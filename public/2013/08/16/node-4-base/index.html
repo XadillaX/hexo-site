@@ -1,0 +1,1072 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>一起撸Node.JS（壹）——基本语法和类型 | XadillaX&#39; Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="小鳥遊死月">
+    
+    <meta name="description" content="Node.js 的基础是 JavaScript 这门 脚本语言。而大多数的脚本语言一个共同的特点就是“弱类型”。
+　　不同于 PHP 的是，PHP 就是是有了新变量也无需申明，而 JavaScript 则还是需要 var 来申明一下的。而这个 var 涵盖了 C++ 中的int、string、cha">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="XadillaX&#39; Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.png">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="XadillaX&#39; Blog" title="XadillaX&#39; Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="XadillaX&#39; Blog">XadillaX&#39; Blog</a></h1>
+				<h2 class="blog-motto">艾克斯の編碼者 —— 一個偽宅级别的碼畜。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/tags">标签</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+						<li><a href="/curriculumvitae">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:xcoder.in">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2013/08/16/node-4-base/" title="一起撸Node.JS（壹）——基本语法和类型" itemprop="url">一起撸Node.JS（壹）——基本语法和类型</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2013-08-16T00:00:00.000Z" itemprop="datePublished">Aug 16 2013</time>
+    Updated:<time datetime="2014-03-24T13:40:55.000Z" itemprop="dateModified">Mar 24 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本语法"><span class="toc-number">1.</span> <span class="toc-text">基本语法</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#变量声明"><span class="toc-number">1.1.</span> <span class="toc-text">变量声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#循环语句"><span class="toc-number">1.2.</span> <span class="toc-text">循环语句</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#for…i"><span class="toc-number">1.2.1.</span> <span class="toc-text">for…i</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#for…in"><span class="toc-number">1.2.2.</span> <span class="toc-text">for…in</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#while…do,_do…while"><span class="toc-number">1.2.3.</span> <span class="toc-text">while…do, do…while</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#运算符"><span class="toc-number">1.3.</span> <span class="toc-text">运算符</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#+,_-,_*,_/"><span class="toc-number">1.3.1.</span> <span class="toc-text">+, -, *, /</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#==,_===,_!=,_!=="><span class="toc-number">1.3.2.</span> <span class="toc-text">==, ===, !=, !==</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#typeof"><span class="toc-number">1.3.3.</span> <span class="toc-text">typeof</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#null,_undefined,_NaN"><span class="toc-number">1.4.</span> <span class="toc-text">null, undefined, NaN</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#null"><span class="toc-number">1.4.1.</span> <span class="toc-text">null</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.2.</span> <span class="toc-text">undefined</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NaN"><span class="toc-number">1.4.3.</span> <span class="toc-text">NaN</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#小杂碎"><span class="toc-number">1.5.</span> <span class="toc-text">小杂碎</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#变量类型"><span class="toc-number">2.</span> <span class="toc-text">变量类型</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础类型"><span class="toc-number">2.1.</span> <span class="toc-text">基础类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JSON对象"><span class="toc-number">2.2.</span> <span class="toc-text">JSON对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类（对象）的基础"><span class="toc-number">2.3.</span> <span class="toc-text">类（对象）的基础</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#类的声明和实例化"><span class="toc-number">2.3.1.</span> <span class="toc-text">类的声明和实例化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#成员变量"><span class="toc-number">2.3.2.</span> <span class="toc-text">成员变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#构造函数"><span class="toc-number">2.3.3.</span> <span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#成员函数"><span class="toc-number">2.3.4.</span> <span class="toc-text">成员函数</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#成员函数声明"><span class="toc-number">2.3.4.1.</span> <span class="toc-text">成员函数声明</span></a></li></ol><li class="toc-item toc-level-4"><a class="toc-link" href="#★_匿名函数"><span class="toc-number">2.3.5.</span> <span class="toc-text">★ 匿名函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#成员函数声明的匿名函数声明方式"><span class="toc-number">2.3.6.</span> <span class="toc-text">成员函数声明的匿名函数声明方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#类的随意性"><span class="toc-number">2.3.7.</span> <span class="toc-text">类的随意性</span></a></li></ol></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#附"><span class="toc-number">3.</span> <span class="toc-text">附</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#深拷贝"><span class="toc-number">3.1.</span> <span class="toc-text">深拷贝</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统默认对象参考手册"><span class="toc-number">3.2.</span> <span class="toc-text">系统默认对象参考手册</span></a></li></ol>
+		</div>
+		
+		<p><strong>Node.js</strong> 的基础是 <strong>JavaScript</strong> 这门 <strong><em>脚本语言</em></strong>。而大多数的脚本语言一个共同的特点就是“<a href="http://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1#.E5.BC.B7.E5.9E.8B.E5.88.A5.E5.92.8C.E5.BC.B1.E5.9E.8B.E5.88.A5" target="_blank">弱类型</a>”。</p>
+<p>　　不同于 <strong>PHP</strong> 的是，<strong>PHP</strong> 就是是有了新变量也无需申明，而 <strong>JavaScript</strong> 则还是需要 <code>var</code> 来申明一下的。而这个 <code>var</code> 涵盖了 <strong>C++</strong> 中的<code>int</code>、<code>string</code>、<code>char</code>等一切类型的含义，甚至是 <code>function</code>。</p>
+<p>　　本篇以及后篇的所有内容都是在 <strong>Linux</strong> 或者 <strong>Cygwin</strong> 下用 <strong>vim</strong> 进行编辑（若不是则请自行转变成你自己的方法），然后在命令行下进行查看结果的。</p>
+<p><!-- 我是小小分割符 --></p>
+<h2 id="基本语法">基本语法</h2>
+<h3 id="变量声明">变量声明</h3>
+<p>在 <strong>C/C++</strong> 中，我们这么声明变量的：</p>
+<figure class="highlight"><figcaption><span>c++</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="keyword">void</span> foo() {}
+
+<span class="keyword">int</span> a = <span class="number">0</span>;
+<span class="keyword">char</span> b = <span class="string">'a'</span>;
+<span class="keyword">float</span> c = <span class="number">1.0f</span>;
+<span class="keyword">void</span> (*d)() = foo;  <span class="comment">///&lt; 忘了是不是这么写的了，总之是函数指针</span>
+</pre></td></tr></table></figure>
+
+
+<p>而在 <strong>Node.js</strong> 中则是这样的：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span> {</span>}
+
+<span class="keyword">var</span> a = <span class="number">0</span>;
+<span class="keyword">var</span> b = <span class="string">'a'</span>;
+<span class="keyword">var</span> c = <span class="number">1.0</span>;
+<span class="keyword">var</span> d = foo;
+</pre></td></tr></table></figure>
+
+
+<p>所以，无论是什么类型的变量，在 <strong>Node.js</strong> 中都是以一个 <code>var</code> 来解决的。</p>
+<h3 id="循环语句">循环语句</h3>
+<h4 id="for…i">for…i</h4>
+<p>这个循环语句基本上跟 <strong>C/C++</strong> 一样，都是</p>
+<figure class="highlight"><figcaption><span>c++</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">for</span>(int i = <span class="number">0</span>; i &lt; foo; i++)
+{
+    //<span class="keyword">...</span>
+}
+</pre></td></tr></table></figure>
+
+
+<p>而鉴于 <strong>Node.js</strong> 是弱类型，所以只需要：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="keyword">for</span>(var i = <span class="number">0</span>; i &lt; foo; i++) {
+    //<span class="keyword">...</span>
+}
+</pre></td></tr></table></figure>
+
+
+<h4 id="for…in">for…in</h4>
+<p>这是一种后有型的循环语句，类似于 <strong>PHP</strong> 的 <code>foreach</code>。</p>
+<p>比如我们有一个 <strong>JSON对象</strong> 如下：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">var</span> foo = {
+    <span class="string">"hello"</span>     : <span class="string">"world"</span>,
+    <span class="string">"node"</span>      : <span class="string">"js"</span>,
+    <span class="string">"blahblah"</span>  : <span class="string">"bar"</span>
+};
+</pre></td></tr></table></figure>
+
+
+<p>这个时候我们就可以用 <code>for...in</code> 来循环遍历了：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="keyword">for</span>(<span class="reserved">var</span> key <span class="keyword">in</span> foo) {
+    <span class="built_in">console</span>.log(key + <span class="string">": "</span> + foo[key]);
+}
+</pre></td></tr></table></figure>
+
+
+<p>我们如果在命令行中打入下面的命令：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$ </span>node foo.js
+</pre></td></tr></table></figure>
+
+
+<p>屏幕上就会显示下面的内容了：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="attribute">hello</span>: <span class="string">world</span>
+<span class="attribute">node</span>: <span class="string">js</span>
+<span class="attribute">blahblah</span>: <span class="string">bar</span>
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><strong>提示</strong>：由上可知，<code>for...in</code> 语句是用来遍历 <strong>JSON对象</strong>、<strong>数组</strong>、<strong>对象</strong>的键名的，而不提供键值的遍历。如果要获取键值，只能通过</p>
+</blockquote>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>foo[<span class="tag">&lt;<span class="title">当前键名</span>&gt;</span>]
+</pre></td></tr></table></figure>
+
+
+<p>的形式来获取。这个跟 <strong>PHP</strong> 的 <code>foreach</code> 还是有一定区别的。</p>
+<h4 id="while…do,_do…while">while…do, do…while</h4>
+<p>这个就不多做解释了，跟其它语言没什么大的区别，无非就是如果有变量声明的话，需要用 <code>var</code> 就够了。</p>
+<h3 id="运算符">运算符</h3>
+<h4 id="+,_-,_*,_/">+, -, *, /</h4>
+<p>这几个运算符也就这样，要注意的是 <code>+</code>。它既可以作用于字符串，也可以作用于数值运算。弱类型语言虽然说类型是弱的，数字有时候可以以字符串的形态出现，字符串有时候可以用数值的形态出现，但是在必要的时候也还是要说一下它是什么类型的，我们可以用下面的代码去看看结果：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="reserved">var</span> a = <span class="string">"1"</span>;
+<span class="reserved">var</span> b = <span class="number">2</span>;
+<span class="built_in">console</span>.log(a + b);
+<span class="built_in">console</span>.log(parseInt(a) + b);
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>这里的 <code>parseInt</code> 是 <strong>Node.js</strong> 的一个内置函数，作用是将一个字符串解析成 <code>int</code> 类型的变量。</p>
+</blockquote>
+<p>上面的代码执行结果是</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>12
+3
+</pre></td></tr></table></figure>
+
+
+<p>第一个 <code>console.log</code> 结果是 <code>12</code>，由于 <code>a</code> 是字符串，所以 <code>b</code> 也被系统以字符串的姿态进行加操作，结果就是将两个字符串黏连在一起就变成了 <code>12</code>。而第二个 <code>console.log</code> 结果是 <code>3</code>，是因为我们将第一个 <code>a</code> 转变为了 <code>int</code> 类型，两个 <code>int</code> 型的变量相加即数值相加，结果当然就是 <code>3</code> 了。</p>
+<h4 id="==,_===,_!=,_!==">==, ===, !=, !==</h4>
+<p>这里有一点要解释，当这个逻辑运算符长度为 <code>2</code> 的时候（<code>==</code>, <code>!=</code>），只是判断外在的值是不是一样的，而不会判断类型。如</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>var <span class="literal">a</span> = <span class="number">1</span>, b = <span class="string">"1"</span><span class="comment">;</span>
+console.log(<span class="literal">a</span> == b)<span class="comment">;</span>
+</pre></td></tr></table></figure>
+
+
+<p>它输出的结果就是 <code>true</code>。但是如果我们在中间判断的时候再加上一个等号，那么就是严格判断了，需要类型和值都一样的时候才会是 <code>true</code>，否则就是 <code>false</code>。也就是说</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>var <span class="literal">a</span> = <span class="number">1</span>, b = <span class="string">"1"</span><span class="comment">;</span>
+console.log(<span class="literal">a</span> === b)<span class="comment">;</span>
+</pre></td></tr></table></figure>
+
+
+<p>的时候，返回的结果就是 <code>false</code> 了，因为 <code>a</code> 是 <code>int</code> 型的，而 <code>b</code> 则是字符串。</p>
+<blockquote>
+<p>顺带着就把条件语句讲了吧，其实这里的 <code>if</code> 跟别的语言没什么两样，就是几个逻辑运算符两个等号三个等号的问题。所以就不多做累述了。</p>
+</blockquote>
+<h4 id="typeof">typeof</h4>
+<p>这里我姑且把它当成是一个运算符而不是函数了。</p>
+<p>这个运算符的作用是判断一个变量的类型，会返回一个字符串，即类型名，具体的执行下面的代码就知道了：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td><td class="code"><pre><span class="reserved">function</span> foo() {}
+
+<span class="reserved">var</span> a = <span class="number">0</span>;
+<span class="reserved">var</span> b = <span class="string">'嘘~蛋花汤在睡觉。'</span>;
+<span class="reserved">var</span> c = <span class="number">1.0</span>;
+<span class="reserved">var</span> d = foo;
+<span class="reserved">var</span> e = { <span class="string">"a"</span> : a };
+<span class="reserved">var</span> f = [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> ];
+<span class="reserved">var</span> g = <span class="literal">null</span>;
+<span class="reserved">var</span> h = <span class="literal">undefined</span>;
+
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> a);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> b);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> c);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> d);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> e);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> f);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> g);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> h);
+</pre></td></tr></table></figure>
+
+
+<p>这里的执行结果就将会是：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="built_in">number</span>
+<span class="keyword">string</span>
+<span class="built_in">number</span>
+<span class="function"><span class="keyword">function</span></span>
+object
+object
+object
+undefined
+</pre></td></tr></table></figure>
+
+
+<h3 id="null,_undefined,_NaN">null, undefined, NaN</h3>
+<p>在 <strong>JavaScript</strong> 中，有三个特殊的值，如标题所示。其中第一个大家可能都比较熟悉吧，<strong>C/C++</strong> 里面也有，不过是大写的，其本质就是一个</p>
+<figure class="highlight"><figcaption><span>c++</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="preprocessor">#<span class="keyword">define</span> NULL 0</span>
+</pre></td></tr></table></figure>
+
+
+<p>而在 <strong>JavaScript</strong> 中，这三个值所代表的意义都不同。</p>
+<h4 id="null">null</h4>
+<p><code>null</code> 是一种特殊的 <strong>object</strong>，大致的意思就是空。比如说：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">var</span> a = <span class="keyword">null</span>;
+</pre></td></tr></table></figure>
+
+
+<p>大家都能看懂，就不多做解释了。但是跟 <strong>C/C++</strong> 不同的是，这个 <code>null</code> 跟 <code>0</code> 不相等。</p>
+<h4 id="undefined">undefined</h4>
+<p>这个东西的意思就是说这个变量未声明。为了能够更好地区分 <code>null</code>，我们的样例代码如下写：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="reserved">var</span> a = {
+    <span class="string">"foo"</span>       : <span class="literal">null</span>
+};
+<span class="built_in">console</span>.log(a[<span class="string">"foo"</span>]);
+<span class="built_in">console</span>.log(a[<span class="string">"bar"</span>]);
+</pre></td></tr></table></figure>
+
+
+<p>上面的代码中，我们让 <code>a[&quot;foo&quot;]</code> 的值为空，即 <code>null</code>。而压根没有声明 <code>a[&quot;bar&quot;]</code> 这个东西，它连空都不是。输出的结果大家都差不多应该猜到了：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="literal">null</span>
+<span class="literal">undefined</span>
+</pre></td></tr></table></figure>
+
+
+<h4 id="NaN">NaN</h4>
+<p>这是一个空的数值，是一个特殊的 <code>number</code>。它的全称是 <code>Not a Number</code>。有点奇怪，大家可以理解为 <strong>不是数字形态，或者数值出错的 <code>number</code> 类型变量</strong>。</p>
+<p>多在浮点型数值运算错误（如被0除）的情况下出现，甚至可以是用户自己让一个变量等于 <code>NaN</code> 以便返回一个错误值让大家知道这个函数运算出错了云云。</p>
+<h3 id="小杂碎">小杂碎</h3>
+<p>其它剩余的语句也跟已存在的其它语言差不多，比如说 <code>break</code> 啊、<code>switch</code> 啊、<code>continue</code> 啊等等等等。</p>
+<h2 id="变量类型">变量类型</h2>
+<p>这一节主要讲的是 <strong>JavaScript</strong> 对象，其它类型差不多一带而过吧。</p>
+<h3 id="基础类型">基础类型</h3>
+<p><strong>Node.js</strong> 包含的基础类型差不多有如下几个：</p>
+<ul>
+<li>number</li>
+<li>string</li>
+<li>boolean</li>
+<li>array</li>
+</ul>
+<p>其中前三种类型可以直接赋值，而 <code>array</code> 的赋值只是一个引用赋值而已，在新变量中改变某个值的话旧变量的值也会改变，直接可以试试下面的代码：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="reserved">var</span> foo = [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> ];
+<span class="reserved">var</span> bar = foo;
+bar[<span class="number">0</span>] = <span class="number">3</span>;
+<span class="built_in">console</span>.log(foo);
+</pre></td></tr></table></figure>
+
+
+<p>它得出的结果是：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>[ <span class="number">3</span>, <span class="number">2</span>, <span class="number">3</span> ]
+</pre></td></tr></table></figure>
+
+
+<p>也就是说 <code>array</code> 要是复制出一个新的数组的话，不能用直接赋值的方法，而必须“<strong><a href="#深拷贝">深拷贝</a></strong>”。</p>
+<p>这里有必要讲一下 <code>array</code> 的三种创建方法。</p>
+<p>第一种：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">var</span> dog = <span class="keyword">new</span> <span class="built_in">Array</span>();
+dog[<span class="number">0</span>] = <span class="string">"嘘~"</span>;
+dog[<span class="number">1</span>] = <span class="string">"蛋花汤"</span>;
+dog[<span class="number">2</span>] = <span class="string">"在睡觉"</span>;
+</pre></td></tr></table></figure>
+
+
+<p>第二种：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">var</span> dog = <span class="keyword">new</span> <span class="built_in">Array</span>( <span class="string">"嘘~"</span>, <span class="string">"蛋花汤"</span>, <span class="string">"在睡觉"</span> );
+</pre></td></tr></table></figure>
+
+
+<p>第四种：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">var</span> dog = [
+    <span class="string">"嘘~"</span>,
+    <span class="string">"蛋花汤"</span>,
+    <span class="string">"在睡觉"</span>
+];
+</pre></td></tr></table></figure>
+
+
+<p>我个人比较喜欢第三种写法，比较简洁。</p>
+<h3 id="JSON对象">JSON对象</h3>
+<p>这里我把 <strong>JSON对象</strong> 单独拎出来而不是把它归类为 <strong>JavaScript对象</strong>，如果觉得我有点误人子弟就可以直接跳过这一节了。</p>
+<p>本人对于 <strong>JSON对象</strong> 和 <strong>JavaScript</strong> 对象的区分放在 <strong>是否只用来存储数据，而并非是一个类的实例化</strong>。其实 <strong>JSON</strong> 的本质便是 <strong>JavaScript Object Notation</strong>。</p>
+<blockquote>
+<p>更多有关 <strong><a href="http://zh.wikipedia.org/wiki/JSON" target="_blank">JSON</a></strong> 的信息请自行百科。</p>
+</blockquote>
+<p>在 <strong>Node.js</strong> 中声明一个 <strong>JSON对象</strong> 非常简单：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="keyword">var</span> dog = {
+    <span class="string">"pre"</span>       : <span class="string">"嘘~"</span>,
+    <span class="string">"sub"</span>       : {
+        <span class="string">"name"</span>  : <span class="string">"蛋花汤"</span>,
+        <span class="string">"act"</span>   : <span class="string">"在睡觉"</span>,
+        <span class="string">"time"</span>  : <span class="number">12</span>
+    },
+
+    <span class="string">"suf"</span>       : [ <span class="string">"我说了"</span>, <span class="string">"它在睡觉"</span>, <span class="string">"就是在睡觉"</span> ]
+};
+</pre></td></tr></table></figure>
+
+
+<p>有两种方式能得到 <strong>JSON对象</strong> 中的某个键名的键值，第一种是用点连接，第二种是用中括号：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>dog<span class="preprocessor">.pre</span><span class="comment">;</span>
+dog[<span class="string">"pre"</span>]<span class="comment">;</span>
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><strong>试试看</strong>：现在你自己动手试试看，用 <code>for...in</code> 的形式遍历一遍上面的 <code>JSON对象</code>。别忘了用上 <code>typeof</code> 喵~</p>
+</blockquote>
+<h3 id="类（对象）的基础">类（对象）的基础</h3>
+<p>严格意义上来讲，<strong>Node.js</strong> 的类不能算是类，其实它只是一个函数的集合体，加一些成员变量。它的本质其实是一个函数。</p>
+<p>不过为了通俗地讲，我们接下去以及以后都将其称为“类”，实例化的叫“对象”。</p>
+<p>因为类有着很多 <strong>函数</strong> 的特性，或者说它的本质就是一个 <strong>函数</strong>，所以这里面我们可能一不留神就顺带着把函数基础给讲了。</p>
+<h4 id="类的声明和实例化">类的声明和实例化</h4>
+<p>声明一个类非常简单，大家不要笑：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="keyword">function</span> foo() {
+    //<span class="keyword">...</span>
+}
+</pre></td></tr></table></figure>
+
+
+<p>好了，我们已经写好了一个 <code>foo</code> 类了。</p>
+<blockquote>
+<p>真的假的？！真的。</p>
+</blockquote>
+<p>不信？不信你可以接下去打一段代码看看：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">var</span> bar = <span class="keyword">new</span> foo();
+</pre></td></tr></table></figure>
+
+
+<p>别看它是一个函数，如果以这样的形式（<code>new</code>）写出来，它就是这个类的实例化。</p>
+<p>而这个所谓的 <code>foo()</code> 其实就是这个 <code>foo()</code> 类的构造函数。</p>
+<h4 id="成员变量">成员变量</h4>
+<p>成员变量有好两种方法。</p>
+<p>第一种就是在类的构造函数或者任何构造函数中使用 <code>this.&lt;变量名&gt;</code> 。你可以在任何时候声明一个成员变量，在外部不影响使用，反正就算在还未声明的时候使用它，也会有一个 <code>undefined</code> 来撑着。所以说这就是第一种方法：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.hello = <span class="string">"world"</span>;
+}
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><strong>注意</strong>：只有在加了 <code>this</code> 的时候才是调用类的<strong>成员变量</strong>，否则只是函数内的一个局部变量而已。要分清楚有没有 <code>this</code> 的时候变量的作用范围。</p>
+</blockquote>
+<p>第二种方法就是在构造函数或者任何成员函数外部声明，其格式是 <code>&lt;类名&gt;.prototype.&lt;变量名&gt;</code>：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">function</span> foo() {
+    //<span class="keyword">...</span>
+}
+
+foo.prototype.hello = <span class="string">"world"</span>;
+</pre></td></tr></table></figure>
+
+
+<p>无聊上面哪种方法都是对成员变量的声明，我们可以看看效果：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="reserved">var</span> bar = <span class="keyword">new</span> foo();
+<span class="built_in">console</span>.log(bar.hello);
+</pre></td></tr></table></figure>
+
+
+<p>甚至你可以这么修改这个类：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.hello = <span class="string">"world"</span>;
+}
+
+foo.prototype.hello = <span class="string">"蛋花汤"</span>;
+</pre></td></tr></table></figure>
+
+
+<p>然后再用上面的代码输出。</p>
+<blockquote>
+<p>想想看为什么输出的还是 <code>world</code> 而不是 <code>蛋花汤</code>。</p>
+</blockquote>
+<h4 id="构造函数">构造函数</h4>
+<p>我们之前说过了这个 <code>foo()</code> 实际上是一个 <strong>构造函数</strong>。那么显然我们可以给构造函数传参数，所以就有了下面的代码：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="comment">// 代码2.1</span>
+<span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">(hello)</span> {</span>
+    <span class="keyword">if</span>(hello === <span class="literal">undefined</span>) {
+        <span class="keyword">this</span>.hello = <span class="string">"world"</span>;
+    } <span class="keyword">else</span> {
+        <span class="keyword">this</span>.hello = hello;
+    }
+}
+</pre></td></tr></table></figure>
+
+
+<p>我们看到上面有一个奇葩的判断 <code>if(hello === undefined)</code>，这个判断有什么用呢？第一种可能，就是开发者很蛋疼地特意传进去一个 <code>undefined</code> 进去，这个时候它是 <code>undefined</code> 无可厚非。</p>
+<p>还有一种情况。我们一开始就说了 <strong>JavaScript</strong> 是一门弱类型语言，其实不仅仅是弱类型，它的传参数也非常不严谨。你可以多传或者少传（只要保证你多传或者少传的时候可以保证程序不出错，或者逻辑不出错），原则上都是可以的。多传的参数会被自动忽略，而少传的参数会以 <code>undefined</code> 补足。</p>
+<p>看看下面的代码就明白了：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="comment">// 上接代码2.1</span>
+<span class="keyword">var</span> bar1 = <span class="keyword">new</span> foo();
+<span class="keyword">var</span> bar2 = <span class="keyword">new</span> foo(<span class="string">"蛋花汤"</span>);
+</pre></td></tr></table></figure>
+
+
+<p>请自行输出一下两个 <code>bar</code> 的 <code>hello</code> 变量，会发现一个是 <strong>world</strong> 一个是 <strong>蛋花汤</strong>。显而易见，我们的第一个 <code>bar1</code> 在声明的时候，被 <strong>Node.js</strong> 自动看成了：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">var</span> bar1 = <span class="keyword">new</span> foo(<span class="literal">undefined</span>);
+</pre></td></tr></table></figure>
+
+
+<p>所以就有了它是 <strong>world</strong> 一说。</p>
+<p>还有就是在这个构造函数中，我们看到了传进去的参数是 <code>hello</code> 而这个类中本来就有个成员变量就是 <code>this.hello</code>。不过我们之前说过了有 <code>this</code> 和没 <code>this</code> 的时候作用域不同，那个参数只是作用于构造函数中，而加了 <code>this</code> 的那个则是成员变量。用一个 <code>this</code> 就马上区分开来他们了，所以即使同名也没关系。</p>
+<h4 id="成员函数">成员函数</h4>
+<h5 id="成员函数声明">成员函数声明</h5>
+<p>成员函数的声明跟成员变量的第二种声明方法差不多，即 <code>&lt;类名&gt;.prototype.&lt;函数名&gt; = &lt;函数&gt;;</code></p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="comment">// 上接代码2.1</span>
+<span class="function"><span class="keyword">function</span> <span class="title">setHello</span><span class="params">(hello)</span> {</span>
+    <span class="keyword">this</span>.hello = hello;
+}
+foo.prototype.setHello = setHello;
+
+bar1.setHello(<span class="string">"鸡蛋饼"</span>);
+</pre></td></tr></table></figure>
+
+
+<p>上面这段代码显而易见，我们实现了 <code>foo</code> 类的 <code>setHello</code> 函数，能通过它修改 <code>foo.hello</code> 的值。</p>
+<p>但是这么写是不是有点麻烦？接下去我要讲一个 <strong>JavaScript</strong> 函数重要的特性了。</p>
+<h4 id="★_匿名函数">★ 匿名函数</h4>
+<p>很多时候我们的某些函数只在一个地方被引用或者调用，那么我们为这个函数起一个名字就太不值了，没必要，所以我们可以临时写好这个函数，直接让引用它的人引用它，调用它的人调用它。所以函数可以省略函数名，如：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span><span class="params">(hello)</span> {</span>
+    <span class="keyword">this</span>.hello = hello;
+}
+</pre></td></tr></table></figure>
+
+
+<p>至于怎么引用或者调用呢？如果是上面的那个类需要引用的话，就是写成这样的：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre>foo.prototype.setHello = <span class="function"><span class="keyword">function</span><span class="params">(hello)</span> {</span>
+    <span class="keyword">this</span>.hello = hello;
+}
+</pre></td></tr></table></figure>
+
+
+<p>这样的写法跟 <strong><a href="#成员函数声明">2.3.3.1. 成员函数声明</a></strong> 是一个效果的，而且省了很多的代码量。而且实际上，基本上的类成员函数的声明都是采用这种匿名函数的方式来声明的。</p>
+<p>至于说怎么样让匿名函数被调用呢？这通常用于传入一个只被某个函数调用的函数时这样写。</p>
+<p>比如我们有一个函数的原型是：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="javadoc">/**
+ * 我们将传入a，b两个变量，
+ * 在算出a+b的值后，交由func(num)
+ * 去进行输出
+ */</span>
+function sumab(a, b, func) {
+    <span class="keyword">var</span> c = a + b;
+    func(a, b, c);
+}
+</pre></td></tr></table></figure>
+
+
+<p>比如我们有两个版本的输出函数，一个是中文输出，一个是英文输出，那么如果不用匿名函数时候是这么写的：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">zh</span><span class="params">(a, b, sum)</span> {</span>
+    <span class="transposed_variable">console.</span>log(a + <span class="string">" + "</span> + b + <span class="string">" 的值是："</span> + <span class="built_in">sum</span>);
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">en</span><span class="params">(a, b, sum)</span> {</span>
+    <span class="transposed_variable">console.</span>log(a + <span class="string">" plus "</span> + b + <span class="string">" is "</span> + <span class="built_in">sum</span>);
+}
+
+sumab(<span class="number">1</span>, <span class="number">2</span>, zh);
+sumab(<span class="number">3</span>, <span class="number">4</span>, en);
+</pre></td></tr></table></figure>
+
+
+<p>执行一遍这段代码，输出的结果将会是：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="number">1</span> + <span class="number">2</span> 的值是：<span class="number">3</span>
+<span class="number">3</span> plus <span class="number">4</span> <span class="keyword">is</span> <span class="number">7</span>
+</pre></td></tr></table></figure>
+
+
+<p>这样的代码如果采用匿名函数的形式则将会是：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre>sumab(<span class="number">1</span>, <span class="number">2</span>, <span class="function"><span class="keyword">function</span><span class="params">(a, b, sum)</span> {</span>
+    <span class="transposed_variable">console.</span>log(a + <span class="string">" + "</span> + b + <span class="string">" 的值是："</span> + <span class="built_in">sum</span>);
+});
+sumab(<span class="number">3</span>, <span class="number">4</span>, <span class="function"><span class="keyword">function</span><span class="params">(a, b, sum)</span> {</span>
+    <span class="transposed_variable">console.</span>log(a + <span class="string">" plus "</span> + b + <span class="string">" is "</span> + <span class="built_in">sum</span>);
+});
+</pre></td></tr></table></figure>
+
+
+<p>这种形式通常使用于回调函数。回调机制算是 <strong>Node.js</strong> 或者说 <strong>JavaScript</strong> 的精髓。在以后的篇章会做介绍。</p>
+<h4 id="成员函数声明的匿名函数声明方式">成员函数声明的匿名函数声明方式</h4>
+<p>虽然上一节讲过了，不过还是再讲一遍吧。</p>
+<p>通常我们声明类的成员函数时候都是用匿名函数来声明的，因为反正那个函数也就是这个类的一个成员函数而已，不会在其它地方被单独引用或者调用，所以就有了下面的代码：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="comment">// 上接代码2.1</span>
+foo.prototype.setHello = <span class="function"><span class="keyword">function</span><span class="params">(hello)</span> {</span>
+    <span class="keyword">this</span>.hello = hello;
+}
+</pre></td></tr></table></figure>
+
+
+<p>这样我们就使得 <code>foo</code> 类有了 <code>setHello</code> 这个函数了。</p>
+<h4 id="类的随意性">类的随意性</h4>
+<p>这个又是我胡扯的。所谓类的随意性即 <strong>JavaScript</strong> 中你可以在任何地方修改你的类，这跟 <strong>Ruby</strong> 有着一定的相似之处。</p>
+<p>比如说 <code>string</code> ，它其实也是一个类，有着诸如 <code>length</code> 这样的成员变量，也有 <code>indexOf</code>、<code>substr</code> 等成员函数。但是万一我们觉得这个 <code>string</code> 有些地方不完善，想加自己的方法，那么可以在你想要的地方给它增加一个函数，比如：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="built_in">String</span>.prototype.sb = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">var</span> newstr = <span class="string">""</span>;
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.length; i++) {
+        <span class="keyword">if</span>(i % <span class="number">2</span> === <span class="number">0</span>) newstr += <span class="string">"s"</span>;
+        <span class="keyword">else</span> newstr += <span class="string">"b"</span>;
+    }
+
+    <span class="keyword">return</span> newstr;
+};
+</pre></td></tr></table></figure>
+
+
+<p>这个函数的意思就是填充一个字符串，使其变成 <code>sb</code> 的化身。</p>
+<p>我们来测试一下：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>var <span class="keyword">str</span> = <span class="string">"嘘~蛋花汤在睡觉。"</span>;
+console.<span class="keyword">log</span>(<span class="keyword">str</span>.sb());
+</pre></td></tr></table></figure>
+
+
+<p>你将会得到这样的结果：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>sbsbsbsbs
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>你跟你的电脑说“嘘~蛋花汤在睡觉。”，你的电脑会骂你四次半傻逼。（赶快砸了它）</p>
+</blockquote>
+<h2 id="附">附</h2>
+<h3 id="深拷贝">深拷贝</h3>
+<p>所谓深拷贝就是自己新建一个数组或者对象，把源数组或者对象中的基础类型变量值一个个手动拷过去，而不是只把源数组或者对象的引用拿过来。所以这就涉及到了一个递归的调用什么的。</p>
+<p>下面是我实现的一个深拷贝函数，大家可以写一个自己的然后加入到自己的 <strong>Node.js</strong> 知识库中。</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">cloneObject</span><span class="params">(src)</span> {</span>
+    <span class="keyword">var</span> dest = {};
+    <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> src) {
+        <span class="keyword">if</span>(<span class="keyword">typeof</span> src === <span class="string">"object"</span>) dest[key] = cloneObject(src[key]);
+        <span class="keyword">else</span> dest[key] = src[key];
+    }
+
+    <span class="keyword">return</span> dest;
+}
+</pre></td></tr></table></figure>
+
+
+<h3 id="系统默认对象参考手册">系统默认对象参考手册</h3>
+<ul>
+<li><strong>字符串</strong>：<a href="http://www.w3school.com.cn/js/jsref_obj_string.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_string.asp</a></li>
+<li><strong>数字</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_number.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_number.asp</a></li>
+<li><strong>数组</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_array.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_array.asp</a></li>
+<li><strong>布尔</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_boolean.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_boolean.asp</a></li>
+<li><strong>日期</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_date.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_date.asp</a></li>
+<li><strong>数学库</strong>：<a href="http://www.w3school.com.cn/js/jsref_obj_math.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_math.asp</a></li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Node.js/">Node.js</a><a href="/tags/JavaScript/">JavaScript</a><a href="/tags/一起撸Node.JS/">一起撸Node.JS</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/NodeJS/">NodeJS</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://xcoder.in/2013/08/16/node-4-base/" data-title="一起撸Node.JS（壹）——基本语法和类型 | XadillaX&#39; Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2013/08/31/srm-589-div2/" title="TopCoder SRM 589 DIV 2">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  TopCoder SRM 589 DIV 2</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2013/08/15/node-2-environment-in-windows/"  title="一起撸Node.JS（负贰）——环境">
+ <strong>NEXT:</strong><br/> 
+ <span>一起撸Node.JS（负贰）——环境
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本语法"><span class="toc-number">1.</span> <span class="toc-text">基本语法</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#变量声明"><span class="toc-number">1.1.</span> <span class="toc-text">变量声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#循环语句"><span class="toc-number">1.2.</span> <span class="toc-text">循环语句</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#for…i"><span class="toc-number">1.2.1.</span> <span class="toc-text">for…i</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#for…in"><span class="toc-number">1.2.2.</span> <span class="toc-text">for…in</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#while…do,_do…while"><span class="toc-number">1.2.3.</span> <span class="toc-text">while…do, do…while</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#运算符"><span class="toc-number">1.3.</span> <span class="toc-text">运算符</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#+,_-,_*,_/"><span class="toc-number">1.3.1.</span> <span class="toc-text">+, -, *, /</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#==,_===,_!=,_!=="><span class="toc-number">1.3.2.</span> <span class="toc-text">==, ===, !=, !==</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#typeof"><span class="toc-number">1.3.3.</span> <span class="toc-text">typeof</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#null,_undefined,_NaN"><span class="toc-number">1.4.</span> <span class="toc-text">null, undefined, NaN</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#null"><span class="toc-number">1.4.1.</span> <span class="toc-text">null</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.2.</span> <span class="toc-text">undefined</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NaN"><span class="toc-number">1.4.3.</span> <span class="toc-text">NaN</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#小杂碎"><span class="toc-number">1.5.</span> <span class="toc-text">小杂碎</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#变量类型"><span class="toc-number">2.</span> <span class="toc-text">变量类型</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础类型"><span class="toc-number">2.1.</span> <span class="toc-text">基础类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JSON对象"><span class="toc-number">2.2.</span> <span class="toc-text">JSON对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类（对象）的基础"><span class="toc-number">2.3.</span> <span class="toc-text">类（对象）的基础</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#类的声明和实例化"><span class="toc-number">2.3.1.</span> <span class="toc-text">类的声明和实例化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#成员变量"><span class="toc-number">2.3.2.</span> <span class="toc-text">成员变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#构造函数"><span class="toc-number">2.3.3.</span> <span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#成员函数"><span class="toc-number">2.3.4.</span> <span class="toc-text">成员函数</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#成员函数声明"><span class="toc-number">2.3.4.1.</span> <span class="toc-text">成员函数声明</span></a></li></ol><li class="toc-item toc-level-4"><a class="toc-link" href="#★_匿名函数"><span class="toc-number">2.3.5.</span> <span class="toc-text">★ 匿名函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#成员函数声明的匿名函数声明方式"><span class="toc-number">2.3.6.</span> <span class="toc-text">成员函数声明的匿名函数声明方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#类的随意性"><span class="toc-number">2.3.7.</span> <span class="toc-text">类的随意性</span></a></li></ol></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#附"><span class="toc-number">3.</span> <span class="toc-text">附</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#深拷贝"><span class="toc-number">3.1.</span> <span class="toc-text">深拷贝</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统默认对象参考手册"><span class="toc-number">3.2.</span> <span class="toc-text">系统默认对象参考手册</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/NodeJS/" title="NodeJS">NodeJS<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Programming/" title="Programming">Programming<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 15.00px;">JavaScript</a><a href="/tags/Node.js/" style="font-size: 20.00px;">Node.js</a><a href="/tags/SRM/" style="font-size: 10.00px;">SRM</a><a href="/tags/TopCoder/" style="font-size: 10.00px;">TopCoder</a><a href="/tags/XPlan/" style="font-size: 10.00px;">XPlan</a><a href="/tags/一起撸Node.JS/" style="font-size: 15.00px;">一起撸Node.JS</a>
+    </div>
+  </div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m a Pseudo-Otaku. <br/>
+			Another way, I am a code monkey! My name is XadillaX.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		<a href="https://github.com/XadillaX" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"xcoder-ghost"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>

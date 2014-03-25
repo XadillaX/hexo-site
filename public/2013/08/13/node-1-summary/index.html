@@ -1,0 +1,462 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>一起撸Node.JS（负叁）——概述 | XadillaX&#39; Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="小鳥遊死月">
+    
+    <meta name="description" content="本系列教程主要是写给我带的那帮熊孩子们看的。我自己的 Node.js 水平半斤八两，措辞之中也免不了有自己错误的理解，会误人子弟。但是对于初学者来说，某些自己助记的理解还是可取的。有些概念性的错误可以等他们进一步深入研究之后再自行更正。
+　　由于那帮人大多还处于使用 M$ Windows 的令人不愉">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="XadillaX&#39; Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.png">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="XadillaX&#39; Blog" title="XadillaX&#39; Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="XadillaX&#39; Blog">XadillaX&#39; Blog</a></h1>
+				<h2 class="blog-motto">艾克斯の編碼者 —— 一個偽宅级别的碼畜。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/tags">标签</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+						<li><a href="/curriculumvitae">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:xcoder.in">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2013/08/13/node-1-summary/" title="一起撸Node.JS（负叁）——概述" itemprop="url">一起撸Node.JS（负叁）——概述</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2013-08-13T00:00:00.000Z" itemprop="datePublished">Aug 13 2013</time>
+    Updated:<time datetime="2014-03-24T13:40:41.000Z" itemprop="dateModified">Mar 24 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Node-JS是什么？"><span class="toc-number">1.</span> <span class="toc-text">Node.JS是什么？</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#前端_JavaScript"><span class="toc-number">1.1.</span> <span class="toc-text">前端 JavaScript</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CommonJS"><span class="toc-number">1.2.</span> <span class="toc-text">CommonJS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Node-JS"><span class="toc-number">1.3.</span> <span class="toc-text">Node.JS</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">2.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#番外"><span class="toc-number">3.</span> <span class="toc-text">番外</span></a></li></ol>
+		</div>
+		
+		<p>　　本系列教程主要是写给我带的那帮熊孩子们看的。我自己的 <strong>Node.js</strong> 水平半斤八两，措辞之中也免不了有自己错误的理解，会误人子弟。但是对于初学者来说，某些自己助记的理解还是可取的。有些概念性的错误可以等他们进一步深入研究之后再自行更正。</p>
+<p>　　由于那帮人大多还处于使用 <strong>M$ Windows</strong> 的令人不愉快的阶段，所以本教程将会退而求其次，使其在 <strong>Cygwin</strong> 中模拟 <strong>linux</strong> 的命令（Windows的bat脚本实在是让人不敢恭维）。以及在这里会讲述一些 <strong>Git</strong> 操作的初步。当然，如果你已经在使用 <strong>linux</strong> 进行开发的话，可以跳过前面一堆令人感到厌烦的环境配置章节。或者你在使用 <strong>M$ Windows</strong> 但却不想改变自己的脚本习惯的话，也可以选择性地跳过一些章节和步骤。</p>
+<p><!-- 我是小小分割符 --></p>
+<h2 id="Node-JS是什么？">Node.JS是什么？</h2>
+<p>很多人都知道JS是一门语言，而且是一门脚本语言，其全称就是 <strong>JavaScript</strong>，而且与所谓的 <strong>Java</strong> 没有一个屁的关系。</p>
+<h3 id="前端_JavaScript">前端 JavaScript</h3>
+<p>在好多年前，<strong>JavaScript</strong> 是网页的一个寄生虫，它必须依赖于网页的浏览器中才能执行，并且作为网页的一部分，以</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript">
+<span class="comment">//blahblah...</span>
+</span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+</pre></td></tr></table></figure>
+
+
+<p>标签进行包含，这样才能提供其上下文环境。或者说将其单独写入一个 <code>*.js</code> 文件中，并且在网页里以</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"foo/bar.js"</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+</pre></td></tr></table></figure>
+
+
+<p>的形式将其包含进来。</p>
+<p>但总而言之，<strong>JavaScript</strong> 只是寄生在网页里面的一只小小可怜虫罢了。它的作用无非就是使网页的交互性更强，页面效果更多而已。</p>
+<p>后来，这帮不甘寂寞的人类将 <strong>JavaScript</strong> 从网页（或者说前端）的帝国中独立了出来（小心快递），于是就出现了 <strong>CommonJS</strong>。</p>
+<h3 id="CommonJS">CommonJS</h3>
+<p><strong>CommonJS</strong> 其实不是一门新的语言，甚至都不能说它是一个新的解释器——实际上它只是一个概念或者是一个规范。</p>
+<p>在这个规范中，它定义了很多 <strong>API</strong> ，讲通俗点或者直截了当点就是函数啊类啊什么的，而这些 <strong>API</strong> 是为那些普通应用程序（Native App）而非浏览器应用使用。它的终极目标就是提供一个类似于 <strong>Python</strong>、<strong>Ruby</strong> 之类的脚本一样的标准库，开发者可以用这样的东西一样来做到 <strong>Python</strong>、<strong>Ruby</strong> 能做到的事，而非仅仅局限于网页中的效果或者功能实现，它也可以跑在本地。</p>
+<p>所以说下面的事情对于 <strong>JavaScript</strong> 来说不再是梦：</p>
+<ul>
+<li>服务端JavaScript应用</li>
+<li>命令行工具</li>
+<li>图形界面应用</li>
+<li>混合应用（Titanium、Adobe AIR等）</li>
+</ul>
+<p>那么，它具体弥补了 <strong>前端JavaScript</strong> 的哪些空白呢？其实这也涉及了很多 <strong>前端JavaScript</strong> 所没有涉及的东西，如二进制、编码、IO、文件、系统、断言测试、套接字、事件队列、Worker、控制台等等。</p>
+<p>关于 <strong>CommonJS</strong> 的更进一步了解可以翻阅一下其 <strong><a href="http://wiki.commonjs.org/wiki/CommonJS" target="_blank">Wiki</a></strong>。</p>
+<h3 id="Node-JS">Node.JS</h3>
+<p>上面讲了那么多，却始终停留在“规范”这个层面上。而 <strong>Node.JS</strong> 的出现便是让 <strong>CommonJS</strong> 成为了现实。</p>
+<p>这里要大家明确的一点的就是 <strong>Node.JS</strong> 并不是一门新的语言，它的语言还是 <strong>JavaScript</strong> ，硬要说是一门新的语言那也应该是 <strong>Common JavaScript</strong>。<strong>Node.JS</strong> 只是 <strong>CommonJS</strong> 的一个<a href="http://zh.wikipedia.org/wiki/%E8%A7%A3%E9%87%8A%E5%99%A8" target="_blank">解释器</a>罢了。</p>
+<p>它是基于 <strong>Google</strong> 的 <strong>V8虚拟机</strong>(Chrome浏览器所使用的JavaScript执行环境) 的一个解释器。</p>
+<p>很多人印象中的概念还是没能摆脱 <strong>前端JavaScript</strong> 的阴霾，认为 <strong>JavaScript</strong> 就是做网站的， <strong>Node.JS</strong> 也是如此。</p>
+<p>包括本人在 <strong><a href="http://cnodejs.org/" target="_blank">cnodejs.org</a></strong> 中看到的帖子大多也都是讲 <strong>Node.JS</strong> 如何如何做网站（服务端）云云，如何如何使用 <strong>Express</strong> 模块来搭建一个网站云云。</p>
+<blockquote>
+<p>这是一个误区。</p>
+</blockquote>
+<p><strong>PHP</strong> 还能用 <strong><a href="http://www.php-cli.com/" target="_blank">PHP-CLI</a></strong> 来写个脚本放本地跑呢，<strong>Node.JS</strong> 更是可以写任何程序。虽然这么讲有些夸大了，但是我这么说的理由是希望大家能摆脱这么一个误区。</p>
+<p>举个简单的例子吧，大家都是搞过 <strong>ACM</strong> 的孩子了，总对终端窗口的输入输出有一定感觉了吧。现在给我以最快速度码一个 <strong><em><a href="http://acm.nbut.edu.cn/problem/view.xhtml?id=1000" target="_blank">A + B Problem</a></em></strong> 给我看看。</p>
+<p>轻车熟路，我知道。但是你们现在做的事用 <strong>Node.JS</strong> 同样能做到。</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre>process.stdin.resume();
+process.stdin.setEncoding(<span class="string">"utf8"</span>);
+process.stdin.on(<span class="string">"data"</span>, <span class="function"><span class="keyword">function</span><span class="params">(chunk)</span> {</span>
+    <span class="keyword">var</span> datas = chunk.trim().split(<span class="string">"\n"</span>);
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; datas.length; i++) {
+        <span class="keyword">var</span> ab = datas[i].trim().split(<span class="string">" "</span>);
+        <span class="keyword">var</span> a = <span class="built_in">parseInt</span>(ab[<span class="number">0</span>]);
+        <span class="keyword">var</span> b = <span class="built_in">parseInt</span>(ab[<span class="number">1</span>]);
+        console.log(a + b);
+    }
+});
+</pre></td></tr></table></figure>
+
+
+<p>由于<del>我们学校</del>我的前任学校OJ不支持 <strong>Node.JS</strong>，所以请你们移步到 <strong><a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1000" target="_blank">AIZU OJ</a></strong> 去把上面的代码交过去看看结果看。</p>
+<blockquote>
+<p><strong>注意</strong>：语言要选择 <strong>JavaScript</strong>。</p>
+</blockquote>
+<p>怎么样，同样能过题的对吧？</p>
+<h2 id="小结">小结</h2>
+<p>上面对这些东西做了个简单的介绍，我需要你们知道的东西很简单：</p>
+<ol>
+<li><strong>Node.JS</strong> 是一个脚本解释器，用的语言是 <strong>JavaScript</strong>。</li>
+<li><strong>Node.JS</strong> 功能很强大，不是只能拿来做网站的，眼光放开阔些。</li>
+<li>给我好好学。</li>
+</ol>
+<h2 id="番外">番外</h2>
+<blockquote>
+<p>有个码畜老了，想学学书法来修身养性。当他展开宣纸，犹豫了半天之后，终于挥毫泼墨，在纸上龙飞凤舞写下几个大字：</p>
+<blockquote>
+<p><strong><em>Hello World</em></strong></p>
+</blockquote>
+</blockquote>
+<p>虽然这一篇文章没有讲到任何 <strong>Node.JS</strong> 的语法，但是还是可以让你们练练书法的。</p>
+<p><strong>C语言</strong> 的标准输出函数是 <code>printf</code>，而 <strong>Node.JS</strong> 的标准输出则是：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>console.<span class="keyword">log</span>(<span class="string">"blahblah..."</span>);
+</pre></td></tr></table></figure>
+
+
+<p>好的，即使没有装上 <strong>Node.JS</strong> 环境也阻止不了我们向世界问好。</p>
+<p>打开 <strong><a href="http://ideone.com/" target="_blank">IDEOne</a></strong>，将你的 <code>Hello World</code> 贴到编辑框中，然后在左侧的语言栏里面选中 <strong>Node.JS</strong> ，点击送出，你就能看到你的第一个 <strong>Node.JS</strong> 程序的运行结果了。</p>
+<p><strong><em>To be continued…</em></strong></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Node.js/">Node.js</a><a href="/tags/JavaScript/">JavaScript</a><a href="/tags/一起撸Node.JS/">一起撸Node.JS</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/NodeJS/">NodeJS</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://xcoder.in/2013/08/13/node-1-summary/" data-title="一起撸Node.JS（负叁）——概述 | XadillaX&#39; Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2013/08/15/node-2-environment-in-windows/" title="一起撸Node.JS（负贰）——环境">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  一起撸Node.JS（负贰）——环境</span>
+</a>
+</div>
+
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Node-JS是什么？"><span class="toc-number">1.</span> <span class="toc-text">Node.JS是什么？</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#前端_JavaScript"><span class="toc-number">1.1.</span> <span class="toc-text">前端 JavaScript</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CommonJS"><span class="toc-number">1.2.</span> <span class="toc-text">CommonJS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Node-JS"><span class="toc-number">1.3.</span> <span class="toc-text">Node.JS</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">2.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#番外"><span class="toc-number">3.</span> <span class="toc-text">番外</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/NodeJS/" title="NodeJS">NodeJS<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Programming/" title="Programming">Programming<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 15.00px;">JavaScript</a><a href="/tags/Node.js/" style="font-size: 20.00px;">Node.js</a><a href="/tags/SRM/" style="font-size: 10.00px;">SRM</a><a href="/tags/TopCoder/" style="font-size: 10.00px;">TopCoder</a><a href="/tags/XPlan/" style="font-size: 10.00px;">XPlan</a><a href="/tags/一起撸Node.JS/" style="font-size: 15.00px;">一起撸Node.JS</a>
+    </div>
+  </div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m a Pseudo-Otaku. <br/>
+			Another way, I am a code monkey! My name is XadillaX.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		<a href="https://github.com/XadillaX" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"xcoder-ghost"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,595 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>浙江大学XPlan项目新闻爬虫手机屏幕适配文档 | XadillaX&#39; Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="小鳥遊死月">
+    
+    <meta name="description" content="前言
+XPlan 是一个“基于校园强关系的社交应用”的开发代号。其中有一个功能是从学校网站上通过网络爬虫（Web Crawler）形式将学校新闻抓取到XPlan自身的数据库当中。
+而这里出现的一个问题就是学校网站上面的文章是通过类似于 KindEditor、UEditor这类在线富文本编辑器生成的代">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="XadillaX&#39; Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.png">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="XadillaX&#39; Blog" title="XadillaX&#39; Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="XadillaX&#39; Blog">XadillaX&#39; Blog</a></h1>
+				<h2 class="blog-motto">艾克斯の編碼者 —— 一個偽宅级别的碼畜。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/tags">标签</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+						<li><a href="/curriculumvitae">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:xcoder.in">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2013/12/28/index/" title="浙江大学XPlan项目新闻爬虫手机屏幕适配文档" itemprop="url">浙江大学XPlan项目新闻爬虫手机屏幕适配文档</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2013-12-28T00:00:00.000Z" itemprop="datePublished">Dec 28 2013</time>
+    Updated:<time datetime="2014-03-24T14:10:15.000Z" itemprop="dateModified">Mar 24 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#预处理"><span class="toc-number">2.</span> <span class="toc-text">预处理</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Viewport"><span class="toc-number">2.1.</span> <span class="toc-text">Viewport</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#width"><span class="toc-number">2.1.1.</span> <span class="toc-text">width</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#height"><span class="toc-number">2.1.2.</span> <span class="toc-text">height</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#initial-scale"><span class="toc-number">2.1.3.</span> <span class="toc-text">initial-scale</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#maximum-scale"><span class="toc-number">2.1.4.</span> <span class="toc-text">maximum-scale</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#user-scaleble"><span class="toc-number">2.1.5.</span> <span class="toc-text">user-scaleble</span></a></li></ol></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#Cheerio模块*"><span class="toc-number">3.</span> <span class="toc-text">Cheerio模块*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bootstrap"><span class="toc-number">4.</span> <span class="toc-text">Bootstrap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#细节处理"><span class="toc-number">5.</span> <span class="toc-text">细节处理</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#&lt;img_/&gt;"><span class="toc-number">5.1.</span> <span class="toc-text">&lt;img /&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#&lt;table&gt;&lt;/table&gt;"><span class="toc-number">5.2.</span> <span class="toc-text">&lt;table&gt;&lt;/table&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#&lt;a_/&gt;"><span class="toc-number">5.3.</span> <span class="toc-text">&lt;a /&gt;</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#结束语"><span class="toc-number">6.</span> <span class="toc-text">结束语</span></a></li></ol>
+		</div>
+		
+		<h2 id="前言">前言</h2>
+<p><strong>XPlan</strong> 是一个“基于校园强关系的社交应用”的开发代号。其中有一个功能是从学校网站上通过网络爬虫（Web Crawler）形式将学校新闻抓取到XPlan自身的数据库当中。</p>
+<p>而这里出现的一个问题就是学校网站上面的文章是通过类似于 <a href="http://kindeditor.net/" target="_blank"><code>KindEditor</code></a>、<a href="http://ueditor.baidu.com/website/" target="_blank"><code>UEditor</code></a>这类<strong>在线富文本编辑器</strong>生成的代码。</p>
+<p>这类代码有几个共性：</p>
+<ol>
+<li>代码有大量冗余、多重无用嵌套。</li>
+<li>非常低的代码可读性。</li>
+<li>在PC浏览器中表现力不错，往往能以低效的代码实现预期排版。</li>
+</ol>
+<p>所以这些富文本编辑器可以在PC各大内核浏览器中表现良好，但是不便人工修改代码。</p>
+<p>而 <strong>XPlan</strong> 确是一个由智能手机主导的应用，新闻将会通过一个 <strong>WebView</strong> 体现出来。所以就需要一定的方法将这些脏乱的代码适配成手机屏幕下表现力良好的代码。</p>
+<h2 id="预处理">预处理</h2>
+<p>在这里，我们将新闻的代码锁定在新闻内容排版，而排除了其它类似于新闻标题、新闻作者等其它信息。</p>
+<p>以我们浙江大学软件学院为例，我们爬取的新闻内容代码将如下：</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre>&lt;div class=<span class="string">"vid_wz"</span>&gt;
+    <span class="keyword">...</span>
+&lt;/div&gt;
+</pre></td></tr></table></figure>
+
+
+<p>所有内容将被包括在这个类型为 <code>vid_wz</code> 的 <code>div</code> 当中。</p>
+<p>这时，我们将其包括在一个自己实现定义好的模板当中。该模板与新闻内容将会形成一个完整的网页，包括完整的 <code>html</code>、<code>head</code>、<code>body</code> 等标签。</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="code"><pre><span class="doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;<span class="title">html</span>&gt;</span>
+<span class="tag">&lt;<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">title</span>&gt;</span>新闻内页<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"Content-Type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=UTF-8"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+    
+<span class="tag">&lt;<span class="title">body</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">article</span> <span class="attribute">id</span>=<span class="value">"_xplan-wrapper"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"vid_wz"</span>&gt;</span>
+            ...
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">article</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span>
+</pre></td></tr></table></figure>
+
+
+<p>这里需要注意的一点的就是其中的一个 <code>meta</code> 标签：</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"</span> /&gt;</span>
+</pre></td></tr></table></figure>
+
+
+<p>它的意思是定义 <code>viewport</code> 的一些属性，实现了初步的手机网页适配。</p>
+<h3 id="Viewport">Viewport</h3>
+<p>手机浏览器是把页面放在一个虚拟窗口（即 <code>viewport</code>）中，用户可以通过平移和缩放来看网页的不同部分。</p>
+<p>通过 <code>viewport</code> 我们能对页面的一些缩放进行手机适配。</p>
+<p>我们所需要做的仅是在 <code>head</code> 中插入一个 <code>meta</code> 标签，命名为 <code>viewport</code>，然后定义好其 <code>content</code>。</p>
+<p><code>content</code> 的语法如下：</p>
+<h4 id="width">width</h4>
+<p>控制 <code>viewport</code> 的宽度，可以指定一个值或者特殊的值，如 <code>device-width</code> 为设备宽度。</p>
+<h4 id="height">height</h4>
+<p>与 <code>width</code> 相对应，指定高度</p>
+<h4 id="initial-scale">initial-scale</h4>
+<p>初始缩放，即页面初始缩放程度。这是一个浮点值，是页面大小的一个乘数。例如，如果你设置初始缩放为 <code>1.0</code>，那么页面在展现的时候就会以分辨率的1:1来展现。如果你设置为<code>2.0</code>，那么这个页面就会放大为2倍。</p>
+<h4 id="maximum-scale">maximum-scale</h4>
+<p>最大放大倍数。</p>
+<h4 id="user-scaleble">user-scaleble</h4>
+<p>用户调整缩放，即用户是否能改变页面缩放程度。如果为 <code>yes</code> 即为可以， <code>no</code> 为不可以。</p>
+<h2 id="Cheerio模块*">Cheerio模块*</h2>
+<p>由于 <strong>XPlan</strong> 的后端是基于 <code>node.js</code> 构架的，所以 <strong>cheerio</strong> 模块是一个 <code>node.js</code> 专有的模块。</p>
+<p>它的作用是将一段HTML代码转换为一棵DOM元素树。</p>
+<p>在其官网上是这么诠释的：为服务端定制的快速、灵活、轻量级实现的 jQuery 内核。通常熟悉 jQuery 使用的开发者应该会对其使用方法比较熟悉。</p>
+<p>所以在我们做接下去适配修改的之前，我们需要将我们刚才生成的完整HTML代码 转换为一棵我们可以操作的DOM元素树。</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>var cheerio = <span class="keyword">require</span>(<span class="string">"cheerio"</span>);
+$ = cheerio.load(<span class="keyword">...</span>);
+</pre></td></tr></table></figure>
+
+
+<p>这时我们便能以熟悉的jQuery模式对其进行操作了，如：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$(</span><span class="string">"p"</span>).html(<span class="string">"hello foo!"</span>);
+</pre></td></tr></table></figure>
+
+
+<h2 id="Bootstrap">Bootstrap</h2>
+<p>Bootstrap是Twitter推出的一个开源的用于前端开发的工具包。它有一个非常好的响应式的页面风格，使其在个尺寸屏幕上表现良好。</p>
+<p>为了能更好适应屏幕，我们决定采用其自带的栅格系统，于是刚才的页面模板就有了新的变化：</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td><td class="code"><pre><span class="doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;<span class="title">html</span>&gt;</span>
+<span class="tag">&lt;<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">title</span>&gt;</span>新闻内页<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"Content-Type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=UTF-8"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+    
+<span class="tag">&lt;<span class="title">body</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">article</span> <span class="attribute">class</span>=<span class="value">"container"</span> <span class="attribute">id</span>=<span class="value">"_xplan-wrapper"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row"</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-md-12"</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"vid_wz"</span>&gt;</span>...<span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+            <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">article</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span>
+</pre></td></tr></table></figure>
+
+
+<p>首先最外框的 <code>container</code>，用其包裹的元素将实现居中对齐。在不同的媒体查询阈值范围内都为 <code>container</code> 设置了 <code>width</code>，用以匹配栅格系统。</p>
+<p><code>row</code> 是一行栅格系统的外包元素。一行可以有12个栅格。</p>
+<p>以 <code>.col-md-</code> 开头的栅格的最大 <code>container</code> 宽度为970，最大列宽为78，并能自适应屏幕。</p>
+<h2 id="细节处理">细节处理</h2>
+<p>在完成了以上操作以后，我们将对各元素进行微调处理。</p>
+<p>好在在手机浏览器或者 <code>WebView</code> 中，对各种字体的设置不是非常敏感，所以我们仍然可以不处理一些关于字体变更的设置，以减轻开发量。</p>
+<p>这里距几个微调的例子。</p>
+<h3 id="&lt;img_/&gt;">&lt;img /&gt;</h3>
+<p>在新闻当中，图片充当的基本上是新闻照片的角色，在手机当中以单行出现为佳。</p>
+<p>而 Bootstrap 当中本身就有元素类型来让图片元素响应屏幕宽度，并可以加上圆角边框。</p>
+<p>所以我们需要做的就是为所有图片加上响应的类型：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="variable">$(</span><span class="string">"img"</span>).addClass(<span class="string">"img-thumbnail"</span>);
+<span class="variable">$(</span><span class="string">"img"</span>).addClass(<span class="string">"img-responsive"</span>);
+<span class="variable">$(</span><span class="string">"img"</span>).removeAttr(<span class="string">"style"</span>);
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><strong>注意：</strong> 最后的一个移除 <code>img</code> 元素自带的 <code>style</code> 属性是因为在文章发布的时候，有可能会被富文本编辑器自动加上一些宽高、边框等信息。为了统一所有图片风格以及让响应式生效，需要将其 <code>style</code> 属性全部移除。</p>
+</blockquote>
+<p>下面是是适配前与适配后的对比：</p>
+<p><img src="/images/xplan-news-1.jpg" alt="适配前"><br><img src="/images/xplan-news-2.jpg" alt="适配后"></p>
+<h3 id="&lt;table&gt;&lt;/table&gt;">&lt;table&gt;&lt;/table&gt;</h3>
+<p>对于 <code>table</code> 元素也需要对它进行自适配，不然很有可能会溢出屏幕，使其多出了一个横向的滚动条。</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="variable">$(</span><span class="string">"table"</span>).removeAttr(<span class="string">"style"</span>);
+<span class="variable">$(</span><span class="string">"table"</span>).removeAttr(<span class="string">"border"</span>);
+
+<span class="variable">$(</span><span class="string">"table"</span>).addClass(<span class="string">"table"</span>);
+<span class="variable">$(</span><span class="string">"table"</span>).addClass(<span class="string">"table-bordered"</span>);
+<span class="variable">$(</span><span class="string">"table"</span>).addClass(<span class="string">"table-striped"</span>);
+</pre></td></tr></table></figure>
+
+
+<p>上面两句是移除 <code>table</code> 的原有的一些风格信息以及属性。后面是为其加上 Bootstrap 特有的 <code>table</code> 类型。</p>
+<p>当然，更多的 <code>table</code> 元素还需要其它更多操作。不过就目前为止，<strong>XPlan</strong> 还没有着手关于 <code>table</code> 的更深一层容错处理。不过这里可以提供一个思路。</p>
+<p>比如说 <a href="http://www.cst.zju.edu.cn/index.php?c=Index&amp;a=detail&amp;catid=72&amp;id=1885" target="_blank">这篇文章中</a>，不知道是谁给的在线富文本编辑器勇气，使其下面几张图片都各自被一个 <code>table</code> 及其子元素所包含。更有甚者，有一篇文章的一个段落被一个 <code>table</code> 所包容，并且在其左侧还有一个看不见的 <code>td</code> 元素。</p>
+<p>我们可以提供的思路就是如果一个 <code>table</code> 只有一行一列就直接将其内容取出并删除该 <code>table</code> 。</p>
+<h3 id="&lt;a_/&gt;">&lt;a /&gt;</h3>
+<p>超链接元素是一个新闻与用户互动的比较重要的元素之一。我们需要保持其美观性。</p>
+<p>举几个例子来说，我们可以将超链接以一个类按钮的形式出现：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="variable">$(</span><span class="string">"a"</span>).removeAttr(<span class="string">"style"</span>);
+<span class="variable">$(</span><span class="string">"a"</span>).addClass(<span class="string">"btn btn-default btn-xs btn-info"</span>);
+</pre></td></tr></table></figure>
+
+
+<p>然后我们甚至可以对其做一些细微的词汇修改。</p>
+<p>比如当新闻发布者上传了一个附件然后不负责任地直接将文件名贴上的时候，我们可以贴心地将其显示文字改为“下载附件”。</p>
+<p>再比如发布者直接以URL形式显示一个超链接的时候，我们可以贴心地将其改变为“打开链接”等等。</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre>$(<span class="string">"a"</span>).each(<span class="function"><span class="keyword">function</span><span class="params">(idx, elem)</span> {</span>
+    <span class="keyword">if</span>($(<span class="keyword">this</span>).html().match(<span class="regexp">/.*\.(doc|xls|ppt|docx|xlsx|pptx)/</span>)) {
+        $(<span class="keyword">this</span>).html(<span class="string">"&lt;i class='glyphicon glyphicon-paperclip'&gt;&lt;/i&gt; 下载附件"</span>);
+        $(<span class="keyword">this</span>).removeClass(<span class="string">"btn-info"</span>);
+        $(<span class="keyword">this</span>).addClass(<span class="string">"btn-warning"</span>);
+    } <span class="keyword">else</span> <span class="keyword">if</span>($(<span class="keyword">this</span>).html().match(<span class="regexp">/http.*\/\/.*/</span>)) {
+        $(<span class="keyword">this</span>).html(<span class="string">"&lt;i class='glyphicon glyphicon-flag'&gt;&lt;/i&gt; 打开链接"</span>);
+        $(<span class="keyword">this</span>).removeClass(<span class="string">"btn-info"</span>);
+        $(<span class="keyword">this</span>).addClass(<span class="string">"btn-warning"</span>);
+    }
+});
+</pre></td></tr></table></figure>
+
+
+<p>然后我们再处理几个由于误操作而增加的错误链接，如在经上面操作后，还存在着url与显示内容相关的超链接可以直接取消，如这类：</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>让我们荡<span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"起双桨"</span>&gt;</span>起双桨<span class="tag">&lt;/<span class="title">a</span>&gt;</span>
+</pre></td></tr></table></figure>
+
+
+<h2 id="结束语">结束语</h2>
+<p>至此，当下版本的 <strong>XPlan</strong> 的新闻爬虫手机屏幕适配基本完成。其中当然还存在着一些细节处理和显示错误处理的不足，但是已经定下了基本的适配思路。</p>
+<p>我们还在探索更好的适配方法，而当下的适配形式暂时已经可以满足了我们项目的需求。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Node.js/">Node.js</a><a href="/tags/XPlan/">XPlan</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Programming/">Programming</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://xcoder.in/2013/12/28/index/" data-title="浙江大学XPlan项目新闻爬虫手机屏幕适配文档 | XadillaX&#39; Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2013/08/31/srm-589-div2/"  title="TopCoder SRM 589 DIV 2">
+ <strong>NEXT:</strong><br/> 
+ <span>TopCoder SRM 589 DIV 2
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#预处理"><span class="toc-number">2.</span> <span class="toc-text">预处理</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Viewport"><span class="toc-number">2.1.</span> <span class="toc-text">Viewport</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#width"><span class="toc-number">2.1.1.</span> <span class="toc-text">width</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#height"><span class="toc-number">2.1.2.</span> <span class="toc-text">height</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#initial-scale"><span class="toc-number">2.1.3.</span> <span class="toc-text">initial-scale</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#maximum-scale"><span class="toc-number">2.1.4.</span> <span class="toc-text">maximum-scale</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#user-scaleble"><span class="toc-number">2.1.5.</span> <span class="toc-text">user-scaleble</span></a></li></ol></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#Cheerio模块*"><span class="toc-number">3.</span> <span class="toc-text">Cheerio模块*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bootstrap"><span class="toc-number">4.</span> <span class="toc-text">Bootstrap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#细节处理"><span class="toc-number">5.</span> <span class="toc-text">细节处理</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#&lt;img_/&gt;"><span class="toc-number">5.1.</span> <span class="toc-text">&lt;img /&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#&lt;table&gt;&lt;/table&gt;"><span class="toc-number">5.2.</span> <span class="toc-text">&lt;table&gt;&lt;/table&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#&lt;a_/&gt;"><span class="toc-number">5.3.</span> <span class="toc-text">&lt;a /&gt;</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#结束语"><span class="toc-number">6.</span> <span class="toc-text">结束语</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/NodeJS/" title="NodeJS">NodeJS<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Programming/" title="Programming">Programming<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 15.00px;">JavaScript</a><a href="/tags/Node.js/" style="font-size: 20.00px;">Node.js</a><a href="/tags/SRM/" style="font-size: 10.00px;">SRM</a><a href="/tags/TopCoder/" style="font-size: 10.00px;">TopCoder</a><a href="/tags/XPlan/" style="font-size: 10.00px;">XPlan</a><a href="/tags/一起撸Node.JS/" style="font-size: 15.00px;">一起撸Node.JS</a>
+    </div>
+  </div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m a Pseudo-Otaku. <br/>
+			Another way, I am a code monkey! My name is XadillaX.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		<a href="https://github.com/XadillaX" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"xcoder-ghost"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>

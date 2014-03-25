@@ -1,0 +1,8 @@
+{
+  "name": "xadillax",
+  "version": "2.5.2",
+  "private": true,
+  "dependencies": {
+    "hexo-generator-feed": "^0.1.0"
+  }
+}

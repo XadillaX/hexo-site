@@ -1,0 +1,1930 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[XadillaX' Blog]]></title>
+  <subtitle><![CDATA[艾克斯の編碼者 —— 一個偽宅级别的碼畜。]]></subtitle>
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://xcoder.in/"/>
+  <updated>2014-03-25T07:04:52.795Z</updated>
+  <id>http://xcoder.in/</id>
+  
+  <author>
+    <name><![CDATA[小鳥遊死月]]></name>
+    <email><![CDATA[admin@xcoder.in]]></email>
+  </author>
+  
+  <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[浙江大学XPlan项目新闻爬虫手机屏幕适配文档]]></title>
+    <link href="http://xcoder.in/2013/12/28/index/"/>
+    <id>http://xcoder.in/2013/12/28/index/</id>
+    <published>2013-12-28T00:00:00.000Z</published>
+    <updated>2014-03-24T14:10:15.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="前言">前言</h2>
+<p><strong>XPlan</strong> 是一个“基于校园强关系的社交应用”的开发代号。其中有一个功能是从学校网站上通过网络爬虫（Web Crawler）形式将学校新闻抓取到XPlan自身的数据库当中。</p>
+<p>而这里出现的一个问题就是学校网站上面的文章是通过类似于 <a href="http://kindeditor.net/" target="_blank"><code>KindEditor</code></a>、<a href="http://ueditor.baidu.com/website/" target="_blank"><code>UEditor</code></a>这类<strong>在线富文本编辑器</strong>生成的代码。</p>
+<p>这类代码有几个共性：</p>
+<ol>
+<li>代码有大量冗余、多重无用嵌套。</li>
+<li>非常低的代码可读性。</li>
+<li>在PC浏览器中表现力不错，往往能以低效的代码实现预期排版。</li>
+</ol>
+<p>所以这些富文本编辑器可以在PC各大内核浏览器中表现良好，但是不便人工修改代码。</p>
+<p>而 <strong>XPlan</strong> 确是一个由智能手机主导的应用，新闻将会通过一个 <strong>WebView</strong> 体现出来。所以就需要一定的方法将这些脏乱的代码适配成手机屏幕下表现力良好的代码。</p>
+<h2 id="预处理">预处理</h2>
+<p>在这里，我们将新闻的代码锁定在新闻内容排版，而排除了其它类似于新闻标题、新闻作者等其它信息。</p>
+<p>以我们浙江大学软件学院为例，我们爬取的新闻内容代码将如下：</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre>&lt;div class=<span class="string">"vid_wz"</span>&gt;
+    <span class="keyword">...</span>
+&lt;/div&gt;
+</pre></td></tr></table></figure>
+
+
+<p>所有内容将被包括在这个类型为 <code>vid_wz</code> 的 <code>div</code> 当中。</p>
+<p>这时，我们将其包括在一个自己实现定义好的模板当中。该模板与新闻内容将会形成一个完整的网页，包括完整的 <code>html</code>、<code>head</code>、<code>body</code> 等标签。</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="code"><pre><span class="doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;<span class="title">html</span>&gt;</span>
+<span class="tag">&lt;<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">title</span>&gt;</span>新闻内页<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"Content-Type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=UTF-8"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+    
+<span class="tag">&lt;<span class="title">body</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">article</span> <span class="attribute">id</span>=<span class="value">"_xplan-wrapper"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"vid_wz"</span>&gt;</span>
+            ...
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">article</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span>
+</pre></td></tr></table></figure>
+
+
+<p>这里需要注意的一点的就是其中的一个 <code>meta</code> 标签：</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"</span> /&gt;</span>
+</pre></td></tr></table></figure>
+
+
+<p>它的意思是定义 <code>viewport</code> 的一些属性，实现了初步的手机网页适配。</p>
+<h3 id="Viewport">Viewport</h3>
+<p>手机浏览器是把页面放在一个虚拟窗口（即 <code>viewport</code>）中，用户可以通过平移和缩放来看网页的不同部分。</p>
+<p>通过 <code>viewport</code> 我们能对页面的一些缩放进行手机适配。</p>
+<p>我们所需要做的仅是在 <code>head</code> 中插入一个 <code>meta</code> 标签，命名为 <code>viewport</code>，然后定义好其 <code>content</code>。</p>
+<p><code>content</code> 的语法如下：</p>
+<h4 id="width">width</h4>
+<p>控制 <code>viewport</code> 的宽度，可以指定一个值或者特殊的值，如 <code>device-width</code> 为设备宽度。</p>
+<h4 id="height">height</h4>
+<p>与 <code>width</code> 相对应，指定高度</p>
+<h4 id="initial-scale">initial-scale</h4>
+<p>初始缩放，即页面初始缩放程度。这是一个浮点值，是页面大小的一个乘数。例如，如果你设置初始缩放为 <code>1.0</code>，那么页面在展现的时候就会以分辨率的1:1来展现。如果你设置为<code>2.0</code>，那么这个页面就会放大为2倍。</p>
+<h4 id="maximum-scale">maximum-scale</h4>
+<p>最大放大倍数。</p>
+<h4 id="user-scaleble">user-scaleble</h4>
+<p>用户调整缩放，即用户是否能改变页面缩放程度。如果为 <code>yes</code> 即为可以， <code>no</code> 为不可以。</p>
+<h2 id="Cheerio模块*">Cheerio模块*</h2>
+<p>由于 <strong>XPlan</strong> 的后端是基于 <code>node.js</code> 构架的，所以 <strong>cheerio</strong> 模块是一个 <code>node.js</code> 专有的模块。</p>
+<p>它的作用是将一段HTML代码转换为一棵DOM元素树。</p>
+<p>在其官网上是这么诠释的：为服务端定制的快速、灵活、轻量级实现的 jQuery 内核。通常熟悉 jQuery 使用的开发者应该会对其使用方法比较熟悉。</p>
+<p>所以在我们做接下去适配修改的之前，我们需要将我们刚才生成的完整HTML代码 转换为一棵我们可以操作的DOM元素树。</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>var cheerio = <span class="keyword">require</span>(<span class="string">"cheerio"</span>);
+$ = cheerio.load(<span class="keyword">...</span>);
+</pre></td></tr></table></figure>
+
+
+<p>这时我们便能以熟悉的jQuery模式对其进行操作了，如：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$(</span><span class="string">"p"</span>).html(<span class="string">"hello foo!"</span>);
+</pre></td></tr></table></figure>
+
+
+<h2 id="Bootstrap">Bootstrap</h2>
+<p>Bootstrap是Twitter推出的一个开源的用于前端开发的工具包。它有一个非常好的响应式的页面风格，使其在个尺寸屏幕上表现良好。</p>
+<p>为了能更好适应屏幕，我们决定采用其自带的栅格系统，于是刚才的页面模板就有了新的变化：</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td><td class="code"><pre><span class="doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;<span class="title">html</span>&gt;</span>
+<span class="tag">&lt;<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">title</span>&gt;</span>新闻内页<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"Content-Type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=UTF-8"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+    
+<span class="tag">&lt;<span class="title">body</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">article</span> <span class="attribute">class</span>=<span class="value">"container"</span> <span class="attribute">id</span>=<span class="value">"_xplan-wrapper"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row"</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-md-12"</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"vid_wz"</span>&gt;</span>...<span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+            <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">article</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span>
+</pre></td></tr></table></figure>
+
+
+<p>首先最外框的 <code>container</code>，用其包裹的元素将实现居中对齐。在不同的媒体查询阈值范围内都为 <code>container</code> 设置了 <code>width</code>，用以匹配栅格系统。</p>
+<p><code>row</code> 是一行栅格系统的外包元素。一行可以有12个栅格。</p>
+<p>以 <code>.col-md-</code> 开头的栅格的最大 <code>container</code> 宽度为970，最大列宽为78，并能自适应屏幕。</p>
+<h2 id="细节处理">细节处理</h2>
+<p>在完成了以上操作以后，我们将对各元素进行微调处理。</p>
+<p>好在在手机浏览器或者 <code>WebView</code> 中，对各种字体的设置不是非常敏感，所以我们仍然可以不处理一些关于字体变更的设置，以减轻开发量。</p>
+<p>这里距几个微调的例子。</p>
+<h3 id="&lt;img_/&gt;">&lt;img /&gt;</h3>
+<p>在新闻当中，图片充当的基本上是新闻照片的角色，在手机当中以单行出现为佳。</p>
+<p>而 Bootstrap 当中本身就有元素类型来让图片元素响应屏幕宽度，并可以加上圆角边框。</p>
+<p>所以我们需要做的就是为所有图片加上响应的类型：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="variable">$(</span><span class="string">"img"</span>).addClass(<span class="string">"img-thumbnail"</span>);
+<span class="variable">$(</span><span class="string">"img"</span>).addClass(<span class="string">"img-responsive"</span>);
+<span class="variable">$(</span><span class="string">"img"</span>).removeAttr(<span class="string">"style"</span>);
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><strong>注意：</strong> 最后的一个移除 <code>img</code> 元素自带的 <code>style</code> 属性是因为在文章发布的时候，有可能会被富文本编辑器自动加上一些宽高、边框等信息。为了统一所有图片风格以及让响应式生效，需要将其 <code>style</code> 属性全部移除。</p>
+</blockquote>
+<p>下面是是适配前与适配后的对比：</p>
+<p><img src="/images/xplan-news-1.jpg" alt="适配前"><br><img src="/images/xplan-news-2.jpg" alt="适配后"></p>
+<h3 id="&lt;table&gt;&lt;/table&gt;">&lt;table&gt;&lt;/table&gt;</h3>
+<p>对于 <code>table</code> 元素也需要对它进行自适配，不然很有可能会溢出屏幕，使其多出了一个横向的滚动条。</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="variable">$(</span><span class="string">"table"</span>).removeAttr(<span class="string">"style"</span>);
+<span class="variable">$(</span><span class="string">"table"</span>).removeAttr(<span class="string">"border"</span>);
+
+<span class="variable">$(</span><span class="string">"table"</span>).addClass(<span class="string">"table"</span>);
+<span class="variable">$(</span><span class="string">"table"</span>).addClass(<span class="string">"table-bordered"</span>);
+<span class="variable">$(</span><span class="string">"table"</span>).addClass(<span class="string">"table-striped"</span>);
+</pre></td></tr></table></figure>
+
+
+<p>上面两句是移除 <code>table</code> 的原有的一些风格信息以及属性。后面是为其加上 Bootstrap 特有的 <code>table</code> 类型。</p>
+<p>当然，更多的 <code>table</code> 元素还需要其它更多操作。不过就目前为止，<strong>XPlan</strong> 还没有着手关于 <code>table</code> 的更深一层容错处理。不过这里可以提供一个思路。</p>
+<p>比如说 <a href="http://www.cst.zju.edu.cn/index.php?c=Index&amp;a=detail&amp;catid=72&amp;id=1885" target="_blank">这篇文章中</a>，不知道是谁给的在线富文本编辑器勇气，使其下面几张图片都各自被一个 <code>table</code> 及其子元素所包含。更有甚者，有一篇文章的一个段落被一个 <code>table</code> 所包容，并且在其左侧还有一个看不见的 <code>td</code> 元素。</p>
+<p>我们可以提供的思路就是如果一个 <code>table</code> 只有一行一列就直接将其内容取出并删除该 <code>table</code> 。</p>
+<h3 id="&lt;a_/&gt;">&lt;a /&gt;</h3>
+<p>超链接元素是一个新闻与用户互动的比较重要的元素之一。我们需要保持其美观性。</p>
+<p>举几个例子来说，我们可以将超链接以一个类按钮的形式出现：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="variable">$(</span><span class="string">"a"</span>).removeAttr(<span class="string">"style"</span>);
+<span class="variable">$(</span><span class="string">"a"</span>).addClass(<span class="string">"btn btn-default btn-xs btn-info"</span>);
+</pre></td></tr></table></figure>
+
+
+<p>然后我们甚至可以对其做一些细微的词汇修改。</p>
+<p>比如当新闻发布者上传了一个附件然后不负责任地直接将文件名贴上的时候，我们可以贴心地将其显示文字改为“下载附件”。</p>
+<p>再比如发布者直接以URL形式显示一个超链接的时候，我们可以贴心地将其改变为“打开链接”等等。</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre>$(<span class="string">"a"</span>).each(<span class="function"><span class="keyword">function</span><span class="params">(idx, elem)</span> {</span>
+    <span class="keyword">if</span>($(<span class="keyword">this</span>).html().match(<span class="regexp">/.*\.(doc|xls|ppt|docx|xlsx|pptx)/</span>)) {
+        $(<span class="keyword">this</span>).html(<span class="string">"&lt;i class='glyphicon glyphicon-paperclip'&gt;&lt;/i&gt; 下载附件"</span>);
+        $(<span class="keyword">this</span>).removeClass(<span class="string">"btn-info"</span>);
+        $(<span class="keyword">this</span>).addClass(<span class="string">"btn-warning"</span>);
+    } <span class="keyword">else</span> <span class="keyword">if</span>($(<span class="keyword">this</span>).html().match(<span class="regexp">/http.*\/\/.*/</span>)) {
+        $(<span class="keyword">this</span>).html(<span class="string">"&lt;i class='glyphicon glyphicon-flag'&gt;&lt;/i&gt; 打开链接"</span>);
+        $(<span class="keyword">this</span>).removeClass(<span class="string">"btn-info"</span>);
+        $(<span class="keyword">this</span>).addClass(<span class="string">"btn-warning"</span>);
+    }
+});
+</pre></td></tr></table></figure>
+
+
+<p>然后我们再处理几个由于误操作而增加的错误链接，如在经上面操作后，还存在着url与显示内容相关的超链接可以直接取消，如这类：</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>让我们荡<span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"起双桨"</span>&gt;</span>起双桨<span class="tag">&lt;/<span class="title">a</span>&gt;</span>
+</pre></td></tr></table></figure>
+
+
+<h2 id="结束语">结束语</h2>
+<p>至此，当下版本的 <strong>XPlan</strong> 的新闻爬虫手机屏幕适配基本完成。其中当然还存在着一些细节处理和显示错误处理的不足，但是已经定下了基本的适配思路。</p>
+<p>我们还在探索更好的适配方法，而当下的适配形式暂时已经可以满足了我们项目的需求。</p>
+]]></content>
+    
+    
+      <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
+    
+      <category term="XPlan" scheme="http://xcoder.in/tags/XPlan/"/>
+    
+      <category term="Programming" scheme="http://xcoder.in/categories/Programming/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[TopCoder SRM 589 DIV 2]]></title>
+    <link href="http://xcoder.in/2013/08/31/srm-589-div2/"/>
+    <id>http://xcoder.in/2013/08/31/srm-589-div2/</id>
+    <published>2013-08-31T00:00:00.000Z</published>
+    <updated>2014-03-24T13:59:55.000Z</updated>
+    <content type="html"><![CDATA[<p>　　好久没撸 <strong>TC</strong> 了，手都生了。前两天刚折腾好 <strong>LinuxMint</strong> + <strong>Cinnamon</strong>，顺便手贱把 <strong>TC</strong> 环境配好了。</p>
+<p>　　随便进去扯了一套最新的 <strong>SRM</strong> 来搞，全跑完之后才发现原来这场比赛还处于 <strong>System Running</strong> 阶段。于是知道了比赛一结束还在 <strong>Running</strong> 的时候你就已经可以自己拉出来做了。小绿名大家不要笑。</p>
+<!-- 我是小小分割符 -->
+
+<h2 id="Summary">Summary</h2>
+<p>　　这次 <strong>DIV 2</strong> 的难度一般，一道签到题加两道普通的 <strong>DP</strong>。</p>
+<p>　　<a href="https://github.com/XadillaX/xadillax-topcoder/tree/master/code/SRM589-DIV2" target="_blank">Code on GitHub</a>.</p>
+<h2 id="250pt_-_Goose_Tattarrattat">250pt - Goose Tattarrattat</h2>
+<p>题意很简单，就是给你一个字符串，问你最少改变多少字符让字符串所有字符都一样。</p>
+<p>签到题，找最多的字符跟总长度一减就OK了。</p>
+<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="code"><pre><span class="preprocessor">#define SIZE(x) ((int)(x.size()))</span>
+<span class="preprocessor">#define LENGTH(x) ((int)(x.length()))</span>
+<span class="keyword">class</span> GooseTattarrattatDiv2 
+{
+<span class="keyword">public</span>:
+    <span class="keyword">int</span> getmin(<span class="built_in">string</span> S);
+};
+
+<span class="keyword">int</span> GooseTattarrattatDiv2::getmin(<span class="built_in">string</span> S)
+{
+    <span class="keyword">int</span> maxsame = <span class="number">0</span>;
+    <span class="stl_container"><span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="keyword">int</span>&gt;</span> mp;
+    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; LENGTH(S); i++)
+    {
+    	mp[S[i]]++;
+    	maxsame = max(maxsame, mp[S[i]]);
+    }
+    
+    <span class="keyword">return</span> LENGTH(S) - maxsame;
+}
+</pre></td></tr></table></figure>
+
+
+<h2 id="500pt_-_Gears">500pt - Gears</h2>
+<p>有 <strong><em>N</em></strong> 个齿轮围成一圈，相邻两个齿轮要反方向转才能正常运转不卡到其它轮子。你要从中间拿掉几个齿轮（留空了就不影响其左边的左边的齿轮），问最少拿掉几个使得所有齿轮能正常转。</p>
+<p>我们建两个二维 <strong><em>dp</em></strong> 数组，或者一个三维 <strong><em>dp</em></strong> 数组：</p>
+<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>dp[<span class="link_label">i</span>][<span class="link_reference">0|1</span>][<span class="link_label">0|1</span>]
+</pre></td></tr></table></figure>
+
+
+<p>第一维 <code>i</code> 代表当前是第 <code>i</code> 个齿轮。第二维若是 <code>0</code> 则表示这个齿轮拿走，若是 <code>1</code> 代表留下。第三维若是 <code>0</code> 则代表第一个齿轮拿走，<code>1</code> 代表第一个齿轮留下。整个数组的每个元素就代表该齿轮留下或者拿走且第一个齿轮是留下或者拿走的情况下的最少拿走齿轮数。</p>
+<p>所以我们能得到几个状态转移方程：</p>
+<blockquote>
+<h3 id="第一个齿轮">第一个齿轮</h3>
+</blockquote>
+<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre>dp[<span class="link_label">i</span>][<span class="link_reference">0</span>][<span class="link_label">0</span>] = 1;
+dp[<span class="link_label">i</span>][<span class="link_reference">0</span>][<span class="link_label">1</span>] = INF;
+dp[<span class="link_label">i</span>][<span class="link_reference">1</span>][<span class="link_label">1</span>] = 0;
+dp[<span class="link_label">i</span>][<span class="link_reference">1</span>][<span class="link_label">0</span>] = INF;
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<h3 id="第二个齿轮">第二个齿轮</h3>
+<p>如果与第一个同向那么就有了一留一走或者两个都走的情况。否则就是四种情况都可以。</p>
+</blockquote>
+<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="code"><pre><span class="keyword">if</span>(与第一个齿轮同向)
+<span class="cell">{
+    dp[<span class="number">1</span>][<span class="number">0</span>][<span class="number">1</span>] = <span class="number">1</span>;
+    dp[<span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>] = <span class="number">1</span>;
+    dp[<span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">2</span>;
+    dp[<span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>] = INF;
+}</span>
+<span class="keyword">else</span> 
+<span class="cell">{
+    dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">2</span>;
+    dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="number">1</span>;
+    dp[i][<span class="number">1</span>][<span class="number">0</span>] = <span class="number">1</span>;
+    dp[i][<span class="number">1</span>][<span class="number">1</span>] = <span class="number">0</span>;
+}</span>
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<h3 id="之后的所有齿轮">之后的所有齿轮</h3>
+<p>若该齿轮与前一个齿轮方向相同 ，那么该齿轮留下的时候，前一个齿轮必须得走，那么就是 <code>dp[i - 1][0][?]</code>;该齿轮走的时候，前一个齿轮可走可留，就是 <code>dp[i - 1][0|1][?] + 1</code> 的稍微小一点那个。</p>
+<p>若方向不相同 ，那么就是该齿轮留下的时候，前一个齿轮也可以留下。</p>
+</blockquote>
+<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="code"><pre><span class="keyword">if</span>(与前一个齿轮同向)
+{
+    dp[i][<span class="number">1</span>][<span class="number">0</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>];
+    dp[i][<span class="number">1</span>][<span class="number">1</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">1</span>];
+
+    dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="built_in">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>]) + <span class="number">1</span>;
+    dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="built_in">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>]) + <span class="number">1</span>;
+}
+<span class="keyword">else</span> 
+{
+    dp [i][<span class="number">1</span>][<span class="number">0</span>] = <span class="built_in">min</span>(dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>]);
+    dp [i][<span class="number">1</span>][<span class="number">1</span>] = <span class="built_in">min</span>(dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>]);
+
+    dp [i][<span class="number">0</span>][<span class="number">0</span>] = <span class="built_in">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>]) + <span class="number">1</span>;
+    dp [i][<span class="number">0</span>][<span class="number">1</span>] = <span class="built_in">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>]) + <span class="number">1</span>;
+}
+</pre></td></tr></table></figure>
+
+
+<p>最后若最后一个齿轮与第一个齿轮同向，那么在 <code>dp[i - 1][0][0]</code>、<code>dp[i - 1][0][1]</code>、<code>dp[i - 1][1][0]</code> 中挑一个。若不同向，那么多了个 <code>dp[i - 1][1][1]</code> 这个选择。</p>
+<p>下面就是代码了：</p>
+<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+</pre></td><td class="code"><pre>class GearsDiv2 
+{
+public:
+    <span class="keyword">int</span> getmin(<span class="keyword">string</span> Directions);
+};
+
+<span class="keyword">int</span> GearsDiv2::getmin(<span class="keyword">string</span> Directions)
+{
+    <span class="keyword">int</span> dp[<span class="number">100</span>][<span class="number">2</span>][<span class="number">2</span>];
+    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; LENGTH(Directions); i++)
+    {
+        <span class="keyword">if</span>(i == <span class="number">0</span>)
+        {
+            dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;
+            dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="number">10000000</span>;
+            dp[i][<span class="number">1</span>][<span class="number">1</span>] = <span class="number">0</span>;
+            dp[i][<span class="number">1</span>][<span class="number">0</span>] = <span class="number">10000000</span>;
+        }
+        <span class="keyword">else</span>
+        <span class="keyword">if</span>(i == <span class="number">1</span>)
+        {
+            <span class="keyword">if</span>(Directions[i] == Directions[i - <span class="number">1</span>])
+            {
+                dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="number">1</span>;
+                dp[i][<span class="number">1</span>][<span class="number">0</span>] = <span class="number">1</span>;
+                
+                dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">2</span>;
+                dp[i][<span class="number">1</span>][<span class="number">1</span>] = <span class="number">10000000</span>;
+            }
+            <span class="keyword">else</span>
+            {
+                dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">2</span>;
+                dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="number">1</span>;
+                dp[i][<span class="number">1</span>][<span class="number">0</span>] = <span class="number">1</span>;
+                dp[i][<span class="number">1</span>][<span class="number">1</span>] = <span class="number">0</span>;
+            }
+        }
+        <span class="keyword">else</span>
+        <span class="keyword">if</span>(Directions[i] == Directions[i - <span class="number">1</span>])
+        {
+            dp[i][<span class="number">1</span>][<span class="number">0</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>];
+            dp[i][<span class="number">1</span>][<span class="number">1</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">1</span>];
+            
+            dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>]) + <span class="number">1</span>;
+            dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="keyword">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">1</span>]) + <span class="number">1</span>;
+        }
+        <span class="keyword">else</span>
+        {
+            dp[i][<span class="number">1</span>][<span class="number">0</span>] = <span class="keyword">min</span>(dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>]);
+            dp[i][<span class="number">1</span>][<span class="number">1</span>] = <span class="keyword">min</span>(dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>]);
+            
+            dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>]) + <span class="number">1</span>;
+            dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="keyword">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>]) + <span class="number">1</span>;
+        }
+    }
+    
+    <span class="keyword">int</span> ans;
+    <span class="keyword">int</span> mi = LENGTH(Directions) - <span class="number">1</span>;
+    <span class="keyword">if</span>(Directions[mi] == Directions[<span class="number">0</span>])
+    {
+        ans = <span class="keyword">min</span>(dp[mi][<span class="number">0</span>][<span class="number">0</span>], <span class="keyword">min</span>(dp[mi][<span class="number">1</span>][<span class="number">0</span>], dp[mi][<span class="number">0</span>][<span class="number">1</span>]));
+    }
+    <span class="keyword">else</span>
+    {
+        ans = <span class="keyword">min</span>(<span class="keyword">min</span>(dp[mi][<span class="number">0</span>][<span class="number">0</span>], dp[mi][<span class="number">1</span>][<span class="number">1</span>]), <span class="keyword">min</span>(dp[mi][<span class="number">0</span>][<span class="number">1</span>], dp[mi][<span class="number">1</span>][<span class="number">0</span>]));
+    }
+    
+    <span class="keyword">return</span> ans;
+}
+</pre></td></tr></table></figure>
+
+
+<h2 id="1000pt_-_Flipping_Bits">1000pt - Flipping Bits</h2>
+<p>给你一个 <strong>01串</strong> 与一个正整数 <strong><em>M</em></strong>。<strong>01串</strong> 有如下三种操作:</p>
+<ul>
+<li>随便反转一位（0 -&gt; 1, 1 -&gt; 0）。</li>
+<li>将开头 <code>k * M</code> 位反转。k 可以是任何正整数。</li>
+<li>将末尾 <code>k * M</code> 位反转。k 可以是任何正整数。</li>
+</ul>
+<p>问最少需要几步将整个字符串变成都是 <code>1</code>。</p>
+<p>这又是一个 <strong>DP</strong> 的题目。</p>
+<p>我们先设有 <strong><em>G</em></strong> 组，一组 <strong><em>M</em></strong> 个 <code>01字符</code>。那么就能有</p>
+<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>dp1[<span class="link_label">i</span>][<span class="link_reference">0|1</span>]
+dp2[<span class="link_label">i</span>][<span class="link_reference">0|1</span>]
+</pre></td></tr></table></figure>
+
+
+<p>其中 <code>i</code> 代表第 <code>i</code> 组，第二维如果是 <code>0</code> 就代表这一组采用一位位反转的操作将这组全变成 <code>1</code>，如果是 <code>1</code> 则将整组全部反转再采用一位位反转的操作将这组全变成 <code>1</code> 。至于 <code>dp1</code> 和 <code>dp2</code> 则代表从头到尾和从尾到头。</p>
+<p>由于只有 <code>0</code> 和 <code>1</code> 反转，那么一组反转两次就能还原原状——这是一个非常重要的性质。</p>
+<p>如果某一组采用<strong>整组反转</strong>的操作，若前一组也是<strong>整组反转</strong>，那么就相当于操作次数不变，只是将前一组的反转范围延续到这一组；若前一组是<strong>非整组反转</strong>，那么就相当于从头到这一组反转之后，前面的所有组再反转回去——相当于是多了两次操作。于是就有了（先只拿 <code>dp1</code> 作为例子）：</p>
+<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre>dp1[<span class="link_label">i</span>][<span class="link_reference">1</span>] = min(
+<span class="code">    dp[i - 1][0] + 这一组1的数量 + 2,</span>
+<span class="code">    dp[i - 1][1] + 这一组1的数量 </span>
+);
+</pre></td></tr></table></figure>
+
+
+<p>如果某一组采用<strong>非整组反转</strong>，那么操作次数就是前一组的<strong>整组反转</strong>或者<strong>非整组反转</strong>的操作次数加上这一组 <code>0</code> 的数量：</p>
+<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre>dp1[<span class="link_label">i</span>][<span class="link_reference">0</span>] = min(
+<span class="code">    dp[i - 1][0] + 这一组0的数量,</span>
+<span class="code">    dp[i - 1][0] + 这一组0的数量</span>
+);
+</pre></td></tr></table></figure>
+
+
+<p>用上面的转移方程把正反向都求了一遍之后，我们就可以求总答案了，总答案就是我们枚举中间只有<strong>操作1</strong>的段的首尾，加上该中间段前部分的 <strong><em>dp</em></strong> 答案和其后部分的 <strong><em>dp</em></strong> 答案，取出最小值就是了。</p>
+<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+</pre></td><td class="code"><pre><span class="keyword">class</span> FlippingBitsDiv2 
+{
+<span class="keyword">public</span>:
+    <span class="keyword">int</span> getmin(<span class="stl_container"><span class="built_in">vector</span> &lt;<span class="built_in">string</span>&gt;</span> S, <span class="keyword">int</span> M);
+    
+    <span class="built_in">string</span> str;
+    <span class="keyword">int</span> group;
+    <span class="keyword">int</span> tn1[<span class="number">2600</span>], tnsum1[<span class="number">2600</span>];
+    <span class="keyword">int</span> tn2[<span class="number">2600</span>], tnsum2[<span class="number">2600</span>];
+    
+    <span class="keyword">int</span> dp1[<span class="number">2600</span>][<span class="number">2</span>];
+    <span class="keyword">int</span> dp2[<span class="number">2600</span>][<span class="number">2</span>];
+    
+    <span class="keyword">int</span> calcsum(<span class="keyword">int</span> l, <span class="keyword">int</span> r)
+    {
+        <span class="keyword">if</span>(l &gt; r) <span class="keyword">return</span> <span class="number">0</span>;
+        <span class="keyword">int</span> tot = tnsum1[r] - tnsum1[l - <span class="number">1</span>];
+        <span class="keyword">return</span> tot;
+    }
+};
+
+<span class="keyword">int</span> FlippingBitsDiv2::getmin(<span class="stl_container"><span class="built_in">vector</span> &lt;<span class="built_in">string</span>&gt;</span> S, <span class="keyword">int</span> M)
+{
+    str = <span class="string">""</span>;
+    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; SIZE(S); i++) str += S[i];
+    group = LENGTH(str) / M;
+    ZERO(tn1);
+    ZERO(tn2);
+    
+    <span class="comment">// init.</span>
+    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; group; i++)
+    {
+        <span class="keyword">int</span> op = i * M;
+        <span class="keyword">int</span> ed = op + M;
+        <span class="keyword">for</span>(<span class="keyword">int</span> j = op; j &lt; ed; j++)
+        {
+            <span class="keyword">if</span>(str[j] == <span class="string">'0'</span>) tn1[i]++, tn2[group - i - <span class="number">1</span>]++;
+        }
+        
+        dp1[i][<span class="number">0</span>] = <span class="number">100000</span>;
+        dp1[i][<span class="number">1</span>] = <span class="number">100000</span>;
+        dp2[i][<span class="number">0</span>] = <span class="number">100000</span>;
+        dp2[i][<span class="number">1</span>] = <span class="number">100000</span>;
+    }
+    
+    <span class="comment">// tnsum</span>
+    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; group; i++)
+    {
+        <span class="keyword">if</span>(i == <span class="number">0</span>) tnsum1[<span class="number">0</span>] = tn1[<span class="number">0</span>], tnsum2[<span class="number">0</span>] = tn2[<span class="number">0</span>];
+        <span class="keyword">else</span>
+        {
+            tnsum1[i] = tnsum1[i - <span class="number">1</span>] + tn1[i];
+            tnsum2[i] = tnsum2[i - <span class="number">1</span>] + tn2[i];
+        }
+    }
+    
+    <span class="comment">// dp.</span>
+    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= group; i++)
+    {
+        <span class="keyword">if</span>(i == <span class="number">0</span>)
+        {
+            dp1[i][<span class="number">0</span>] = dp1[i][<span class="number">1</span>] = dp2[i][<span class="number">0</span>] = dp2[i][<span class="number">1</span>] = <span class="number">0</span>;
+        }
+        <span class="keyword">else</span>
+        <span class="keyword">if</span>(i == <span class="number">1</span>)
+        {
+            <span class="comment">// head -&gt; tail</span>
+            dp1[i][<span class="number">0</span>] = tn1[i - <span class="number">1</span>];
+            dp1[i][<span class="number">1</span>] = <span class="number">1</span> + (M - tn1[i - <span class="number">1</span>]);
+            
+            <span class="comment">// tail -&gt; head</span>
+            dp2[i][<span class="number">0</span>] = tn2[i - <span class="number">1</span>];
+            dp2[i][<span class="number">1</span>] = <span class="number">1</span> + (M - tn2[i - <span class="number">1</span>]);
+        }
+        <span class="keyword">else</span>
+        {
+            <span class="comment">// head -&gt; tail</span>
+            dp1[i][<span class="number">0</span>] = min(
+                dp1[i - <span class="number">1</span>][<span class="number">0</span>] + tn1[i - <span class="number">1</span>],
+                dp1[i - <span class="number">1</span>][<span class="number">1</span>] + tn1[i - <span class="number">1</span>]
+            );
+            dp1[i][<span class="number">1</span>] = min(
+                dp1[i - <span class="number">1</span>][<span class="number">0</span>] + <span class="number">2</span> + (M - tn1[i - <span class="number">1</span>]),
+                dp1[i - <span class="number">1</span>][<span class="number">1</span>] + (M - tn1[i - <span class="number">1</span>])
+            );
+            
+            <span class="comment">// tail -&gt; head</span>
+            dp2[i][<span class="number">0</span>] = min(
+                dp2[i - <span class="number">1</span>][<span class="number">0</span>] + tn2[i - <span class="number">1</span>],
+                dp2[i - <span class="number">1</span>][<span class="number">1</span>] + tn2[i - <span class="number">1</span>]
+            );
+            dp2[i][<span class="number">1</span>] = min(
+                dp2[i - <span class="number">1</span>][<span class="number">0</span>] + <span class="number">2</span> + (M - tn2[i - <span class="number">1</span>]),
+                dp2[i - <span class="number">1</span>][<span class="number">1</span>] + (M - tn2[i - <span class="number">1</span>])
+            );
+        }
+    }
+    
+    <span class="keyword">int</span> minans = <span class="number">100000000</span>;
+    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= group; i++)
+    {
+        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= group - i; j++)
+        {
+            <span class="keyword">int</span> zzl = i;
+            <span class="keyword">int</span> zzr = group - j - <span class="number">1</span>;
+            
+            minans = min(minans,
+                min(dp1[i][<span class="number">0</span>], dp1[i][<span class="number">1</span>]) +
+                min(dp2[j][<span class="number">0</span>], dp2[j][<span class="number">1</span>]) +
+                calcsum(zzl, zzr)
+                );
+        }
+    }
+    
+    <span class="keyword">return</span> minans;
+}
+</pre></td></tr></table></figure>
+]]></content>
+    
+    
+      <category term="TopCoder" scheme="http://xcoder.in/tags/TopCoder/"/>
+    
+      <category term="SRM" scheme="http://xcoder.in/tags/SRM/"/>
+    
+      <category term="Programming" scheme="http://xcoder.in/categories/Programming/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[一起撸Node.JS（壹）——基本语法和类型]]></title>
+    <link href="http://xcoder.in/2013/08/16/node-4-base/"/>
+    <id>http://xcoder.in/2013/08/16/node-4-base/</id>
+    <published>2013-08-16T00:00:00.000Z</published>
+    <updated>2014-03-24T13:40:55.000Z</updated>
+    <content type="html"><![CDATA[<p><strong>Node.js</strong> 的基础是 <strong>JavaScript</strong> 这门 <strong><em>脚本语言</em></strong>。而大多数的脚本语言一个共同的特点就是“<a href="http://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1#.E5.BC.B7.E5.9E.8B.E5.88.A5.E5.92.8C.E5.BC.B1.E5.9E.8B.E5.88.A5" target="_blank">弱类型</a>”。</p>
+<p>　　不同于 <strong>PHP</strong> 的是，<strong>PHP</strong> 就是是有了新变量也无需申明，而 <strong>JavaScript</strong> 则还是需要 <code>var</code> 来申明一下的。而这个 <code>var</code> 涵盖了 <strong>C++</strong> 中的<code>int</code>、<code>string</code>、<code>char</code>等一切类型的含义，甚至是 <code>function</code>。</p>
+<p>　　本篇以及后篇的所有内容都是在 <strong>Linux</strong> 或者 <strong>Cygwin</strong> 下用 <strong>vim</strong> 进行编辑（若不是则请自行转变成你自己的方法），然后在命令行下进行查看结果的。</p>
+<p><!-- 我是小小分割符 --></p>
+<h2 id="基本语法">基本语法</h2>
+<h3 id="变量声明">变量声明</h3>
+<p>在 <strong>C/C++</strong> 中，我们这么声明变量的：</p>
+<figure class="highlight"><figcaption><span>c++</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="keyword">void</span> foo() {}
+
+<span class="keyword">int</span> a = <span class="number">0</span>;
+<span class="keyword">char</span> b = <span class="string">'a'</span>;
+<span class="keyword">float</span> c = <span class="number">1.0f</span>;
+<span class="keyword">void</span> (*d)() = foo;  <span class="comment">///&lt; 忘了是不是这么写的了，总之是函数指针</span>
+</pre></td></tr></table></figure>
+
+
+<p>而在 <strong>Node.js</strong> 中则是这样的：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span> {</span>}
+
+<span class="keyword">var</span> a = <span class="number">0</span>;
+<span class="keyword">var</span> b = <span class="string">'a'</span>;
+<span class="keyword">var</span> c = <span class="number">1.0</span>;
+<span class="keyword">var</span> d = foo;
+</pre></td></tr></table></figure>
+
+
+<p>所以，无论是什么类型的变量，在 <strong>Node.js</strong> 中都是以一个 <code>var</code> 来解决的。</p>
+<h3 id="循环语句">循环语句</h3>
+<h4 id="for…i">for…i</h4>
+<p>这个循环语句基本上跟 <strong>C/C++</strong> 一样，都是</p>
+<figure class="highlight"><figcaption><span>c++</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">for</span>(int i = <span class="number">0</span>; i &lt; foo; i++)
+{
+    //<span class="keyword">...</span>
+}
+</pre></td></tr></table></figure>
+
+
+<p>而鉴于 <strong>Node.js</strong> 是弱类型，所以只需要：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="keyword">for</span>(var i = <span class="number">0</span>; i &lt; foo; i++) {
+    //<span class="keyword">...</span>
+}
+</pre></td></tr></table></figure>
+
+
+<h4 id="for…in">for…in</h4>
+<p>这是一种后有型的循环语句，类似于 <strong>PHP</strong> 的 <code>foreach</code>。</p>
+<p>比如我们有一个 <strong>JSON对象</strong> 如下：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">var</span> foo = {
+    <span class="string">"hello"</span>     : <span class="string">"world"</span>,
+    <span class="string">"node"</span>      : <span class="string">"js"</span>,
+    <span class="string">"blahblah"</span>  : <span class="string">"bar"</span>
+};
+</pre></td></tr></table></figure>
+
+
+<p>这个时候我们就可以用 <code>for...in</code> 来循环遍历了：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="keyword">for</span>(<span class="reserved">var</span> key <span class="keyword">in</span> foo) {
+    <span class="built_in">console</span>.log(key + <span class="string">": "</span> + foo[key]);
+}
+</pre></td></tr></table></figure>
+
+
+<p>我们如果在命令行中打入下面的命令：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$ </span>node foo.js
+</pre></td></tr></table></figure>
+
+
+<p>屏幕上就会显示下面的内容了：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="attribute">hello</span>: <span class="string">world</span>
+<span class="attribute">node</span>: <span class="string">js</span>
+<span class="attribute">blahblah</span>: <span class="string">bar</span>
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><strong>提示</strong>：由上可知，<code>for...in</code> 语句是用来遍历 <strong>JSON对象</strong>、<strong>数组</strong>、<strong>对象</strong>的键名的，而不提供键值的遍历。如果要获取键值，只能通过</p>
+</blockquote>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>foo[<span class="tag">&lt;<span class="title">当前键名</span>&gt;</span>]
+</pre></td></tr></table></figure>
+
+
+<p>的形式来获取。这个跟 <strong>PHP</strong> 的 <code>foreach</code> 还是有一定区别的。</p>
+<h4 id="while…do,_do…while">while…do, do…while</h4>
+<p>这个就不多做解释了，跟其它语言没什么大的区别，无非就是如果有变量声明的话，需要用 <code>var</code> 就够了。</p>
+<h3 id="运算符">运算符</h3>
+<h4 id="+,_-,_*,_/">+, -, *, /</h4>
+<p>这几个运算符也就这样，要注意的是 <code>+</code>。它既可以作用于字符串，也可以作用于数值运算。弱类型语言虽然说类型是弱的，数字有时候可以以字符串的形态出现，字符串有时候可以用数值的形态出现，但是在必要的时候也还是要说一下它是什么类型的，我们可以用下面的代码去看看结果：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="reserved">var</span> a = <span class="string">"1"</span>;
+<span class="reserved">var</span> b = <span class="number">2</span>;
+<span class="built_in">console</span>.log(a + b);
+<span class="built_in">console</span>.log(parseInt(a) + b);
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>这里的 <code>parseInt</code> 是 <strong>Node.js</strong> 的一个内置函数，作用是将一个字符串解析成 <code>int</code> 类型的变量。</p>
+</blockquote>
+<p>上面的代码执行结果是</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>12
+3
+</pre></td></tr></table></figure>
+
+
+<p>第一个 <code>console.log</code> 结果是 <code>12</code>，由于 <code>a</code> 是字符串，所以 <code>b</code> 也被系统以字符串的姿态进行加操作，结果就是将两个字符串黏连在一起就变成了 <code>12</code>。而第二个 <code>console.log</code> 结果是 <code>3</code>，是因为我们将第一个 <code>a</code> 转变为了 <code>int</code> 类型，两个 <code>int</code> 型的变量相加即数值相加，结果当然就是 <code>3</code> 了。</p>
+<h4 id="==,_===,_!=,_!==">==, ===, !=, !==</h4>
+<p>这里有一点要解释，当这个逻辑运算符长度为 <code>2</code> 的时候（<code>==</code>, <code>!=</code>），只是判断外在的值是不是一样的，而不会判断类型。如</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>var <span class="literal">a</span> = <span class="number">1</span>, b = <span class="string">"1"</span><span class="comment">;</span>
+console.log(<span class="literal">a</span> == b)<span class="comment">;</span>
+</pre></td></tr></table></figure>
+
+
+<p>它输出的结果就是 <code>true</code>。但是如果我们在中间判断的时候再加上一个等号，那么就是严格判断了，需要类型和值都一样的时候才会是 <code>true</code>，否则就是 <code>false</code>。也就是说</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>var <span class="literal">a</span> = <span class="number">1</span>, b = <span class="string">"1"</span><span class="comment">;</span>
+console.log(<span class="literal">a</span> === b)<span class="comment">;</span>
+</pre></td></tr></table></figure>
+
+
+<p>的时候，返回的结果就是 <code>false</code> 了，因为 <code>a</code> 是 <code>int</code> 型的，而 <code>b</code> 则是字符串。</p>
+<blockquote>
+<p>顺带着就把条件语句讲了吧，其实这里的 <code>if</code> 跟别的语言没什么两样，就是几个逻辑运算符两个等号三个等号的问题。所以就不多做累述了。</p>
+</blockquote>
+<h4 id="typeof">typeof</h4>
+<p>这里我姑且把它当成是一个运算符而不是函数了。</p>
+<p>这个运算符的作用是判断一个变量的类型，会返回一个字符串，即类型名，具体的执行下面的代码就知道了：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td><td class="code"><pre><span class="reserved">function</span> foo() {}
+
+<span class="reserved">var</span> a = <span class="number">0</span>;
+<span class="reserved">var</span> b = <span class="string">'嘘~蛋花汤在睡觉。'</span>;
+<span class="reserved">var</span> c = <span class="number">1.0</span>;
+<span class="reserved">var</span> d = foo;
+<span class="reserved">var</span> e = { <span class="string">"a"</span> : a };
+<span class="reserved">var</span> f = [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> ];
+<span class="reserved">var</span> g = <span class="literal">null</span>;
+<span class="reserved">var</span> h = <span class="literal">undefined</span>;
+
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> a);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> b);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> c);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> d);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> e);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> f);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> g);
+<span class="built_in">console</span>.log(<span class="keyword">typeof</span> h);
+</pre></td></tr></table></figure>
+
+
+<p>这里的执行结果就将会是：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="built_in">number</span>
+<span class="keyword">string</span>
+<span class="built_in">number</span>
+<span class="function"><span class="keyword">function</span></span>
+object
+object
+object
+undefined
+</pre></td></tr></table></figure>
+
+
+<h3 id="null,_undefined,_NaN">null, undefined, NaN</h3>
+<p>在 <strong>JavaScript</strong> 中，有三个特殊的值，如标题所示。其中第一个大家可能都比较熟悉吧，<strong>C/C++</strong> 里面也有，不过是大写的，其本质就是一个</p>
+<figure class="highlight"><figcaption><span>c++</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="preprocessor">#<span class="keyword">define</span> NULL 0</span>
+</pre></td></tr></table></figure>
+
+
+<p>而在 <strong>JavaScript</strong> 中，这三个值所代表的意义都不同。</p>
+<h4 id="null">null</h4>
+<p><code>null</code> 是一种特殊的 <strong>object</strong>，大致的意思就是空。比如说：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">var</span> a = <span class="keyword">null</span>;
+</pre></td></tr></table></figure>
+
+
+<p>大家都能看懂，就不多做解释了。但是跟 <strong>C/C++</strong> 不同的是，这个 <code>null</code> 跟 <code>0</code> 不相等。</p>
+<h4 id="undefined">undefined</h4>
+<p>这个东西的意思就是说这个变量未声明。为了能够更好地区分 <code>null</code>，我们的样例代码如下写：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="reserved">var</span> a = {
+    <span class="string">"foo"</span>       : <span class="literal">null</span>
+};
+<span class="built_in">console</span>.log(a[<span class="string">"foo"</span>]);
+<span class="built_in">console</span>.log(a[<span class="string">"bar"</span>]);
+</pre></td></tr></table></figure>
+
+
+<p>上面的代码中，我们让 <code>a[&quot;foo&quot;]</code> 的值为空，即 <code>null</code>。而压根没有声明 <code>a[&quot;bar&quot;]</code> 这个东西，它连空都不是。输出的结果大家都差不多应该猜到了：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="literal">null</span>
+<span class="literal">undefined</span>
+</pre></td></tr></table></figure>
+
+
+<h4 id="NaN">NaN</h4>
+<p>这是一个空的数值，是一个特殊的 <code>number</code>。它的全称是 <code>Not a Number</code>。有点奇怪，大家可以理解为 <strong>不是数字形态，或者数值出错的 <code>number</code> 类型变量</strong>。</p>
+<p>多在浮点型数值运算错误（如被0除）的情况下出现，甚至可以是用户自己让一个变量等于 <code>NaN</code> 以便返回一个错误值让大家知道这个函数运算出错了云云。</p>
+<h3 id="小杂碎">小杂碎</h3>
+<p>其它剩余的语句也跟已存在的其它语言差不多，比如说 <code>break</code> 啊、<code>switch</code> 啊、<code>continue</code> 啊等等等等。</p>
+<h2 id="变量类型">变量类型</h2>
+<p>这一节主要讲的是 <strong>JavaScript</strong> 对象，其它类型差不多一带而过吧。</p>
+<h3 id="基础类型">基础类型</h3>
+<p><strong>Node.js</strong> 包含的基础类型差不多有如下几个：</p>
+<ul>
+<li>number</li>
+<li>string</li>
+<li>boolean</li>
+<li>array</li>
+</ul>
+<p>其中前三种类型可以直接赋值，而 <code>array</code> 的赋值只是一个引用赋值而已，在新变量中改变某个值的话旧变量的值也会改变，直接可以试试下面的代码：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="reserved">var</span> foo = [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> ];
+<span class="reserved">var</span> bar = foo;
+bar[<span class="number">0</span>] = <span class="number">3</span>;
+<span class="built_in">console</span>.log(foo);
+</pre></td></tr></table></figure>
+
+
+<p>它得出的结果是：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>[ <span class="number">3</span>, <span class="number">2</span>, <span class="number">3</span> ]
+</pre></td></tr></table></figure>
+
+
+<p>也就是说 <code>array</code> 要是复制出一个新的数组的话，不能用直接赋值的方法，而必须“<strong><a href="#深拷贝">深拷贝</a></strong>”。</p>
+<p>这里有必要讲一下 <code>array</code> 的三种创建方法。</p>
+<p>第一种：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">var</span> dog = <span class="keyword">new</span> <span class="built_in">Array</span>();
+dog[<span class="number">0</span>] = <span class="string">"嘘~"</span>;
+dog[<span class="number">1</span>] = <span class="string">"蛋花汤"</span>;
+dog[<span class="number">2</span>] = <span class="string">"在睡觉"</span>;
+</pre></td></tr></table></figure>
+
+
+<p>第二种：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">var</span> dog = <span class="keyword">new</span> <span class="built_in">Array</span>( <span class="string">"嘘~"</span>, <span class="string">"蛋花汤"</span>, <span class="string">"在睡觉"</span> );
+</pre></td></tr></table></figure>
+
+
+<p>第四种：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">var</span> dog = [
+    <span class="string">"嘘~"</span>,
+    <span class="string">"蛋花汤"</span>,
+    <span class="string">"在睡觉"</span>
+];
+</pre></td></tr></table></figure>
+
+
+<p>我个人比较喜欢第三种写法，比较简洁。</p>
+<h3 id="JSON对象">JSON对象</h3>
+<p>这里我把 <strong>JSON对象</strong> 单独拎出来而不是把它归类为 <strong>JavaScript对象</strong>，如果觉得我有点误人子弟就可以直接跳过这一节了。</p>
+<p>本人对于 <strong>JSON对象</strong> 和 <strong>JavaScript</strong> 对象的区分放在 <strong>是否只用来存储数据，而并非是一个类的实例化</strong>。其实 <strong>JSON</strong> 的本质便是 <strong>JavaScript Object Notation</strong>。</p>
+<blockquote>
+<p>更多有关 <strong><a href="http://zh.wikipedia.org/wiki/JSON" target="_blank">JSON</a></strong> 的信息请自行百科。</p>
+</blockquote>
+<p>在 <strong>Node.js</strong> 中声明一个 <strong>JSON对象</strong> 非常简单：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="keyword">var</span> dog = {
+    <span class="string">"pre"</span>       : <span class="string">"嘘~"</span>,
+    <span class="string">"sub"</span>       : {
+        <span class="string">"name"</span>  : <span class="string">"蛋花汤"</span>,
+        <span class="string">"act"</span>   : <span class="string">"在睡觉"</span>,
+        <span class="string">"time"</span>  : <span class="number">12</span>
+    },
+
+    <span class="string">"suf"</span>       : [ <span class="string">"我说了"</span>, <span class="string">"它在睡觉"</span>, <span class="string">"就是在睡觉"</span> ]
+};
+</pre></td></tr></table></figure>
+
+
+<p>有两种方式能得到 <strong>JSON对象</strong> 中的某个键名的键值，第一种是用点连接，第二种是用中括号：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>dog<span class="preprocessor">.pre</span><span class="comment">;</span>
+dog[<span class="string">"pre"</span>]<span class="comment">;</span>
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><strong>试试看</strong>：现在你自己动手试试看，用 <code>for...in</code> 的形式遍历一遍上面的 <code>JSON对象</code>。别忘了用上 <code>typeof</code> 喵~</p>
+</blockquote>
+<h3 id="类（对象）的基础">类（对象）的基础</h3>
+<p>严格意义上来讲，<strong>Node.js</strong> 的类不能算是类，其实它只是一个函数的集合体，加一些成员变量。它的本质其实是一个函数。</p>
+<p>不过为了通俗地讲，我们接下去以及以后都将其称为“类”，实例化的叫“对象”。</p>
+<p>因为类有着很多 <strong>函数</strong> 的特性，或者说它的本质就是一个 <strong>函数</strong>，所以这里面我们可能一不留神就顺带着把函数基础给讲了。</p>
+<h4 id="类的声明和实例化">类的声明和实例化</h4>
+<p>声明一个类非常简单，大家不要笑：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="keyword">function</span> foo() {
+    //<span class="keyword">...</span>
+}
+</pre></td></tr></table></figure>
+
+
+<p>好了，我们已经写好了一个 <code>foo</code> 类了。</p>
+<blockquote>
+<p>真的假的？！真的。</p>
+</blockquote>
+<p>不信？不信你可以接下去打一段代码看看：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">var</span> bar = <span class="keyword">new</span> foo();
+</pre></td></tr></table></figure>
+
+
+<p>别看它是一个函数，如果以这样的形式（<code>new</code>）写出来，它就是这个类的实例化。</p>
+<p>而这个所谓的 <code>foo()</code> 其实就是这个 <code>foo()</code> 类的构造函数。</p>
+<h4 id="成员变量">成员变量</h4>
+<p>成员变量有好两种方法。</p>
+<p>第一种就是在类的构造函数或者任何构造函数中使用 <code>this.&lt;变量名&gt;</code> 。你可以在任何时候声明一个成员变量，在外部不影响使用，反正就算在还未声明的时候使用它，也会有一个 <code>undefined</code> 来撑着。所以说这就是第一种方法：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.hello = <span class="string">"world"</span>;
+}
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><strong>注意</strong>：只有在加了 <code>this</code> 的时候才是调用类的<strong>成员变量</strong>，否则只是函数内的一个局部变量而已。要分清楚有没有 <code>this</code> 的时候变量的作用范围。</p>
+</blockquote>
+<p>第二种方法就是在构造函数或者任何成员函数外部声明，其格式是 <code>&lt;类名&gt;.prototype.&lt;变量名&gt;</code>：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">function</span> foo() {
+    //<span class="keyword">...</span>
+}
+
+foo.prototype.hello = <span class="string">"world"</span>;
+</pre></td></tr></table></figure>
+
+
+<p>无聊上面哪种方法都是对成员变量的声明，我们可以看看效果：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="reserved">var</span> bar = <span class="keyword">new</span> foo();
+<span class="built_in">console</span>.log(bar.hello);
+</pre></td></tr></table></figure>
+
+
+<p>甚至你可以这么修改这个类：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.hello = <span class="string">"world"</span>;
+}
+
+foo.prototype.hello = <span class="string">"蛋花汤"</span>;
+</pre></td></tr></table></figure>
+
+
+<p>然后再用上面的代码输出。</p>
+<blockquote>
+<p>想想看为什么输出的还是 <code>world</code> 而不是 <code>蛋花汤</code>。</p>
+</blockquote>
+<h4 id="构造函数">构造函数</h4>
+<p>我们之前说过了这个 <code>foo()</code> 实际上是一个 <strong>构造函数</strong>。那么显然我们可以给构造函数传参数，所以就有了下面的代码：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="comment">// 代码2.1</span>
+<span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">(hello)</span> {</span>
+    <span class="keyword">if</span>(hello === <span class="literal">undefined</span>) {
+        <span class="keyword">this</span>.hello = <span class="string">"world"</span>;
+    } <span class="keyword">else</span> {
+        <span class="keyword">this</span>.hello = hello;
+    }
+}
+</pre></td></tr></table></figure>
+
+
+<p>我们看到上面有一个奇葩的判断 <code>if(hello === undefined)</code>，这个判断有什么用呢？第一种可能，就是开发者很蛋疼地特意传进去一个 <code>undefined</code> 进去，这个时候它是 <code>undefined</code> 无可厚非。</p>
+<p>还有一种情况。我们一开始就说了 <strong>JavaScript</strong> 是一门弱类型语言，其实不仅仅是弱类型，它的传参数也非常不严谨。你可以多传或者少传（只要保证你多传或者少传的时候可以保证程序不出错，或者逻辑不出错），原则上都是可以的。多传的参数会被自动忽略，而少传的参数会以 <code>undefined</code> 补足。</p>
+<p>看看下面的代码就明白了：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="comment">// 上接代码2.1</span>
+<span class="keyword">var</span> bar1 = <span class="keyword">new</span> foo();
+<span class="keyword">var</span> bar2 = <span class="keyword">new</span> foo(<span class="string">"蛋花汤"</span>);
+</pre></td></tr></table></figure>
+
+
+<p>请自行输出一下两个 <code>bar</code> 的 <code>hello</code> 变量，会发现一个是 <strong>world</strong> 一个是 <strong>蛋花汤</strong>。显而易见，我们的第一个 <code>bar1</code> 在声明的时候，被 <strong>Node.js</strong> 自动看成了：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">var</span> bar1 = <span class="keyword">new</span> foo(<span class="literal">undefined</span>);
+</pre></td></tr></table></figure>
+
+
+<p>所以就有了它是 <strong>world</strong> 一说。</p>
+<p>还有就是在这个构造函数中，我们看到了传进去的参数是 <code>hello</code> 而这个类中本来就有个成员变量就是 <code>this.hello</code>。不过我们之前说过了有 <code>this</code> 和没 <code>this</code> 的时候作用域不同，那个参数只是作用于构造函数中，而加了 <code>this</code> 的那个则是成员变量。用一个 <code>this</code> 就马上区分开来他们了，所以即使同名也没关系。</p>
+<h4 id="成员函数">成员函数</h4>
+<h5 id="成员函数声明">成员函数声明</h5>
+<p>成员函数的声明跟成员变量的第二种声明方法差不多，即 <code>&lt;类名&gt;.prototype.&lt;函数名&gt; = &lt;函数&gt;;</code></p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="comment">// 上接代码2.1</span>
+<span class="function"><span class="keyword">function</span> <span class="title">setHello</span><span class="params">(hello)</span> {</span>
+    <span class="keyword">this</span>.hello = hello;
+}
+foo.prototype.setHello = setHello;
+
+bar1.setHello(<span class="string">"鸡蛋饼"</span>);
+</pre></td></tr></table></figure>
+
+
+<p>上面这段代码显而易见，我们实现了 <code>foo</code> 类的 <code>setHello</code> 函数，能通过它修改 <code>foo.hello</code> 的值。</p>
+<p>但是这么写是不是有点麻烦？接下去我要讲一个 <strong>JavaScript</strong> 函数重要的特性了。</p>
+<h4 id="★_匿名函数">★ 匿名函数</h4>
+<p>很多时候我们的某些函数只在一个地方被引用或者调用，那么我们为这个函数起一个名字就太不值了，没必要，所以我们可以临时写好这个函数，直接让引用它的人引用它，调用它的人调用它。所以函数可以省略函数名，如：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span><span class="params">(hello)</span> {</span>
+    <span class="keyword">this</span>.hello = hello;
+}
+</pre></td></tr></table></figure>
+
+
+<p>至于怎么引用或者调用呢？如果是上面的那个类需要引用的话，就是写成这样的：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre>foo.prototype.setHello = <span class="function"><span class="keyword">function</span><span class="params">(hello)</span> {</span>
+    <span class="keyword">this</span>.hello = hello;
+}
+</pre></td></tr></table></figure>
+
+
+<p>这样的写法跟 <strong><a href="#成员函数声明">2.3.3.1. 成员函数声明</a></strong> 是一个效果的，而且省了很多的代码量。而且实际上，基本上的类成员函数的声明都是采用这种匿名函数的方式来声明的。</p>
+<p>至于说怎么样让匿名函数被调用呢？这通常用于传入一个只被某个函数调用的函数时这样写。</p>
+<p>比如我们有一个函数的原型是：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="javadoc">/**
+ * 我们将传入a，b两个变量，
+ * 在算出a+b的值后，交由func(num)
+ * 去进行输出
+ */</span>
+function sumab(a, b, func) {
+    <span class="keyword">var</span> c = a + b;
+    func(a, b, c);
+}
+</pre></td></tr></table></figure>
+
+
+<p>比如我们有两个版本的输出函数，一个是中文输出，一个是英文输出，那么如果不用匿名函数时候是这么写的：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">zh</span><span class="params">(a, b, sum)</span> {</span>
+    <span class="transposed_variable">console.</span>log(a + <span class="string">" + "</span> + b + <span class="string">" 的值是："</span> + <span class="built_in">sum</span>);
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">en</span><span class="params">(a, b, sum)</span> {</span>
+    <span class="transposed_variable">console.</span>log(a + <span class="string">" plus "</span> + b + <span class="string">" is "</span> + <span class="built_in">sum</span>);
+}
+
+sumab(<span class="number">1</span>, <span class="number">2</span>, zh);
+sumab(<span class="number">3</span>, <span class="number">4</span>, en);
+</pre></td></tr></table></figure>
+
+
+<p>执行一遍这段代码，输出的结果将会是：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="number">1</span> + <span class="number">2</span> 的值是：<span class="number">3</span>
+<span class="number">3</span> plus <span class="number">4</span> <span class="keyword">is</span> <span class="number">7</span>
+</pre></td></tr></table></figure>
+
+
+<p>这样的代码如果采用匿名函数的形式则将会是：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre>sumab(<span class="number">1</span>, <span class="number">2</span>, <span class="function"><span class="keyword">function</span><span class="params">(a, b, sum)</span> {</span>
+    <span class="transposed_variable">console.</span>log(a + <span class="string">" + "</span> + b + <span class="string">" 的值是："</span> + <span class="built_in">sum</span>);
+});
+sumab(<span class="number">3</span>, <span class="number">4</span>, <span class="function"><span class="keyword">function</span><span class="params">(a, b, sum)</span> {</span>
+    <span class="transposed_variable">console.</span>log(a + <span class="string">" plus "</span> + b + <span class="string">" is "</span> + <span class="built_in">sum</span>);
+});
+</pre></td></tr></table></figure>
+
+
+<p>这种形式通常使用于回调函数。回调机制算是 <strong>Node.js</strong> 或者说 <strong>JavaScript</strong> 的精髓。在以后的篇章会做介绍。</p>
+<h4 id="成员函数声明的匿名函数声明方式">成员函数声明的匿名函数声明方式</h4>
+<p>虽然上一节讲过了，不过还是再讲一遍吧。</p>
+<p>通常我们声明类的成员函数时候都是用匿名函数来声明的，因为反正那个函数也就是这个类的一个成员函数而已，不会在其它地方被单独引用或者调用，所以就有了下面的代码：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="comment">// 上接代码2.1</span>
+foo.prototype.setHello = <span class="function"><span class="keyword">function</span><span class="params">(hello)</span> {</span>
+    <span class="keyword">this</span>.hello = hello;
+}
+</pre></td></tr></table></figure>
+
+
+<p>这样我们就使得 <code>foo</code> 类有了 <code>setHello</code> 这个函数了。</p>
+<h4 id="类的随意性">类的随意性</h4>
+<p>这个又是我胡扯的。所谓类的随意性即 <strong>JavaScript</strong> 中你可以在任何地方修改你的类，这跟 <strong>Ruby</strong> 有着一定的相似之处。</p>
+<p>比如说 <code>string</code> ，它其实也是一个类，有着诸如 <code>length</code> 这样的成员变量，也有 <code>indexOf</code>、<code>substr</code> 等成员函数。但是万一我们觉得这个 <code>string</code> 有些地方不完善，想加自己的方法，那么可以在你想要的地方给它增加一个函数，比如：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="built_in">String</span>.prototype.sb = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">var</span> newstr = <span class="string">""</span>;
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.length; i++) {
+        <span class="keyword">if</span>(i % <span class="number">2</span> === <span class="number">0</span>) newstr += <span class="string">"s"</span>;
+        <span class="keyword">else</span> newstr += <span class="string">"b"</span>;
+    }
+
+    <span class="keyword">return</span> newstr;
+};
+</pre></td></tr></table></figure>
+
+
+<p>这个函数的意思就是填充一个字符串，使其变成 <code>sb</code> 的化身。</p>
+<p>我们来测试一下：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>var <span class="keyword">str</span> = <span class="string">"嘘~蛋花汤在睡觉。"</span>;
+console.<span class="keyword">log</span>(<span class="keyword">str</span>.sb());
+</pre></td></tr></table></figure>
+
+
+<p>你将会得到这样的结果：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>sbsbsbsbs
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>你跟你的电脑说“嘘~蛋花汤在睡觉。”，你的电脑会骂你四次半傻逼。（赶快砸了它）</p>
+</blockquote>
+<h2 id="附">附</h2>
+<h3 id="深拷贝">深拷贝</h3>
+<p>所谓深拷贝就是自己新建一个数组或者对象，把源数组或者对象中的基础类型变量值一个个手动拷过去，而不是只把源数组或者对象的引用拿过来。所以这就涉及到了一个递归的调用什么的。</p>
+<p>下面是我实现的一个深拷贝函数，大家可以写一个自己的然后加入到自己的 <strong>Node.js</strong> 知识库中。</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">cloneObject</span><span class="params">(src)</span> {</span>
+    <span class="keyword">var</span> dest = {};
+    <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> src) {
+        <span class="keyword">if</span>(<span class="keyword">typeof</span> src === <span class="string">"object"</span>) dest[key] = cloneObject(src[key]);
+        <span class="keyword">else</span> dest[key] = src[key];
+    }
+
+    <span class="keyword">return</span> dest;
+}
+</pre></td></tr></table></figure>
+
+
+<h3 id="系统默认对象参考手册">系统默认对象参考手册</h3>
+<ul>
+<li><strong>字符串</strong>：<a href="http://www.w3school.com.cn/js/jsref_obj_string.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_string.asp</a></li>
+<li><strong>数字</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_number.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_number.asp</a></li>
+<li><strong>数组</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_array.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_array.asp</a></li>
+<li><strong>布尔</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_boolean.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_boolean.asp</a></li>
+<li><strong>日期</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_date.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_date.asp</a></li>
+<li><strong>数学库</strong>：<a href="http://www.w3school.com.cn/js/jsref_obj_math.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_math.asp</a></li>
+</ul>
+]]></content>
+    
+    
+      <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
+    
+      <category term="JavaScript" scheme="http://xcoder.in/tags/JavaScript/"/>
+    
+      <category term="一起撸Node.JS" scheme="http://xcoder.in/tags/%E4%B8%80%E8%B5%B7%E6%92%B8Node.JS/"/>
+    
+      <category term="NodeJS" scheme="http://xcoder.in/categories/NodeJS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[一起撸Node.JS（负贰）——环境]]></title>
+    <link href="http://xcoder.in/2013/08/15/node-2-environment-in-windows/"/>
+    <id>http://xcoder.in/2013/08/15/node-2-environment-in-windows/</id>
+    <published>2013-08-15T00:00:00.000Z</published>
+    <updated>2014-03-24T13:43:21.000Z</updated>
+    <content type="html"><![CDATA[<p>　　由于<a href="#linux-环境">Linux</a>中的环境搭建比较简单，所以草草略过。</p>
+<p>　　其实<a href="#windows-环境">Windows</a>下也不算麻烦，但是这里会讲一定量的别的环境的搭建。</p>
+<p><!-- 我是小小分割符 --></p>
+<h2 id="Linux_环境">Linux 环境</h2>
+<p>讲到这个就很简单了，跟着下面的 <strong>bash</strong> 操作即可：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre>$ cd /usr/<span class="built_in">local</span>/bin
+$ wget http:<span class="comment">//nodejs.org/dist/v0.00.00/node-v0.00.00-linux-x00.tar.gz</span>
+$ tar zxf node<span class="attribute">-v0</span><span class="number">.00</span><span class="number">.00</span><span class="attribute">-linux</span><span class="attribute">-x00</span><span class="built_in">.</span>tar<span class="built_in">.</span>gz
+$ cd node<span class="attribute">-v0</span><span class="number">.00</span><span class="number">.00</span><span class="attribute">-linux</span><span class="attribute">-x00</span>
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>其中将上方的 <strong>v0.00.00</strong> 替换成 <strong>Node.js</strong> 最新的版本号，把 <strong>x00</strong> 替换成你自己电脑的位数。</p>
+<p>也可以直接去官网 <a href="http://nodejs.org/download/" target="_blank">http://nodejs.org/download/</a> 找到相应的地址。</p>
+</blockquote>
+<p>最后将其的连接加入到 <code>/usr/bin</code> 下即可。</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="variable">$ </span>cd bin
+<span class="variable">$ </span>ln node /usr/bin
+<span class="variable">$ </span>ln npm /usr/bin
+</pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><strong>注意</strong>： 该用 <code>sudo</code> 的地方就用 <code>sudo</code> 或者 <code>su</code> 。</p>
+</blockquote>
+<p>至此，<strong>Linux</strong> 下的 <strong>Node.js</strong> 环境基本搭建完毕。</p>
+<h2 id="Windows_环境">Windows 环境</h2>
+<h3 id="Cygwin_安装和配置">Cygwin 安装和配置</h3>
+<p><strong><em>Cygwin</em></strong> 是一个在 <strong><em>Windows</em></strong> 平台上运行的 <strong><em>Unix</em></strong> 模拟环境。对于学习 <strong><em>Unix/Linux</em></strong> 操作环境，或者从 <strong><em>Unix</em></strong> 到 <strong><em>Windows</em></strong> 的应用程序移植，或者进行某些特殊的开发工作，尤其是使用 <strong><em>GNU工具集</em></strong> 在 <strong><em>Windows</em></strong> 上进行嵌入式系统开发，非常有用。</p>
+<h4 id="Cygwin_安装">Cygwin 安装</h4>
+<p>我们先跑到 <strong>Cygwin</strong> 的官网上去把东西下来：</p>
+<blockquote>
+<p><a href="http://cygwin.com/install.html" target="_blank">http://cygwin.com/install.html</a></p>
+<blockquote>
+<p>注意，最好下 <strong>x86</strong> 的包，因为我们之后要讲一个 <code>cyg-apt</code> 的脚本插件，这是一个能让 <strong>Cygwin</strong> 能跟 <strong>Linux</strong> 一样通过脚本从源安装软件包的脚本。为了方便修改，我们将其下成 <strong>x86</strong> 的版本。</p>
+</blockquote>
+</blockquote>
+<p>然后就是安装步骤了。</p>
+<center><img src="http://blog-xcoder-in.qiniudn.com/cygwin-install-1.png" alt="从网络安装"></center><br><center><small>[图2.1]</small></center>
+
+<p>到 <strong>[图2.1]</strong> 这个步骤的时候，选择默认的 <code>Install from Internet</code> 即可。</p>
+<center><img src="http://blog-xcoder-in.qiniudn.com/cygwin-install-2.png" alt="选择安装路径"></center><br><center><small>[图2.2]</small></center>
+
+<p>在 <strong>[图2.2]</strong> 的时候选一个安装路径。</p>
+<blockquote>
+<p><strong>注意</strong>：尽可能让这个安装路径简单，而不要是类似于</p>
+<p><code>c:\Program Files\blahblah</code></p>
+<p>这样的文件路径。</p>
+</blockquote>
+<center><img src="http://blog-xcoder-in.qiniudn.com/cygwin-install-3.png" alt="本地包路径"></center><br><center><small>[图2.3]</small></center>
+
+<p><strong>[图2.3]</strong> 的时候选一个本地包的路径，我这里选的是 <code>e:\cygwin\tmp</code>。</p>
+<center><img src="http://blog-xcoder-in.qiniudn.com/cygwin-install-4.png" alt="直连"></center><br><center><small>[图2.4]</small></center>
+
+<p><strong>[图2.4]</strong> 选择直接连接。</p>
+<center><img src="http://blog-xcoder-in.qiniudn.com/cygwin-install-5.png" alt="163"></center><br><center><small>[图2.5]</small></center>
+
+<p>我们国内的用户源还是选择 <code>163</code> 的速度比较快。所以在 <strong>[图2.5]</strong> 这一步的时候就直接选用默认的 <code>163</code> 的源了。如果不是默认的话，请选中它。</p>
+<p>在 <strong>Select Package</strong> 也就是选择预安装的软件的时候，把下列表中的软件包勾选起来：</p>
+<blockquote>
+<ul>
+<li><strong>wget</strong>: 在 <strong>Utils</strong> 中</li>
+<li><strong>vim</strong>: 在 <strong>Editors</strong> 中</li>
+<li><strong>gcc</strong>: 在 <strong>Devel</strong> 中</li>
+<li><strong>gcc-g++</strong>: 在 <strong>Devel</strong> 中</li>
+<li><strong>make</strong>: 在 <strong>Devel</strong> 中</li>
+<li><strong>cmake</strong>: 在 <strong>Devel</strong> 中</li>
+</ul>
+</blockquote>
+<p>若是这些选项已经被选起来了就不用再选了，如果没有选起来则把它选中。</p>
+<p>勾选好了之后就可以下一步安装了，直至安装完毕，你就可以打开你的 <strong>Cygwin</strong> 了。</p>
+<center><img src="http://blog-xcoder-in.qiniudn.com/cygwin-install-6.png" alt="Cygwin"></center><br><center><small>[图2.6]</small></center>
+
+<blockquote>
+<p><strong>提示</strong>：你可以点击窗口左上角的小图片，然后里面的 <strong>Options</strong> 中，你可以调整你自己的 <strong>Cygwin</strong> 外观。</p>
+</blockquote>
+<h3 id="vim_配置">vim 配置</h3>
+<p>上一步我们已经选中了 <strong>vim</strong> ，也就是说我们已经在 <strong>Cygwin</strong> 中装上了 <strong>vim</strong>。但是由于这里的 <strong>vim</strong> 默认配置非常蛋疼，所以我们得改一下。</p>
+<p>在你的 <strong>Cygwin</strong> 中一句句输入下面的命令：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre>$ cd /home/&lt;你自己的用户名&gt;
+$ wget http://blog-xcoder-<span class="keyword">in</span><span class="preprocessor">.qiniudn</span><span class="preprocessor">.com</span>/<span class="preprocessor">.vimrc</span>
+$ mkdir <span class="preprocessor">.vim</span>
+$ cd <span class="preprocessor">.vim</span>
+$ mkdir colors
+$ cd colors
+$ wget http://blog-xcoder-<span class="keyword">in</span><span class="preprocessor">.qiniudn</span><span class="preprocessor">.com</span>/molokai<span class="preprocessor">.vim</span>
+</pre></td></tr></table></figure>
+
+
+<p>这样你的 <strong>vim</strong> 就用上了上面的那个地址的配置文件，当然你也可以编辑你自己的配置文件或者说从网上下别的配置文件以满足你的个性化需求。</p>
+<p><strong>vim</strong> 配置以及使用请参照：<a href="https://wiki.archlinux.org/index.php/Vim" target="_blank">https://wiki.archlinux.org/index.php/Vim</a></p>
+<blockquote>
+<p>事无巨细问 <strong>ArchWiki</strong>。</p>
+<div style="text-align: right;"><em>— <a href="https://github.com/kalxd" target="_blank">kalxd</a></em></div>
+
+</blockquote>
+<h3 id="apt-cyg">apt-cyg</h3>
+<blockquote>
+<p>apt-cyg is a command-line installer for Cygwin which cooperates with Cygwin Setup and uses the same repository. The syntax is similar to apt-get.</p>
+<div style="text-align: right;"><em>— From apt-cyg googlecode page</em></div>
+
+</blockquote>
+<p>总之意思就是说 <code>apt-cyg</code> 是类似于 <strong>Linux</strong> 中的 <code>apt-get</code>， <code>yum</code>, <code>zypper</code> 等命令行软件包安装器一样，可以通过</p>
+<ul>
+<li><code>apt-cyg install &lt;package names&gt;</code> 来安装软件包</li>
+<li><code>apt-cyg remove &lt;package names&gt;</code> 来移除软件包</li>
+<li><code>apt-cyg update</code> 来更新 setup.ini</li>
+<li><code>apt-cyg show</code> 来列出已安装的软件包</li>
+<li><code>apt-cyg find &lt;pattern(s)&gt;</code> 来查找符合条件的软件包</li>
+<li><code>apt-cyg describe &lt;pattern(s)&gt;</code> 来描述符合条件的软件包</li>
+<li><code>apt-cyg packageof &lt;commands or files&gt;</code> 来定位其父软件包</li>
+</ul>
+<h4 id="apt-cyg_安装">apt-cyg 安装</h4>
+<p>其实也不能说是安装，纯粹是把脚本从网络上拷到自己的 <strong>Cygwin</strong> 的环境目录中。</p>
+<p>在你的 <strong>Cygwin</strong> 中输入以下命令：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="variable">$ </span>cd /usr/local/bin
+<span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/apt-cyg.googlecode.com/svn</span><span class="regexp">/trunk/apt</span>-cyg
+</pre></td></tr></table></figure>
+
+
+<p>这样你就“安装”好了 <strong>apt-cyg</strong> 了。不过这里用的是默认的源，所有东西都是默认的。</p>
+<p>如果你现在已经心安理得或者不想折腾了可以跳过 <strong><a href="#apt-cyg-修改">2.1.3.2. apt-cyg 修改</a></strong>，如果你想把源换成 <code>163</code> 的话那么稍微看一下吧。</p>
+<h4 id="apt-cyg_修改">apt-cyg 修改</h4>
+<p>接下去我们要对 <strong>apt-cyg</strong> 做一些编辑。</p>
+<p>你有下面两个选择：</p>
+<ol>
+<li>如果你想学习 <strong>vim</strong> 操作或者你已经熟悉了，那么直接使用 <code>vim apt-cyg</code> 来进行编辑。</li>
+<li>如果你是懒人还是想要直接编辑的话，请跑到你的 <strong>Cygwin</strong> 的安装目录，找到 <strong>usr</strong> 文件夹，飞进 <strong>local/bin</strong> 目录中去，用你自己喜欢的文本编辑器打开并编辑。</li>
+</ol>
+<p>大约是 <code>68</code> 行上下吧，有一句是：</p>
+<figure class="highlight"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>  mirror=ftp://mirror<span class="preprocessor">.mcs</span><span class="preprocessor">.anl</span><span class="preprocessor">.gov</span>/pub/cygwin
+</pre></td></tr></table></figure>
+
+
+<p>将其改成：</p>
+<figure class="highlight"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="attribute">  mirror</span>=<span class="string">http://mirrors.163.com/cygwin</span>
+</pre></td></tr></table></figure>
+
+
+<p>还有就是大概在 <code>98</code> 行和 <code>105</code> 行左右：</p>
+<figure class="highlight"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre>    wget -N $mirror/setup.bz2
+    <span class="keyword">...</span>
+    wget -N $mirror/setup.ini
+</pre></td></tr></table></figure>
+
+
+<p>修改成：</p>
+<figure class="highlight"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre>    wget -N $mirror/x86/setup.bz2
+    <span class="keyword">...</span>
+    wget -N $mirror/x86/setup.ini
+</pre></td></tr></table></figure>
+
+
+<p>至此，你的 <strong>Cygwin</strong> 环境基本完成，以后可以再慢慢完善。</p>
+<h3 id="Node-js_安装">Node.js 安装</h3>
+<p>这个就很简单了，打开 <strong><a href="http://nodejs.org/download/" target="_blank">Node.js</a></strong> 官网下载安装即可。</p>
+<blockquote>
+<p>选择 <strong>Windows Installer (.msi)</strong> 或者 <strong>Windows Binary (.exe)</strong>。</p>
+</blockquote>
+<p>安装好后就能直接在 <strong>Cygwin</strong> 里面使用了。</p>
+<h2 id="真·Hello_World">真·Hello World</h2>
+<p>现在，无论你是 <strong>Linux</strong> 用户还是 <strong>Windows</strong> 用户，都可以用一样的步骤来完成下面的 <code>Hello World</code> 了。</p>
+<p>随便跑一个目录里面新建一个文件并且用 <strong>vim</strong> 编辑：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$ </span>vim hello.js
+</pre></td></tr></table></figure>
+
+
+<p>在里面输入下面的东西：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>console.<span class="keyword">log</span>(<span class="string">"Hello world!"</span>);
+</pre></td></tr></table></figure>
+
+
+<p>然后退出 <strong>vim</strong> 执行：</p>
+<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$ </span>node hello.js
+</pre></td></tr></table></figure>
+
+
+<p>终于，<strong>真·Hello world</strong> 出现在了你的眼前，而不需要借助 <strong><a href="http://ideone.com/" target="_blank">IDEOne</a></strong> 了。</p>
+<p><strong><em>To be continued…</em></strong></p>
+]]></content>
+    
+    
+      <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
+    
+      <category term="JavaScript" scheme="http://xcoder.in/tags/JavaScript/"/>
+    
+      <category term="一起撸Node.JS" scheme="http://xcoder.in/tags/%E4%B8%80%E8%B5%B7%E6%92%B8Node.JS/"/>
+    
+      <category term="NodeJS" scheme="http://xcoder.in/categories/NodeJS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[一起撸Node.JS（负叁）——概述]]></title>
+    <link href="http://xcoder.in/2013/08/13/node-1-summary/"/>
+    <id>http://xcoder.in/2013/08/13/node-1-summary/</id>
+    <published>2013-08-13T00:00:00.000Z</published>
+    <updated>2014-03-24T13:40:41.000Z</updated>
+    <content type="html"><![CDATA[<p>　　本系列教程主要是写给我带的那帮熊孩子们看的。我自己的 <strong>Node.js</strong> 水平半斤八两，措辞之中也免不了有自己错误的理解，会误人子弟。但是对于初学者来说，某些自己助记的理解还是可取的。有些概念性的错误可以等他们进一步深入研究之后再自行更正。</p>
+<p>　　由于那帮人大多还处于使用 <strong>M$ Windows</strong> 的令人不愉快的阶段，所以本教程将会退而求其次，使其在 <strong>Cygwin</strong> 中模拟 <strong>linux</strong> 的命令（Windows的bat脚本实在是让人不敢恭维）。以及在这里会讲述一些 <strong>Git</strong> 操作的初步。当然，如果你已经在使用 <strong>linux</strong> 进行开发的话，可以跳过前面一堆令人感到厌烦的环境配置章节。或者你在使用 <strong>M$ Windows</strong> 但却不想改变自己的脚本习惯的话，也可以选择性地跳过一些章节和步骤。</p>
+<p><!-- 我是小小分割符 --></p>
+<h2 id="Node-JS是什么？">Node.JS是什么？</h2>
+<p>很多人都知道JS是一门语言，而且是一门脚本语言，其全称就是 <strong>JavaScript</strong>，而且与所谓的 <strong>Java</strong> 没有一个屁的关系。</p>
+<h3 id="前端_JavaScript">前端 JavaScript</h3>
+<p>在好多年前，<strong>JavaScript</strong> 是网页的一个寄生虫，它必须依赖于网页的浏览器中才能执行，并且作为网页的一部分，以</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript">
+<span class="comment">//blahblah...</span>
+</span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+</pre></td></tr></table></figure>
+
+
+<p>标签进行包含，这样才能提供其上下文环境。或者说将其单独写入一个 <code>*.js</code> 文件中，并且在网页里以</p>
+<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"foo/bar.js"</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+</pre></td></tr></table></figure>
+
+
+<p>的形式将其包含进来。</p>
+<p>但总而言之，<strong>JavaScript</strong> 只是寄生在网页里面的一只小小可怜虫罢了。它的作用无非就是使网页的交互性更强，页面效果更多而已。</p>
+<p>后来，这帮不甘寂寞的人类将 <strong>JavaScript</strong> 从网页（或者说前端）的帝国中独立了出来（小心快递），于是就出现了 <strong>CommonJS</strong>。</p>
+<h3 id="CommonJS">CommonJS</h3>
+<p><strong>CommonJS</strong> 其实不是一门新的语言，甚至都不能说它是一个新的解释器——实际上它只是一个概念或者是一个规范。</p>
+<p>在这个规范中，它定义了很多 <strong>API</strong> ，讲通俗点或者直截了当点就是函数啊类啊什么的，而这些 <strong>API</strong> 是为那些普通应用程序（Native App）而非浏览器应用使用。它的终极目标就是提供一个类似于 <strong>Python</strong>、<strong>Ruby</strong> 之类的脚本一样的标准库，开发者可以用这样的东西一样来做到 <strong>Python</strong>、<strong>Ruby</strong> 能做到的事，而非仅仅局限于网页中的效果或者功能实现，它也可以跑在本地。</p>
+<p>所以说下面的事情对于 <strong>JavaScript</strong> 来说不再是梦：</p>
+<ul>
+<li>服务端JavaScript应用</li>
+<li>命令行工具</li>
+<li>图形界面应用</li>
+<li>混合应用（Titanium、Adobe AIR等）</li>
+</ul>
+<p>那么，它具体弥补了 <strong>前端JavaScript</strong> 的哪些空白呢？其实这也涉及了很多 <strong>前端JavaScript</strong> 所没有涉及的东西，如二进制、编码、IO、文件、系统、断言测试、套接字、事件队列、Worker、控制台等等。</p>
+<p>关于 <strong>CommonJS</strong> 的更进一步了解可以翻阅一下其 <strong><a href="http://wiki.commonjs.org/wiki/CommonJS" target="_blank">Wiki</a></strong>。</p>
+<h3 id="Node-JS">Node.JS</h3>
+<p>上面讲了那么多，却始终停留在“规范”这个层面上。而 <strong>Node.JS</strong> 的出现便是让 <strong>CommonJS</strong> 成为了现实。</p>
+<p>这里要大家明确的一点的就是 <strong>Node.JS</strong> 并不是一门新的语言，它的语言还是 <strong>JavaScript</strong> ，硬要说是一门新的语言那也应该是 <strong>Common JavaScript</strong>。<strong>Node.JS</strong> 只是 <strong>CommonJS</strong> 的一个<a href="http://zh.wikipedia.org/wiki/%E8%A7%A3%E9%87%8A%E5%99%A8" target="_blank">解释器</a>罢了。</p>
+<p>它是基于 <strong>Google</strong> 的 <strong>V8虚拟机</strong>(Chrome浏览器所使用的JavaScript执行环境) 的一个解释器。</p>
+<p>很多人印象中的概念还是没能摆脱 <strong>前端JavaScript</strong> 的阴霾，认为 <strong>JavaScript</strong> 就是做网站的， <strong>Node.JS</strong> 也是如此。</p>
+<p>包括本人在 <strong><a href="http://cnodejs.org/" target="_blank">cnodejs.org</a></strong> 中看到的帖子大多也都是讲 <strong>Node.JS</strong> 如何如何做网站（服务端）云云，如何如何使用 <strong>Express</strong> 模块来搭建一个网站云云。</p>
+<blockquote>
+<p>这是一个误区。</p>
+</blockquote>
+<p><strong>PHP</strong> 还能用 <strong><a href="http://www.php-cli.com/" target="_blank">PHP-CLI</a></strong> 来写个脚本放本地跑呢，<strong>Node.JS</strong> 更是可以写任何程序。虽然这么讲有些夸大了，但是我这么说的理由是希望大家能摆脱这么一个误区。</p>
+<p>举个简单的例子吧，大家都是搞过 <strong>ACM</strong> 的孩子了，总对终端窗口的输入输出有一定感觉了吧。现在给我以最快速度码一个 <strong><em><a href="http://acm.nbut.edu.cn/problem/view.xhtml?id=1000" target="_blank">A + B Problem</a></em></strong> 给我看看。</p>
+<p>轻车熟路，我知道。但是你们现在做的事用 <strong>Node.JS</strong> 同样能做到。</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre>process.stdin.resume();
+process.stdin.setEncoding(<span class="string">"utf8"</span>);
+process.stdin.on(<span class="string">"data"</span>, <span class="function"><span class="keyword">function</span><span class="params">(chunk)</span> {</span>
+    <span class="keyword">var</span> datas = chunk.trim().split(<span class="string">"\n"</span>);
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; datas.length; i++) {
+        <span class="keyword">var</span> ab = datas[i].trim().split(<span class="string">" "</span>);
+        <span class="keyword">var</span> a = <span class="built_in">parseInt</span>(ab[<span class="number">0</span>]);
+        <span class="keyword">var</span> b = <span class="built_in">parseInt</span>(ab[<span class="number">1</span>]);
+        console.log(a + b);
+    }
+});
+</pre></td></tr></table></figure>
+
+
+<p>由于<del>我们学校</del>我的前任学校OJ不支持 <strong>Node.JS</strong>，所以请你们移步到 <strong><a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1000" target="_blank">AIZU OJ</a></strong> 去把上面的代码交过去看看结果看。</p>
+<blockquote>
+<p><strong>注意</strong>：语言要选择 <strong>JavaScript</strong>。</p>
+</blockquote>
+<p>怎么样，同样能过题的对吧？</p>
+<h2 id="小结">小结</h2>
+<p>上面对这些东西做了个简单的介绍，我需要你们知道的东西很简单：</p>
+<ol>
+<li><strong>Node.JS</strong> 是一个脚本解释器，用的语言是 <strong>JavaScript</strong>。</li>
+<li><strong>Node.JS</strong> 功能很强大，不是只能拿来做网站的，眼光放开阔些。</li>
+<li>给我好好学。</li>
+</ol>
+<h2 id="番外">番外</h2>
+<blockquote>
+<p>有个码畜老了，想学学书法来修身养性。当他展开宣纸，犹豫了半天之后，终于挥毫泼墨，在纸上龙飞凤舞写下几个大字：</p>
+<blockquote>
+<p><strong><em>Hello World</em></strong></p>
+</blockquote>
+</blockquote>
+<p>虽然这一篇文章没有讲到任何 <strong>Node.JS</strong> 的语法，但是还是可以让你们练练书法的。</p>
+<p><strong>C语言</strong> 的标准输出函数是 <code>printf</code>，而 <strong>Node.JS</strong> 的标准输出则是：</p>
+<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>console.<span class="keyword">log</span>(<span class="string">"blahblah..."</span>);
+</pre></td></tr></table></figure>
+
+
+<p>好的，即使没有装上 <strong>Node.JS</strong> 环境也阻止不了我们向世界问好。</p>
+<p>打开 <strong><a href="http://ideone.com/" target="_blank">IDEOne</a></strong>，将你的 <code>Hello World</code> 贴到编辑框中，然后在左侧的语言栏里面选中 <strong>Node.JS</strong> ，点击送出，你就能看到你的第一个 <strong>Node.JS</strong> 程序的运行结果了。</p>
+<p><strong><em>To be continued…</em></strong></p>
+]]></content>
+    
+    
+      <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
+    
+      <category term="JavaScript" scheme="http://xcoder.in/tags/JavaScript/"/>
+    
+      <category term="一起撸Node.JS" scheme="http://xcoder.in/tags/%E4%B8%80%E8%B5%B7%E6%92%B8Node.JS/"/>
+    
+      <category term="NodeJS" scheme="http://xcoder.in/categories/NodeJS/"/>
+    
+  </entry>
+  
+</feed>
