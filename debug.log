@@ -1,4 +1,4 @@
-date: 2014-03-24 22:42:58.320
+date: 2014-04-02 01:18:35.059
 argv: E:\Program Files\nodejs\node.exe C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\bin\hexo server
 os: Windows_NT 6.1.7601 win32 x64
 version:
@@ -13,103 +13,104 @@ version:
   openssl: 1.0.1e
 ---
 
-[debug] 22:42:57.751 Config file loaded
-[debug] 22:42:57.753 Version info checked successfully
-[debug] 22:42:57.775 Loading database.
-[debug] 22:42:57.827 Plugin loaded successfully: hexo-generator-feed
-[debug] 22:42:57.829 Script load successfully: fancybox.js
-[debug] 22:42:57.994 Processed: LICENSE
-[debug] 22:42:57.994 Processed: README.md
-[debug] 22:42:57.995 Processed: scripts/fancybox.js
-[debug] 22:42:58.032 Processed: source/css/_partial/article.styl
-[debug] 22:42:58.032 Processed: source/css/_partial/aside.styl
-[debug] 22:42:58.032 Processed: source/css/_partial/duoshuo.styl
-[debug] 22:42:58.032 Processed: source/css/_partial/footer.styl
-[debug] 22:42:58.032 Processed: source/css/_partial/gallery.styl
-[debug] 22:42:58.032 Processed: source/css/_partial/header.styl
-[debug] 22:42:58.032 Processed: source/css/_partial/helper.styl
-[debug] 22:42:58.032 Processed: source/css/_partial/index.styl
-[debug] 22:42:58.032 Processed: source/css/_base/code.styl
-[debug] 22:42:58.032 Processed: source/css/_base/font.styl
-[debug] 22:42:58.032 Processed: source/css/_base/public.styl
-[debug] 22:42:58.032 Processed: source/css/_base/variable.styl
-[debug] 22:42:58.259 Processed: source/font/FontAwesome.otf
-[debug] 22:42:58.259 Processed: source/font/coveredbyyourgrace-webfont.eot
-[debug] 22:42:58.260 Processed: source/font/coveredbyyourgrace-webfont.svg
-[debug] 22:42:58.260 Processed: source/font/coveredbyyourgrace-webfont.woff
-[debug] 22:42:58.261 Processed: source/font/coveredbyyourgrace-webfont.ttf
-[debug] 22:42:58.261 Processed: source/font/fontawesome-webfont.eot
-[debug] 22:42:58.261 Processed: source/font/fontawesome-webfont.svg
-[debug] 22:42:58.262 Processed: source/font/fontawesome-webfont.ttf
-[debug] 22:42:58.263 Processed: source/font/fontawesome-webfont.woff
-[debug] 22:42:58.263 Processed: source/img/author.jpg
-[debug] 22:42:58.264 Processed: source/img/favicon.ico
-[debug] 22:42:58.264 Processed: source/img/logo.png
-[debug] 22:42:58.265 Processed: source/img/logo.svg
-[debug] 22:42:58.266 Processed: source/img/pacman.jpg
-[debug] 22:42:58.266 Processed: source/js/jquery-2.1.0.min.js
-[debug] 22:42:58.267 Processed: source/css/style.styl
-[debug] 22:42:58.267 Processed: source/fancybox/blank.gif
-[debug] 22:42:58.268 Processed: source/fancybox/fancybox_loading.gif
-[debug] 22:42:58.268 Processed: source/fancybox/fancybox_loading@2x.gif
-[debug] 22:42:58.269 Processed: source/fancybox/fancybox_overlay.png
-[debug] 22:42:58.270 Processed: source/fancybox/fancybox_sprite.png
-[debug] 22:42:58.271 Processed: source/fancybox/fancybox_sprite@2x.png
-[debug] 22:42:58.271 Processed: source/fancybox/jquery.fancybox.css
-[debug] 22:42:58.272 Processed: source/fancybox/jquery.fancybox.js
-[debug] 22:42:58.273 Processed: source/fancybox/jquery.fancybox.pack.js
-[debug] 22:42:58.273 Processed: source/fancybox/helpers/fancybox_buttons.png
-[debug] 22:42:58.274 Processed: source/fancybox/helpers/jquery.fancybox-buttons.css
-[debug] 22:42:58.274 Processed: source/fancybox/helpers/jquery.fancybox-buttons.js
-[debug] 22:42:58.275 Processed: source/fancybox/helpers/jquery.fancybox-media.js
-[debug] 22:42:58.276 Processed: source/fancybox/helpers/jquery.fancybox-thumbs.css
-[debug] 22:42:58.277 Processed: source/fancybox/helpers/jquery.fancybox-thumbs.js
-[debug] 22:42:58.279 Processed: layout/archive.ejs
-[debug] 22:42:58.279 Processed: layout/category.ejs
-[debug] 22:42:58.279 Processed: layout/index.ejs
-[debug] 22:42:58.279 Processed: layout/page.ejs
-[debug] 22:42:58.279 Processed: layout/layout.ejs
-[debug] 22:42:58.279 Processed: layout/post.ejs
-[debug] 22:42:58.279 Processed: layout/tag.ejs
-[debug] 22:42:58.279 Processed: layout/_widget/archive.ejs
-[debug] 22:42:58.279 Processed: layout/_widget/category.ejs
-[debug] 22:42:58.279 Processed: layout/_widget/links.ejs
-[debug] 22:42:58.279 Processed: layout/_widget/rss.ejs
-[debug] 22:42:58.279 Processed: layout/_widget/tag.ejs
-[debug] 22:42:58.279 Processed: layout/_widget/tagcloud.ejs
-[debug] 22:42:58.279 Processed: layout/_partial/after_footer.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/archive.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/article.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/categories.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/footer.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/google_analytics.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/head.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/header.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/pagination.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/search.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/sidebar.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/tags.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/post/article.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/post/catetags.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/post/footer.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/post/comment.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/post/gallery.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/post/header.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/post/jiathis.ejs
-[debug] 22:42:58.280 Processed: layout/_partial/post/pagination.ejs
-[debug] 22:42:58.307 Theme config loaded
-[debug] 22:42:58.307 Processed: _config.yml
-[debug] 22:42:58.308 Processed: languages/default.yml
-[debug] 22:42:58.308 Processed: languages/zh-CN.yml
-[debug] 22:42:58.309 Processed: languages/zh-TW.yml
-[debug] 22:42:58.309 Processed: categories/index.md
-[debug] 22:42:58.311 Processed: curriculumvitae/index.md
-[debug] 22:42:58.311 Processed: tags/index.md
-[debug] 22:42:58.311 Processed: _posts/node-1-summary.md
-[error] 22:42:58.315 HexoError: Process failed: _posts/node-2-environment-in-windows.md
-Error: Unexpected tag "highlight sh" on line 11 in file E:\cygwin\home\XadillaX\hexo\source\_posts\node-2-environment-in-windows.md.
+[debug] 01:18:34.004 Config file loaded
+[debug] 01:18:34.005 Version info checked successfully
+[debug] 01:18:34.028 Loading database.
+[debug] 01:18:34.078 Plugin loaded successfully: hexo-generator-feed
+[debug] 01:18:34.082 Script load successfully: fancybox.js
+[debug] 01:18:34.130 Processed: _posts/xplan-spider-doc/xplan-news-1.jpg
+[debug] 01:18:34.130 Processed: _posts/xplan-spider-doc/xplan-news-2.jpg
+[debug] 01:18:34.131 Processed: LICENSE
+[debug] 01:18:34.131 Processed: README.md
+[debug] 01:18:34.131 Processed: scripts/fancybox.js
+[debug] 01:18:34.157 Processed: source/css/_base/code.styl
+[debug] 01:18:34.157 Processed: source/css/_base/public.styl
+[debug] 01:18:34.158 Processed: source/css/_base/font.styl
+[debug] 01:18:34.158 Processed: source/css/_base/variable.styl
+[debug] 01:18:34.158 Processed: source/css/_partial/article.styl
+[debug] 01:18:34.158 Processed: source/css/_partial/aside.styl
+[debug] 01:18:34.158 Processed: source/css/_partial/duoshuo.styl
+[debug] 01:18:34.158 Processed: source/css/_partial/footer.styl
+[debug] 01:18:34.158 Processed: source/css/_partial/gallery.styl
+[debug] 01:18:34.158 Processed: source/css/_partial/header.styl
+[debug] 01:18:34.158 Processed: source/css/_partial/index.styl
+[debug] 01:18:34.158 Processed: source/css/_partial/helper.styl
+[debug] 01:18:34.169 Processed: source/img/author.jpg
+[debug] 01:18:34.170 Processed: source/img/favicon.ico
+[debug] 01:18:34.170 Processed: source/img/logo.png
+[debug] 01:18:34.171 Processed: source/img/logo.svg
+[debug] 01:18:34.173 Processed: source/img/pacman.jpg
+[debug] 01:18:34.174 Processed: source/font/FontAwesome.otf
+[debug] 01:18:34.174 Processed: source/font/coveredbyyourgrace-webfont.eot
+[debug] 01:18:34.175 Processed: source/font/coveredbyyourgrace-webfont.svg
+[debug] 01:18:34.175 Processed: source/font/coveredbyyourgrace-webfont.ttf
+[debug] 01:18:34.176 Processed: source/font/coveredbyyourgrace-webfont.woff
+[debug] 01:18:34.176 Processed: source/font/fontawesome-webfont.eot
+[debug] 01:18:34.177 Processed: source/font/fontawesome-webfont.svg
+[debug] 01:18:34.178 Processed: source/font/fontawesome-webfont.ttf
+[debug] 01:18:34.178 Processed: source/font/fontawesome-webfont.woff
+[debug] 01:18:34.179 Processed: source/js/jquery-2.1.0.min.js
+[debug] 01:18:34.179 Processed: source/css/style.styl
+[debug] 01:18:34.180 Processed: source/fancybox/blank.gif
+[debug] 01:18:34.181 Processed: source/fancybox/fancybox_loading.gif
+[debug] 01:18:34.181 Processed: source/fancybox/fancybox_loading@2x.gif
+[debug] 01:18:34.182 Processed: source/fancybox/fancybox_overlay.png
+[debug] 01:18:34.183 Processed: source/fancybox/fancybox_sprite.png
+[debug] 01:18:34.183 Processed: source/fancybox/fancybox_sprite@2x.png
+[debug] 01:18:34.184 Processed: source/fancybox/jquery.fancybox.css
+[debug] 01:18:34.185 Processed: source/fancybox/jquery.fancybox.js
+[debug] 01:18:34.185 Processed: source/fancybox/jquery.fancybox.pack.js
+[debug] 01:18:34.186 Processed: source/fancybox/helpers/fancybox_buttons.png
+[debug] 01:18:34.187 Processed: source/fancybox/helpers/jquery.fancybox-buttons.css
+[debug] 01:18:34.187 Processed: source/fancybox/helpers/jquery.fancybox-buttons.js
+[debug] 01:18:34.188 Processed: source/fancybox/helpers/jquery.fancybox-media.js
+[debug] 01:18:34.189 Processed: source/fancybox/helpers/jquery.fancybox-thumbs.css
+[debug] 01:18:34.190 Processed: source/fancybox/helpers/jquery.fancybox-thumbs.js
+[debug] 01:18:34.190 Processed: layout/archive.ejs
+[debug] 01:18:34.190 Processed: layout/category.ejs
+[debug] 01:18:34.191 Processed: layout/layout.ejs
+[debug] 01:18:34.191 Processed: layout/index.ejs
+[debug] 01:18:34.191 Processed: layout/page.ejs
+[debug] 01:18:34.191 Processed: layout/post.ejs
+[debug] 01:18:34.191 Processed: layout/tag.ejs
+[debug] 01:18:34.191 Processed: layout/_widget/archive.ejs
+[debug] 01:18:34.191 Processed: layout/_widget/category.ejs
+[debug] 01:18:34.191 Processed: layout/_widget/links.ejs
+[debug] 01:18:34.191 Processed: layout/_widget/rss.ejs
+[debug] 01:18:34.191 Processed: layout/_widget/tag.ejs
+[debug] 01:18:34.191 Processed: layout/_widget/tagcloud.ejs
+[debug] 01:18:34.191 Processed: layout/_partial/after_footer.ejs
+[debug] 01:18:34.191 Processed: layout/_partial/archive.ejs
+[debug] 01:18:34.191 Processed: layout/_partial/article.ejs
+[debug] 01:18:34.191 Processed: layout/_partial/categories.ejs
+[debug] 01:18:34.191 Processed: layout/_partial/footer.ejs
+[debug] 01:18:34.191 Processed: layout/_partial/google_analytics.ejs
+[debug] 01:18:34.191 Processed: layout/_partial/head.ejs
+[debug] 01:18:34.191 Processed: layout/_partial/header.ejs
+[debug] 01:18:34.191 Processed: layout/_partial/pagination.ejs
+[debug] 01:18:34.191 Processed: layout/_partial/search.ejs
+[debug] 01:18:34.191 Processed: layout/_partial/sidebar.ejs
+[debug] 01:18:34.192 Processed: layout/_partial/tags.ejs
+[debug] 01:18:34.192 Processed: layout/_partial/post/article.ejs
+[debug] 01:18:34.192 Processed: layout/_partial/post/catetags.ejs
+[debug] 01:18:34.192 Processed: layout/_partial/post/comment.ejs
+[debug] 01:18:34.192 Processed: layout/_partial/post/footer.ejs
+[debug] 01:18:34.192 Processed: layout/_partial/post/gallery.ejs
+[debug] 01:18:34.192 Processed: layout/_partial/post/header.ejs
+[debug] 01:18:34.192 Processed: layout/_partial/post/jiathis.ejs
+[debug] 01:18:34.192 Processed: layout/_partial/post/pagination.ejs
+[debug] 01:18:35.003 Theme config loaded
+[debug] 01:18:35.003 Processed: _config.yml
+[debug] 01:18:35.003 Processed: languages/default.yml
+[debug] 01:18:35.004 Processed: languages/zh-CN.yml
+[debug] 01:18:35.004 Processed: languages/zh-TW.yml
+[debug] 01:18:35.015 Processed: curriculumvitae/index.md
+[debug] 01:18:35.016 Processed: categories/index.md
+[debug] 01:18:35.016 Processed: tags/index.md
+[error] 01:18:35.054 HexoError: Process failed: _posts/nodejs-cpp-addons-1.md
+Error: Unexpected end of tag " code" on line 47 in file E:\cygwin\home\XadillaX\hexo\source\_posts\nodejs-cpp-addons-1.md.
     at Object.exports.throwError (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\utils.js:183:9)
-    at parseTag (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\parser.js:543:13)
+    at parseTag (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\parser.js:531:15)
     at C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\parser.js:638:15
     at Object.exports.each (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\utils.js:45:11)
     at Object.exports.parse (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\parser.js:622:9)
@@ -119,5 +120,10 @@ Error: Unexpected tag "highlight sh" on line 11 in file E:\cygwin\home\XadillaX\
     at Object.render (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\swig.js:513:17)
     at C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\lib\post\render.js:69:29
 
-[debug] 22:42:58.317 Processed: _posts/node-4-base.md
-[debug] 22:42:58.320 Cache saved
+[debug] 01:18:35.059 Processed: _posts/node-1-summary.md
+[debug] 01:18:35.059 Cache saved
+[debug] 01:18:35.060 Processed: _posts/node-2-environment-in-windows.md
+[debug] 01:18:35.060 Processed: _posts/node-4-base.md
+[debug] 01:18:35.060 Processed: _posts/srm-589-div2.md
+[debug] 01:18:35.061 Processed: _posts/node-public-file-house.md
+[debug] 01:18:35.064 Processed: _posts/xplan-spider-doc.md
