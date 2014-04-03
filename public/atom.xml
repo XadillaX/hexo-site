@@ -4,7 +4,7 @@
   <subtitle><![CDATA[艾克斯の編碼者 —— 一個偽宅级别的碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in/"/>
-  <updated>2014-04-01T17:41:55.342Z</updated>
+  <updated>2014-04-03T16:15:50.125Z</updated>
   <id>http://xcoder.in/</id>
   
   <author>
@@ -13,6 +13,293 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[让Node.js和C++一起搞基 —— 2]]></title>
+    <link href="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"/>
+    <id>http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/</id>
+    <published>2014-04-03T13:37:15.000Z</published>
+    <updated>2014-04-03T16:14:56.000Z</updated>
+    <content type="html"><![CDATA[<p>　　好，今天让我们更深入地搞基吧！</p>
+<p>　　首先请大家记住这个 V8 的在线手册——<a href="http://izs.me/v8-docs/main.html" target="_blank">http://izs.me/v8-docs/main.html</a>。</p>
+<p>　　还记得上次的 <code>building.gyp</code> 文件吗？</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre>{
+  "<span class="attribute">targets</span>": <span class="value">[
+    {
+      "<span class="attribute">target_name</span>": <span class="value"><span class="string">"addon"</span></span>,
+      "<span class="attribute">sources</span>": <span class="value">[ <span class="string">"addon.cc"</span> ]
+    </span>}
+  ]
+</span>}
+</pre></td></tr></table></figure>
+
+<p>　　就像这样，举一反三，如果多几个 <code>*.cc</code> 文件的话就是这样的：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>"sources": [ "addon.cc", "myexample.cc" ]
+</pre></td></tr></table></figure>
+
+<p>　　上次我们把俩步骤分开了，实际上配置和编译可以放在一起的：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$ </span>node-gyp configure build
+</pre></td></tr></table></figure>
+
+<p>　　复习完了吗？没？！</p>
+<p><img src="mama.jpg" alt="啪"></p>
+<p>　　好的，那我们继续吧。</p>
+<h2 id="函数参数">函数参数</h2>
+<p>　　现在我们终于要讲参数了呢。</p>
+<p>　　让我们设想有这样一个函数 <code>add(a, b)</code> 代表把 <code>a</code> 和 <code>b</code> 相加返回结果，所以先把函数外框写好：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="preprocessor">#include &lt;node.h&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> v8;
+
+Handle&lt;Value&gt; Add(<span class="keyword">const</span> Arguments& args)
+{
+    HandleScope scope;
+
+    <span class="comment">//... 又来！</span>
+}
+</pre></td></tr></table></figure>
+
+<h3 id="Arguments">Arguments</h3>
+<p>　　这个就是函数的参数了。我们不妨先看看 v8 的<a href="http://izs.me/v8-docs/classv8_1_1Arguments.html" target="_blank">官方手册参考</a>。</p>
+<ul>
+<li><code>int Length() const</code></li>
+<li><code>Local&lt;Value&gt; operator[](int i) const</code></li>
+</ul>
+<p>　　其它的我们咱不关心，这两个可重要了！一个代表传入函数的参数个数，另一个中括号就是通过下标索引来访问第 <code>n</code> 个参数的。</p>
+<p>　　所以如上的需求，我们大致就可以理解为 <code>args.Length()</code> 为 <code>2</code>，<code>args[0]</code> 代表 <code>a</code> 以及 <code>args[1]</code> 代表 <code>b</code> 了。并且我们要判断这两个数的类型必须得是 <code>Number</code>。</p>
+<p>　　注意到没，中括号的索引操作符返回结果是一个 <code>Local&lt;Value&gt;</code> 也就是 <code>Node.js</code> 的所有类型基类。所以传进来的参数类型不定的，我们必须得自己判断是什么参数。这就关系到了这个 <code>Value</code> 类型的一些<a href="http://izs.me/v8-docs/classv8_1_1Value.html" target="_blank">函数</a>了。</p>
+<ul>
+<li><code>IsArray()</code></li>
+<li><code>IsBoolean()</code></li>
+<li><code>IsDate()</code></li>
+<li><code>IsFunction()</code></li>
+<li><code>IsInt32()</code></li>
+<li><code>IsNativeError()</code></li>
+<li><code>IsNull()</code></li>
+<li><code>IsNumber()</code></li>
+<li><code>IsRegExp()</code></li>
+<li><code>IsString()</code></li>
+<li>…</li>
+</ul>
+<p>　　我就不一一列举了，剩下的自己看文档。｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡</p>
+<h3 id="ThrowException">ThrowException</h3>
+<p>　　这个是我们等下要用到的一个函数。具体在 <a href="http://izs.me/v8-docs/namespacev8.html#a2469af0ac719d39f77f20cf68dd9200e" target="_blank">v8 文档</a>中可以找到。</p>
+<p>　　顾名思义，就是抛出错误啦。执行这个语句之后，相当于在 <code>Node.js</code> 本地文件中执行了一条 <code>throw()</code> 语句一样。比如说：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>ThrowException(Exception::TypeError(String::New(<span class="string">"Wrong number of arguments"</span>)));
+</pre></td></tr></table></figure>
+
+<p>　　就相当于执行了一条 <code>Node.js</code> 的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">"Wrong number of arguments"</span>);
+</pre></td></tr></table></figure>
+
+<h3 id="Undefined()">Undefined()</h3>
+<p>　　这个函数呢也在<a href="http://izs.me/v8-docs/namespacev8.html#ad39cfade81e77137fc11ff3a24284340" target="_blank">文档</a>里面。</p>
+<p>　　具体就是一个空值，因为有些函数并不需要返回什么具体的值，或者说没有返回值，这个时候就需要用 <code>Undefined()</code> 来代替了。</p>
+<h3 id="动手吧骚年！">动手吧骚年！</h3>
+<p>　　在理解了以上的几个要点之后，我相信你们很快就能写出 <code>a + b</code> 的逻辑了，我就把 <code>Node.js</code> 官方手册的代码抄过来给你们过一遍就算完事了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+</pre></td><td class="code"><pre><span class="preprocessor">#include &lt;node.h&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> v8;
+
+Handle&lt;Value&gt; Add(<span class="keyword">const</span> Arguments& args)
+{
+    HandleScope scope;
+    
+    <span class="comment">// 代表了可以传入 2 个以上的参数，但实际上我们只用前两个</span>
+    <span class="keyword">if</span>(args.Length() &lt; <span class="number">2</span>)
+    {
+        <span class="comment">// 抛出错误</span>
+        ThrowException(Exception::TypeError(String::New(<span class="string">"Wrong number of arguments"</span>)));
+        
+        <span class="comment">// 返回空值</span>
+        <span class="keyword">return</span> scope.Close(Undefined());
+    }
+    
+    <span class="comment">// 若前两个参数其中一个不是数字的话</span>
+    <span class="keyword">if</span>(!args[<span class="number">0</span>]-&gt;IsNumber() || !args[<span class="number">1</span>]-&gt;IsNumber())
+    {
+        <span class="comment">// 抛出错误并返回空值</span>
+        ThrowException(Exception::TypeError(String::New(<span class="string">"Wrong arguments"</span>)));
+        <span class="keyword">return</span> scope.Close(Undefined());
+    }
+    
+    <span class="comment">// 具体参考 v8 文档</span>
+    <span class="comment">//     http://izs.me/v8-docs/classv8_1_1Value.html#a6eac2b07dced58f1761bbfd53bf0e366)</span>
+    <span class="comment">// 的 `NumberValue` 函数</span>
+    Local&lt;Number&gt; num = Number::New(args[<span class="number">0</span>]-&gt;NumberValue() + args[<span class="number">1</span>]-&gt;NumberValue());
+    
+    <span class="keyword">return</span> scope.Close(num);
+}
+</pre></td></tr></table></figure>
+
+<p>　　函数大功告成！</p>
+<p>　　最后把尾部的导出函数给写好就 OK 了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="keyword">void</span> Init(Handle&lt;Object&gt; exports)
+{
+    exports-&gt;Set(String::NewSymbol(<span class="string">"add"</span>),
+        FunctionTemplate::New(Add)-&gt;GetFunction());
+}
+
+NODE_MODULE(addon, Init)
+</pre></td></tr></table></figure>
+
+<p>　　等你编译好之后，我们就能这样用了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="keyword">var</span> addon = <span class="built_in">require</span>(<span class="string">'./build/Release/addon'</span>);
+console.log(addon.add(<span class="number">1</span>, <span class="number">1</span>) + <span class="string">"b"</span>);
+</pre></td></tr></table></figure>
+
+<p>　　你会看到一个 <code>2b</code> ！✧<em>｡٩(ˊᗜˋ</em>)و✧*｡</p>
+<h2 id="回调函数">回调函数</h2>
+<p>　　上一章我们只讲了个 <code>Hello world</code>，这一章阿婆主就良心发现一下，再来个回调函数的写法。</p>
+<p>　　惯例我们先写好框架：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre><span class="preprocessor">#include &lt;node.h&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> v8;
+
+Handle&lt;Value&gt; RunCallback(<span class="keyword">const</span> Arguments& args)
+{
+  HandleScope scope;
+
+  <span class="comment">// ... 噼里啪啦噼里啪啦</span>
+
+  <span class="keyword">return</span> scope.Close(Undefined());
+}
+</pre></td></tr></table></figure>
+
+<p>　　然后我们决定它的用法是这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre>func(<span class="function"><span class="keyword">function</span><span class="params">(msg)</span> {</span>
+    console.log(msg);
+});
+</pre></td></tr></table></figure>
+
+<p>　　即它会给回调函数传入一个参数，我们设想它是一个字符串，然后我们可以 <code>console.log()</code> 出来看。</p>
+<h3 id="首先你要有一个字符串系列">首先你要有一个字符串系列</h3>
+<p>　　废话不多说，先给它一个字符串喂饱了再说吧。<em>(√ ζ ε:)</em></p>
+<p>　　不过我们得让这个字符串是通用类型的，因为 <code>Node.js</code> 代码是弱类型的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>Local&lt;Value&gt;::New(String::New(<span class="string">"hello world"</span>));
+</pre></td></tr></table></figure>
+
+<p>　　什么？你问我什么是 <code>Local&lt;Value&gt;</code>？</p>
+<p>　　那我稍稍讲一下吧，参考自<a href="http://cnodejs.org/topic/4f16442ccae1f4aa270010c5" target="_blank">这里</a>和<a href="http://izs.me/v8-docs/classv8_1_1Local.html" target="_blank">V8参考文档</a>。</p>
+<p>　　如文档所示，<code>Local&lt;T&gt;</code> 实际上继承自 <code>Handle&lt;T&gt;</code>，我记得<a href="/2014/04/02/nodejs-cpp-addons-1/#Handle&lt;Value">上一章</a>已经讲过 <code>Handle&lt;T&gt;</code> 这个东西了。</p>
+<p>　　然后下面就是讲 Local 了。</p>
+<blockquote>
+<p>Handle 有两种类型， Local Handle 和 Persistent Handle ，类型分别是 <code>Local&lt;T&gt; : Handle&lt;T&gt;</code> 和 <code>Persistent&lt;T&gt; : Handle&lt;T&gt;</code> ，前者和 <code>Handle&lt;T&gt;</code> 没有区别生存周期都在 scope 内。而后者的生命周期脱离 scope ，你需要手动调用 <code>Persistent::Dispose</code> 结束其生命周期。也就是说 Local Handle 相当于在 C++`在栈上分配对象而 Persistent Handle 相当于 C++ 在堆上分配对象。</p>
+</blockquote>
+<h3 id="然后你要有个参数表系列">然后你要有个参数表系列</h3>
+<p>　　终端命令行调用 C/C++ 之后怎么取命令行参数？</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="keyword">void</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])
+{
+    <span class="comment">// ...</span>
+}
+</pre></td></tr></table></figure>
+
+<p>　　对了，这里的 <code>argc</code> 就是命令行参数个数，<code>argv[]</code> 就是各个参数了。那么调用 <code>Node.js</code> 的回调函数，<code>v8</code> 也采用了类似的<a href="http://izs.me/v8-docs/classv8_1_1Function.html#ac61877494d2d8bb81fcef96003ec4059" target="_blank">方法</a>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre>V8EXPORT Local&lt;Value&gt; v8::Function::Call(Handle&lt;Object&gt;recv,
+    <span class="keyword">int</span> argc,
+    Handle&lt;Value&gt; argv[]
+);
+</pre></td></tr></table></figure>
+
+<blockquote>
+<p>QAQ 卡在了 <code>Handle&lt;Object&gt;recv</code> 了！！！明天继续写。</p>
+</blockquote>
+]]></content>
+    
+    
+      <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
+    
+      <category term="C++" scheme="http://xcoder.in/tags/C++/"/>
+    
+      <category term="NodeJS" scheme="http://xcoder.in/categories/NodeJS/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[让Node.js和C++一起搞基 —— 1]]></title>
