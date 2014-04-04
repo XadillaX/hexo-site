@@ -4,7 +4,7 @@
   <subtitle><![CDATA[艾克斯の編碼者 —— 一個偽宅级别的碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in/"/>
-  <updated>2014-04-03T16:15:50.125Z</updated>
+  <updated>2014-04-04T05:48:47.853Z</updated>
   <id>http://xcoder.in/</id>
   
   <author>
@@ -19,8 +19,9 @@
     <link href="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"/>
     <id>http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/</id>
     <published>2014-04-03T13:37:15.000Z</published>
-    <updated>2014-04-03T16:14:56.000Z</updated>
+    <updated>2014-04-04T05:47:45.000Z</updated>
     <content type="html"><![CDATA[<p>　　好，今天让我们更深入地搞基吧！</p>
+<h2 id="温故而知新，可以为湿矣">温故而知新，可以为湿矣</h2>
 <p>　　首先请大家记住这个 V8 的在线手册——<a href="http://izs.me/v8-docs/main.html" target="_blank">http://izs.me/v8-docs/main.html</a>。</p>
 <p>　　还记得上次的 <code>building.gyp</code> 文件吗？</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre>1
@@ -54,7 +55,8 @@
 <p>　　复习完了吗？没？！</p>
 <p><img src="mama.jpg" alt="啪"></p>
 <p>　　好的，那我们继续吧。</p>
-<h2 id="函数参数">函数参数</h2>
+<h2 id="表番">表番</h2>
+<h3 id="函数参数">函数参数</h3>
 <p>　　现在我们终于要讲参数了呢。</p>
 <p>　　让我们设想有这样一个函数 <code>add(a, b)</code> 代表把 <code>a</code> 和 <code>b</code> 相加返回结果，所以先把函数外框写好：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
@@ -77,7 +79,7 @@ Handle&lt;Value&gt; Add(<span class="keyword">const</span> Arguments& args)
 }
 </pre></td></tr></table></figure>
 
-<h3 id="Arguments">Arguments</h3>
+<h4 id="Arguments">Arguments</h4>
 <p>　　这个就是函数的参数了。我们不妨先看看 v8 的<a href="http://izs.me/v8-docs/classv8_1_1Arguments.html" target="_blank">官方手册参考</a>。</p>
 <ul>
 <li><code>int Length() const</code></li>
@@ -100,7 +102,7 @@ Handle&lt;Value&gt; Add(<span class="keyword">const</span> Arguments& args)
 <li>…</li>
 </ul>
 <p>　　我就不一一列举了，剩下的自己看文档。｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡</p>
-<h3 id="ThrowException">ThrowException</h3>
+<h4 id="ThrowException">ThrowException</h4>
 <p>　　这个是我们等下要用到的一个函数。具体在 <a href="http://izs.me/v8-docs/namespacev8.html#a2469af0ac719d39f77f20cf68dd9200e" target="_blank">v8 文档</a>中可以找到。</p>
 <p>　　顾名思义，就是抛出错误啦。执行这个语句之后，相当于在 <code>Node.js</code> 本地文件中执行了一条 <code>throw()</code> 语句一样。比如说：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
@@ -112,10 +114,10 @@ Handle&lt;Value&gt; Add(<span class="keyword">const</span> Arguments& args)
 </pre></td><td class="code"><pre><span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">"Wrong number of arguments"</span>);
 </pre></td></tr></table></figure>
 
-<h3 id="Undefined()">Undefined()</h3>
+<h4 id="Undefined()">Undefined()</h4>
 <p>　　这个函数呢也在<a href="http://izs.me/v8-docs/namespacev8.html#ad39cfade81e77137fc11ff3a24284340" target="_blank">文档</a>里面。</p>
 <p>　　具体就是一个空值，因为有些函数并不需要返回什么具体的值，或者说没有返回值，这个时候就需要用 <code>Undefined()</code> 来代替了。</p>
-<h3 id="动手吧骚年！">动手吧骚年！</h3>
+<h4 id="动手吧骚年！">动手吧骚年！</h4>
 <p>　　在理解了以上的几个要点之后，我相信你们很快就能写出 <code>a + b</code> 的逻辑了，我就把 <code>Node.js</code> 官方手册的代码抄过来给你们过一遍就算完事了：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
@@ -209,7 +211,7 @@ console.log(addon.add(<span class="number">1</span>, <span class="number">1</spa
 </pre></td></tr></table></figure>
 
 <p>　　你会看到一个 <code>2b</code> ！✧<em>｡٩(ˊᗜˋ</em>)و✧*｡</p>
-<h2 id="回调函数">回调函数</h2>
+<h3 id="回调函数">回调函数</h3>
 <p>　　上一章我们只讲了个 <code>Hello world</code>，这一章阿婆主就良心发现一下，再来个回调函数的写法。</p>
 <p>　　惯例我们先写好框架：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
@@ -246,7 +248,7 @@ Handle&lt;Value&gt; RunCallback(<span class="keyword">const</span> Arguments& ar
 </pre></td></tr></table></figure>
 
 <p>　　即它会给回调函数传入一个参数，我们设想它是一个字符串，然后我们可以 <code>console.log()</code> 出来看。</p>
-<h3 id="首先你要有一个字符串系列">首先你要有一个字符串系列</h3>
+<h4 id="首先你要有一个字符串系列">首先你要有一个字符串系列</h4>
 <p>　　废话不多说，先给它一个字符串喂饱了再说吧。<em>(√ ζ ε:)</em></p>
 <p>　　不过我们得让这个字符串是通用类型的，因为 <code>Node.js</code> 代码是弱类型的。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
@@ -260,7 +262,7 @@ Handle&lt;Value&gt; RunCallback(<span class="keyword">const</span> Arguments& ar
 <blockquote>
 <p>Handle 有两种类型， Local Handle 和 Persistent Handle ，类型分别是 <code>Local&lt;T&gt; : Handle&lt;T&gt;</code> 和 <code>Persistent&lt;T&gt; : Handle&lt;T&gt;</code> ，前者和 <code>Handle&lt;T&gt;</code> 没有区别生存周期都在 scope 内。而后者的生命周期脱离 scope ，你需要手动调用 <code>Persistent::Dispose</code> 结束其生命周期。也就是说 Local Handle 相当于在 C++`在栈上分配对象而 Persistent Handle 相当于 C++ 在堆上分配对象。</p>
 </blockquote>
-<h3 id="然后你要有个参数表系列">然后你要有个参数表系列</h3>
+<h4 id="然后你要有个参数表系列">然后你要有个参数表系列</h4>
 <p>　　终端命令行调用 C/C++ 之后怎么取命令行参数？</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
@@ -288,8 +290,94 @@ Handle&lt;Value&gt; RunCallback(<span class="keyword">const</span> Arguments& ar
 </pre></td></tr></table></figure>
 
 <blockquote>
-<p>QAQ 卡在了 <code>Handle&lt;Object&gt;recv</code> 了！！！明天继续写。</p>
+<p><del>QAQ 卡在了 <code>Handle&lt;Object&gt; recv</code> 了！！！明天继续写。</del></p>
 </blockquote>
+<p>　　好吧，新的一天开始了我感觉我充满了力量。(∩^o^)⊃━☆ﾟ.*･｡</p>
+<p>　　经过我多方面求证（<a href="http://segmentfault.com/q/1010000000456217" target="_blank">SegmentFault</a>和<a href="http://stackoverflow.com/questions/22842908/what-does-the-first-argument-of-functioncall-in-v8-engine-mean/22848601?noredirect=1#22848601" target="_blank">StackOverflow</a>以及一个扣扣群），终于解决了上面这个函数仨参数的意思。</p>
+<p>　　后面两个参数就不多说了，一个是参数个数，另一个就是一个参数的数组了。至于第一个参数 <code>Handle&lt;Object&gt; recv</code>，StackOverflow 仁兄的解释是这样的：</p>
+<blockquote>
+<p>It is the same as apply in JS. In JS, you do</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="keyword">var</span> context = ...;
+cb.apply(context, [ ...args...]);
+</pre></td></tr></table></figure>
+
+<p>The object passed as the first argument becomes this within the function scope. More documentation on <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply" target="_blank">MDN</a>. If you don’t know JS well, you can read more about JS’s this here: <a href="http://unschooled.org/2012/03/understanding-javascript-this/" target="_blank">http://unschooled.org/2012/03/understanding-javascript-this/</a></p>
+<p style="text-align: right;">—— 摘自 <a href="http://stackoverflow.com/questions/22842908/what-does-the-first-argument-of-functioncall-in-v8-engine-mean/22848601?noredirect=1#22848601" target="_blank">StackOverflow</a></p>
+
+</blockquote>
+<p>　　总之其作用就是指定了被调用函数的 <code>this</code> 指针。这个 <code>Call</code> 的用法就跟 JavaScript 中的 <code>bind()</code>、<code>call()</code>、<code>apply()</code> 类似。</p>
+<p>　　所以我们要做的事情就是先把参数表建好，然后传入这个 <code>Call</code> 函数供其执行。</p>
+<p>　　第一步，显示转换函数，因为本来是 <code>Object</code> 类型：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>Local&lt;Function&gt; cb = Local&lt;Function&gt;::Cast(args[<span class="number">0</span>]);
+</pre></td></tr></table></figure>
+
+<p>　　第二步，建立参数表（数组）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>Local&lt;Value&gt; argv[argc] = { Local&lt;Value&gt;::New(String::New(<span class="string">"hello world"</span>)) };
+</pre></td></tr></table></figure>
+
+<h4 id="最后调用函数系列">最后调用函数系列</h4>
+<p>　　调用 <code>cb</code> ，把参数传进去：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>cb-&gt;Call(Context::GetCurrent()-&gt;Global(), <span class="number">1</span>, argv);
+</pre></td></tr></table></figure>
+
+<p>　　这里第一个参数 <code>Context::GetCurrent()-&gt;Global()</code> 所代表的意思就是获取全局上下文作为函数的 <code>this</code>；第二个参数就是参数表中的个数（毕竟虽然 <code>Node.js</code> 的数组是有长度属性的，但是 <code>C++</code> 里面数组的长度实际上系统是不知道的，还得你自己传进一个数来说明数组长度）；最后一个参数就是刚才我们建立好的参数表了。</p>
+<h4 id="终章之结束文件系列">终章之结束文件系列</h4>
+<p>　　相信这一步大家已经轻车熟路了吧，就是把函数写好，然后放进导出函数里面，最后申明一下。</p>
+<p>　　我就直接放出代码吧，或者直接跑去 <code>Node.js</code> 的<a href="http://nodejs.org/api/addons.html#addons_callbacks" target="_blank">文档</a>看也行。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+</pre></td><td class="code"><pre><span class="preprocessor">#include &lt;node.h&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> v8;
+
+Handle&lt;Value&gt; RunCallback(<span class="keyword">const</span> Arguments& args)
+{
+    HandleScope scope;
+    Local&lt;Function&gt; cb = Local&lt;Function&gt;::Cast(args[<span class="number">0</span>]);
+    <span class="keyword">const</span> <span class="keyword">unsigned</span> argc = <span class="number">1</span>;
+    Local&lt;Value&gt; argv[argc] = { Local&lt;Value&gt;::New(String::New(<span class="string">"hello world"</span>)) };
+    cb-&gt;Call(Context::GetCurrent()-&gt;Global(), argc, argv);
+    
+    <span class="keyword">return</span> scope.Close(Undefined());
+}
+
+<span class="keyword">void</span> Init(Handle&lt;Object&gt; exports, Handle&lt;Object&gt; module)
+{
+    module-&gt;Set(String::NewSymbol(<span class="string">"exports"</span>),
+        FunctionTemplate::New(RunCallback)-&gt;GetFunction());
+}
+
+NODE_MODULE(addon, Init)
+</pre></td></tr></table></figure>
+
+<p>　　Well done! 最后剩下的步骤就自己去吧。至于 <code>Js</code> 里面这么调用这个函数，我在<a href="#回调函数">之前</a>已经提到过了。</p>
+<h2 id="番外">番外</h2>
+<p>　　嘛嘛，我感觉我的学习笔记写得越来越奔放了求破～</p>
+<p>　　今天就先写到这里吧，写学习笔记的过程中我又涨姿势了，比如说那个 <code>Call</code> 函数的参数意义。</p>
+<p>　　如果你们觉得本系列学习笔记对你们还有帮助的话，就来和我一起搞基吧么么哒～Σ&gt;―(〃°ω°〃)♡→</p>
 ]]></content>
     
     

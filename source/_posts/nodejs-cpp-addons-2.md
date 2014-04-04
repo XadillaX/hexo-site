@@ -5,6 +5,8 @@ category: NodeJS
 ---
 
 　　好，今天让我们更深入地搞基吧！
+  
+## 温故而知新，可以为湿矣
 
 　　首先请大家记住这个 V8 的在线手册——[http://izs.me/v8-docs/main.html](http://izs.me/v8-docs/main.html)。
 
@@ -38,8 +40,10 @@ $ node-gyp configure build
 ![啪](mama.jpg)
 
 　　好的，那我们继续吧。
+  
+## 表番
 
-## 函数参数
+### 函数参数
 
 　　现在我们终于要讲参数了呢。
 
@@ -57,7 +61,7 @@ Handle<Value> Add(const Arguments& args)
 }
 ```
 
-### Arguments
+#### Arguments
 
 　　这个就是函数的参数了。我们不妨先看看 v8 的[官方手册参考](http://izs.me/v8-docs/classv8_1_1Arguments.html)。
   
@@ -84,7 +88,7 @@ Handle<Value> Add(const Arguments& args)
 
 　　我就不一一列举了，剩下的自己看文档。｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡
 
-### ThrowException
+#### ThrowException
 
 　　这个是我们等下要用到的一个函数。具体在 [v8 文档](http://izs.me/v8-docs/namespacev8.html#a2469af0ac719d39f77f20cf68dd9200e)中可以找到。
 
@@ -100,13 +104,13 @@ ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
 throw new TypeError("Wrong number of arguments");
 ```
 
-### Undefined()
+#### Undefined()
 
 　　这个函数呢也在[文档](http://izs.me/v8-docs/namespacev8.html#ad39cfade81e77137fc11ff3a24284340)里面。
 
 　　具体就是一个空值，因为有些函数并不需要返回什么具体的值，或者说没有返回值，这个时候就需要用 `Undefined()` 来代替了。
 
-### 动手吧骚年！
+#### 动手吧骚年！
 
 　　在理解了以上的几个要点之后，我相信你们很快就能写出 `a + b` 的逻辑了，我就把 `Node.js` 官方手册的代码抄过来给你们过一遍就算完事了：
 
@@ -168,7 +172,7 @@ console.log(addon.add(1, 1) + "b");
 
 　　你会看到一个 `2b` ！✧*｡٩(ˊᗜˋ*)و✧*｡
   
-## 回调函数
+### 回调函数
 
 　　上一章我们只讲了个 `Hello world`，这一章阿婆主就良心发现一下，再来个回调函数的写法。
 
@@ -198,7 +202,7 @@ func(function(msg) {
 
 　　即它会给回调函数传入一个参数，我们设想它是一个字符串，然后我们可以 `console.log()` 出来看。
 
-### 首先你要有一个字符串系列
+#### 首先你要有一个字符串系列
 
 　　废话不多说，先给它一个字符串喂饱了再说吧。_(√ ζ ε:)_
 
@@ -218,7 +222,7 @@ Local<Value>::New(String::New("hello world"));
 
 > Handle 有两种类型， Local Handle 和 Persistent Handle ，类型分别是 `Local<T> : Handle<T>` 和 `Persistent<T> : Handle<T>` ，前者和 `Handle<T>` 没有区别生存周期都在 scope 内。而后者的生命周期脱离 scope ，你需要手动调用 `Persistent::Dispose` 结束其生命周期。也就是说 Local Handle 相当于在 C++`在栈上分配对象而 Persistent Handle 相当于 C++ 在堆上分配对象。
 
-### 然后你要有个参数表系列
+#### 然后你要有个参数表系列
 
 　　终端命令行调用 C/C++ 之后怎么取命令行参数？
 
@@ -240,4 +244,86 @@ V8EXPORT Local<Value> v8::Function::Call(Handle<Object>recv,
 );
 ```
 
-> QAQ 卡在了 `Handle<Object>recv` 了！！！明天继续写。
+> ~~QAQ 卡在了 `Handle<Object> recv` 了！！！明天继续写。~~
+
+　　好吧，新的一天开始了我感觉我充满了力量。(∩^o^)⊃━☆ﾟ.*･｡
+  
+　　经过我多方面求证（[SegmentFault](http://segmentfault.com/q/1010000000456217)和[StackOverflow](http://stackoverflow.com/questions/22842908/what-does-the-first-argument-of-functioncall-in-v8-engine-mean/22848601?noredirect=1#22848601)以及一个扣扣群），终于解决了上面这个函数仨参数的意思。
+
+　　后面两个参数就不多说了，一个是参数个数，另一个就是一个参数的数组了。至于第一个参数 `Handle<Object> recv`，StackOverflow 仁兄的解释是这样的：
+
+> It is the same as apply in JS. In JS, you do
+>
+> ```javascript
+var context = ...;
+cb.apply(context, [ ...args...]);
+```
+> The object passed as the first argument becomes this within the function scope. More documentation on [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply). If you don't know JS well, you can read more about JS's this here: http://unschooled.org/2012/03/understanding-javascript-this/
+>
+> <p style="text-align: right;">—— 摘自 [StackOverflow](http://stackoverflow.com/questions/22842908/what-does-the-first-argument-of-functioncall-in-v8-engine-mean/22848601?noredirect=1#22848601)</p>
+
+　　总之其作用就是指定了被调用函数的 `this` 指针。这个 `Call` 的用法就跟 JavaScript 中的 `bind()`、`call()`、`apply()` 类似。
+
+　　所以我们要做的事情就是先把参数表建好，然后传入这个 `Call` 函数供其执行。
+
+　　第一步，显示转换函数，因为本来是 `Object` 类型：
+
+```cpp
+Local<Function> cb = Local<Function>::Cast(args[0]);
+```
+
+　　第二步，建立参数表（数组）：
+
+```cpp
+Local<Value> argv[argc] = { Local<Value>::New(String::New("hello world")) };
+```
+
+#### 最后调用函数系列
+
+　　调用 `cb` ，把参数传进去：
+
+```cpp
+cb->Call(Context::GetCurrent()->Global(), 1, argv);
+```
+
+　　这里第一个参数 `Context::GetCurrent()->Global()` 所代表的意思就是获取全局上下文作为函数的 `this`；第二个参数就是参数表中的个数（毕竟虽然 `Node.js` 的数组是有长度属性的，但是 `C++` 里面数组的长度实际上系统是不知道的，还得你自己传进一个数来说明数组长度）；最后一个参数就是刚才我们建立好的参数表了。
+  
+#### 终章之结束文件系列
+
+　　相信这一步大家已经轻车熟路了吧，就是把函数写好，然后放进导出函数里面，最后申明一下。
+
+　　我就直接放出代码吧，或者直接跑去 `Node.js` 的[文档](http://nodejs.org/api/addons.html#addons_callbacks)看也行。
+  
+```cpp
+#include <node.h>
+using namespace v8;
+
+Handle<Value> RunCallback(const Arguments& args)
+{
+    HandleScope scope;
+    Local<Function> cb = Local<Function>::Cast(args[0]);
+    const unsigned argc = 1;
+    Local<Value> argv[argc] = { Local<Value>::New(String::New("hello world")) };
+    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+    
+    return scope.Close(Undefined());
+}
+
+void Init(Handle<Object> exports, Handle<Object> module)
+{
+    module->Set(String::NewSymbol("exports"),
+        FunctionTemplate::New(RunCallback)->GetFunction());
+}
+
+NODE_MODULE(addon, Init)
+```
+
+　　Well done! 最后剩下的步骤就自己去吧。至于 `Js` 里面这么调用这个函数，我在[之前](#回调函数)已经提到过了。
+  
+## 番外
+
+　　嘛嘛，我感觉我的学习笔记写得越来越奔放了求破～
+  
+　　今天就先写到这里吧，写学习笔记的过程中我又涨姿势了，比如说那个 `Call` 函数的参数意义。
+  
+　　如果你们觉得本系列学习笔记对你们还有帮助的话，就来和我一起搞基吧么么哒～Σ>―(〃°ω°〃)♡→
