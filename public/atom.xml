@@ -4,7 +4,7 @@
   <subtitle><![CDATA[艾克斯の編碼者 —— 一個偽宅级别的碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in/"/>
-  <updated>2014-04-04T05:48:47.853Z</updated>
+  <updated>2014-04-05T08:22:19.079Z</updated>
   <id>http://xcoder.in/</id>
   
   <author>
@@ -13,6 +13,91 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[C++中类成员函数 inline 的坑]]></title>
+    <link href="http://xcoder.in/2014/04/05/cpp-class-inline-keng/"/>
+    <id>http://xcoder.in/2014/04/05/cpp-class-inline-keng/</id>
+    <published>2014-04-05T07:55:57.000Z</published>
+    <updated>2014-04-05T08:21:28.000Z</updated>
+    <content type="html"><![CDATA[<p>　　今天我来讲一讲 <code>C++</code> 中类成员函数 <code>inline</code> 修饰符的一个坑。</p>
+<p>　　这个坑是我在尝试着写我的第一个 <code>Node.js</code> 扩展 <code>simpleini</code> 时候遇到的。</p>
+<h2 id="坑描述">坑描述</h2>
+<p>　　因为只是尝试着写，所以懒得自己实现，于是网上找了个开源的 <code>C++</code> 阅读 ini 文件的项目，名不见经传，叫 <a href="http://miniini.tuxfamily.org/" target="_blank">miniini</a>。</p>
+<p>　　好了，问题来了，当我写好我的源文件的时候，然后写好了我的 <code>binding.gyp</code> ，总之一切大功告成开始编译的时候—— <code>Windows</code> 下没问题，<code>MacOS</code> 下也可以正常运行，但是在 <code>Linux</code> 下就出问题了：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>node: symbol lookup err: <span class="keyword">...</span>/simpleIni.node: undefined symbol: _ZNK10INISection10ReadStringEPKcRS1_
+</pre></td></tr></table></figure>
+
+<p>　　大致的意思呢就是说找不到 <code>INISection</code> 的 <code>ReadString</code> 函数符号。</p>
+<h2 id="问题分析">问题分析</h2>
+<p>　　又是怀着崇敬的心情去 <a href="http://stackoverflow.com/questions/22868307/undefined-symbol-in-node-js-c-addon-under-linux-why" target="_blank">SO</a> 求解了。</p>
+<p>　　最后的解答大概<a href="http://isocpp.org/wiki/faq/inline-functions#inline-member-fns" target="_blank">如下</a>：</p>
+<blockquote>
+<p>内联成员函数的声明看起来像一个非内联函数的声明：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">class</span> Fred {
+<span class="keyword">public</span>:
+    <span class="keyword">void</span> f(<span class="keyword">int</span> i, <span class="keyword">char</span> c);
+};
+</pre></td></tr></table></figure>
+
+<p>但是你的内敛成员函数定义前面又加了 <code>inline</code> 这个关键字时，你必须把这个定义放到头文件中：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">inline</span>
+<span class="keyword">void</span> Fred::f(<span class="keyword">int</span> i, <span class="keyword">char</span> c)
+{
+    <span class="comment">// ...</span>
+}
+</pre></td></tr></table></figure>
+
+<p>这么做的原因就是为了避免链接器 <code>unresolved external</code> 的发生。如果你不这么做，这个错误就将会在你从另外一个 <code>.cpp</code> 文件中调用它时出现。</p>
+</blockquote>
+<p>　　好嘛，原来是原作者自己写的代码有问题啊。但是不得不说一下又涨姿势了。C++还真是有千奇百怪的坑和错误啊。</p>
+<h2 id="解决方案">解决方案</h2>
+<p>　　最后的解决方案大致就是把函数定义放到头文件中去，或者在函数声明前面也加上 <code>inline</code> 关键字。</p>
+<h2 id="simpleini">simpleini</h2>
+<p>　　我的第一个 <code>C++</code> 模块，叫 <code>simpleini</code> ，其实只是抱着试试看 <code>Node.j</code> 的 <code>C++</code> 模块是不是这么写的而已，并没有多大实际用处。Repo 在 <a href="https://github.com/XadillaX/node-simple-ini" target="_blank">Github</a> 上。</p>
+<p>　　然后用法很简单，先安装：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$ </span>npm install simpleini
+</pre></td></tr></table></figure>
+
+<p>　　然后下面的代码就是例子了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="keyword">var</span> simpleIni = <span class="built_in">require</span>(<span class="string">"simpleini"</span>);
+
+console.log(simpleIni.open(<span class="string">"./node_modules/simpleini/src/miniini-0.9/test/test.ini"</span>));
+console.log(simpleIni.read(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>));
+console.log(simpleIni.read(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"d"</span>));
+console.log(simpleIni.read(<span class="string">"SETTINGS"</span>, <span class="string">"sections"</span>));
+console.log(simpleIni.read(<span class="string">"vals"</span>, <span class="string">"float"</span>));
+</pre></td></tr></table></figure>
+
+<p>　　读取配置的时候第一个参数是 <code>Section</code>，第二个参数是 <code>Key</code>，第三个参数是取不到该值时的默认值。</p>
+]]></content>
+    
+    
+      <category term="Programming" scheme="http://xcoder.in/tags/Programming/"/>
+    
+      <category term="C++" scheme="http://xcoder.in/tags/C++/"/>
+    
+      <category term="Programming" scheme="http://xcoder.in/categories/Programming/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[让Node.js和C++一起搞基 —— 2]]></title>

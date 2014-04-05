@@ -1,0 +1,432 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>C++中类成员函数 inline 的坑 | XadillaX&#39; Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="小鳥遊死月">
+    
+    <meta name="description" content="今天我来讲一讲 C++ 中类成员函数 inline 修饰符的一个坑。
+　　这个坑是我在尝试着写我的第一个 Node.js 扩展 simpleini 时候遇到的。
+坑描述
+　　因为只是尝试着写，所以懒得自己实现，于是网上找了个开源的 C++ 阅读 ini 文件的项目，名不见经传，叫 miniini。
+">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="XadillaX&#39; Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.png">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="XadillaX&#39; Blog" title="XadillaX&#39; Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="XadillaX&#39; Blog">XadillaX&#39; Blog</a></h1>
+				<h2 class="blog-motto">艾克斯の編碼者 —— 一個偽宅级别的碼畜。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/tags">标签</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+						<li><a href="/curriculumvitae">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:xcoder.in">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/04/05/cpp-class-inline-keng/" title="C++中类成员函数 inline 的坑" itemprop="url">C++中类成员函数 inline 的坑</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-04-05T07:55:57.000Z" itemprop="datePublished">Apr 5 2014</time>
+    Updated:<time datetime="2014-04-05T08:21:28.000Z" itemprop="dateModified">Apr 5 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#坑描述"><span class="toc-number">1.</span> <span class="toc-text">坑描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题分析"><span class="toc-number">2.</span> <span class="toc-text">问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-number">3.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#simpleini"><span class="toc-number">4.</span> <span class="toc-text">simpleini</span></a></li></ol>
+		</div>
+		
+		<p>　　今天我来讲一讲 <code>C++</code> 中类成员函数 <code>inline</code> 修饰符的一个坑。</p>
+<p>　　这个坑是我在尝试着写我的第一个 <code>Node.js</code> 扩展 <code>simpleini</code> 时候遇到的。</p>
+<h2 id="坑描述">坑描述</h2>
+<p>　　因为只是尝试着写，所以懒得自己实现，于是网上找了个开源的 <code>C++</code> 阅读 ini 文件的项目，名不见经传，叫 <a href="http://miniini.tuxfamily.org/" target="_blank">miniini</a>。</p>
+<p>　　好了，问题来了，当我写好我的源文件的时候，然后写好了我的 <code>binding.gyp</code> ，总之一切大功告成开始编译的时候—— <code>Windows</code> 下没问题，<code>MacOS</code> 下也可以正常运行，但是在 <code>Linux</code> 下就出问题了：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>node: symbol lookup err: <span class="keyword">...</span>/simpleIni.node: undefined symbol: _ZNK10INISection10ReadStringEPKcRS1_
+</pre></td></tr></table></figure>
+
+<p>　　大致的意思呢就是说找不到 <code>INISection</code> 的 <code>ReadString</code> 函数符号。</p>
+<h2 id="问题分析">问题分析</h2>
+<p>　　又是怀着崇敬的心情去 <a href="http://stackoverflow.com/questions/22868307/undefined-symbol-in-node-js-c-addon-under-linux-why" target="_blank">SO</a> 求解了。</p>
+<p>　　最后的解答大概<a href="http://isocpp.org/wiki/faq/inline-functions#inline-member-fns" target="_blank">如下</a>：</p>
+<blockquote>
+<p>内联成员函数的声明看起来像一个非内联函数的声明：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">class</span> Fred {
+<span class="keyword">public</span>:
+    <span class="keyword">void</span> f(<span class="keyword">int</span> i, <span class="keyword">char</span> c);
+};
+</pre></td></tr></table></figure>
+
+<p>但是你的内敛成员函数定义前面又加了 <code>inline</code> 这个关键字时，你必须把这个定义放到头文件中：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">inline</span>
+<span class="keyword">void</span> Fred::f(<span class="keyword">int</span> i, <span class="keyword">char</span> c)
+{
+    <span class="comment">// ...</span>
+}
+</pre></td></tr></table></figure>
+
+<p>这么做的原因就是为了避免链接器 <code>unresolved external</code> 的发生。如果你不这么做，这个错误就将会在你从另外一个 <code>.cpp</code> 文件中调用它时出现。</p>
+</blockquote>
+<p>　　好嘛，原来是原作者自己写的代码有问题啊。但是不得不说一下又涨姿势了。C++还真是有千奇百怪的坑和错误啊。</p>
+<h2 id="解决方案">解决方案</h2>
+<p>　　最后的解决方案大致就是把函数定义放到头文件中去，或者在函数声明前面也加上 <code>inline</code> 关键字。</p>
+<h2 id="simpleini">simpleini</h2>
+<p>　　我的第一个 <code>C++</code> 模块，叫 <code>simpleini</code> ，其实只是抱着试试看 <code>Node.j</code> 的 <code>C++</code> 模块是不是这么写的而已，并没有多大实际用处。Repo 在 <a href="https://github.com/XadillaX/node-simple-ini" target="_blank">Github</a> 上。</p>
+<p>　　然后用法很简单，先安装：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$ </span>npm install simpleini
+</pre></td></tr></table></figure>
+
+<p>　　然后下面的代码就是例子了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="keyword">var</span> simpleIni = <span class="built_in">require</span>(<span class="string">"simpleini"</span>);
+
+console.log(simpleIni.open(<span class="string">"./node_modules/simpleini/src/miniini-0.9/test/test.ini"</span>));
+console.log(simpleIni.read(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>));
+console.log(simpleIni.read(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"d"</span>));
+console.log(simpleIni.read(<span class="string">"SETTINGS"</span>, <span class="string">"sections"</span>));
+console.log(simpleIni.read(<span class="string">"vals"</span>, <span class="string">"float"</span>));
+</pre></td></tr></table></figure>
+
+<p>　　读取配置的时候第一个参数是 <code>Section</code>，第二个参数是 <code>Key</code>，第三个参数是取不到该值时的默认值。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Programming/">Programming</a><a href="/tags/C++/">C++</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Programming/">Programming</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://xcoder.in/2014/04/05/cpp-class-inline-keng/" data-title="C++中类成员函数 inline 的坑 | XadillaX&#39; Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2014/04/03/nodejs-cpp-addons-2/"  title="让Node.js和C++一起搞基 —— 2">
+ <strong>NEXT:</strong><br/> 
+ <span>让Node.js和C++一起搞基 —— 2
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#坑描述"><span class="toc-number">1.</span> <span class="toc-text">坑描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题分析"><span class="toc-number">2.</span> <span class="toc-text">问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-number">3.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#simpleini"><span class="toc-number">4.</span> <span class="toc-text">simpleini</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Document/" title="Document">Document<sup>1</sup></a></li>
+		
+			<li><a href="/categories/NodeJS/" title="NodeJS">NodeJS<sup>5</sup></a></li>
+		
+			<li><a href="/categories/Programming/" title="Programming">Programming<sup>3</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/C++/" style="font-size: 15.00px;">C++</a><a href="/tags/JavaScript/" style="font-size: 15.00px;">JavaScript</a><a href="/tags/Node.js/" style="font-size: 20.00px;">Node.js</a><a href="/tags/Programming/" style="font-size: 10.00px;">Programming</a><a href="/tags/Project Parse/" style="font-size: 10.00px;">Project Parse</a><a href="/tags/SRM/" style="font-size: 10.00px;">SRM</a><a href="/tags/TopCoder/" style="font-size: 10.00px;">TopCoder</a><a href="/tags/XPlan/" style="font-size: 10.00px;">XPlan</a><a href="/tags/一起撸Node.JS/" style="font-size: 15.00px;">一起撸Node.JS</a>
+    </div>
+  </div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m a Pseudo-Otaku. <br/>
+			Another way, I am a code monkey! My name is XadillaX.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		<a href="https://github.com/XadillaX" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"xcoder-ghost"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>
