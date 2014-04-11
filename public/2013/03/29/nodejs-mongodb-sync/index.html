@@ -1,0 +1,481 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>关于Node.js下的MongoDB阻塞模式实现 | XadillaX&#39; Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="小鳥遊死月">
+    
+    <meta name="description" content="注：本文仅为我初学 Node.JS 的时候的稚嫩笔记。是从 http://web.archive.org/ 扒回来的。现在看来已无多大参考价值，各位可以略过。我只是把它扒回来纪念一下而已，以记录我的历程。而那个相对应的 SevenzJS 也已经被遗弃
+背景
+　　最近在做公司项目的一个模块，主要用于 ">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="XadillaX&#39; Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.png">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="XadillaX&#39; Blog" title="XadillaX&#39; Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="XadillaX&#39; Blog">XadillaX&#39; Blog</a></h1>
+				<h2 class="blog-motto">艾克斯の編碼者 —— 一個偽宅级别的碼畜。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/tags">标签</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+						<li><a href="/curriculumvitae">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:xcoder.in">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2013/03/29/nodejs-mongodb-sync/" title="关于Node.js下的MongoDB阻塞模式实现" itemprop="url">关于Node.js下的MongoDB阻塞模式实现</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2013-03-29T00:31:38.000Z" itemprop="datePublished">Mar 29 2013</time>
+    Updated:<time datetime="2014-04-11T04:39:49.000Z" itemprop="dateModified">Apr 11 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正题"><span class="toc-number">2.</span> <span class="toc-text">正题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结尾"><span class="toc-number">3.</span> <span class="toc-text">结尾</span></a></li></ol>
+		</div>
+		
+		<p>　　<strong><em>注：本文仅为我初学 Node.JS 的时候的稚嫩笔记。是从 <a href="http://web.archive.org/" target="_blank">http://web.archive.org/</a> 扒回来的。现在看来已无多大参考价值，各位可以略过。我只是把它扒回来纪念一下而已，以记录我的历程。而那个相对应的 <code>SevenzJS</code> 也已经被遗弃</em></strong></p>
+<h2 id="背景">背景</h2>
+<p>　　最近在做公司项目的一个模块，主要用于 <strong>JSON Api</strong> 的传输，所以开发环境的目标就锁定在了 <strong>Node.js</strong>。而这一块的登陆用户又是存在 <strong>MongoDB</strong> 里面的，所以就有了如下的问题。</p>
+<ul>
+<li>网上的 Node.JS 框架都比较重型或者臃肿的，学了 Node 之后还需要学额外的东西。</li>
+<li>所以我就打算自己写一个专注于 JSON Api 的快速开发框架，于是有了 SevenJS。</li>
+<li>问题出现了，虽然 Node.JS 极度推崇异步非阻塞模式，但是阻塞模式在平常开发中还是太常用了。</li>
+</ul>
+<p>　　我们试想一下，如果我们有几句MongoDB的查询之类的，用node-mongodb-native来写的话是这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="code"><pre><span class="keyword">var</span> client = <span class="keyword">new</span> Db(<span class="string">'test'</span>, <span class="keyword">new</span> Server(<span class="string">"127.0.0.1"</span>, <span class="number">27017</span>, {}));
+<span class="keyword">var</span> test = <span class="function"><span class="keyword">function</span> <span class="params">(err, collection)</span> {</span>
+    collection.insert({a:<span class="number">2</span>}, <span class="function"><span class="keyword">function</span><span class="params">(err, docs)</span> {</span>
+        collection.count(<span class="function"><span class="keyword">function</span><span class="params">(err, count)</span> {</span>
+            test.assertEquals(<span class="number">1</span>, count); });
+
+            <span class="comment">// Locate all the entries using find</span>
+            collection.find().toArray(<span class="function"><span class="keyword">function</span><span class="params">(err, results)</span> {</span>
+            test.assertEquals(<span class="number">1</span>, results.length);
+            test.assertTrue(results[<span class="number">0</span>].a === <span class="number">2</span>);
+
+            <span class="comment">// Let's close the db</span>
+            client.close();
+        });
+    });
+};
+
+client.open(<span class="function"><span class="keyword">function</span><span class="params">(err, client)</span> {</span>
+    client.collection(<span class="string">'test_insert'</span>, test);
+});
+</pre></td></tr></table></figure>
+
+<p>　　各种嵌套回调有木有！这不是我们想要的，尤其是我的那个框架，因为我的框架是流式的。</p>
+<p>　　所以我就想有这样的一种方案：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="keyword">var</span> client = mongodb.connect();
+<span class="keyword">var</span> collection = mongodb.getCollection(client, <span class="string">"dbname"</span>);
+<span class="keyword">var</span> result = mongodb.find({ <span class="string">"foo"</span> : <span class="string">"bar"</span> });
+</pre></td></tr></table></figure>
+
+<p>　　使得这样就能找出dbname表下的foo为bar值的记录了。</p>
+<h2 id="正题">正题</h2>
+<p>　　出于这样的想法，我在网上找遍了大江南北，除了 CNode 社区有人问到了类似的问题以外，再也找不到音信了，而且那里也没有一个好的回答。</p>
+<p>　　不过这也正常，因为 Node.js 官方本身就不推荐这么做——他们认为异步非阻塞是非常优雅的一件事情。</p>
+<p>　　包括我在 Node.js 的 IRC 聊天室里面问了这个问题，也有人是这么回答我的：</p>
+<blockquote>
+<p>You can’t use a car as a boat. If you want a boat, use a boat.</p>
+</blockquote>
+<p>　　言简意赅，直截了当地说明 Node.js 是不支持这样的，如果你想这样做，就用 python 或者 ruby 去吧。</p>
+<p>　　不过好在后来 IRC 里面有人推荐了我一个模块：<a href="https://github.com/laverdet/node-fibers" target="_blank">fibers</a>。</p>
+<p>　　有了这个模块好啊，直接能用了有木有！</p>
+<p>　　接下来就来讲一下如何使用吧：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">find</span><span class="params">(collection, selector, callback)</span> {</span>
+    collection.find(selector).toArray(callback);
+}
+
+<span class="keyword">var</span> Fiber = <span class="built_in">require</span>(<span class="string">'fibers'</span>);
+<span class="keyword">var</span> Future = <span class="built_in">require</span>(<span class="string">'fibers/future'</span>);
+<span class="keyword">var</span> wait = Future.wait;
+
+Fiber(<span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
+    <span class="keyword">var</span> wrapper = Future.wrap(fund);
+
+    <span class="comment">/** 这里就是正题了，我们假设已经获取一个collection了 */</span>
+    <span class="keyword">var</span> result = wrapper(collection, { <span class="string">"foo"</span> : <span class="string">"bar"</span> }).wait();
+    console.log(<span class="built_in">JSON</span>.stringify(result));
+}).run();
+</pre></td></tr></table></figure>
+
+<p>　　这就是一个非常简单的同步查询 MongoDB 的例子了，实际上本质还是一个异步，注意到没有，其实 <code>Fiber()</code> 内部的那个 <code>function</code> 本质上还是一个回调函数，只不过在这个回调函数里面，里面的所有 <code>callback</code> 都可以被同步了。不过我们只需要小动一些手脚就能加上这个外壳了。具体请参见 <a href="https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/sevenz/sRouter.js" target="_blank">sRouter.js</a> 约 121 行的外壳以及 <a href="https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/sevenz/sMongoSync.js" target="_blank">sMongoSync.js</a> 的实现，加上 <a href="http://web.archive.org/web/20130726042859/https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/actions/index.js" target="_blank">index.js</a> 中的查询 demo。</p>
+<h2 id="结尾">结尾</h2>
+<p>　　所以说当我们做不到某件事的时候，多去IRC看看，多去社区混混，也多去找找模块，要真没有的话就只能自己丰衣足食了（我还没到那水平，笑）。总之这次Fibers帮了我一个大忙。</p>
+<p>　　最后，SevenzJS 欢迎 <a href="https://github.com/XadillaX/SevenzJS" target="_blank">Fork</a>。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/老博客备份归档/">老博客备份归档</a><a href="/tags/Node.JS/">Node.JS</a><a href="/tags/MongoDB/">MongoDB</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/老博客备份归档/">老博客备份归档</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://xcoder.in/2013/03/29/nodejs-mongodb-sync/" data-title="关于Node.js下的MongoDB阻塞模式实现 | XadillaX&#39; Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2013/07/15/javascript-callback-this-bind/" title="关于JavaScript中callback函数的this指针重定义">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  关于JavaScript中callback函数的this指针重定义</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2012/12/24/jquery-animate-color-support/"  title="关于jQuery中“animate()”函数对颜色变化的支持">
+ <strong>NEXT:</strong><br/> 
+ <span>关于jQuery中“animate()”函数对颜色变化的支持
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正题"><span class="toc-number">2.</span> <span class="toc-text">正题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结尾"><span class="toc-number">3.</span> <span class="toc-text">结尾</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Document/" title="Document">Document<sup>1</sup></a></li>
+		
+			<li><a href="/categories/NodeJS/" title="NodeJS">NodeJS<sup>6</sup></a></li>
+		
+			<li><a href="/categories/Programming/" title="Programming">Programming<sup>3</sup></a></li>
+		
+			<li><a href="/categories/老博客备份归档/" title="老博客备份归档">老博客备份归档<sup>13</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/C++/" style="font-size: 18.33px;">C++</a><a href="/tags/CodeForces/" style="font-size: 10.00px;">CodeForces</a><a href="/tags/HGE/" style="font-size: 15.00px;">HGE</a><a href="/tags/JavaScript/" style="font-size: 13.33px;">JavaScript</a><a href="/tags/Javascript/" style="font-size: 11.67px;">Javascript</a><a href="/tags/MongoDB/" style="font-size: 10.00px;">MongoDB</a><a href="/tags/Node.JS/" style="font-size: 10.00px;">Node.JS</a><a href="/tags/Node.js/" style="font-size: 16.67px;">Node.js</a><a href="/tags/Programming/" style="font-size: 10.00px;">Programming</a><a href="/tags/Project Parse/" style="font-size: 10.00px;">Project Parse</a><a href="/tags/SRM/" style="font-size: 10.00px;">SRM</a><a href="/tags/ScopeLock/" style="font-size: 10.00px;">ScopeLock</a><a href="/tags/TopCoder/" style="font-size: 10.00px;">TopCoder</a><a href="/tags/XPlan/" style="font-size: 10.00px;">XPlan</a><a href="/tags/jQuery/" style="font-size: 10.00px;">jQuery</a><a href="/tags/一起撸Node.JS/" style="font-size: 13.33px;">一起撸Node.JS</a><a href="/tags/二进制文件/" style="font-size: 10.00px;">二进制文件</a><a href="/tags/游戏制作/" style="font-size: 10.00px;">游戏制作</a><a href="/tags/游戏开发/" style="font-size: 11.67px;">游戏开发</a><a href="/tags/牢骚/" style="font-size: 10.00px;">牢骚</a><a href="/tags/线程安全/" style="font-size: 10.00px;">线程安全</a><a href="/tags/线程死锁/" style="font-size: 10.00px;">线程死锁</a><a href="/tags/网之游/" style="font-size: 10.00px;">网之游</a><a href="/tags/老博客备份归档/" style="font-size: 20.00px;">老博客备份归档</a><a href="/tags/设计模式/" style="font-size: 11.67px;">设计模式</a><a href="/tags/资源包/" style="font-size: 10.00px;">资源包</a>
+    </div>
+  </div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m a Pseudo-Otaku. <br/>
+			Another way, I am a code monkey! My name is XadillaX.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		<a href="https://github.com/XadillaX" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"xcoder-ghost"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>

@@ -1,5 +1,5 @@
-date: 2014-04-02 01:18:35.059
-argv: E:\Program Files\nodejs\node.exe C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\bin\hexo server
+date: 2014-04-11 14:36:26.486
+argv: node C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\bin\hexo server
 os: Windows_NT 6.1.7601 win32 x64
 version:
   hexo: 2.5.2
@@ -13,117 +13,135 @@ version:
   openssl: 1.0.1e
 ---
 
-[debug] 01:18:34.004 Config file loaded
-[debug] 01:18:34.005 Version info checked successfully
-[debug] 01:18:34.028 Loading database.
-[debug] 01:18:34.078 Plugin loaded successfully: hexo-generator-feed
-[debug] 01:18:34.082 Script load successfully: fancybox.js
-[debug] 01:18:34.130 Processed: _posts/xplan-spider-doc/xplan-news-1.jpg
-[debug] 01:18:34.130 Processed: _posts/xplan-spider-doc/xplan-news-2.jpg
-[debug] 01:18:34.131 Processed: LICENSE
-[debug] 01:18:34.131 Processed: README.md
-[debug] 01:18:34.131 Processed: scripts/fancybox.js
-[debug] 01:18:34.157 Processed: source/css/_base/code.styl
-[debug] 01:18:34.157 Processed: source/css/_base/public.styl
-[debug] 01:18:34.158 Processed: source/css/_base/font.styl
-[debug] 01:18:34.158 Processed: source/css/_base/variable.styl
-[debug] 01:18:34.158 Processed: source/css/_partial/article.styl
-[debug] 01:18:34.158 Processed: source/css/_partial/aside.styl
-[debug] 01:18:34.158 Processed: source/css/_partial/duoshuo.styl
-[debug] 01:18:34.158 Processed: source/css/_partial/footer.styl
-[debug] 01:18:34.158 Processed: source/css/_partial/gallery.styl
-[debug] 01:18:34.158 Processed: source/css/_partial/header.styl
-[debug] 01:18:34.158 Processed: source/css/_partial/index.styl
-[debug] 01:18:34.158 Processed: source/css/_partial/helper.styl
-[debug] 01:18:34.169 Processed: source/img/author.jpg
-[debug] 01:18:34.170 Processed: source/img/favicon.ico
-[debug] 01:18:34.170 Processed: source/img/logo.png
-[debug] 01:18:34.171 Processed: source/img/logo.svg
-[debug] 01:18:34.173 Processed: source/img/pacman.jpg
-[debug] 01:18:34.174 Processed: source/font/FontAwesome.otf
-[debug] 01:18:34.174 Processed: source/font/coveredbyyourgrace-webfont.eot
-[debug] 01:18:34.175 Processed: source/font/coveredbyyourgrace-webfont.svg
-[debug] 01:18:34.175 Processed: source/font/coveredbyyourgrace-webfont.ttf
-[debug] 01:18:34.176 Processed: source/font/coveredbyyourgrace-webfont.woff
-[debug] 01:18:34.176 Processed: source/font/fontawesome-webfont.eot
-[debug] 01:18:34.177 Processed: source/font/fontawesome-webfont.svg
-[debug] 01:18:34.178 Processed: source/font/fontawesome-webfont.ttf
-[debug] 01:18:34.178 Processed: source/font/fontawesome-webfont.woff
-[debug] 01:18:34.179 Processed: source/js/jquery-2.1.0.min.js
-[debug] 01:18:34.179 Processed: source/css/style.styl
-[debug] 01:18:34.180 Processed: source/fancybox/blank.gif
-[debug] 01:18:34.181 Processed: source/fancybox/fancybox_loading.gif
-[debug] 01:18:34.181 Processed: source/fancybox/fancybox_loading@2x.gif
-[debug] 01:18:34.182 Processed: source/fancybox/fancybox_overlay.png
-[debug] 01:18:34.183 Processed: source/fancybox/fancybox_sprite.png
-[debug] 01:18:34.183 Processed: source/fancybox/fancybox_sprite@2x.png
-[debug] 01:18:34.184 Processed: source/fancybox/jquery.fancybox.css
-[debug] 01:18:34.185 Processed: source/fancybox/jquery.fancybox.js
-[debug] 01:18:34.185 Processed: source/fancybox/jquery.fancybox.pack.js
-[debug] 01:18:34.186 Processed: source/fancybox/helpers/fancybox_buttons.png
-[debug] 01:18:34.187 Processed: source/fancybox/helpers/jquery.fancybox-buttons.css
-[debug] 01:18:34.187 Processed: source/fancybox/helpers/jquery.fancybox-buttons.js
-[debug] 01:18:34.188 Processed: source/fancybox/helpers/jquery.fancybox-media.js
-[debug] 01:18:34.189 Processed: source/fancybox/helpers/jquery.fancybox-thumbs.css
-[debug] 01:18:34.190 Processed: source/fancybox/helpers/jquery.fancybox-thumbs.js
-[debug] 01:18:34.190 Processed: layout/archive.ejs
-[debug] 01:18:34.190 Processed: layout/category.ejs
-[debug] 01:18:34.191 Processed: layout/layout.ejs
-[debug] 01:18:34.191 Processed: layout/index.ejs
-[debug] 01:18:34.191 Processed: layout/page.ejs
-[debug] 01:18:34.191 Processed: layout/post.ejs
-[debug] 01:18:34.191 Processed: layout/tag.ejs
-[debug] 01:18:34.191 Processed: layout/_widget/archive.ejs
-[debug] 01:18:34.191 Processed: layout/_widget/category.ejs
-[debug] 01:18:34.191 Processed: layout/_widget/links.ejs
-[debug] 01:18:34.191 Processed: layout/_widget/rss.ejs
-[debug] 01:18:34.191 Processed: layout/_widget/tag.ejs
-[debug] 01:18:34.191 Processed: layout/_widget/tagcloud.ejs
-[debug] 01:18:34.191 Processed: layout/_partial/after_footer.ejs
-[debug] 01:18:34.191 Processed: layout/_partial/archive.ejs
-[debug] 01:18:34.191 Processed: layout/_partial/article.ejs
-[debug] 01:18:34.191 Processed: layout/_partial/categories.ejs
-[debug] 01:18:34.191 Processed: layout/_partial/footer.ejs
-[debug] 01:18:34.191 Processed: layout/_partial/google_analytics.ejs
-[debug] 01:18:34.191 Processed: layout/_partial/head.ejs
-[debug] 01:18:34.191 Processed: layout/_partial/header.ejs
-[debug] 01:18:34.191 Processed: layout/_partial/pagination.ejs
-[debug] 01:18:34.191 Processed: layout/_partial/search.ejs
-[debug] 01:18:34.191 Processed: layout/_partial/sidebar.ejs
-[debug] 01:18:34.192 Processed: layout/_partial/tags.ejs
-[debug] 01:18:34.192 Processed: layout/_partial/post/article.ejs
-[debug] 01:18:34.192 Processed: layout/_partial/post/catetags.ejs
-[debug] 01:18:34.192 Processed: layout/_partial/post/comment.ejs
-[debug] 01:18:34.192 Processed: layout/_partial/post/footer.ejs
-[debug] 01:18:34.192 Processed: layout/_partial/post/gallery.ejs
-[debug] 01:18:34.192 Processed: layout/_partial/post/header.ejs
-[debug] 01:18:34.192 Processed: layout/_partial/post/jiathis.ejs
-[debug] 01:18:34.192 Processed: layout/_partial/post/pagination.ejs
-[debug] 01:18:35.003 Theme config loaded
-[debug] 01:18:35.003 Processed: _config.yml
-[debug] 01:18:35.003 Processed: languages/default.yml
-[debug] 01:18:35.004 Processed: languages/zh-CN.yml
-[debug] 01:18:35.004 Processed: languages/zh-TW.yml
-[debug] 01:18:35.015 Processed: curriculumvitae/index.md
-[debug] 01:18:35.016 Processed: categories/index.md
-[debug] 01:18:35.016 Processed: tags/index.md
-[error] 01:18:35.054 HexoError: Process failed: _posts/nodejs-cpp-addons-1.md
-Error: Unexpected end of tag " code" on line 47 in file E:\cygwin\home\XadillaX\hexo\source\_posts\nodejs-cpp-addons-1.md.
-    at Object.exports.throwError (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\utils.js:183:9)
-    at parseTag (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\parser.js:531:15)
-    at C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\parser.js:638:15
-    at Object.exports.each (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\utils.js:45:11)
-    at Object.exports.parse (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\parser.js:622:9)
-    at parse (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\swig.js:349:19)
-    at precompile (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\swig.js:479:23)
-    at compile (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\swig.js:584:16)
-    at Object.render (C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\node_modules\swig\lib\swig.js:513:17)
-    at C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\lib\post\render.js:69:29
-
-[debug] 01:18:35.059 Processed: _posts/node-1-summary.md
-[debug] 01:18:35.059 Cache saved
-[debug] 01:18:35.060 Processed: _posts/node-2-environment-in-windows.md
-[debug] 01:18:35.060 Processed: _posts/node-4-base.md
-[debug] 01:18:35.060 Processed: _posts/srm-589-div2.md
-[debug] 01:18:35.061 Processed: _posts/node-public-file-house.md
-[debug] 01:18:35.064 Processed: _posts/xplan-spider-doc.md
+[debug] 14:36:25.297 Config file loaded
+[debug] 14:36:25.299 Version info checked successfully
+[debug] 14:36:25.321 Loading database.
+[debug] 14:36:25.374 Plugin loaded successfully: hexo-generator-feed
+[debug] 14:36:25.376 Script load successfully: fancybox.js
+[debug] 14:36:25.443 Processed: _posts/codeforces-128-div2/hit-ball.png
+[debug] 14:36:25.443 Processed: _posts/hero-snake/1.png
+[debug] 14:36:25.443 Processed: _posts/hero-snake/10.png
+[debug] 14:36:25.443 Processed: _posts/hero-snake/2.png
+[debug] 14:36:25.443 Processed: _posts/hero-snake/3.png
+[debug] 14:36:25.443 Processed: _posts/hero-snake/4.png
+[debug] 14:36:25.443 Processed: _posts/hero-snake/5.png
+[debug] 14:36:25.443 Processed: _posts/hero-snake/6.png
+[debug] 14:36:25.443 Processed: _posts/hero-snake/7.png
+[debug] 14:36:25.443 Processed: _posts/hero-snake/8.png
+[debug] 14:36:25.443 Processed: _posts/hero-snake/9.png
+[debug] 14:36:25.443 Processed: _posts/hero-snake/bin.7z
+[debug] 14:36:25.444 Processed: _posts/hero-snake/door.png
+[debug] 14:36:25.444 Processed: _posts/hero-snake/treasure0.png
+[debug] 14:36:25.444 Processed: _posts/hero-snake/treasure1.png
+[debug] 14:36:25.444 Processed: _posts/hero-snake/treasure10.png
+[debug] 14:36:25.444 Processed: _posts/hero-snake/treasure2.png
+[debug] 14:36:25.444 Processed: _posts/hero-snake/treasure3.png
+[debug] 14:36:25.444 Processed: _posts/hero-snake/treasure4.png
+[debug] 14:36:25.445 Processed: _posts/hero-snake/treasure5.png
+[debug] 14:36:25.445 Processed: _posts/hero-snake/treasure6.png
+[debug] 14:36:25.445 Processed: _posts/hero-snake/treasure7.png
+[debug] 14:36:25.445 Processed: _posts/hero-snake/treasure8.png
+[debug] 14:36:25.445 Processed: _posts/hge-hotspot-collision/src.rar
+[debug] 14:36:25.445 Processed: _posts/lianlinakan-algorighm-i/comment.png
+[debug] 14:36:25.445 Processed: _posts/nodejs-cpp-addons-2/mama.jpg
+[debug] 14:36:25.445 Processed: _posts/xplan-spider-doc/xplan-news-1.jpg
+[debug] 14:36:25.445 Processed: _posts/xplan-spider-doc/xplan-news-2.jpg
+[debug] 14:36:25.447 Processed: README.md
+[debug] 14:36:25.447 Processed: LICENSE
+[debug] 14:36:25.447 Processed: scripts/fancybox.js
+[debug] 14:36:25.474 Processed: source/css/_base/code.styl
+[debug] 14:36:25.474 Processed: source/css/_base/font.styl
+[debug] 14:36:25.474 Processed: source/css/_base/public.styl
+[debug] 14:36:25.474 Processed: source/css/_base/variable.styl
+[debug] 14:36:25.474 Processed: source/css/_partial/aside.styl
+[debug] 14:36:25.474 Processed: source/css/_partial/article.styl
+[debug] 14:36:25.474 Processed: source/css/_partial/duoshuo.styl
+[debug] 14:36:25.474 Processed: source/css/_partial/footer.styl
+[debug] 14:36:25.474 Processed: source/css/_partial/gallery.styl
+[debug] 14:36:25.474 Processed: source/css/_partial/header.styl
+[debug] 14:36:25.474 Processed: source/css/_partial/helper.styl
+[debug] 14:36:25.474 Processed: source/css/_partial/index.styl
+[debug] 14:36:25.485 Processed: source/js/jquery-2.1.0.min.js
+[debug] 14:36:25.486 Processed: source/img/author.jpg
+[debug] 14:36:25.486 Processed: source/img/favicon.ico
+[debug] 14:36:25.487 Processed: source/img/logo.png
+[debug] 14:36:25.487 Processed: source/img/pacman.jpg
+[debug] 14:36:25.488 Processed: source/img/logo.svg
+[debug] 14:36:25.489 Processed: source/font/coveredbyyourgrace-webfont.svg
+[debug] 14:36:25.489 Processed: source/font/FontAwesome.otf
+[debug] 14:36:25.490 Processed: source/font/coveredbyyourgrace-webfont.ttf
+[debug] 14:36:25.490 Processed: source/font/coveredbyyourgrace-webfont.woff
+[debug] 14:36:25.491 Processed: source/font/fontawesome-webfont.eot
+[debug] 14:36:25.491 Processed: source/font/fontawesome-webfont.woff
+[debug] 14:36:25.492 Processed: source/font/fontawesome-webfont.svg
+[debug] 14:36:25.492 Processed: source/font/fontawesome-webfont.ttf
+[debug] 14:36:25.493 Processed: source/font/coveredbyyourgrace-webfont.eot
+[debug] 14:36:25.493 Processed: source/css/style.styl
+[debug] 14:36:25.494 Processed: source/fancybox/fancybox_loading.gif
+[debug] 14:36:25.495 Processed: source/fancybox/fancybox_overlay.png
+[debug] 14:36:25.495 Processed: source/fancybox/fancybox_sprite.png
+[debug] 14:36:25.497 Processed: source/fancybox/fancybox_loading@2x.gif
+[debug] 14:36:25.498 Processed: source/fancybox/blank.gif
+[debug] 14:36:25.499 Processed: source/fancybox/jquery.fancybox.css
+[debug] 14:36:25.500 Processed: source/fancybox/jquery.fancybox.pack.js
+[debug] 14:36:25.500 Processed: source/fancybox/fancybox_sprite@2x.png
+[debug] 14:36:25.502 Processed: source/fancybox/jquery.fancybox.js
+[debug] 14:36:25.503 Processed: source/fancybox/helpers/jquery.fancybox-buttons.css
+[debug] 14:36:25.505 Processed: source/fancybox/helpers/jquery.fancybox-media.js
+[debug] 14:36:25.506 Processed: source/fancybox/helpers/fancybox_buttons.png
+[debug] 14:36:25.506 Processed: source/fancybox/helpers/jquery.fancybox-buttons.js
+[debug] 14:36:25.507 Processed: source/fancybox/helpers/jquery.fancybox-thumbs.js
+[debug] 14:36:25.508 Processed: source/fancybox/helpers/jquery.fancybox-thumbs.css
+[debug] 14:36:25.509 Processed: layout/archive.ejs
+[debug] 14:36:25.509 Processed: layout/category.ejs
+[debug] 14:36:25.509 Processed: layout/layout.ejs
+[debug] 14:36:25.509 Processed: layout/index.ejs
+[debug] 14:36:25.509 Processed: layout/page.ejs
+[debug] 14:36:25.509 Processed: layout/post.ejs
+[debug] 14:36:25.509 Processed: layout/tag.ejs
+[debug] 14:36:25.509 Processed: layout/_widget/category.ejs
+[debug] 14:36:25.509 Processed: layout/_widget/links.ejs
+[debug] 14:36:25.509 Processed: layout/_widget/archive.ejs
+[debug] 14:36:25.509 Processed: layout/_widget/tag.ejs
+[debug] 14:36:25.509 Processed: layout/_widget/tagcloud.ejs
+[debug] 14:36:25.509 Processed: layout/_widget/rss.ejs
+[debug] 14:36:25.509 Processed: layout/_partial/after_footer.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/categories.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/article.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/head.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/google_analytics.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/header.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/pagination.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/footer.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/search.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/tags.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/sidebar.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/archive.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/post/footer.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/post/comment.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/post/pagination.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/post/article.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/post/header.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/post/jiathis.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/post/gallery.ejs
+[debug] 14:36:25.510 Processed: layout/_partial/post/catetags.ejs
+[debug] 14:36:26.392 Theme config loaded
+[debug] 14:36:26.392 Processed: _config.yml
+[debug] 14:36:26.392 Processed: languages/zh-CN.yml
+[debug] 14:36:26.393 Processed: languages/default.yml
+[debug] 14:36:26.393 Processed: languages/zh-TW.yml
+[debug] 14:36:26.397 Processed: categories/index.md
+[debug] 14:36:26.403 Processed: curriculumvitae/index.md
+[debug] 14:36:26.403 Processed: tags/index.md
+[error] 14:36:26.469 { rawMessage: 'Unexpected characters near "],".',
+  parsedLine: 3,
+  snippet: 'tags: [ 老博客备份归档, 游戏开发, 牢骚, 网之游 ],',
+  parsedFile: null,
+  message: 'Unexpected characters near "]," at line 3 (near "tags: [ 老博客备份归档, 游戏开发, 牢骚, 网之游 ],").',
+  domain: 
+   { domain: null,
+     _events: { error: [Function] },
+     _maxListeners: 10,
+     members: [],
+     _disposed: true },
+  domainThrown: true }

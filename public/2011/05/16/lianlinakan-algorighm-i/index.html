@@ -1,0 +1,808 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>连连看核心算法小分享——1 | XadillaX&#39; Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="小鳥遊死月">
+    
+    <meta name="description" content="注：这篇文章我到现在也没有填第二篇的坑。数据没了重新从 Capture 里面取出来，看看舍不得，于是把这篇文章也拿回来了。权当纪念吧，以及当时和 Kalxd 的对话。
+正文
+　　刚忙完邀请赛，蹭了块铜。刚才在逛别人博客的时候看别人的文章，突然心血来潮想记一些东西。
+　　连连看是我学HGE做的第一个小">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="XadillaX&#39; Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.png">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="XadillaX&#39; Blog" title="XadillaX&#39; Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="XadillaX&#39; Blog">XadillaX&#39; Blog</a></h1>
+				<h2 class="blog-motto">艾克斯の編碼者 —— 一個偽宅级别的碼畜。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/tags">标签</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+						<li><a href="/curriculumvitae">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:xcoder.in">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2011/05/16/lianlinakan-algorighm-i/" title="连连看核心算法小分享——1" itemprop="url">连连看核心算法小分享——1</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2011-05-16T03:30:12.000Z" itemprop="datePublished">May 16 2011</time>
+    Updated:<time datetime="2014-04-11T05:49:29.000Z" itemprop="dateModified">Apr 11 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#正文"><span class="toc-number">1.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#回忆时间"><span class="toc-number">2.</span> <span class="toc-text">回忆时间</span></a></li></ol>
+		</div>
+		
+		<p>　　<strong>注：这篇文章我到现在也没有填第二篇的坑。数据没了重新从 Capture 里面取出来，看看舍不得，于是把这篇文章也拿回来了。权当纪念吧，以及当时和 <code>Kalxd</code> 的对话。</strong></p>
+<h2 id="正文">正文</h2>
+<p>　　刚忙完邀请赛，蹭了块铜。刚才在逛别人博客的时候看别人的文章，突然心血来潮想记一些东西。</p>
+<p>　　连连看是我学HGE做的第一个小游戏，素材用的是QQ的。时间大概是去年国庆吧。好吧，废话不多说，就讲讲连连看怎么找到能消的两块吧。</p>
+<p>　　首先来回顾一下消方块的规则，一共有三种可能性：</p>
+<ol>
+<li>直线消除（包括水平或者垂直）</li>
+<li>一个拐角消除</li>
+<li>两个拐角消除</li>
+</ol>
+<p>　　嗯，接下去我们就针对每种可能性开始写代码。</p>
+<p>　　首先讲讲一些定义：</p>
+<p>　　坐标结构体，这个结构体包含了x、y的值以及一些坐标中常用的函数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+</pre></td><td class="code"><pre><span class="comment">/**
+ * @brief 地图坐标结构体
+ *
+ * 地图坐标结构体，包含x轴值、y轴值
+ * 以及一些操作函数。
+ */</span>
+<span class="keyword">struct</span> CoorType {
+    <span class="keyword">int</span> x;                                          <span class="comment">///&lt; x轴</span>
+    <span class="keyword">int</span> y;                                          <span class="comment">///&lt; y轴</span>
+
+    <span class="comment">/**
+     * 重载构造函数
+     * 将x、y值各初始化为-1
+     */</span>
+    CoorType()
+    {
+        x = -<span class="number">1</span>, y = -<span class="number">1</span>;
+    }
+
+    <span class="comment">/**
+     * 构造函数重载
+     * 将x、y各赋值为b、a
+     * @param a 将要赋值的y轴数值
+     * @param b 将要赋值的x轴数值
+     */</span>
+    CoorType(<span class="keyword">int</span> a, <span class="keyword">int</span> b)
+    {
+        y = a, x = b;
+    }
+
+    <span class="comment">/**
+     * 设置坐标
+     * 将x、y各赋值为b、a
+     * @param a 将要赋值的y轴数值
+     * @param b 将要赋值的x轴数值
+     */</span>
+    <span class="keyword">void</span> Set(<span class="keyword">int</span> a, <span class="keyword">int</span> b)
+    {
+        y = a, x = b;
+    }
+
+    <span class="comment">/**
+     * 运算符"+="重载
+     * 将此坐标与另一坐标相加
+     * @param &a 另一坐标
+     * @return 返回结果坐标值
+     */</span>
+    CoorType & <span class="keyword">operator</span> += (<span class="keyword">const</span> CoorType &a)
+    {
+        y += a.y, x += a.x;
+        <span class="keyword">return</span> *<span class="keyword">this</span>;
+    }
+
+    <span class="comment">/**
+     * 重载运算符"!="
+     * 判断与另一坐标是否表示同一个值
+     * @param &a 另一坐标
+     * @return 返回布尔类型表示是否相等
+     */</span>
+    <span class="keyword">bool</span> <span class="keyword">operator</span> != (<span class="keyword">const</span> CoorType &a)
+    {
+        <span class="keyword">if</span>(y != a.y || x != a.x) <span class="keyword">return</span> <span class="keyword">false</span>;
+        <span class="keyword">else</span> <span class="keyword">return</span> <span class="keyword">true</span>;
+    }
+
+    <span class="comment">/**
+     * 判断此坐标是否合法
+     * 若出界则不合法
+     * @return 返回布尔类型表示是否合法
+     */</span>
+    <span class="keyword">bool</span> isIll()
+    {
+        <span class="keyword">if</span>(y &gt;= <span class="number">0</span> && x &gt;= <span class="number">0</span> && y &lt; MAP_HEIGHT && x &lt; MAP_WIDTH) <span class="keyword">return</span> <span class="keyword">true</span>;
+        <span class="keyword">else</span> <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+};
+</pre></td></tr></table></figure>
+
+<p>　　然后是关于地图数组的定义：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">int</span> Map[MAP_HEIGHT][MAP_WIDTH];
+</pre></td></tr></table></figure>
+
+<p>　　接着是路径结构体：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre><span class="comment">/**
+ * @brief 路线结构体
+ *
+ * 合法路线结构体
+ * 储存最多四个点（起点终点和两个转折点）
+ */</span>
+<span class="keyword">struct</span> PointPath {
+    <span class="keyword">bool</span> bExist;                                    <span class="comment">///&lt; 是否有路径</span>
+    <span class="keyword">int</span> Num;                                        <span class="comment">///&lt; 驻点个数</span>
+    CoorType Points[<span class="number">4</span>];                             <span class="comment">///&lt; 各驻点</span>
+};
+</pre></td></tr></table></figure>
+
+<p>　　接着可以正式开始了。首先我们来想一下，哪些条件各符合上面三种情况的哪一种。对于一条直线的，显然是x相等或者y相等；对于有一个转折点的话，我们只需要判断起点横向画线（或者纵向），然后终点纵向画线（或者横向），然后从起点到交点以及从交点到终点各可行不；对于两个转折点，其中一个转折点的x或者y跟起点的x或者y相等，另一个转折点跟终点的x或者y相等。于是这两个转折点就根据这样的性质进行枚举。因为连连看的地图比较小，所以这种O(n^2)的时间复杂度不碍事。</p>
+<p>　　为了方便，我们写一个 <code>Abled(CoorType, CoorType, bool, bool);</code> 函数来进行判断两个点（当然两点是在同一直线上的）是否有同路（即中间没有东西挡着）。我们先放着这个Abled不管，先实现寻路过程吧。</p>
+<p>　　我是用一个CMapSearch类来实现的，声明如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+</pre></td><td class="code"><pre><span class="comment">/**
+ * @brief 地图搜索类
+ *
+ * 根据指定地图搜索出各合法路径。
+ */</span>
+<span class="keyword">class</span> CMapSearch
+{
+<span class="keyword">private</span>:
+    <span class="keyword">int</span> Map[MAP_HEIGHT][MAP_WIDTH];                                             <span class="comment">///&lt; 地图数据矩阵</span>
+    PointPath dis[MAP_HEIGHT][MAP_WIDTH][MAP_HEIGHT][MAP_WIDTH];                <span class="comment">///&lt; 路径数组</span>
+    STLMap grap;                                                                <span class="comment">///&lt; STL映射</span>
+    CoorType dir[<span class="number">4</span>];                                                            <span class="comment">///&lt; 常量坐标增量</span>
+    PointPath Hint;                                                             <span class="comment">///&lt; 提示时用的合法路径</span>
+
+    <span class="comment">/**
+     * @brief 两点寻径
+     *
+     * 对(x1, y1)和(x2, y2)进行寻径
+     * @param x1 第一个坐标的x轴
+     * @param y1 第一个坐标的y轴
+     * @param x2 第二个坐标的x轴
+     * @param y2 第二个坐标的y轴
+     * @return 返回一个路线结构体的值，若不存在路径，则结构体的bExist为假
+     * @see Abled
+     */</span>
+    PointPath DoSearch(<span class="keyword">int</span> y1, <span class="keyword">int</span> x1, <span class="keyword">int</span> y2, <span class="keyword">int</span> x2);
+
+<span class="keyword">public</span>:
+    <span class="comment">/**
+     * @brief 构造函数
+     *
+     * @param _Map[][Map_Width] 地图矩阵
+     */</span>
+    CMapSearch(<span class="keyword">int</span> _Map[][MAP_WIDTH]);
+
+    <span class="comment">/**
+     * @brief 析构函数
+     */</span>
+    ~CMapSearch(<span class="keyword">void</span>);
+
+    <span class="comment">/**
+     * @brief 载入地图
+     * 从矩阵中载入地图到对象
+     *
+     * @param _Map[][Map_Width] 地图矩阵
+     */</span>
+    <span class="keyword">void</span> LoadMap(<span class="keyword">int</span> _Map[][MAP_WIDTH]);
+
+    <span class="comment">/**
+     * @brief 搜索地图
+     * 对整个地图进行搜索每两个相同方块之间的路径
+     *
+     * @return 如果存在至少一条路径则返回真，否则为假，用于是否重列
+     * @see CreateSTLMap
+     * @see DoSearch
+     */</span>
+    <span class="keyword">bool</span> Search();
+
+    <span class="comment">/**
+     * @brief 创建map映射
+     * 创建一个方块ID的映射，对每个ID创建一条的该ID的方块在地图中的各坐标的链表
+     */</span>
+    <span class="keyword">void</span> CreateSTLMap();
+
+    <span class="comment">/**
+     * @brief 判断是否有障碍
+     * 对于a、b两坐标（在同一直线）进行判断期间是否有方块障碍而导致不能连线
+     *
+     * @param a 坐标a（头坐标）
+     * @param b 坐标b（尾坐标）
+     * @param head 若包括头坐标则为true，否则为false
+     * @param tail 若包括尾坐标则为true，否则为false
+     * @return 若有障碍则返回false，否则为true
+     */</span>
+    <span class="keyword">bool</span> Abled(CoorType a, CoorType b, <span class="keyword">bool</span> head = <span class="keyword">false</span>, <span class="keyword">bool</span> tail = <span class="keyword">false</span>);
+
+    <span class="comment">/**
+     * @brief 得到路径
+     * 得到两个坐标的连线具体路径
+     *
+     * @param y1 第一个坐标的y轴
+     * @param x1 第一个坐标的x轴
+     * @param y2 第二个坐标的y轴
+     * @param x2 第二个坐标的x轴
+     * @return 返回一个路线结构体，表示该两个坐标直接的路线
+     */</span>
+    PointPath GetPath(<span class="keyword">int</span> y1, <span class="keyword">int</span> x1, <span class="keyword">int</span> y2, <span class="keyword">int</span> x2);
+
+    <span class="comment">/**
+     * @brief 得到提示路径
+     * 得到一条提示的路径的相应两个方块
+     *
+     * @param &a 接受第一个方块ID的变量
+     * @param &b 接受第二个方块ID的变量
+     */</span>
+    <span class="keyword">void</span> GetRandomHint(<span class="keyword">int</span> &a, <span class="keyword">int</span> &b);
+};
+</pre></td></tr></table></figure>
+
+<p>　　然后我这个分享里所讲的算法就是DoSearch和Abled函数了，因为其它函数就是用于“提示”道具的。在DoSearch中我们先定义两个临时变量，一个是返回值（一个PointPath），四个坐标变量：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>PointPath ans;
+CoorType a(y1, x1), b(y2, x2), c, d;
+</pre></td></tr></table></figure>
+
+<p>　　其中a、b表示起点和终点，c、d表示可能用到的两个转折点。</p>
+<p>　　首先我们先来判断直线情况吧，这种情况比较简单：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre><span class="comment">//如果是直线</span>
+<span class="keyword">if</span>(a.x == b.x || a.y == b.y)
+{
+    <span class="keyword">if</span>(Abled(a, b, <span class="keyword">true</span>, <span class="keyword">true</span>))
+    {
+        ans.bExist = <span class="keyword">true</span>;
+        ans.Num = <span class="number">2</span>;
+        ans.Points[<span class="number">0</span>] = a, ans.Points[<span class="number">1</span>] = b;
+        <span class="keyword">return</span> ans;
+    }
+}
+</pre></td></tr></table></figure>
+
+<p>　　对于这种情况，我们只需直接判断a、b直接有没有通路就好，如果有通路我们就将结果记录到ans中并返回即可。</p>
+<p>　　而有一个转折点、两个转折点的情况以及Abled函数将在下一篇文章中小分享一下。</p>
+<h2 id="回忆时间">回忆时间</h2>
+<p>　　然后下面就是在这篇文章里面我跟 <code>Kalxd</code> 的对话了，想想现在真是沧海桑田啊。</p>
+<p>　　CSS 样式早已经不在了，截图里面是一篇白板</p>
+<p><img src="comment.png" alt="评论回忆"></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/老博客备份归档/">老博客备份归档</a><a href="/tags/C++/">C++</a><a href="/tags/HGE/">HGE</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/老博客备份归档/">老博客备份归档</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://xcoder.in/2011/05/16/lianlinakan-algorighm-i/" data-title="连连看核心算法小分享——1 | XadillaX&#39; Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2011/06/16/resource-pack/" title="关于游戏资源包的更新、删除">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  关于游戏资源包的更新、删除</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2011/04/25/my-first-game/"  title="我的编程生涯中第一个商业游戏">
+ <strong>NEXT:</strong><br/> 
+ <span>我的编程生涯中第一个商业游戏
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#正文"><span class="toc-number">1.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#回忆时间"><span class="toc-number">2.</span> <span class="toc-text">回忆时间</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Document/" title="Document">Document<sup>1</sup></a></li>
+		
+			<li><a href="/categories/NodeJS/" title="NodeJS">NodeJS<sup>6</sup></a></li>
+		
+			<li><a href="/categories/Programming/" title="Programming">Programming<sup>3</sup></a></li>
+		
+			<li><a href="/categories/老博客备份归档/" title="老博客备份归档">老博客备份归档<sup>13</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/C++/" style="font-size: 18.33px;">C++</a><a href="/tags/CodeForces/" style="font-size: 10.00px;">CodeForces</a><a href="/tags/HGE/" style="font-size: 15.00px;">HGE</a><a href="/tags/JavaScript/" style="font-size: 13.33px;">JavaScript</a><a href="/tags/Javascript/" style="font-size: 11.67px;">Javascript</a><a href="/tags/MongoDB/" style="font-size: 10.00px;">MongoDB</a><a href="/tags/Node.JS/" style="font-size: 10.00px;">Node.JS</a><a href="/tags/Node.js/" style="font-size: 16.67px;">Node.js</a><a href="/tags/Programming/" style="font-size: 10.00px;">Programming</a><a href="/tags/Project Parse/" style="font-size: 10.00px;">Project Parse</a><a href="/tags/SRM/" style="font-size: 10.00px;">SRM</a><a href="/tags/ScopeLock/" style="font-size: 10.00px;">ScopeLock</a><a href="/tags/TopCoder/" style="font-size: 10.00px;">TopCoder</a><a href="/tags/XPlan/" style="font-size: 10.00px;">XPlan</a><a href="/tags/jQuery/" style="font-size: 10.00px;">jQuery</a><a href="/tags/一起撸Node.JS/" style="font-size: 13.33px;">一起撸Node.JS</a><a href="/tags/二进制文件/" style="font-size: 10.00px;">二进制文件</a><a href="/tags/游戏制作/" style="font-size: 10.00px;">游戏制作</a><a href="/tags/游戏开发/" style="font-size: 11.67px;">游戏开发</a><a href="/tags/牢骚/" style="font-size: 10.00px;">牢骚</a><a href="/tags/线程安全/" style="font-size: 10.00px;">线程安全</a><a href="/tags/线程死锁/" style="font-size: 10.00px;">线程死锁</a><a href="/tags/网之游/" style="font-size: 10.00px;">网之游</a><a href="/tags/老博客备份归档/" style="font-size: 20.00px;">老博客备份归档</a><a href="/tags/设计模式/" style="font-size: 11.67px;">设计模式</a><a href="/tags/资源包/" style="font-size: 10.00px;">资源包</a>
+    </div>
+  </div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m a Pseudo-Otaku. <br/>
+			Another way, I am a code monkey! My name is XadillaX.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		<a href="https://github.com/XadillaX" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"xcoder-ghost"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>

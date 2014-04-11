@@ -1,0 +1,1015 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>CodeForces Round 128 DIV2 | XadillaX&#39; Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="小鳥遊死月">
+    
+    <meta name="description" content="这次玩脱了。好不容易四题都做出来，却因为小细节挂了两题。
+Description
+Two Problems
+　　题意就是说，CF有两题，每题初始分A和B，然后每题在每分钟会扣DA和DB分。给你比赛总时间T，问你某个人可不可能拿到X分。（注意可能做出一题、两题或者一题也没做出）
+　　(0 ≤ x ≤ ">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="XadillaX&#39; Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.png">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="XadillaX&#39; Blog" title="XadillaX&#39; Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="XadillaX&#39; Blog">XadillaX&#39; Blog</a></h1>
+				<h2 class="blog-motto">艾克斯の編碼者 —— 一個偽宅级别的碼畜。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/tags">标签</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+						<li><a href="/curriculumvitae">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:xcoder.in">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2012/07/04/codeforces-128-div2/" title="CodeForces Round 128 DIV2" itemprop="url">CodeForces Round 128 DIV2</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2012-07-04T02:38:59.000Z" itemprop="datePublished">Jul 4 2012</time>
+    Updated:<time datetime="2014-04-11T04:58:57.000Z" itemprop="dateModified">Apr 11 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Description"><span class="toc-number">1.</span> <span class="toc-text">Description</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Two_Problems"><span class="toc-number">1.1.</span> <span class="toc-text">Two Problems</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Game_on_Paper"><span class="toc-number">1.2.</span> <span class="toc-text">Game on Paper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Photographer"><span class="toc-number">1.3.</span> <span class="toc-text">Photographer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hit_Ball"><span class="toc-number">1.4.</span> <span class="toc-text">Hit Ball</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transportation"><span class="toc-number">1.5.</span> <span class="toc-text">Transportation</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#Analysis"><span class="toc-number">2.</span> <span class="toc-text">Analysis</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Two_Problems-1"><span class="toc-number">2.1.</span> <span class="toc-text">Two Problems</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Game_on_Paper-1"><span class="toc-number">2.2.</span> <span class="toc-text">Game on Paper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Photographer-1"><span class="toc-number">2.3.</span> <span class="toc-text">Photographer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hit_Ball-1"><span class="toc-number">2.4.</span> <span class="toc-text">Hit Ball</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#Code"><span class="toc-number">3.</span> <span class="toc-text">Code</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Two_Problems-1"><span class="toc-number">3.1.</span> <span class="toc-text">Two Problems</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Game_on_Paper-1"><span class="toc-number">3.2.</span> <span class="toc-text">Game on Paper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Photographer-2"><span class="toc-number">3.3.</span> <span class="toc-text">Photographer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hit_Ball-1"><span class="toc-number">3.4.</span> <span class="toc-text">Hit Ball</span></a></li></ol>
+		</div>
+		
+		<p>　　这次玩脱了。好不容易四题都做出来，却因为小细节挂了两题。</p>
+<h2 id="Description">Description</h2>
+<h3 id="Two_Problems">Two Problems</h3>
+<p>　　题意就是说，CF有两题，每题初始分A和B，然后每题在每分钟会扣DA和DB分。给你比赛总时间T，问你某个人可不可能拿到X分。（注意可能做出一题、两题或者一题也没做出）</p>
+<p>　　(0 ≤ x ≤ 600; 1 ≤ t, a, b, da, db ≤ 300且保证及时比赛时间到了各题的分数也不会小于0)</p>
+<h3 id="Game_on_Paper">Game on Paper</h3>
+<p>　　有一个 N<em>N 方格纸。在上面的方格里一格格涂黑。每一步涂一格一共涂 m 次，给定 xi 和 yi。问最少涂几步方格纸里会出现一个 3</em>3 的正方形。</p>
+<p>　　(1 ≤ n ≤ 1000, 1 ≤ m ≤ min(n· n, 105))</p>
+<h3 id="Photographer">Photographer</h3>
+<p>　　照相内存卡里有d容量。其中高质量照片占a容量、低质量占b容量。然后有n个顾客，每个顾客需要xi张高质量照片和yi张低质量照片。摄影师如果给一个人拍照了，就应该满足他所有要求（即给xi张高质量照片和yi张低质量照片）。问摄影师最多能给几个人拍照。</p>
+<p>　　(1 ≤ n ≤ 105, 1 ≤ d ≤ 109, 1 ≤ a ≤ b ≤ 104, 0 ≤ xi, yi ≤ 105)</p>
+<h3 id="Hit_Ball">Hit Ball</h3>
+<p>　　封闭房间里，从房间的一头最底下的中间以某个方向踢球（一定是网对面踢），问踢到另一头的墙上的时候，x、z各是多少。</p>
+<p>　　(各坐标以及向量都是小于等于100的正整数)</p>
+<p><img src="hit-ball.png" alt="Hit Ball"></p>
+<h3 id="Transportation">Transportation</h3>
+<p>　　还没看。</p>
+<h2 id="Analysis">Analysis</h2>
+<h3 id="Two_Problems-1">Two Problems</h3>
+<p>　　这题只要注意几个trick就行了：可以做出0题、1题或者2题。直接两个for枚举各题在几分钟内做出来，然后做一下0题、1题的特殊判断就好了。</p>
+<h3 id="Game_on_Paper-1">Game on Paper</h3>
+<p>　　在每次涂的时候，以当前涂的点位中心，设它为九宫格的其中一个位置（一共九种位置），对于每种位置，都判断其对应的九宫格是不是 3*3 的黑色就好了。(我做的时候在设位置的时候 x - 1, y - 1 手贱敲成了 x - 1, y - 2，lock 之后才发现。悲剧)</p>
+<h3 id="Photographer-1">Photographer</h3>
+<p>　　贪心。对于每个人将其所需的总容量算出来再进行递增排序。最后求的时候推荐累减的方式判断，因为我累加然后用 int 最后爆范围了。</p>
+<h3 id="Hit_Ball-1">Hit Ball</h3>
+<p>　　首先拿出空间几何的线面相交模板。然后来一个 <code>while</code>，每次循环的时候判断当前所在的点与方向适量形成的直线与 (X, 0, Z) 面的交点在不在终点墙壁大小的范围内。若不是则说明中途撞墙了判断方向向量：x &lt; 0则线面相交判断是不是撞左墙，若是则 x 正负值变一下；x &gt; 0 则线面相交判断是不是撞右墙，若是则 x 正负值变一下。z &lt; 0则判断是不是以求抢地，若是则 z 正负变一下。最后 z &gt; 0 则判断是不是撞天花板，若是则z正负值变一下。然后以球撞击的点为新的起点，与新的方向向量形成新的直线，继续下一次循环。因为房间大小最大是 100 <em> 100 </em> 100，而方向向量各方向是 1 到 100 的整数，不是小数，则撞击次数不会很多，直接 <code>while</code> 撞击也不会超。</p>
+<h2 id="Code">Code</h2>
+<h3 id="Two_Problems-1">Two Problems</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+</pre></td><td class="code"><pre><span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
+
+<span class="keyword">int</span> main()
+{
+    <span class="keyword">int</span> x, t, a, b, da, db;
+    <span class="keyword">while</span>(~<span class="built_in">scanf</span>(<span class="string">"%d%d%d%d%d%d"</span>, &x, &t, &a, &b, &da, &db))
+    {
+        <span class="keyword">bool</span> flag = <span class="keyword">false</span>;
+        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; t; i++)
+        {
+            <span class="keyword">if</span>(x == a - i * da)
+            {
+                flag = <span class="keyword">true</span>;
+                <span class="keyword">break</span>;
+            }
+
+            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; t; j++)
+            {
+                <span class="keyword">if</span>(x == b - j * db)
+                {
+                    flag = <span class="keyword">true</span>;
+                    <span class="keyword">break</span>;
+                }
+
+                <span class="keyword">if</span>(x == a - i * da + b - j * db)
+                {
+                    flag = <span class="keyword">true</span>;
+                    <span class="keyword">break</span>;
+                }
+            }
+            <span class="keyword">if</span>(flag) <span class="keyword">break</span>;
+        }
+        <span class="keyword">if</span>(<span class="number">0</span> == x) flag = <span class="keyword">true</span>;
+
+        <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, flag ? <span class="string">"YES"</span> : <span class="string">"NO"</span>);
+    }
+
+    <span class="keyword">return</span> <span class="number">0</span>;
+}
+</pre></td></tr></table></figure>
+
+<h3 id="Game_on_Paper-1">Game on Paper</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+</pre></td><td class="code"><pre><span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
+
+<span class="keyword">bool</span> mat[<span class="number">1015</span>][<span class="number">1015</span>];
+
+<span class="keyword">bool</span> check2(<span class="keyword">int</span> sx, <span class="keyword">int</span> sy)
+{
+    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)
+    {
+        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">3</span>; j++)
+        {
+            <span class="comment">//if(i == 1 && j == 1) continue;</span>
+
+            <span class="keyword">if</span>(!mat[sx + i][sy + j]) <span class="keyword">return</span> <span class="keyword">false</span>;
+        }
+    }
+
+    <span class="keyword">return</span> <span class="keyword">true</span>;
+}
+
+<span class="keyword">bool</span> check(<span class="keyword">int</span> x, <span class="keyword">int</span> y)
+{
+    <span class="keyword">if</span>(check2(x, y)) <span class="keyword">return</span> <span class="keyword">true</span>;
+    <span class="keyword">if</span>(check2(x, y - <span class="number">1</span>)) <span class="keyword">return</span> <span class="keyword">true</span>;
+    <span class="keyword">if</span>(check2(x, y - <span class="number">2</span>)) <span class="keyword">return</span> <span class="keyword">true</span>;
+    <span class="keyword">if</span>(check2(x - <span class="number">1</span>, y)) <span class="keyword">return</span> <span class="keyword">true</span>;
+    <span class="keyword">if</span>(check2(x - <span class="number">1</span>, y - <span class="number">1</span>)) <span class="keyword">return</span> <span class="keyword">true</span>;
+    <span class="keyword">if</span>(check2(x - <span class="number">1</span>, y - <span class="number">2</span>)) <span class="keyword">return</span> <span class="keyword">true</span>;
+    <span class="keyword">if</span>(check2(x - <span class="number">2</span>, y)) <span class="keyword">return</span> <span class="keyword">true</span>;
+    <span class="keyword">if</span>(check2(x - <span class="number">2</span>, y - <span class="number">1</span>)) <span class="keyword">return</span> <span class="keyword">true</span>;
+    <span class="keyword">if</span>(check2(x - <span class="number">2</span>, y - <span class="number">2</span>)) <span class="keyword">return</span> <span class="keyword">true</span>;
+
+    <span class="keyword">return</span> <span class="keyword">false</span>;
+}
+
+<span class="keyword">int</span> main()
+{
+    <span class="keyword">int</span> n, m;
+    <span class="keyword">int</span> x, y;
+    <span class="keyword">while</span>(~<span class="built_in">scanf</span>(<span class="string">"%d%d"</span>, &n, &m))
+    {
+        <span class="keyword">int</span> ans = -<span class="number">1</span>;
+        <span class="built_in">memset</span>(mat, <span class="number">0</span>, <span class="keyword">sizeof</span>(mat));
+        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++)
+        {
+            <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>, &x, &y);
+            mat[x + <span class="number">1</span>][y + <span class="number">1</span>] = <span class="keyword">true</span>;
+
+            <span class="keyword">if</span>(ans == -<span class="number">1</span>)
+            {
+                <span class="keyword">if</span>(check(x + <span class="number">1</span>, y + <span class="number">1</span>))
+                {
+                    ans = i + <span class="number">1</span>;
+                }
+            }
+        }
+
+        <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, ans);
+    }
+
+    <span class="keyword">return</span> <span class="number">0</span>;
+}
+</pre></td></tr></table></figure>
+
+<h3 id="Photographer-2">Photographer</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+</pre></td><td class="code"><pre><span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;algorithm&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
+
+<span class="keyword">struct</span> client
+{
+    <span class="keyword">int</span> id;
+    <span class="keyword">int</span> memo;
+};
+
+<span class="keyword">bool</span> cmp(client a, client b)
+{
+    <span class="keyword">return</span> a.memo &lt; b.memo;
+}
+
+client c[<span class="number">100005</span>];
+
+<span class="keyword">int</span> main()
+{
+    <span class="keyword">int</span> n;
+    __int64 d;
+    <span class="keyword">int</span> a, b;
+    <span class="keyword">int</span> x, y;
+
+    <span class="keyword">while</span>(~<span class="built_in">scanf</span>(<span class="string">"%d%I64d"</span>, &n, &d))
+    {
+        <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>, &a, &b);
+        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)
+        {
+            <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>, &x, &y);
+            c[i].id = i + <span class="number">1</span>;
+            c[i].memo = a * x + b * y;
+        }
+
+        sort(c, c + n, cmp);
+        __int64 sum = <span class="number">0L</span>;
+        <span class="keyword">int</span> maxi = -<span class="number">1</span>;
+        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)
+        {
+            <span class="keyword">if</span>(sum + c[i].memo &lt;= d) sum += c[i].memo, maxi = i;
+            <span class="keyword">else</span> <span class="keyword">break</span>;
+        }
+
+        <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, maxi + <span class="number">1</span>);
+        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= maxi; i++)
+        {
+            <span class="built_in">printf</span>(<span class="string">"%d%c"</span>, c[i].id, i == maxi ? <span class="string">'\n'</span> : <span class="string">' '</span>);
+        }
+    }
+
+    <span class="keyword">return</span> <span class="number">0</span>;
+}
+</pre></td></tr></table></figure>
+
+<h3 id="Hit_Ball-1">Hit Ball</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+</pre></td><td class="code"><pre><span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;math.h&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
+<span class="preprocessor">#define eps 1e-8</span>
+<span class="preprocessor">#define zero(x) (((x)&gt;0?(x):-(x))&lt;eps)</span>
+<span class="keyword">struct</span> point3{<span class="keyword">double</span> x,y,z;};
+<span class="keyword">struct</span> line3{point3 a,b;};
+<span class="keyword">struct</span> plane3{point3 a,b,c;};
+
+point3 xmult(point3 u,point3 v){
+    point3 ret;
+    ret.x=u.y*v.z-v.y*u.z;
+    ret.y=u.z*v.x-u.x*v.z;
+    ret.z=u.x*v.y-u.y*v.x;
+    <span class="keyword">return</span> ret;
+}
+
+point3 subt(point3 u,point3 v){
+    point3 ret;
+    ret.x=u.x-v.x;
+    ret.y=u.y-v.y;
+    ret.z=u.z-v.z;
+    <span class="keyword">return</span> ret;
+}
+
+point3 pvec(plane3 s){
+    <span class="keyword">return</span> xmult(subt(s.a,s.b),subt(s.b,s.c));
+}
+
+point3 intersection(line3 l,plane3 s){
+    point3 ret=pvec(s);
+    <span class="keyword">double</span> t=(ret.x*(s.a.x-l.a.x)+ret.y*(s.a.y-l.a.y)+ret.z*(s.a.z-l.a.z))/
+        (ret.x*(l.b.x-l.a.x)+ret.y*(l.b.y-l.a.y)+ret.z*(l.b.z-l.a.z));
+    ret.x=l.a.x+(l.b.x-l.a.x)*t;
+    ret.y=l.a.y+(l.b.y-l.a.y)*t;
+    ret.z=l.a.z+(l.b.z-l.a.z)*t;
+    <span class="keyword">return</span> ret;
+}
+
+<span class="keyword">int</span> main()
+{
+    <span class="keyword">double</span> a, b, m;
+    <span class="keyword">double</span> vx, vy, vz;
+
+    <span class="keyword">while</span>(~<span class="built_in">scanf</span>(<span class="string">"%lf%lf%lf%lf%lf%lf"</span>, &a, &b, &m, &vx, &vy, &vz))
+    {
+        <span class="comment">/** 5 walls */</span>
+        plane3 door, lw, rw, top, ground;
+        door.a.x = <span class="number">0</span>, door.a.y = <span class="number">0</span>, door.a.z = <span class="number">0</span>;
+        door.b.x = <span class="number">1</span>, door.b.y = <span class="number">0</span>, door.b.z = <span class="number">0</span>;
+        door.c.x = <span class="number">0</span>, door.c.y = <span class="number">0</span>, door.c.z = <span class="number">1</span>;
+        lw.a.x = <span class="number">0</span>, lw.a.y = <span class="number">0</span>, lw.a.z = <span class="number">0</span>;
+        lw.b.x = <span class="number">0</span>, lw.b.y = <span class="number">1</span>, lw.b.z = <span class="number">0</span>;
+        lw.c.x = <span class="number">0</span>, lw.c.y = <span class="number">0</span>, lw.c.z = <span class="number">1</span>;
+        rw.a.x = a, rw.a.y = <span class="number">0</span>, rw.a.z = <span class="number">0</span>;
+        rw.b.x = a, rw.b.y = <span class="number">1</span>, rw.b.z = <span class="number">0</span>;
+        rw.c.x = a, rw.c.y = <span class="number">0</span>, rw.c.z = <span class="number">1</span>;
+        ground.a.x = <span class="number">0</span>, ground.a.y = <span class="number">0</span>, ground.a.z = <span class="number">0</span>;
+        ground.b.x = a, ground.b.y = <span class="number">0</span>, ground.b.z = <span class="number">0</span>;
+        ground.c.x = a / <span class="number">2</span>, ground.c.y = m, ground.c.z = <span class="number">0</span>;
+        top.a.x = <span class="number">0</span>, top.a.y = <span class="number">0</span>, top.a.z = b;
+        top.b.x = a, top.b.y = <span class="number">0</span>, top.b.z = b;
+        top.c.x = a / <span class="number">2</span>, top.c.y = m, top.c.z = b;
+
+        line3 l;
+
+        l.a.x = a / <span class="number">2</span>;
+        l.a.y = m;
+        l.a.z = <span class="number">0</span>;
+
+        l.b.x = (a / <span class="number">2</span>) + vx;
+        l.b.y = m + vy;
+        l.b.z = vz;
+
+        point3 v;
+        v.x = vx, v.y = vy, v.z = vz;
+
+        point3 myans;
+        <span class="keyword">while</span>(<span class="keyword">true</span>)
+        {
+            point3 ans, ans1, ans2, ans3, ans4;
+            <span class="built_in">memset</span>(&ans1, <span class="number">0</span>, <span class="keyword">sizeof</span>(point3));
+            <span class="built_in">memset</span>(&ans2, <span class="number">0</span>, <span class="keyword">sizeof</span>(point3));
+            <span class="built_in">memset</span>(&ans3, <span class="number">0</span>, <span class="keyword">sizeof</span>(point3));
+            <span class="built_in">memset</span>(&ans4, <span class="number">0</span>, <span class="keyword">sizeof</span>(point3));
+
+            ans = intersection(l, door);
+            <span class="keyword">if</span>(ans.x &gt;= <span class="number">0</span> && ans.z &gt;= <span class="number">0</span> && ans.x &lt;= a && ans.z &lt;= b)
+            {
+                myans = ans;
+                <span class="keyword">break</span>;
+            }
+
+            point3 totans;
+
+            <span class="keyword">if</span>(v.x &lt; <span class="number">0</span>)
+            {
+                ans1 = intersection(l, lw);
+                <span class="keyword">if</span>(ans1.z &gt;= <span class="number">0</span> && ans1.z &lt;= b)
+                {
+                    v.x = -v.x;
+                    totans = ans1;
+                }
+            }
+            <span class="keyword">else</span>
+            <span class="keyword">if</span>(v.x &gt; <span class="number">0</span>)
+            {
+                ans2 = intersection(l, rw);
+                <span class="keyword">if</span>(ans2.z &gt;= <span class="number">0</span> && ans2.z &lt;= b)
+                {
+                    v.x = -v.x;
+                    totans = ans2;
+                }
+            }
+
+            <span class="keyword">if</span>(v.z &gt; <span class="number">0</span>)
+            {
+                ans3 = intersection(l, top);
+                <span class="keyword">if</span>(ans3.x &gt;= <span class="number">0</span> && ans3.x &lt;= a)
+                {
+                    v.z = -v.z;
+                    totans = ans3;
+                }
+            }
+            <span class="keyword">else</span>
+            <span class="keyword">if</span>(v.z &lt; <span class="number">0</span>)
+            {
+                ans4 = intersection(l, ground);
+                <span class="keyword">if</span>(ans4.x &gt;= <span class="number">0</span> && ans4.x &lt;= a)
+                {
+                    v.z = -v.z;
+                    totans = ans4;
+                }
+            }
+
+            l.a = totans;
+            l.b = totans;
+            l.b.x += v.x;
+            l.b.y += v.y;
+            l.b.z += v.z;
+        }
+
+        <span class="built_in">printf</span>(<span class="string">"%.10lf %.10lf\n"</span>, myans.x, myans.z);
+    }
+
+    <span class="keyword">return</span> <span class="number">0</span>;
+}
+</pre></td></tr></table></figure>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/老博客备份归档/">老博客备份归档</a><a href="/tags/CodeForces/">CodeForces</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/老博客备份归档/">老博客备份归档</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://xcoder.in/2012/07/04/codeforces-128-div2/" data-title="CodeForces Round 128 DIV2 | XadillaX&#39; Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2012/09/08/scope-lock/" title="线程安全——Scope Lock模式">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  线程安全——Scope Lock模式</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2011/10/18/hge-hotspot-collision/"  title="HGE做格斗游戏的热点图片碰撞检测法">
+ <strong>NEXT:</strong><br/> 
+ <span>HGE做格斗游戏的热点图片碰撞检测法
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Description"><span class="toc-number">1.</span> <span class="toc-text">Description</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Two_Problems"><span class="toc-number">1.1.</span> <span class="toc-text">Two Problems</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Game_on_Paper"><span class="toc-number">1.2.</span> <span class="toc-text">Game on Paper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Photographer"><span class="toc-number">1.3.</span> <span class="toc-text">Photographer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hit_Ball"><span class="toc-number">1.4.</span> <span class="toc-text">Hit Ball</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transportation"><span class="toc-number">1.5.</span> <span class="toc-text">Transportation</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#Analysis"><span class="toc-number">2.</span> <span class="toc-text">Analysis</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Two_Problems-1"><span class="toc-number">2.1.</span> <span class="toc-text">Two Problems</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Game_on_Paper-1"><span class="toc-number">2.2.</span> <span class="toc-text">Game on Paper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Photographer-1"><span class="toc-number">2.3.</span> <span class="toc-text">Photographer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hit_Ball-1"><span class="toc-number">2.4.</span> <span class="toc-text">Hit Ball</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#Code"><span class="toc-number">3.</span> <span class="toc-text">Code</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Two_Problems-1"><span class="toc-number">3.1.</span> <span class="toc-text">Two Problems</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Game_on_Paper-1"><span class="toc-number">3.2.</span> <span class="toc-text">Game on Paper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Photographer-2"><span class="toc-number">3.3.</span> <span class="toc-text">Photographer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hit_Ball-1"><span class="toc-number">3.4.</span> <span class="toc-text">Hit Ball</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Document/" title="Document">Document<sup>1</sup></a></li>
+		
+			<li><a href="/categories/NodeJS/" title="NodeJS">NodeJS<sup>6</sup></a></li>
+		
+			<li><a href="/categories/Programming/" title="Programming">Programming<sup>3</sup></a></li>
+		
+			<li><a href="/categories/老博客备份归档/" title="老博客备份归档">老博客备份归档<sup>13</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/C++/" style="font-size: 18.33px;">C++</a><a href="/tags/CodeForces/" style="font-size: 10.00px;">CodeForces</a><a href="/tags/HGE/" style="font-size: 15.00px;">HGE</a><a href="/tags/JavaScript/" style="font-size: 13.33px;">JavaScript</a><a href="/tags/Javascript/" style="font-size: 11.67px;">Javascript</a><a href="/tags/MongoDB/" style="font-size: 10.00px;">MongoDB</a><a href="/tags/Node.JS/" style="font-size: 10.00px;">Node.JS</a><a href="/tags/Node.js/" style="font-size: 16.67px;">Node.js</a><a href="/tags/Programming/" style="font-size: 10.00px;">Programming</a><a href="/tags/Project Parse/" style="font-size: 10.00px;">Project Parse</a><a href="/tags/SRM/" style="font-size: 10.00px;">SRM</a><a href="/tags/ScopeLock/" style="font-size: 10.00px;">ScopeLock</a><a href="/tags/TopCoder/" style="font-size: 10.00px;">TopCoder</a><a href="/tags/XPlan/" style="font-size: 10.00px;">XPlan</a><a href="/tags/jQuery/" style="font-size: 10.00px;">jQuery</a><a href="/tags/一起撸Node.JS/" style="font-size: 13.33px;">一起撸Node.JS</a><a href="/tags/二进制文件/" style="font-size: 10.00px;">二进制文件</a><a href="/tags/游戏制作/" style="font-size: 10.00px;">游戏制作</a><a href="/tags/游戏开发/" style="font-size: 11.67px;">游戏开发</a><a href="/tags/牢骚/" style="font-size: 10.00px;">牢骚</a><a href="/tags/线程安全/" style="font-size: 10.00px;">线程安全</a><a href="/tags/线程死锁/" style="font-size: 10.00px;">线程死锁</a><a href="/tags/网之游/" style="font-size: 10.00px;">网之游</a><a href="/tags/老博客备份归档/" style="font-size: 20.00px;">老博客备份归档</a><a href="/tags/设计模式/" style="font-size: 11.67px;">设计模式</a><a href="/tags/资源包/" style="font-size: 10.00px;">资源包</a>
+    </div>
+  </div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m a Pseudo-Otaku. <br/>
+			Another way, I am a code monkey! My name is XadillaX.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		<a href="https://github.com/XadillaX" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"xcoder-ghost"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>
