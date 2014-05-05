@@ -1,10 +1,10 @@
 
  <!DOCTYPE HTML>
-<html >
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   
-    <title>～公众档所～项目解析 | XadillaX&#39; Blog</title>
+    <title>～公众档所～项目解析 | 艾克斯の編碼者</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="小鳥遊死月">
@@ -14,7 +14,7 @@
     
     
     
-    <link rel="alternative" href="/atom.xml" title="XadillaX&#39; Blog" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="艾克斯の編碼者" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/favicon.ico">
@@ -31,14 +31,14 @@
       <div>
 		
 			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="XadillaX&#39; Blog" title="XadillaX&#39; Blog"/></a>
+				<a href="/"><img src="/img/logo.png" alt="艾克斯の編碼者" title="艾克斯の編碼者"/></a>
 			</div>
 			
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="XadillaX&#39; Blog">XadillaX&#39; Blog</a></h1>
-				<h2 class="blog-motto">艾克斯の編碼者 —— 一個偽宅级别的碼畜。</h2>
+				<h1 class="site-name"><a href="/" title="艾克斯の編碼者">艾克斯の編碼者</a></h1>
+				<h2 class="blog-motto">一個偽宅级别的蒟蒻碼畜。</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -58,8 +58,8 @@
 					
 					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
-						<input type="hidden" name="q" value="site:xcoder.in">
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:xcoder.in/">
 					</form>
 					
 					</li>
@@ -78,11 +78,11 @@
   </h1>
   <p class="article-author">By
     
-      <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+      <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-03-26T16:34:04.000Z" itemprop="datePublished">Mar 27 2014</time>
-    Updated:<time datetime="2014-03-27T08:38:09.000Z" itemprop="dateModified">Mar 27 2014</time>
+    <time datetime="2014-03-26T16:34:04.000Z" itemprop="datePublished">2014年03月27日</time>
+    更新日期:<time datetime="2014-03-27T08:38:09.769Z" itemprop="dateModified">2014年03月27日</time>
     
   </p>
 </header>
@@ -90,11 +90,11 @@
 		
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#部署"><span class="toc-number">1.</span> <span class="toc-text">部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解析"><span class="toc-number">2.</span> <span class="toc-text">解析</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础文件"><span class="toc-number">2.1.</span> <span class="toc-text">基础文件</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pfh-js"><span class="toc-number">2.1.1.</span> <span class="toc-text">pfh.js</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#router-js"><span class="toc-number">2.1.2.</span> <span class="toc-text">router.js</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#模型"><span class="toc-number">2.2.</span> <span class="toc-text">模型</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#model/fileModel-js"><span class="toc-number">2.2.1.</span> <span class="toc-text">model/fileModel.js</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#控制器"><span class="toc-number">2.3.</span> <span class="toc-text">控制器</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#action/index-js"><span class="toc-number">2.3.1.</span> <span class="toc-text">action/index.js</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#exports-index"><span class="toc-number">2.3.1.1.</span> <span class="toc-text">exports.index</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#exports-download"><span class="toc-number">2.3.1.2.</span> <span class="toc-text">exports.download</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#exports-getToken"><span class="toc-number">2.3.1.3.</span> <span class="toc-text">exports.getToken</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#exports-send2fetion"><span class="toc-number">2.3.1.4.</span> <span class="toc-text">exports.send2fetion</span></a></li></ol><li class="toc-item toc-level-4"><a class="toc-link" href="#action/upload-js"><span class="toc-number">2.3.2.</span> <span class="toc-text">action/upload.js</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#function_genAlphaKey(time,_callback)"><span class="toc-number">2.3.2.1.</span> <span class="toc-text">function genAlphaKey(time, callback)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#exports-upload"><span class="toc-number">2.3.2.2.</span> <span class="toc-text">exports.upload</span></a></li></ol></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#视图"><span class="toc-number">2.4.</span> <span class="toc-text">视图</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#views/index/index-ejs"><span class="toc-number">2.4.1.</span> <span class="toc-text">views/index/index.ejs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#public/js/index-js"><span class="toc-number">2.4.2.</span> <span class="toc-text">public/js/index.js</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#public/backbone/router/workspace-js"><span class="toc-number">2.4.3.</span> <span class="toc-text">public/backbone/router/workspace.js</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#public/backbone/view/*-js"><span class="toc-number">2.4.4.</span> <span class="toc-text">public/backbone/view/*.js</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#uploadView-js"><span class="toc-number">2.4.4.1.</span> <span class="toc-text">uploadView.js</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#getView-js"><span class="toc-number">2.4.4.2.</span> <span class="toc-text">getView.js</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#uploadedView-js"><span class="toc-number">2.4.4.3.</span> <span class="toc-text">uploadedView.js</span></a></li></ol></ol></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#结束"><span class="toc-number">3.</span> <span class="toc-text">结束</span></a></li></ol>
 		</div>
 		
-		<p>　　所谓“公众档所”，其实就是一个公共的临时网盘了。这个东西是一个老物了，在我刚接触 <code>Expressjs</code> 的时候写的。当时还随便搞了一下 <code>backbone.js</code>，但是没有深入，勿笑。关于深入构架 <code>Expressjs</code> 方面也没做，只是粗粗写了下最基础的路由，所以整个文件结构也不是很规范。但是应该能比较适合刚学 <code>Node.js</code> 以及刚接触 <code>Expressjs</code> 的人吧。</p>
+		<p>所谓“公众档所”，其实就是一个公共的临时网盘了。这个东西是一个老物了，在我刚接触 <code>Expressjs</code> 的时候写的。当时还随便搞了一下 <code>backbone.js</code>，但是没有深入，勿笑。关于深入构架 <code>Expressjs</code> 方面也没做，只是粗粗写了下最基础的路由，所以整个文件结构也不是很规范。但是应该能比较适合刚学 <code>Node.js</code> 以及刚接触 <code>Expressjs</code> 的人吧。</p>
 <p>　　Repo地址在<a href="https://github.com/XadillaX/public-file-house" target="_blank">我的Github</a>上。Demo地址在 <a href="http://dang.kacaka.ca/" target="_blank">http://dang.kacaka.ca/</a>，由于个人电脑的不稳定性，所以不保证你们随时可以访问，保不定哪天就失效了，所以最好的办法还是自己 <code>clone</code> 下来啪啪啪。</p>
 <p>　　它所需要的东西大致就是 <code>Expressjs</code> + <code>Redis</code> + <code>Backbone</code> 了。不过都是最最基础的代码。</p>
 <h2 id="部署">部署</h2>
@@ -998,7 +998,7 @@ $(<span class="function"><span class="keyword">function</span><span class="param
 
 <div class="article-share" id="share">
 
-  <div data-url="http://xcoder.in/2014/03/27/node-public-file-house/" data-title="～公众档所～项目解析 | XadillaX&#39; Blog" data-tsina="null" class="share clearfix">
+  <div data-url="http://xcoder.in/2014/03/27/node-public-file-house/" data-title="～公众档所～项目解析 | 艾克斯の編碼者" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -1032,21 +1032,23 @@ $(<span class="function"><span class="keyword">function</span><span class="param
 </section>
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
   <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#部署"><span class="toc-number">1.</span> <span class="toc-text">部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解析"><span class="toc-number">2.</span> <span class="toc-text">解析</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础文件"><span class="toc-number">2.1.</span> <span class="toc-text">基础文件</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pfh-js"><span class="toc-number">2.1.1.</span> <span class="toc-text">pfh.js</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#router-js"><span class="toc-number">2.1.2.</span> <span class="toc-text">router.js</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#模型"><span class="toc-number">2.2.</span> <span class="toc-text">模型</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#model/fileModel-js"><span class="toc-number">2.2.1.</span> <span class="toc-text">model/fileModel.js</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#控制器"><span class="toc-number">2.3.</span> <span class="toc-text">控制器</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#action/index-js"><span class="toc-number">2.3.1.</span> <span class="toc-text">action/index.js</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#exports-index"><span class="toc-number">2.3.1.1.</span> <span class="toc-text">exports.index</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#exports-download"><span class="toc-number">2.3.1.2.</span> <span class="toc-text">exports.download</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#exports-getToken"><span class="toc-number">2.3.1.3.</span> <span class="toc-text">exports.getToken</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#exports-send2fetion"><span class="toc-number">2.3.1.4.</span> <span class="toc-text">exports.send2fetion</span></a></li></ol><li class="toc-item toc-level-4"><a class="toc-link" href="#action/upload-js"><span class="toc-number">2.3.2.</span> <span class="toc-text">action/upload.js</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#function_genAlphaKey(time,_callback)"><span class="toc-number">2.3.2.1.</span> <span class="toc-text">function genAlphaKey(time, callback)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#exports-upload"><span class="toc-number">2.3.2.2.</span> <span class="toc-text">exports.upload</span></a></li></ol></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#视图"><span class="toc-number">2.4.</span> <span class="toc-text">视图</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#views/index/index-ejs"><span class="toc-number">2.4.1.</span> <span class="toc-text">views/index/index.ejs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#public/js/index-js"><span class="toc-number">2.4.2.</span> <span class="toc-text">public/js/index.js</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#public/backbone/router/workspace-js"><span class="toc-number">2.4.3.</span> <span class="toc-text">public/backbone/router/workspace.js</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#public/backbone/view/*-js"><span class="toc-number">2.4.4.</span> <span class="toc-text">public/backbone/view/*.js</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#uploadView-js"><span class="toc-number">2.4.4.1.</span> <span class="toc-text">uploadView.js</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#getView-js"><span class="toc-number">2.4.4.2.</span> <span class="toc-text">getView.js</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#uploadedView-js"><span class="toc-number">2.4.4.3.</span> <span class="toc-text">uploadedView.js</span></a></li></ol></ol></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#结束"><span class="toc-number">3.</span> <span class="toc-text">结束</span></a></li></ol>
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
 	<p class="asidetitle">分类</p>
 		<ul>
+		
+			<li><a href="/categories/ACM/" title="ACM">ACM<sup>1</sup></a></li>
 		
 			<li><a href="/categories/Document/" title="Document">Document<sup>1</sup></a></li>
 		
@@ -1064,13 +1066,13 @@ $(<span class="function"><span class="keyword">function</span><span class="param
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/C++/" style="font-size: 18.33px;">C++</a><a href="/tags/CodeForces/" style="font-size: 10.00px;">CodeForces</a><a href="/tags/HGE/" style="font-size: 15.00px;">HGE</a><a href="/tags/JavaScript/" style="font-size: 13.33px;">JavaScript</a><a href="/tags/Javascript/" style="font-size: 11.67px;">Javascript</a><a href="/tags/MongoDB/" style="font-size: 10.00px;">MongoDB</a><a href="/tags/Node.JS/" style="font-size: 10.00px;">Node.JS</a><a href="/tags/Node.js/" style="font-size: 16.67px;">Node.js</a><a href="/tags/Programming/" style="font-size: 10.00px;">Programming</a><a href="/tags/Project Parse/" style="font-size: 10.00px;">Project Parse</a><a href="/tags/SRM/" style="font-size: 10.00px;">SRM</a><a href="/tags/ScopeLock/" style="font-size: 10.00px;">ScopeLock</a><a href="/tags/TopCoder/" style="font-size: 10.00px;">TopCoder</a><a href="/tags/XPlan/" style="font-size: 10.00px;">XPlan</a><a href="/tags/jQuery/" style="font-size: 10.00px;">jQuery</a><a href="/tags/一起撸Node.JS/" style="font-size: 13.33px;">一起撸Node.JS</a><a href="/tags/二进制文件/" style="font-size: 10.00px;">二进制文件</a><a href="/tags/游戏制作/" style="font-size: 10.00px;">游戏制作</a><a href="/tags/游戏开发/" style="font-size: 11.67px;">游戏开发</a><a href="/tags/牢骚/" style="font-size: 10.00px;">牢骚</a><a href="/tags/线程安全/" style="font-size: 10.00px;">线程安全</a><a href="/tags/线程死锁/" style="font-size: 10.00px;">线程死锁</a><a href="/tags/网之游/" style="font-size: 10.00px;">网之游</a><a href="/tags/老博客备份归档/" style="font-size: 20.00px;">老博客备份归档</a><a href="/tags/设计模式/" style="font-size: 11.67px;">设计模式</a><a href="/tags/资源包/" style="font-size: 10.00px;">资源包</a>
+       <a href="/tags/ACM/" style="font-size: 10.00px;">ACM</a><a href="/tags/C++/" style="font-size: 18.33px;">C++</a><a href="/tags/CodeForces/" style="font-size: 10.00px;">CodeForces</a><a href="/tags/HGE/" style="font-size: 15.00px;">HGE</a><a href="/tags/JavaScript/" style="font-size: 13.33px;">JavaScript</a><a href="/tags/Javascript/" style="font-size: 11.67px;">Javascript</a><a href="/tags/MongoDB/" style="font-size: 10.00px;">MongoDB</a><a href="/tags/Node.JS/" style="font-size: 10.00px;">Node.JS</a><a href="/tags/Node.js/" style="font-size: 16.67px;">Node.js</a><a href="/tags/Programming/" style="font-size: 10.00px;">Programming</a><a href="/tags/Project Parse/" style="font-size: 10.00px;">Project Parse</a><a href="/tags/SRM/" style="font-size: 10.00px;">SRM</a><a href="/tags/ScopeLock/" style="font-size: 10.00px;">ScopeLock</a><a href="/tags/TopCoder/" style="font-size: 10.00px;">TopCoder</a><a href="/tags/XPlan/" style="font-size: 10.00px;">XPlan</a><a href="/tags/jQuery/" style="font-size: 10.00px;">jQuery</a><a href="/tags/一起撸Node.JS/" style="font-size: 13.33px;">一起撸Node.JS</a><a href="/tags/二进制文件/" style="font-size: 10.00px;">二进制文件</a><a href="/tags/游戏制作/" style="font-size: 10.00px;">游戏制作</a><a href="/tags/游戏开发/" style="font-size: 11.67px;">游戏开发</a><a href="/tags/牢骚/" style="font-size: 10.00px;">牢骚</a><a href="/tags/算法/" style="font-size: 10.00px;">算法</a><a href="/tags/线程安全/" style="font-size: 10.00px;">线程安全</a><a href="/tags/线程死锁/" style="font-size: 10.00px;">线程死锁</a><a href="/tags/网之游/" style="font-size: 10.00px;">网之游</a><a href="/tags/老博客备份归档/" style="font-size: 20.00px;">老博客备份归档</a><a href="/tags/设计模式/" style="font-size: 11.67px;">设计模式</a><a href="/tags/资源包/" style="font-size: 10.00px;">资源包</a>
     </div>
   </div>
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
 </div>
 
 </aside>
@@ -1099,7 +1101,7 @@ $(<span class="function"><span class="keyword">function</span><span class="param
 	</div>
 		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
 		
-		<a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
+		<a href="http://xcoder.in/" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
 		
 		</p>
 </div>

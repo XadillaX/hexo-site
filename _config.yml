@@ -3,12 +3,12 @@
 ## Source: https://github.com/tommy351/hexo/
 
 # Site
-title: XadillaX' Blog
-subtitle: 艾克斯の編碼者 —— 一個偽宅级别的碼畜。
+title: 艾克斯の編碼者
+subtitle: 一個偽宅级别的蒟蒻碼畜。
 description: 
 author: 小鳥遊死月
 email: admin@xcoder.in
-language:
+language: zh-CN
 
 # RSS
 feed: atom
@@ -17,7 +17,7 @@ limit: 20
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://xcoder.in
+url: http://xcoder.in/
 root: /
 permalink: :year/:month/:day/:title/
 tag_dir: tags
@@ -71,7 +71,7 @@ logger_format:
 ## Hexo uses Moment.js to parse and display date
 ## You can customize the date format as defined in
 ## http://momentjs.com/docs/#/displaying/format/
-date_format: MMM D YYYY
+date_format: YYYY年MM月DD日
 time_format: H:mm:ss
 
 # Pagination

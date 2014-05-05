@@ -1,10 +1,10 @@
 
  <!DOCTYPE HTML>
-<html >
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   
-    <title>一起撸Node.JS（负叁）——概述 | XadillaX&#39; Blog</title>
+    <title>一起撸Node.JS（负叁）——概述 | 艾克斯の編碼者</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="小鳥遊死月">
@@ -15,7 +15,7 @@
     
     
     
-    <link rel="alternative" href="/atom.xml" title="XadillaX&#39; Blog" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="艾克斯の編碼者" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/favicon.ico">
@@ -32,14 +32,14 @@
       <div>
 		
 			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="XadillaX&#39; Blog" title="XadillaX&#39; Blog"/></a>
+				<a href="/"><img src="/img/logo.png" alt="艾克斯の編碼者" title="艾克斯の編碼者"/></a>
 			</div>
 			
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="XadillaX&#39; Blog">XadillaX&#39; Blog</a></h1>
-				<h2 class="blog-motto">艾克斯の編碼者 —— 一個偽宅级别的碼畜。</h2>
+				<h1 class="site-name"><a href="/" title="艾克斯の編碼者">艾克斯の編碼者</a></h1>
+				<h2 class="blog-motto">一個偽宅级别的蒟蒻碼畜。</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -59,8 +59,8 @@
 					
 					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
-						<input type="hidden" name="q" value="site:xcoder.in">
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:xcoder.in/">
 					</form>
 					
 					</li>
@@ -79,11 +79,11 @@
   </h1>
   <p class="article-author">By
     
-      <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+      <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
     </p>
   <p class="article-time">
-    <time datetime="2013-08-13T00:00:00.000Z" itemprop="datePublished">Aug 13 2013</time>
-    Updated:<time datetime="2014-03-24T13:40:41.000Z" itemprop="dateModified">Mar 24 2014</time>
+    <time datetime="2013-08-13T00:00:00.000Z" itemprop="datePublished">2013年08月13日</time>
+    更新日期:<time datetime="2014-03-24T13:40:41.563Z" itemprop="dateModified">2014年03月24日</time>
     
   </p>
 </header>
@@ -91,11 +91,11 @@
 		
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Node-JS是什么？"><span class="toc-number">1.</span> <span class="toc-text">Node.JS是什么？</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#前端_JavaScript"><span class="toc-number">1.1.</span> <span class="toc-text">前端 JavaScript</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CommonJS"><span class="toc-number">1.2.</span> <span class="toc-text">CommonJS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Node-JS"><span class="toc-number">1.3.</span> <span class="toc-text">Node.JS</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">2.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#番外"><span class="toc-number">3.</span> <span class="toc-text">番外</span></a></li></ol>
 		</div>
 		
-		<p>　　本系列教程主要是写给我带的那帮熊孩子们看的。我自己的 <strong>Node.js</strong> 水平半斤八两，措辞之中也免不了有自己错误的理解，会误人子弟。但是对于初学者来说，某些自己助记的理解还是可取的。有些概念性的错误可以等他们进一步深入研究之后再自行更正。</p>
+		<p>本系列教程主要是写给我带的那帮熊孩子们看的。我自己的 <strong>Node.js</strong> 水平半斤八两，措辞之中也免不了有自己错误的理解，会误人子弟。但是对于初学者来说，某些自己助记的理解还是可取的。有些概念性的错误可以等他们进一步深入研究之后再自行更正。</p>
 <p>　　由于那帮人大多还处于使用 <strong>M$ Windows</strong> 的令人不愉快的阶段，所以本教程将会退而求其次，使其在 <strong>Cygwin</strong> 中模拟 <strong>linux</strong> 的命令（Windows的bat脚本实在是让人不敢恭维）。以及在这里会讲述一些 <strong>Git</strong> 操作的初步。当然，如果你已经在使用 <strong>linux</strong> 进行开发的话，可以跳过前面一堆令人感到厌烦的环境配置章节。或者你在使用 <strong>M$ Windows</strong> 但却不想改变自己的脚本习惯的话，也可以选择性地跳过一些章节和步骤。</p>
 <p><!-- 我是小小分割符 --></p>
 <h2 id="Node-JS是什么？">Node.JS是什么？</h2>
@@ -217,7 +217,7 @@ process.stdin.on(<span class="string">"data"</span>, <span class="function"><spa
 
 <div class="article-share" id="share">
 
-  <div data-url="http://xcoder.in/2013/08/13/node-1-summary/" data-title="一起撸Node.JS（负叁）——概述 | XadillaX&#39; Blog" data-tsina="null" class="share clearfix">
+  <div data-url="http://xcoder.in/2013/08/13/node-1-summary/" data-title="一起撸Node.JS（负叁）——概述 | 艾克斯の編碼者" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -251,21 +251,23 @@ process.stdin.on(<span class="string">"data"</span>, <span class="function"><spa
 </section>
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
   <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Node-JS是什么？"><span class="toc-number">1.</span> <span class="toc-text">Node.JS是什么？</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#前端_JavaScript"><span class="toc-number">1.1.</span> <span class="toc-text">前端 JavaScript</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CommonJS"><span class="toc-number">1.2.</span> <span class="toc-text">CommonJS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Node-JS"><span class="toc-number">1.3.</span> <span class="toc-text">Node.JS</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">2.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#番外"><span class="toc-number">3.</span> <span class="toc-text">番外</span></a></li></ol>
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
 	<p class="asidetitle">分类</p>
 		<ul>
+		
+			<li><a href="/categories/ACM/" title="ACM">ACM<sup>1</sup></a></li>
 		
 			<li><a href="/categories/Document/" title="Document">Document<sup>1</sup></a></li>
 		
@@ -283,13 +285,13 @@ process.stdin.on(<span class="string">"data"</span>, <span class="function"><spa
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/C++/" style="font-size: 18.33px;">C++</a><a href="/tags/CodeForces/" style="font-size: 10.00px;">CodeForces</a><a href="/tags/HGE/" style="font-size: 15.00px;">HGE</a><a href="/tags/JavaScript/" style="font-size: 13.33px;">JavaScript</a><a href="/tags/Javascript/" style="font-size: 11.67px;">Javascript</a><a href="/tags/MongoDB/" style="font-size: 10.00px;">MongoDB</a><a href="/tags/Node.JS/" style="font-size: 10.00px;">Node.JS</a><a href="/tags/Node.js/" style="font-size: 16.67px;">Node.js</a><a href="/tags/Programming/" style="font-size: 10.00px;">Programming</a><a href="/tags/Project Parse/" style="font-size: 10.00px;">Project Parse</a><a href="/tags/SRM/" style="font-size: 10.00px;">SRM</a><a href="/tags/ScopeLock/" style="font-size: 10.00px;">ScopeLock</a><a href="/tags/TopCoder/" style="font-size: 10.00px;">TopCoder</a><a href="/tags/XPlan/" style="font-size: 10.00px;">XPlan</a><a href="/tags/jQuery/" style="font-size: 10.00px;">jQuery</a><a href="/tags/一起撸Node.JS/" style="font-size: 13.33px;">一起撸Node.JS</a><a href="/tags/二进制文件/" style="font-size: 10.00px;">二进制文件</a><a href="/tags/游戏制作/" style="font-size: 10.00px;">游戏制作</a><a href="/tags/游戏开发/" style="font-size: 11.67px;">游戏开发</a><a href="/tags/牢骚/" style="font-size: 10.00px;">牢骚</a><a href="/tags/线程安全/" style="font-size: 10.00px;">线程安全</a><a href="/tags/线程死锁/" style="font-size: 10.00px;">线程死锁</a><a href="/tags/网之游/" style="font-size: 10.00px;">网之游</a><a href="/tags/老博客备份归档/" style="font-size: 20.00px;">老博客备份归档</a><a href="/tags/设计模式/" style="font-size: 11.67px;">设计模式</a><a href="/tags/资源包/" style="font-size: 10.00px;">资源包</a>
+       <a href="/tags/ACM/" style="font-size: 10.00px;">ACM</a><a href="/tags/C++/" style="font-size: 18.33px;">C++</a><a href="/tags/CodeForces/" style="font-size: 10.00px;">CodeForces</a><a href="/tags/HGE/" style="font-size: 15.00px;">HGE</a><a href="/tags/JavaScript/" style="font-size: 13.33px;">JavaScript</a><a href="/tags/Javascript/" style="font-size: 11.67px;">Javascript</a><a href="/tags/MongoDB/" style="font-size: 10.00px;">MongoDB</a><a href="/tags/Node.JS/" style="font-size: 10.00px;">Node.JS</a><a href="/tags/Node.js/" style="font-size: 16.67px;">Node.js</a><a href="/tags/Programming/" style="font-size: 10.00px;">Programming</a><a href="/tags/Project Parse/" style="font-size: 10.00px;">Project Parse</a><a href="/tags/SRM/" style="font-size: 10.00px;">SRM</a><a href="/tags/ScopeLock/" style="font-size: 10.00px;">ScopeLock</a><a href="/tags/TopCoder/" style="font-size: 10.00px;">TopCoder</a><a href="/tags/XPlan/" style="font-size: 10.00px;">XPlan</a><a href="/tags/jQuery/" style="font-size: 10.00px;">jQuery</a><a href="/tags/一起撸Node.JS/" style="font-size: 13.33px;">一起撸Node.JS</a><a href="/tags/二进制文件/" style="font-size: 10.00px;">二进制文件</a><a href="/tags/游戏制作/" style="font-size: 10.00px;">游戏制作</a><a href="/tags/游戏开发/" style="font-size: 11.67px;">游戏开发</a><a href="/tags/牢骚/" style="font-size: 10.00px;">牢骚</a><a href="/tags/算法/" style="font-size: 10.00px;">算法</a><a href="/tags/线程安全/" style="font-size: 10.00px;">线程安全</a><a href="/tags/线程死锁/" style="font-size: 10.00px;">线程死锁</a><a href="/tags/网之游/" style="font-size: 10.00px;">网之游</a><a href="/tags/老博客备份归档/" style="font-size: 20.00px;">老博客备份归档</a><a href="/tags/设计模式/" style="font-size: 11.67px;">设计模式</a><a href="/tags/资源包/" style="font-size: 10.00px;">资源包</a>
     </div>
   </div>
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
 </div>
 
 </aside>
@@ -318,7 +320,7 @@ process.stdin.on(<span class="string">"data"</span>, <span class="function"><spa
 	</div>
 		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
 		
-		<a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
+		<a href="http://xcoder.in/" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
 		
 		</p>
 </div>

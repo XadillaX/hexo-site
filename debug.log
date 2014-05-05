@@ -1,5 +1,5 @@
-date: 2014-04-11 14:36:26.486
-argv: node C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\bin\hexo server
+date: 2014-04-22 16:57:55.485
+argv: E:\Program Files\nodejs\node.exe C:\Users\XadillaX\AppData\Roaming\npm\node_modules\hexo\bin\hexo server --debug
 os: Windows_NT 6.1.7601 win32 x64
 version:
   hexo: 2.5.2
@@ -13,135 +13,119 @@ version:
   openssl: 1.0.1e
 ---
 
-[debug] 14:36:25.297 Config file loaded
-[debug] 14:36:25.299 Version info checked successfully
-[debug] 14:36:25.321 Loading database.
-[debug] 14:36:25.374 Plugin loaded successfully: hexo-generator-feed
-[debug] 14:36:25.376 Script load successfully: fancybox.js
-[debug] 14:36:25.443 Processed: _posts/codeforces-128-div2/hit-ball.png
-[debug] 14:36:25.443 Processed: _posts/hero-snake/1.png
-[debug] 14:36:25.443 Processed: _posts/hero-snake/10.png
-[debug] 14:36:25.443 Processed: _posts/hero-snake/2.png
-[debug] 14:36:25.443 Processed: _posts/hero-snake/3.png
-[debug] 14:36:25.443 Processed: _posts/hero-snake/4.png
-[debug] 14:36:25.443 Processed: _posts/hero-snake/5.png
-[debug] 14:36:25.443 Processed: _posts/hero-snake/6.png
-[debug] 14:36:25.443 Processed: _posts/hero-snake/7.png
-[debug] 14:36:25.443 Processed: _posts/hero-snake/8.png
-[debug] 14:36:25.443 Processed: _posts/hero-snake/9.png
-[debug] 14:36:25.443 Processed: _posts/hero-snake/bin.7z
-[debug] 14:36:25.444 Processed: _posts/hero-snake/door.png
-[debug] 14:36:25.444 Processed: _posts/hero-snake/treasure0.png
-[debug] 14:36:25.444 Processed: _posts/hero-snake/treasure1.png
-[debug] 14:36:25.444 Processed: _posts/hero-snake/treasure10.png
-[debug] 14:36:25.444 Processed: _posts/hero-snake/treasure2.png
-[debug] 14:36:25.444 Processed: _posts/hero-snake/treasure3.png
-[debug] 14:36:25.444 Processed: _posts/hero-snake/treasure4.png
-[debug] 14:36:25.445 Processed: _posts/hero-snake/treasure5.png
-[debug] 14:36:25.445 Processed: _posts/hero-snake/treasure6.png
-[debug] 14:36:25.445 Processed: _posts/hero-snake/treasure7.png
-[debug] 14:36:25.445 Processed: _posts/hero-snake/treasure8.png
-[debug] 14:36:25.445 Processed: _posts/hge-hotspot-collision/src.rar
-[debug] 14:36:25.445 Processed: _posts/lianlinakan-algorighm-i/comment.png
-[debug] 14:36:25.445 Processed: _posts/nodejs-cpp-addons-2/mama.jpg
-[debug] 14:36:25.445 Processed: _posts/xplan-spider-doc/xplan-news-1.jpg
-[debug] 14:36:25.445 Processed: _posts/xplan-spider-doc/xplan-news-2.jpg
-[debug] 14:36:25.447 Processed: README.md
-[debug] 14:36:25.447 Processed: LICENSE
-[debug] 14:36:25.447 Processed: scripts/fancybox.js
-[debug] 14:36:25.474 Processed: source/css/_base/code.styl
-[debug] 14:36:25.474 Processed: source/css/_base/font.styl
-[debug] 14:36:25.474 Processed: source/css/_base/public.styl
-[debug] 14:36:25.474 Processed: source/css/_base/variable.styl
-[debug] 14:36:25.474 Processed: source/css/_partial/aside.styl
-[debug] 14:36:25.474 Processed: source/css/_partial/article.styl
-[debug] 14:36:25.474 Processed: source/css/_partial/duoshuo.styl
-[debug] 14:36:25.474 Processed: source/css/_partial/footer.styl
-[debug] 14:36:25.474 Processed: source/css/_partial/gallery.styl
-[debug] 14:36:25.474 Processed: source/css/_partial/header.styl
-[debug] 14:36:25.474 Processed: source/css/_partial/helper.styl
-[debug] 14:36:25.474 Processed: source/css/_partial/index.styl
-[debug] 14:36:25.485 Processed: source/js/jquery-2.1.0.min.js
-[debug] 14:36:25.486 Processed: source/img/author.jpg
-[debug] 14:36:25.486 Processed: source/img/favicon.ico
-[debug] 14:36:25.487 Processed: source/img/logo.png
-[debug] 14:36:25.487 Processed: source/img/pacman.jpg
-[debug] 14:36:25.488 Processed: source/img/logo.svg
-[debug] 14:36:25.489 Processed: source/font/coveredbyyourgrace-webfont.svg
-[debug] 14:36:25.489 Processed: source/font/FontAwesome.otf
-[debug] 14:36:25.490 Processed: source/font/coveredbyyourgrace-webfont.ttf
-[debug] 14:36:25.490 Processed: source/font/coveredbyyourgrace-webfont.woff
-[debug] 14:36:25.491 Processed: source/font/fontawesome-webfont.eot
-[debug] 14:36:25.491 Processed: source/font/fontawesome-webfont.woff
-[debug] 14:36:25.492 Processed: source/font/fontawesome-webfont.svg
-[debug] 14:36:25.492 Processed: source/font/fontawesome-webfont.ttf
-[debug] 14:36:25.493 Processed: source/font/coveredbyyourgrace-webfont.eot
-[debug] 14:36:25.493 Processed: source/css/style.styl
-[debug] 14:36:25.494 Processed: source/fancybox/fancybox_loading.gif
-[debug] 14:36:25.495 Processed: source/fancybox/fancybox_overlay.png
-[debug] 14:36:25.495 Processed: source/fancybox/fancybox_sprite.png
-[debug] 14:36:25.497 Processed: source/fancybox/fancybox_loading@2x.gif
-[debug] 14:36:25.498 Processed: source/fancybox/blank.gif
-[debug] 14:36:25.499 Processed: source/fancybox/jquery.fancybox.css
-[debug] 14:36:25.500 Processed: source/fancybox/jquery.fancybox.pack.js
-[debug] 14:36:25.500 Processed: source/fancybox/fancybox_sprite@2x.png
-[debug] 14:36:25.502 Processed: source/fancybox/jquery.fancybox.js
-[debug] 14:36:25.503 Processed: source/fancybox/helpers/jquery.fancybox-buttons.css
-[debug] 14:36:25.505 Processed: source/fancybox/helpers/jquery.fancybox-media.js
-[debug] 14:36:25.506 Processed: source/fancybox/helpers/fancybox_buttons.png
-[debug] 14:36:25.506 Processed: source/fancybox/helpers/jquery.fancybox-buttons.js
-[debug] 14:36:25.507 Processed: source/fancybox/helpers/jquery.fancybox-thumbs.js
-[debug] 14:36:25.508 Processed: source/fancybox/helpers/jquery.fancybox-thumbs.css
-[debug] 14:36:25.509 Processed: layout/archive.ejs
-[debug] 14:36:25.509 Processed: layout/category.ejs
-[debug] 14:36:25.509 Processed: layout/layout.ejs
-[debug] 14:36:25.509 Processed: layout/index.ejs
-[debug] 14:36:25.509 Processed: layout/page.ejs
-[debug] 14:36:25.509 Processed: layout/post.ejs
-[debug] 14:36:25.509 Processed: layout/tag.ejs
-[debug] 14:36:25.509 Processed: layout/_widget/category.ejs
-[debug] 14:36:25.509 Processed: layout/_widget/links.ejs
-[debug] 14:36:25.509 Processed: layout/_widget/archive.ejs
-[debug] 14:36:25.509 Processed: layout/_widget/tag.ejs
-[debug] 14:36:25.509 Processed: layout/_widget/tagcloud.ejs
-[debug] 14:36:25.509 Processed: layout/_widget/rss.ejs
-[debug] 14:36:25.509 Processed: layout/_partial/after_footer.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/categories.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/article.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/head.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/google_analytics.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/header.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/pagination.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/footer.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/search.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/tags.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/sidebar.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/archive.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/post/footer.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/post/comment.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/post/pagination.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/post/article.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/post/header.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/post/jiathis.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/post/gallery.ejs
-[debug] 14:36:25.510 Processed: layout/_partial/post/catetags.ejs
-[debug] 14:36:26.392 Theme config loaded
-[debug] 14:36:26.392 Processed: _config.yml
-[debug] 14:36:26.392 Processed: languages/zh-CN.yml
-[debug] 14:36:26.393 Processed: languages/default.yml
-[debug] 14:36:26.393 Processed: languages/zh-TW.yml
-[debug] 14:36:26.397 Processed: categories/index.md
-[debug] 14:36:26.403 Processed: curriculumvitae/index.md
-[debug] 14:36:26.403 Processed: tags/index.md
-[error] 14:36:26.469 { rawMessage: 'Unexpected characters near "],".',
-  parsedLine: 3,
-  snippet: 'tags: [ 老博客备份归档, 游戏开发, 牢骚, 网之游 ],',
-  parsedFile: null,
-  message: 'Unexpected characters near "]," at line 3 (near "tags: [ 老博客备份归档, 游戏开发, 牢骚, 网之游 ],").',
-  domain: 
-   { domain: null,
-     _events: { error: [Function] },
-     _maxListeners: 10,
-     members: [],
-     _disposed: true },
-  domainThrown: true }
+[debug] 16:57:55.893 Config file loaded
+[debug] 16:57:55.898 Version info checked successfully
+[debug] 16:57:55.919 Loading database.
+[debug] 16:57:55.971 Plugin loaded successfully: hexo-generator-feed
+[debug] 16:57:56.030 Processed: _posts/codeforces-128-div2/hit-ball.png
+[debug] 16:57:56.030 Processed: _posts/hero-snake/1.png
+[debug] 16:57:56.030 Processed: _posts/hero-snake/10.png
+[debug] 16:57:56.030 Processed: _posts/hero-snake/2.png
+[debug] 16:57:56.030 Processed: _posts/hero-snake/3.png
+[debug] 16:57:56.030 Processed: _posts/hero-snake/4.png
+[debug] 16:57:56.031 Processed: _posts/hero-snake/5.png
+[debug] 16:57:56.031 Processed: _posts/hero-snake/6.png
+[debug] 16:57:56.031 Processed: _posts/hero-snake/7.png
+[debug] 16:57:56.031 Processed: _posts/hero-snake/8.png
+[debug] 16:57:56.031 Processed: _posts/hero-snake/9.png
+[debug] 16:57:56.031 Processed: _posts/hero-snake/bin.7z
+[debug] 16:57:56.031 Processed: _posts/hero-snake/door.png
+[debug] 16:57:56.032 Processed: _posts/hero-snake/treasure0.png
+[debug] 16:57:56.032 Processed: _posts/hero-snake/treasure1.png
+[debug] 16:57:56.032 Processed: _posts/hero-snake/treasure10.png
+[debug] 16:57:56.032 Processed: _posts/hero-snake/treasure2.png
+[debug] 16:57:56.032 Processed: _posts/hero-snake/treasure3.png
+[debug] 16:57:56.032 Processed: _posts/hero-snake/treasure4.png
+[debug] 16:57:56.032 Processed: _posts/hero-snake/treasure5.png
+[debug] 16:57:56.032 Processed: _posts/hero-snake/treasure6.png
+[debug] 16:57:56.033 Processed: _posts/hero-snake/treasure7.png
+[debug] 16:57:56.033 Processed: _posts/hero-snake/treasure8.png
+[debug] 16:57:56.033 Processed: _posts/hge-hotspot-collision/src.rar
+[debug] 16:57:56.033 Processed: _posts/lianlinakan-algorighm-i/comment.png
+[debug] 16:57:56.033 Processed: _posts/nodejs-cpp-addons-2/mama.jpg
+[debug] 16:57:56.033 Processed: _posts/xplan-spider-doc/xplan-news-1.jpg
+[debug] 16:57:56.033 Processed: _posts/xplan-spider-doc/xplan-news-2.jpg
+[debug] 16:57:56.045 Processed: source/css/_base/base.styl
+[debug] 16:57:56.045 Processed: source/css/_base/var.styl
+[debug] 16:57:56.045 Processed: source/css/_partial/foot.styl
+[debug] 16:57:56.045 Processed: source/css/_partial/head.styl
+[debug] 16:57:56.045 Processed: source/css/_partial/post.styl
+[debug] 16:57:56.048 Processed: source/js/common.js
+[debug] 16:57:56.049 Processed: source/js/jquery-2.1.0.min.js
+[debug] 16:57:56.049 Processed: source/js/jquery-2.1.0.min.map
+[debug] 16:57:56.050 Processed: source/js/jquery.backstretch.min.js
+[debug] 16:57:56.050 Processed: source/bootstrap/css/bootstrap-theme.css
+[debug] 16:57:56.050 Processed: source/bootstrap/css/bootstrap-theme.css.map
+[debug] 16:57:56.051 Processed: source/bootstrap/css/bootstrap-theme.min.css
+[debug] 16:57:56.053 Processed: source/bootstrap/css/bootstrap.css
+[debug] 16:57:56.054 Processed: source/bootstrap/css/bootstrap.css.map
+[debug] 16:57:56.054 Processed: source/bootstrap/css/bootstrap.min.css
+[debug] 16:57:56.054 Processed: source/bootstrap/fonts/glyphicons-halflings-regular.eot
+[debug] 16:57:56.055 Processed: source/bootstrap/fonts/glyphicons-halflings-regular.svg
+[debug] 16:57:56.055 Processed: source/bootstrap/fonts/glyphicons-halflings-regular.ttf
+[debug] 16:57:56.056 Processed: source/bootstrap/fonts/glyphicons-halflings-regular.woff
+[debug] 16:57:56.056 Processed: source/bootstrap/js/bootstrap.js
+[debug] 16:57:56.056 Processed: source/bootstrap/js/bootstrap.min.js
+[debug] 16:57:56.057 Processed: source/css/style.styl
+[debug] 16:57:56.057 Processed: source/images/avatar.gif
+[debug] 16:57:56.058 Processed: source/images/background/1.png
+[debug] 16:57:56.058 Processed: source/images/background/2.jpg
+[debug] 16:57:56.059 Processed: source/images/background/3.png
+[debug] 16:57:56.061 Processed: layout/layout.ejs
+[debug] 16:57:56.061 Processed: layout/category.ejs
+[debug] 16:57:56.061 Processed: layout/archive.ejs
+[debug] 16:57:56.061 Processed: layout/page.ejs
+[debug] 16:57:56.062 Processed: layout/post.ejs
+[debug] 16:57:56.062 Processed: layout/tag.ejs
+[debug] 16:57:56.062 Processed: layout/_partial/footer.ejs
+[debug] 16:57:56.062 Processed: layout/_partial/header.ejs
+[debug] 16:57:57.011 Theme config loaded
+[debug] 16:57:57.011 Processed: _config.yml
+[debug] 16:57:57.019 Processed: categories/index.md
+[debug] 16:57:57.025 Processed: curriculumvitae/index.md
+[debug] 16:57:57.026 Processed: tags/index.md
+[debug] 16:57:57.104 Processed: layout/index.ejs
+[debug] 16:57:57.135 Processed: _posts/cpp-class-inline-keng.md
+[debug] 16:57:57.135 Processed: _posts/codeforces-128-div2.md
+[debug] 16:57:57.136 Processed: _posts/hge-transparent-color.md
+[debug] 16:57:57.136 Processed: _posts/javascript-callback-this-bind.md
+[debug] 16:57:57.137 Processed: _posts/hero-snake.md
+[debug] 16:57:57.138 Processed: _posts/jquery-animate-color-support.md
+[debug] 16:57:57.138 Processed: _posts/hge-hotspot-collision.md
+[debug] 16:57:57.138 Processed: _posts/my-first-game.md
+[debug] 16:57:57.138 Processed: _posts/node-1-summary.md
+[debug] 16:57:57.138 Processed: _posts/lianlinakan-algorighm-i.md
+[debug] 16:57:57.138 Processed: _posts/node-2-environment-in-windows.md
+[debug] 16:57:57.139 Processed: _posts/node-4-base.md
+[debug] 16:57:57.139 Processed: _posts/node-public-file-house.md
+[debug] 16:57:57.139 Processed: _posts/nodejs-cpp-addons-1.md
+[debug] 16:57:57.140 Processed: _posts/nodejs-cpp-addons-3.md
+[debug] 16:57:57.140 Processed: _posts/nodejs-mongodb-sync.md
+[debug] 16:57:57.140 Processed: _posts/objectfactory-learning.md
+[debug] 16:57:57.141 Processed: _posts/resource-pack.md
+[debug] 16:57:57.141 Processed: _posts/scope-lock.md
+[debug] 16:57:57.141 Processed: _posts/nodejs-cpp-addons-2.md
+[debug] 16:57:57.142 Processed: _posts/srm-589-div2.md
+[debug] 16:57:57.142 Processed: _posts/singleton-learning.md
+[debug] 16:57:57.142 Processed: _posts/xplan-spider-doc.md
+[info] 16:57:57.260 Hexo is running at http://localhost:4000/. Press Ctrl+C to stop.
+[debug] 16:57:57.264 Cache saved
+[debug] 16:57:58.010 Render index: 
+[update] 16:58:14.951 E:\cygwin\home\XadillaX\hexo\themes\xadillax\source\css\_partial\post.styl
+[update] 16:58:14.952 E:\cygwin\home\XadillaX\hexo\themes\xadillax\source\css\_partial\post.styl
+[debug] 16:58:15.052 Processed: source/css/_partial/post.styl
+[debug] 16:58:15.053 Processed: source/css/_partial/post.styl
+[debug] 16:58:16.383 Render index: 
+[update] 16:58:22.478 E:\cygwin\home\XadillaX\hexo\themes\xadillax\source\css\_partial\post.styl
+[update] 16:58:22.480 E:\cygwin\home\XadillaX\hexo\themes\xadillax\source\css\_partial\post.styl
+[debug] 16:58:22.587 Processed: source/css/_partial/post.styl
+[debug] 16:58:22.587 Processed: source/css/_partial/post.styl
+[debug] 16:58:23.844 Render index: 
+[debug] 16:58:30.284 Render index: 
+[debug] 16:58:31.309 Render index: 
+[debug] 16:58:48.285 Render index: page/2/
+[debug] 16:58:52.442 Render index: page/3/
+[debug] 16:58:55.815 Render post: 2011/04/25/my-first-game/
+[debug] 17:00:06.546 Render index: 
+[debug] 17:04:40.734 Render index: page/2/
+[debug] 17:05:12.477 Render index: 
