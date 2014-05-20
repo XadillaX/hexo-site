@@ -11,8 +11,14 @@ title       : 链接
 
 ## Node.js
 
++ [伊凡](http://77.yt/)
 + [原来是悟空](http://www.robanlee.com)
 
 ## PHP
 
 + [团哥](http://crazyphper.com/)
+
+## 我的其它好玩域名
+
++ [没想好干嘛(http://letme.repair/)](http://letme.repair/)
++ [没想好干嘛(http://youare.ws/)](http://youare.ws/)
