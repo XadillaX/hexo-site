@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2014-05-05T16:09:27.576Z</updated>
+  <updated>2014-05-20T10:08:43.654Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -15,11 +15,11 @@
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[「NBUT 2014 校赛·网络同步赛」题解]]></title>
+    <title><![CDATA[「NBUT 2014 校赛·网络同步赛」题解 (未完成...)]]></title>
     <link href="http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/"/>
     <id>http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/</id>
     <published>2014-05-05T06:08:39.000Z</published>
-    <updated>2014-05-05T10:02:03.886Z</updated>
+    <updated>2014-05-20T10:07:24.000Z</updated>
     <content type="html"><![CDATA[<p>这次比赛由 <a href="http://blog.163.com/surgy_han/" target="_blank">Hungar</a>，<a href="http://www.cnblogs.com/Wine93/" target="_blank">8Mao</a> 以及我负责的。明明都读研了，还诈尸回来出题——归结起来大概是因为各种面试不顺吧，想来虐虐学弟妹们怒刷存在感。结果网络赛还是被虐得死去活来。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯</p>
 <p>　　好了废话不多说，还是直接上题解吧。</p>
 <h2 id="Minecraft_Server_Bug">Minecraft Server Bug</h2>
@@ -185,7 +185,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/11/hero-snake/"/>
     <id>http://xcoder.in/2014/04/11/hero-snake/</id>
     <published>2014-04-11T04:53:35.000Z</published>
-    <updated>2014-04-11T06:30:00.386Z</updated>
+    <updated>2014-04-11T06:30:00.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>注：备份到这篇日志的时候，感觉眼睛进了什么奇怪的东西。（才……才不是眼泪呢，那一定是沙子！(;´༎ຶД༎ຶ`)</p>
 <p>主要引起感伤的还是这首轩辕剑的 BGM 吧。因为 Hero Snake 的BGM就是这个。</p>
@@ -237,11 +237,11 @@ lint solution(lint n)
   </entry>
   
   <entry>
-    <title><![CDATA[让Node.js和C++一起搞基 —— 3]]></title>
+    <title><![CDATA[让Node.js和C++一起搞基 —— 3 (未完成...)]]></title>
     <link href="http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/"/>
     <id>http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/</id>
     <published>2014-04-06T07:15:39.000Z</published>
-    <updated>2014-04-06T07:18:27.254Z</updated>
+    <updated>2014-05-20T10:07:31.000Z</updated>
     <content type="html"><![CDATA[<p><a href="/2014/04/03/nodejs-cpp-addons-2/">上一章</a>我们偷偷学习了如何在 <code>C++</code> 中实现 <code>Node.js</code> 调用时传参数和调用回调函数，并且我自己也心血来潮写了个<a href="/2014/04/05/cpp-class-inline-keng/#simpleini">小 Demo</a> 供大家参考。</p>
 <p>　　今天我们就不复习了，直捣黄龙吧。</p>
 ]]></content>
@@ -260,7 +260,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/05/cpp-class-inline-keng/"/>
     <id>http://xcoder.in/2014/04/05/cpp-class-inline-keng/</id>
     <published>2014-04-05T07:55:57.000Z</published>
-    <updated>2014-04-05T08:21:28.360Z</updated>
+    <updated>2014-04-05T08:21:28.000Z</updated>
     <content type="html"><![CDATA[<p>今天我来讲一讲 <code>C++</code> 中类成员函数 <code>inline</code> 修饰符的一个坑。</p>
 <p>　　这个坑是我在尝试着写我的第一个 <code>Node.js</code> 扩展 <code>simpleini</code> 时候遇到的。</p>
 <h2 id="坑描述">坑描述</h2>
@@ -345,7 +345,7 @@ console.log(simpleIni.read(<span class="string">"vals"</span>, <span class="stri
     <link href="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"/>
     <id>http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/</id>
     <published>2014-04-03T13:37:15.000Z</published>
-    <updated>2014-04-04T05:47:45.055Z</updated>
+    <updated>2014-04-04T05:47:45.000Z</updated>
     <content type="html"><![CDATA[<p>好，今天让我们更深入地搞基吧！</p>
 <h2 id="温故而知新，可以为湿矣">温故而知新，可以为湿矣</h2>
 <p>　　首先请大家记住这个 V8 的在线手册——<a href="http://izs.me/v8-docs/main.html" target="_blank">http://izs.me/v8-docs/main.html</a>。</p>
@@ -720,7 +720,7 @@ NODE_MODULE(addon, Init)
     <link href="http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/"/>
     <id>http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/</id>
     <published>2014-04-01T15:53:22.000Z</published>
-    <updated>2014-04-01T17:41:23.979Z</updated>
+    <updated>2014-04-01T17:41:23.000Z</updated>
     <content type="html"><![CDATA[<p>N久之前的一个坑——用 <strong>Node.js</strong> 来重构 NBUT 的 <strong>Online Judge</strong>，包括评测端也得重构一遍。（至于什么时候完成大家就不要关心了，(／‵Д′)／~ ╧╧</p>
 <p>　　总之我们现在要做的其实简而言之就是——用C/C++来实现 <strong>Node.js</strong> 的模块。</p>
 <h2 id="准备工作">准备工作</h2>
@@ -978,7 +978,7 @@ NODE_MODULE(module_name, Initialize)
     <link href="http://xcoder.in/2014/03/27/node-public-file-house/"/>
     <id>http://xcoder.in/2014/03/27/node-public-file-house/</id>
     <published>2014-03-26T16:34:04.000Z</published>
-    <updated>2014-03-27T08:38:09.769Z</updated>
+    <updated>2014-03-27T08:38:09.000Z</updated>
     <content type="html"><![CDATA[<p>所谓“公众档所”，其实就是一个公共的临时网盘了。这个东西是一个老物了，在我刚接触 <code>Expressjs</code> 的时候写的。当时还随便搞了一下 <code>backbone.js</code>，但是没有深入，勿笑。关于深入构架 <code>Expressjs</code> 方面也没做，只是粗粗写了下最基础的路由，所以整个文件结构也不是很规范。但是应该能比较适合刚学 <code>Node.js</code> 以及刚接触 <code>Expressjs</code> 的人吧。</p>
 <p>　　Repo地址在<a href="https://github.com/XadillaX/public-file-house" target="_blank">我的Github</a>上。Demo地址在 <a href="http://dang.kacaka.ca/" target="_blank">http://dang.kacaka.ca/</a>，由于个人电脑的不稳定性，所以不保证你们随时可以访问，保不定哪天就失效了，所以最好的办法还是自己 <code>clone</code> 下来啪啪啪。</p>
 <p>　　它所需要的东西大致就是 <code>Expressjs</code> + <code>Redis</code> + <code>Backbone</code> 了。不过都是最最基础的代码。</p>
@@ -1880,7 +1880,7 @@ $(<span class="function"><span class="keyword">function</span><span class="param
     <link href="http://xcoder.in/2013/12/28/xplan-spider-doc/"/>
     <id>http://xcoder.in/2013/12/28/xplan-spider-doc/</id>
     <published>2013-12-28T00:00:00.000Z</published>
-    <updated>2014-03-26T16:51:15.005Z</updated>
+    <updated>2014-03-26T16:51:15.000Z</updated>
     <content type="html"><![CDATA[<h2 id="前言">前言</h2>
 <p><strong>XPlan</strong> 是一个“基于校园强关系的社交应用”的开发代号。其中有一个功能是从学校网站上通过网络爬虫（Web Crawler）形式将学校新闻抓取到XPlan自身的数据库当中。</p>
 <p>而这里出现的一个问题就是学校网站上面的文章是通过类似于 <a href="http://kindeditor.net/" target="_blank"><code>KindEditor</code></a>、<a href="http://ueditor.baidu.com/website/" target="_blank"><code>UEditor</code></a>这类<strong>在线富文本编辑器</strong>生成的代码。</p>
@@ -2132,7 +2132,7 @@ $ = cheerio.load(<span class="keyword">...</span>);
     <link href="http://xcoder.in/2013/08/31/srm-589-div2/"/>
     <id>http://xcoder.in/2013/08/31/srm-589-div2/</id>
     <published>2013-08-31T00:00:00.000Z</published>
-    <updated>2014-03-24T13:59:55.891Z</updated>
+    <updated>2014-03-24T13:59:55.000Z</updated>
     <content type="html"><![CDATA[<p>好久没撸 <strong>TC</strong> 了，手都生了。前两天刚折腾好 <strong>LinuxMint</strong> + <strong>Cinnamon</strong>，顺便手贱把 <strong>TC</strong> 环境配好了。</p>
 <p>　　随便进去扯了一套最新的 <strong>SRM</strong> 来搞，全跑完之后才发现原来这场比赛还处于 <strong>System Running</strong> 阶段。于是知道了比赛一结束还在 <strong>Running</strong> 的时候你就已经可以自己拉出来做了。小绿名大家不要笑。</p>
 <!-- 我是小小分割符 -->
@@ -2721,7 +2721,7 @@ dp2[<span class="link_label">i</span>][<span class="link_reference">0|1</span>]
     <link href="http://xcoder.in/2013/08/16/node-4-base/"/>
     <id>http://xcoder.in/2013/08/16/node-4-base/</id>
     <published>2013-08-16T00:00:00.000Z</published>
-    <updated>2014-03-24T13:40:55.971Z</updated>
+    <updated>2014-03-24T13:40:55.000Z</updated>
     <content type="html"><![CDATA[<p><strong>Node.js</strong> 的基础是 <strong>JavaScript</strong> 这门 <strong><em>脚本语言</em></strong>。而大多数的脚本语言一个共同的特点就是“<a href="http://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1#.E5.BC.B7.E5.9E.8B.E5.88.A5.E5.92.8C.E5.BC.B1.E5.9E.8B.E5.88.A5" target="_blank">弱类型</a>”。</p>
 <p>　　不同于 <strong>PHP</strong> 的是，<strong>PHP</strong> 就是是有了新变量也无需申明，而 <strong>JavaScript</strong> 则还是需要 <code>var</code> 来申明一下的。而这个 <code>var</code> 涵盖了 <strong>C++</strong> 中的<code>int</code>、<code>string</code>、<code>char</code>等一切类型的含义，甚至是 <code>function</code>。</p>
 <p>　　本篇以及后篇的所有内容都是在 <strong>Linux</strong> 或者 <strong>Cygwin</strong> 下用 <strong>vim</strong> 进行编辑（若不是则请自行转变成你自己的方法），然后在命令行下进行查看结果的。</p>
@@ -3445,7 +3445,7 @@ console.<span class="keyword">log</span>(<span class="keyword">str</span>.sb());
     <link href="http://xcoder.in/2013/08/15/node-2-environment-in-windows/"/>
     <id>http://xcoder.in/2013/08/15/node-2-environment-in-windows/</id>
     <published>2013-08-15T00:00:00.000Z</published>
-    <updated>2014-03-24T13:43:21.554Z</updated>
+    <updated>2014-03-24T13:43:21.000Z</updated>
     <content type="html"><![CDATA[<p>由于<a href="#linux-环境">Linux</a>中的环境搭建比较简单，所以草草略过。</p>
 <p>　　其实<a href="#windows-环境">Windows</a>下也不算麻烦，但是这里会讲一定量的别的环境的搭建。</p>
 <p><!-- 我是小小分割符 --></p>
@@ -3671,7 +3671,7 @@ $ wget http://blog-xcoder-<span class="keyword">in</span><span class="preprocess
     <link href="http://xcoder.in/2013/08/13/node-1-summary/"/>
     <id>http://xcoder.in/2013/08/13/node-1-summary/</id>
     <published>2013-08-13T00:00:00.000Z</published>
-    <updated>2014-03-24T13:40:41.563Z</updated>
+    <updated>2014-03-24T13:40:41.000Z</updated>
     <content type="html"><![CDATA[<p>本系列教程主要是写给我带的那帮熊孩子们看的。我自己的 <strong>Node.js</strong> 水平半斤八两，措辞之中也免不了有自己错误的理解，会误人子弟。但是对于初学者来说，某些自己助记的理解还是可取的。有些概念性的错误可以等他们进一步深入研究之后再自行更正。</p>
 <p>　　由于那帮人大多还处于使用 <strong>M$ Windows</strong> 的令人不愉快的阶段，所以本教程将会退而求其次，使其在 <strong>Cygwin</strong> 中模拟 <strong>linux</strong> 的命令（Windows的bat脚本实在是让人不敢恭维）。以及在这里会讲述一些 <strong>Git</strong> 操作的初步。当然，如果你已经在使用 <strong>linux</strong> 进行开发的话，可以跳过前面一堆令人感到厌烦的环境配置章节。或者你在使用 <strong>M$ Windows</strong> 但却不想改变自己的脚本习惯的话，也可以选择性地跳过一些章节和步骤。</p>
 <p><!-- 我是小小分割符 --></p>
@@ -3793,7 +3793,7 @@ process.stdin.on(<span class="string">"data"</span>, <span class="function"><spa
     <link href="http://xcoder.in/2013/07/15/javascript-callback-this-bind/"/>
     <id>http://xcoder.in/2013/07/15/javascript-callback-this-bind/</id>
     <published>2013-07-15T05:20:29.000Z</published>
-    <updated>2014-04-11T04:19:06.292Z</updated>
+    <updated>2014-04-11T04:19:06.000Z</updated>
     <content type="html"><![CDATA[<p>最近在写 <strong>NBUT Virtual Judge</strong> 的内核框架，用的又是 <strong>Node.JS</strong> 了，把它当作一个本地运行的脚本不断进行轮询。</p>
 <p>　　众所周知JS中的一个精髓就是异步回调。</p>
 <p>　　所以在我自己写的框架中也经常会出现类似于下面的代码：</p>
@@ -3836,7 +3836,7 @@ foo.bar(a, b, cb);
     <link href="http://xcoder.in/2013/03/29/nodejs-mongodb-sync/"/>
     <id>http://xcoder.in/2013/03/29/nodejs-mongodb-sync/</id>
     <published>2013-03-29T00:31:38.000Z</published>
-    <updated>2014-04-11T04:39:49.633Z</updated>
+    <updated>2014-04-11T04:39:49.000Z</updated>
     <content type="html"><![CDATA[<p><strong><em>注：本文仅为我初学 Node.JS 的时候的稚嫩笔记。是从 <a href="http://web.archive.org/" target="_blank">http://web.archive.org/</a> 扒回来的。现在看来已无多大参考价值，各位可以略过。我只是把它扒回来纪念一下而已，以记录我的历程。而那个相对应的 <code>SevenzJS</code> 也已经被遗弃</em></strong></p>
 <h2 id="背景">背景</h2>
 <p>　　最近在做公司项目的一个模块，主要用于 <strong>JSON Api</strong> 的传输，所以开发环境的目标就锁定在了 <strong>Node.js</strong>。而这一块的登陆用户又是存在 <strong>MongoDB</strong> 里面的，所以就有了如下的问题。</p>
@@ -3964,7 +3964,7 @@ Fiber(<span class="function"><span class="keyword">function</span><span class="p
     <link href="http://xcoder.in/2012/12/24/jquery-animate-color-support/"/>
     <id>http://xcoder.in/2012/12/24/jquery-animate-color-support/</id>
     <published>2012-12-24T00:20:16.000Z</published>
-    <updated>2014-04-11T04:37:09.585Z</updated>
+    <updated>2014-04-11T04:37:09.000Z</updated>
     <content type="html"><![CDATA[<p>最近在做一个汽车团购网的项目，由于老大力求简洁，所以界面做得有些小清新。不过得说一下页面不是我设计的，是一位美工同志。</p>
 <p>　　废话不多说，直接切入正题吧——</p>
 <p>　　我要做得就是让下面一段代码生效：</p>
@@ -4011,7 +4011,7 @@ Fiber(<span class="function"><span class="keyword">function</span><span class="p
     <link href="http://xcoder.in/2012/09/08/scope-lock/"/>
     <id>http://xcoder.in/2012/09/08/scope-lock/</id>
     <published>2012-09-07T16:31:59.000Z</published>
-    <updated>2014-04-11T04:44:23.766Z</updated>
+    <updated>2014-04-11T04:44:23.000Z</updated>
     <content type="html"><![CDATA[<p><strong><em>嘛，本文是建立在M$的Visual Studio基础上的，linux☭勿喷。</em></strong></p>
 <p>　　我最先用到 ScopeLock 模式是在自己开发 <strong>XAE引擎</strong> 的时候。在里面用到挺多的线程函数，那么如何解决临界区就成了一个重要的课题。可能大家想，不就一个线程锁临界区什么的么，一个 <code>EnterCriticalSection</code> 和一个 <code>LeaveCriticalSection</code> 不就解决了么？</p>
 <p>　　其实不然。在 <strong>M$</strong> 中，最常用的当然就是 <code>CRITICAL_SECTION</code> 了，但是如果临界区上锁却木有解锁呢？这就会发生死锁现象。对于一个粗心的程序猿来说这样的错误还是有几率发生的。就算你足够细心，还是有时候会一失足成千古恨。</p>
@@ -4098,7 +4098,7 @@ CRITICAL_SECTION cs;
     <link href="http://xcoder.in/2012/07/04/codeforces-128-div2/"/>
     <id>http://xcoder.in/2012/07/04/codeforces-128-div2/</id>
     <published>2012-07-04T02:38:59.000Z</published>
-    <updated>2014-04-11T04:58:57.257Z</updated>
+    <updated>2014-04-11T04:58:57.000Z</updated>
     <content type="html"><![CDATA[<p>这次玩脱了。好不容易四题都做出来，却因为小细节挂了两题。</p>
 <h2 id="Description">Description</h2>
 <h3 id="Two_Problems">Two Problems</h3>
@@ -4756,7 +4756,7 @@ point3 intersection(line3 l,plane3 s){
     <link href="http://xcoder.in/2011/10/18/hge-hotspot-collision/"/>
     <id>http://xcoder.in/2011/10/18/hge-hotspot-collision/</id>
     <published>2011-10-18T06:22:21.000Z</published>
-    <updated>2014-04-11T05:18:04.306Z</updated>
+    <updated>2014-04-11T05:18:04.000Z</updated>
     <content type="html"><![CDATA[<p>碰撞检测始终是做2D游戏中的一个热点话题，我本人并没有做过这类游戏，所以一切只是理论而已，不过正打算做这么个小游戏练练手。</p>
 <p>　　前几天在HGE的群里看到有人突然问到如何判断鼠标有没有点到人（点到纹理的透明区域不算），从而引申出了碰撞检测问题。</p>
 <p>　　他的问题相对好实现，只要算出纹理所按的点是不是透明即可。</p>
@@ -5001,7 +5001,7 @@ point3 intersection(line3 l,plane3 s){
     <link href="http://xcoder.in/2011/09/13/hge-transparent-color/"/>
     <id>http://xcoder.in/2011/09/13/hge-transparent-color/</id>
     <published>2011-09-13T03:12:32.000Z</published>
-    <updated>2014-04-11T05:22:23.991Z</updated>
+    <updated>2014-04-11T05:22:23.000Z</updated>
     <content type="html"><![CDATA[<p>嘛 = = 在做那个项目的动画预览器的时候，因为那引擎封装得太麻烦了，于是自己基于HGE再移植一遍，发现其中有一个SetTransparentColor函数，即设置透明色。</p>
 <p>　　拿出来分享一下吧。</p>
 <p>　　其实方法很简单，<code>HTEXTURE</code> 是纹理句柄，当你用 <code>Texture_Lock</code> 这个函数锁定这个纹理的时候，它的返回值就是这个纹理在内存中的首地址。也就是说接下来的 width * height 个地址中就是这个纹理的每一个像素了。既然要设置透明色，只要对于每个像素判断一下与运算一下就好了。</p>
@@ -5062,7 +5062,7 @@ point3 intersection(line3 l,plane3 s){
     <link href="http://xcoder.in/2011/06/16/resource-pack/"/>
     <id>http://xcoder.in/2011/06/16/resource-pack/</id>
     <published>2011-06-15T16:20:31.000Z</published>
-    <updated>2014-04-11T05:27:18.781Z</updated>
+    <updated>2014-04-11T05:27:18.000Z</updated>
     <content type="html"><![CDATA[<p>最近除了忙各种各样的期末考试、去西班牙的签证，就是公司的那个韩国项目了。</p>
 <p>　　我的任务基本完成——将原本单屏的游戏改成三屏，完善整个 GUI系统 以及“劫持”了原游戏中的一些逻辑，比如滚轴的排列可以任意控制等。由于原代码中的GUI系统没有文本编辑框，我还得自己写一个。然而我对于IME的操作、GDI和DX的结合不是非常熟悉，所以还是参照了一下 <strong>ShowLong</strong> 所修改的微妙的平衡给HGE写的中文解决方案。</p>
 <p>　　完成了以上的任务之后，由于我的考试以及签证问题以及我本身的任务差不多了，就把这个摊子就扔回公司去了。在交接的时候，老大给我派了一个任务，让我来写这个游戏资源包的代码。</p>

@@ -1,4 +1,4 @@
-title: 「NBUT 2014 校赛·网络同步赛」题解
+title: 「NBUT 2014 校赛·网络同步赛」题解 (未完成...)
 date: 2014-05-05 15:08:39
 tags: [ ACM, 算法 ]
 category: ACM
