@@ -15,7 +15,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tag: Javascript | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>Tag: JavaScript | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -80,7 +80,7 @@
         
     $(function() {
         // page-id...
-        var pageId = "tags/Javascript/";
+        var pageId = "tags/JavaScript/";
         pageId = pageId.substr(0, pageId.indexOf("/"));
         if(pageId === "") pageId = "index";
         
@@ -92,7 +92,7 @@
     <div class="row">
         <div class="col-xs-3 well">
             <div class="archive-title" >
-                <h2 class="tag-icon">Javascript</h2>
+                <h2 class="tag-icon">JavaScript</h2>
                 <div>
                     <a href="/tags"><< 返回标签列表</a> 
                 </div>
@@ -103,40 +103,60 @@
             
             <article class="post">
                 <div class="jumbotron">
-                    <h1><a href="/2013/07/15/javascript-callback-this-bind/" title="关于JavaScript中callback函数的this指针重定义">关于JavaScript中callback函数的this指针重定义</a></h1>
+                    <h1><a href="/2013/08/16/node-4-base/" title="一起撸Node.JS（壹）——基本语法和类型">一起撸Node.JS（壹）——基本语法和类型</a></h1>
 
                     
-                        <p>最近在写 NBUT Virtual Judge 的内核框架，用的又是 Node.JS 了，把它当作一个本地运行的脚本不断进行轮询。
-　　众所周知JS中的一个精髓就是异步回调。
-　　所以在我自己写的框架中也经常会出现类似于下面的代码：
-1
-foo.bar(a, b, functio</p>
+                        <p>Node.js 的基础是 JavaScript 这门 脚本语言。而大多数的脚本语言一个共同的特点就是“弱类型”。
+　　不同于 PHP 的是，PHP 就是是有了新变量也无需申明，而 JavaScript 则还是需要 var 来申明一下的。而这个 var 涵盖了 C++ 中的int、</p>
                     
 
                     <p class="say-title">
                         —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
                         <a href="http://xcoder.in/" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-                        于2013年07月15日自豪地以 <a class="article-tag-link" href="/tags/Javascript/">Javascript</a>, <a class="article-tag-link" href="/tags/老博客备份归档/">老博客备份归档</a> 唠嗑
+                        于2013年08月16日自豪地以 <a class="article-tag-link" href="/tags/JavaScript/">JavaScript</a>, <a class="article-tag-link" href="/tags/Node.js/">Node.js</a>, <a class="article-tag-link" href="/tags/一起撸Node.JS/">一起撸Node.JS</a> 唠嗑
                     </p>
                 </div>
             </article>
             
             <article class="post">
                 <div class="jumbotron">
-                    <h1><a href="/2012/12/24/jquery-animate-color-support/" title="关于jQuery中“animate()”函数对颜色变化的支持">关于jQuery中“animate()”函数对颜色变化的支持</a></h1>
+                    <h1><a href="/2013/08/15/node-2-environment-in-windows/" title="一起撸Node.JS（负贰）——环境">一起撸Node.JS（负贰）——环境</a></h1>
 
                     
-                        <p>最近在做一个汽车团购网的项目，由于老大力求简洁，所以界面做得有些小清新。不过得说一下页面不是我设计的，是一位美工同志。
-　　废话不多说，直接切入正题吧——
-　　我要做得就是让下面一段代码生效：
-1
-$(&quot;#yourid&quot;).stop().animate({ &quot;background</p>
+                        <p>由于Linux中的环境搭建比较简单，所以草草略过。
+　　其实Windows下也不算麻烦，但是这里会讲一定量的别的环境的搭建。
+
+Linux 环境
+讲到这个就很简单了，跟着下面的 bash 操作即可：
+sh1
+2
+3
+4
+$ cd /usr/local/bin
+$ wget htt</p>
                     
 
                     <p class="say-title">
                         —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
                         <a href="http://xcoder.in/" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-                        于2012年12月24日自豪地以 <a class="article-tag-link" href="/tags/Javascript/">Javascript</a>, <a class="article-tag-link" href="/tags/jQuery/">jQuery</a>, <a class="article-tag-link" href="/tags/老博客备份归档/">老博客备份归档</a> 唠嗑
+                        于2013年08月15日自豪地以 <a class="article-tag-link" href="/tags/JavaScript/">JavaScript</a>, <a class="article-tag-link" href="/tags/Node.js/">Node.js</a>, <a class="article-tag-link" href="/tags/一起撸Node.JS/">一起撸Node.JS</a> 唠嗑
+                    </p>
+                </div>
+            </article>
+            
+            <article class="post">
+                <div class="jumbotron">
+                    <h1><a href="/2013/08/13/node-1-summary/" title="一起撸Node.JS（负叁）——概述">一起撸Node.JS（负叁）——概述</a></h1>
+
+                    
+                        <p>本系列教程主要是写给我带的那帮熊孩子们看的。我自己的 Node.js 水平半斤八两，措辞之中也免不了有自己错误的理解，会误人子弟。但是对于初学者来说，某些自己助记的理解还是可取的。有些概念性的错误可以等他们进一步深入研究之后再自行更正。
+　　由于那帮人大多还处于使用 M$ Win</p>
+                    
+
+                    <p class="say-title">
+                        —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
+                        <a href="http://xcoder.in/" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
+                        于2013年08月13日自豪地以 <a class="article-tag-link" href="/tags/JavaScript/">JavaScript</a>, <a class="article-tag-link" href="/tags/Node.js/">Node.js</a>, <a class="article-tag-link" href="/tags/一起撸Node.JS/">一起撸Node.JS</a> 唠嗑
                     </p>
                 </div>
             </article>

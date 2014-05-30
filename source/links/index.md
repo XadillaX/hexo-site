@@ -9,6 +9,10 @@ title       : 链接
 
 　　你可以在链接里面称本站为『艾克斯の編碼者』、『死月』或者『XadillaX』，至于链接么就是 [http://xcoder.in/](http://xcoder.in/)。
 
+## 好机油
+
++ [鄙野清舍](http://xgley.cc/)
+
 ## Node.js
 
 + [伊凡](http://77.yt/)
