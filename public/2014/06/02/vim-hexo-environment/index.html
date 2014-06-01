@@ -6,8 +6,17 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="上一章我们偷偷学习了如何在 C++ 中实现 Node.js 调用时传参数和调用回调函数，并且我自己也心血来潮写了个小 Demo 供大家参考。
-　　今天我们就不复习了，直捣黄龙吧。">
+    <meta name="description" content="本文只讲两个函数，对于 markdown 如何高亮之类的问题还请自行谷歌。
+　　然后请打开你自己的 .vimrc 文件。
+预备工作
+　　首先定义一个变量——你自己的 hexo 目录，如果要跨平台可以做个判断之类的，如下：
+1
+2
+3
+4
+5
+if has(&quot;win32&quot;)
+    let g:hex">
     
     
 
@@ -18,7 +27,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>让Node.js和C++一起搞基 —— 3 (未完成...) | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>搭建 VIM 下的 Hexo 编辑环境 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -83,7 +92,7 @@
         
     $(function() {
         // page-id...
-        var pageId = "2014/04/06/nodejs-cpp-addons-3/";
+        var pageId = "2014/06/02/vim-hexo-environment/";
         pageId = pageId.substr(0, pageId.indexOf("/"));
         if(pageId === "") pageId = "index";
         
@@ -92,22 +101,116 @@
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>让Node.js和C++一起搞基 —— 3 (未完成...)</h1>
+        <h1>搭建 VIM 下的 Hexo 编辑环境</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-04-06T08:15:39.000Z" itemprop="datePublished">2014年04月06日</time>,
-更新于:<time datetime="2014-05-20T10:07:31.000Z" itemprop="dateModified">2014年05月20日</time>,
+发表于:<time datetime="2014-06-01T20:52:30.000Z" itemprop="datePublished">2014年06月02日</time>,
+更新于:<time datetime="2014-06-01T21:11:21.000Z" itemprop="dateModified">2014年06月02日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
             <div id="toc" class="toc-article well">
                 <strong class="toc-title">大纲</strong>
-                
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#预备工作"><span class="toc-number">1.</span> <span class="toc-text">预备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#几个函数"><span class="toc-number">2.</span> <span class="toc-text">几个函数</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#进入_Hexo_目录"><span class="toc-number">2.1.</span> <span class="toc-text">进入 Hexo 目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#打开一篇_Post"><span class="toc-number">2.2.</span> <span class="toc-text">打开一篇 Post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新建一篇_Post"><span class="toc-number">2.3.</span> <span class="toc-text">新建一篇 Post</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#指令映射"><span class="toc-number">3.</span> <span class="toc-text">指令映射</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#打开指令"><span class="toc-number">3.1.</span> <span class="toc-text">打开指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新建指令"><span class="toc-number">3.2.</span> <span class="toc-text">新建指令</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#使用方法"><span class="toc-number">4.</span> <span class="toc-text">使用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#遗留问题"><span class="toc-number">5.</span> <span class="toc-text">遗留问题</span></a></li></ol>
             </div>
             
-            <p><a href="/2014/04/03/nodejs-cpp-addons-2/">上一章</a>我们偷偷学习了如何在 <code>C++</code> 中实现 <code>Node.js</code> 调用时传参数和调用回调函数，并且我自己也心血来潮写了个<a href="/2014/04/05/cpp-class-inline-keng/#simpleini">小 Demo</a> 供大家参考。</p>
-<p>　　今天我们就不复习了，直捣黄龙吧。</p>
+            <p>本文只讲两个函数，对于 <code>markdown</code> 如何高亮之类的问题还请自行谷歌。</p>
+<p>　　然后请打开你自己的 <code>.vimrc</code> 文件。</p>
+<h2 id="预备工作">预备工作</h2>
+<p>　　首先定义一个变量——你自己的 <code>hexo</code> 目录，如果要跨平台可以做个判断之类的，如下：</p>
+<figure class="highlight vimrc"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">if</span> has(<span class="string">"win32"</span>)
+    <span class="built_in">let</span> g:hexoProjectPath=<span class="string">"E:\\cygwin\\home\\XadillaX\\hexo"</span>
+<span class="keyword">else</span>
+    <span class="built_in">let</span> g:hexoProjectPath=<span class="string">"~/hexo/"</span>
+endif
+</pre></td></tr></table></figure>
+
+<h2 id="几个函数">几个函数</h2>
+<h3 id="进入_Hexo_目录">进入 Hexo 目录</h3>
+<p>　　这个函数大致就是让你进入你自己的 <code>Hexo</code> 路径：</p>
+<figure class="highlight vimrc"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="keyword">fun</span>! <span class="variable">OpenHexoProjPath</span>()
+    execute <span class="string">"cd "</span> . g:hexo<span class="variable">ProjectPath</span>
+endfun
+</pre></td></tr></table></figure>
+
+<h3 id="打开一篇_Post">打开一篇 Post</h3>
+<p>　　接下去就是一个打开 <code>Post</code> 的函数了：</p>
+<figure class="highlight vimrc"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span>! <span class="title">OpenHexoPost</span><span class="params">(...)</span></span>
+    call OpenHexoProjPath()
+
+    let filename = <span class="string">"source/_posts/"</span> . a:<span class="number">1</span> . <span class="string">".md"</span>
+    execute <span class="string">"e "</span> . filename
+<span class="function"><span class="keyword">endfunction</span></span>
+</pre></td></tr></table></figure>
+
+<blockquote>
+<p>解析：上面的代码大意就是进入 Hexo 路径，然后设定好文件名，最后执行 <code>:e filename</code> 即可打开文件了。</p>
+</blockquote>
+<h3 id="新建一篇_Post">新建一篇 Post</h3>
+<p>　　新建的流程跟打开相似，只不过首先要在 <code>Hexo</code> 目录下执行一遍 <code>hexo new FOO</code> 的命令而已，命令执行完毕之后再打开即可。</p>
+<figure class="highlight vimrc"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span>! <span class="title">NewHexoPost</span><span class="params">(...)</span></span>
+    call OpenHexoProjPath()
+
+    let filename = a:<span class="number">1</span>
+    execute <span class="string">"!hexo new "</span> . filename
+
+    call OpenHexoPost(a:<span class="number">1</span>)
+<span class="function"><span class="keyword">endfunction</span></span>
+</pre></td></tr></table></figure>
+
+<h2 id="指令映射">指令映射</h2>
+<p>　　函数写好后我们最后把函数映射成类似于 <code>:e</code>, <code>:w</code> 之类的后面能跟着参数的指令即可。</p>
+<p>　　以前木有接触过的同学可以参考一下<a href="http://vimdoc.sourceforge.net/htmldoc/usr_40.html#40.2" target="_blank">这里</a>的文档。</p>
+<h3 id="打开指令">打开指令</h3>
+<figure class="highlight vimrc"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="command"><span class="keyword">command</span> -<span class="title">nargs</span>=+ <span class="title">HexoOpen</span> :<span class="title">call</span> <span class="title">OpenHexoPost</span>(<span class="string">"&lt;args&gt;"</span>)</span>
+</pre></td></tr></table></figure>
+
+<h3 id="新建指令">新建指令</h3>
+<figure class="highlight vimrc"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="command"><span class="keyword">command</span> -<span class="title">nargs</span>=+ <span class="title">HexoNew</span> :<span class="title">call</span> <span class="title">NewHexoPost</span>(<span class="string">"&lt;args&gt;"</span>)</span>
+</pre></td></tr></table></figure>
+
+<h2 id="使用方法">使用方法</h2>
+<p>　　当你做完以上步骤的时候，你就可以无论在什么目录下在 VIM 里面通过下面的指令进行新建一篇日志了：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="symbol">:HexoNew</span> artical-name
+</pre></td></tr></table></figure>
+
+<p>　　以及下面的指令来打开一篇已存在的日志：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="symbol">:HexoOpen</span> artical-name
+</pre></td></tr></table></figure>
+
+<h2 id="遗留问题">遗留问题</h2>
+<p>　　相信看到这里之后，大家也能自己写出一个生成的指令了，这里就不累述了，无非就是：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>:!hexo <span class="keyword">generate</span>
+</pre></td></tr></table></figure>
+
 
             
             <section class="comment">

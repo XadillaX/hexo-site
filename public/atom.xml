@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2014-05-30T06:23:33.340Z</updated>
+  <updated>2014-06-01T21:11:51.654Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -15,10 +15,121 @@
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[搭建 VIM 下的 Hexo 编辑环境]]></title>
+    <link href="http://xcoder.in/2014/06/02/vim-hexo-environment/"/>
+    <id>http://xcoder.in/2014/06/02/vim-hexo-environment/</id>
+    <published>2014-06-01T20:52:30.000Z</published>
+    <updated>2014-06-01T21:11:21.000Z</updated>
+    <content type="html"><![CDATA[<p>本文只讲两个函数，对于 <code>markdown</code> 如何高亮之类的问题还请自行谷歌。</p>
+<p>　　然后请打开你自己的 <code>.vimrc</code> 文件。</p>
+<h2 id="预备工作">预备工作</h2>
+<p>　　首先定义一个变量——你自己的 <code>hexo</code> 目录，如果要跨平台可以做个判断之类的，如下：</p>
+<figure class="highlight vimrc"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">if</span> has(<span class="string">"win32"</span>)
+    <span class="built_in">let</span> g:hexoProjectPath=<span class="string">"E:\\cygwin\\home\\XadillaX\\hexo"</span>
+<span class="keyword">else</span>
+    <span class="built_in">let</span> g:hexoProjectPath=<span class="string">"~/hexo/"</span>
+endif
+</pre></td></tr></table></figure>
+
+<h2 id="几个函数">几个函数</h2>
+<h3 id="进入_Hexo_目录">进入 Hexo 目录</h3>
+<p>　　这个函数大致就是让你进入你自己的 <code>Hexo</code> 路径：</p>
+<figure class="highlight vimrc"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="keyword">fun</span>! <span class="variable">OpenHexoProjPath</span>()
+    execute <span class="string">"cd "</span> . g:hexo<span class="variable">ProjectPath</span>
+endfun
+</pre></td></tr></table></figure>
+
+<h3 id="打开一篇_Post">打开一篇 Post</h3>
+<p>　　接下去就是一个打开 <code>Post</code> 的函数了：</p>
+<figure class="highlight vimrc"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span>! <span class="title">OpenHexoPost</span><span class="params">(...)</span></span>
+    call OpenHexoProjPath()
+
+    let filename = <span class="string">"source/_posts/"</span> . a:<span class="number">1</span> . <span class="string">".md"</span>
+    execute <span class="string">"e "</span> . filename
+<span class="function"><span class="keyword">endfunction</span></span>
+</pre></td></tr></table></figure>
+
+<blockquote>
+<p>解析：上面的代码大意就是进入 Hexo 路径，然后设定好文件名，最后执行 <code>:e filename</code> 即可打开文件了。</p>
+</blockquote>
+<h3 id="新建一篇_Post">新建一篇 Post</h3>
+<p>　　新建的流程跟打开相似，只不过首先要在 <code>Hexo</code> 目录下执行一遍 <code>hexo new FOO</code> 的命令而已，命令执行完毕之后再打开即可。</p>
+<figure class="highlight vimrc"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span>! <span class="title">NewHexoPost</span><span class="params">(...)</span></span>
+    call OpenHexoProjPath()
+
+    let filename = a:<span class="number">1</span>
+    execute <span class="string">"!hexo new "</span> . filename
+
+    call OpenHexoPost(a:<span class="number">1</span>)
+<span class="function"><span class="keyword">endfunction</span></span>
+</pre></td></tr></table></figure>
+
+<h2 id="指令映射">指令映射</h2>
+<p>　　函数写好后我们最后把函数映射成类似于 <code>:e</code>, <code>:w</code> 之类的后面能跟着参数的指令即可。</p>
+<p>　　以前木有接触过的同学可以参考一下<a href="http://vimdoc.sourceforge.net/htmldoc/usr_40.html#40.2" target="_blank">这里</a>的文档。</p>
+<h3 id="打开指令">打开指令</h3>
+<figure class="highlight vimrc"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="command"><span class="keyword">command</span> -<span class="title">nargs</span>=+ <span class="title">HexoOpen</span> :<span class="title">call</span> <span class="title">OpenHexoPost</span>(<span class="string">"&lt;args&gt;"</span>)</span>
+</pre></td></tr></table></figure>
+
+<h3 id="新建指令">新建指令</h3>
+<figure class="highlight vimrc"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="command"><span class="keyword">command</span> -<span class="title">nargs</span>=+ <span class="title">HexoNew</span> :<span class="title">call</span> <span class="title">NewHexoPost</span>(<span class="string">"&lt;args&gt;"</span>)</span>
+</pre></td></tr></table></figure>
+
+<h2 id="使用方法">使用方法</h2>
+<p>　　当你做完以上步骤的时候，你就可以无论在什么目录下在 VIM 里面通过下面的指令进行新建一篇日志了：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="symbol">:HexoNew</span> artical-name
+</pre></td></tr></table></figure>
+
+<p>　　以及下面的指令来打开一篇已存在的日志：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="symbol">:HexoOpen</span> artical-name
+</pre></td></tr></table></figure>
+
+<h2 id="遗留问题">遗留问题</h2>
+<p>　　相信看到这里之后，大家也能自己写出一个生成的指令了，这里就不累述了，无非就是：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>:!hexo <span class="keyword">generate</span>
+</pre></td></tr></table></figure>
+
+]]></content>
+    
+    
+      <category term="vim" scheme="http://xcoder.in/tags/vim/"/>
+    
+      <category term="hexo" scheme="http://xcoder.in/tags/hexo/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[「NBUT 2014 校赛·网络同步赛」题解 (未完成...)]]></title>
     <link href="http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/"/>
     <id>http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/</id>
-    <published>2014-05-05T06:08:39.000Z</published>
+    <published>2014-05-05T07:08:39.000Z</published>
     <updated>2014-05-20T10:07:24.000Z</updated>
     <content type="html"><![CDATA[<p>这次比赛由 <a href="http://blog.163.com/surgy_han/" target="_blank">Hungar</a>，<a href="http://www.cnblogs.com/Wine93/" target="_blank">8Mao</a> 以及我负责的。明明都读研了，还诈尸回来出题——归结起来大概是因为各种面试不顺吧，想来虐虐学弟妹们怒刷存在感。结果网络赛还是被虐得死去活来。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯</p>
 <p>　　好了废话不多说，还是直接上题解吧。</p>
@@ -184,7 +295,7 @@ lint solution(lint n)
     <title><![CDATA[死月出品：Hero Snake 英雄蛇]]></title>
     <link href="http://xcoder.in/2014/04/11/hero-snake/"/>
     <id>http://xcoder.in/2014/04/11/hero-snake/</id>
-    <published>2014-04-11T04:53:35.000Z</published>
+    <published>2014-04-11T05:53:35.000Z</published>
     <updated>2014-04-11T06:30:00.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>注：备份到这篇日志的时候，感觉眼睛进了什么奇怪的东西。（才……才不是眼泪呢，那一定是沙子！(;´༎ຶД༎ຶ`)</p>
@@ -240,7 +351,7 @@ lint solution(lint n)
     <title><![CDATA[让Node.js和C++一起搞基 —— 3 (未完成...)]]></title>
     <link href="http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/"/>
     <id>http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/</id>
-    <published>2014-04-06T07:15:39.000Z</published>
+    <published>2014-04-06T08:15:39.000Z</published>
     <updated>2014-05-20T10:07:31.000Z</updated>
     <content type="html"><![CDATA[<p><a href="/2014/04/03/nodejs-cpp-addons-2/">上一章</a>我们偷偷学习了如何在 <code>C++</code> 中实现 <code>Node.js</code> 调用时传参数和调用回调函数，并且我自己也心血来潮写了个<a href="/2014/04/05/cpp-class-inline-keng/#simpleini">小 Demo</a> 供大家参考。</p>
 <p>　　今天我们就不复习了，直捣黄龙吧。</p>
@@ -259,7 +370,7 @@ lint solution(lint n)
     <title><![CDATA[C++中类成员函数 inline 的坑]]></title>
     <link href="http://xcoder.in/2014/04/05/cpp-class-inline-keng/"/>
     <id>http://xcoder.in/2014/04/05/cpp-class-inline-keng/</id>
-    <published>2014-04-05T07:55:57.000Z</published>
+    <published>2014-04-05T08:55:57.000Z</published>
     <updated>2014-04-05T08:21:28.000Z</updated>
     <content type="html"><![CDATA[<p>今天我来讲一讲 <code>C++</code> 中类成员函数 <code>inline</code> 修饰符的一个坑。</p>
 <p>　　这个坑是我在尝试着写我的第一个 <code>Node.js</code> 扩展 <code>simpleini</code> 时候遇到的。</p>
@@ -344,7 +455,7 @@ console.log(simpleIni.read(<span class="string">"vals"</span>, <span class="stri
     <title><![CDATA[让Node.js和C++一起搞基 —— 2]]></title>
     <link href="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"/>
     <id>http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/</id>
-    <published>2014-04-03T13:37:15.000Z</published>
+    <published>2014-04-03T14:37:15.000Z</published>
     <updated>2014-04-04T05:47:45.000Z</updated>
     <content type="html"><![CDATA[<p>好，今天让我们更深入地搞基吧！</p>
 <h2 id="温故而知新，可以为湿矣">温故而知新，可以为湿矣</h2>
@@ -719,7 +830,7 @@ NODE_MODULE(addon, Init)
     <title><![CDATA[让Node.js和C++一起搞基 —— 1]]></title>
     <link href="http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/"/>
     <id>http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/</id>
-    <published>2014-04-01T15:53:22.000Z</published>
+    <published>2014-04-01T16:53:22.000Z</published>
     <updated>2014-04-01T17:41:23.000Z</updated>
     <content type="html"><![CDATA[<p>N久之前的一个坑——用 <strong>Node.js</strong> 来重构 NBUT 的 <strong>Online Judge</strong>，包括评测端也得重构一遍。（至于什么时候完成大家就不要关心了，(／‵Д′)／~ ╧╧</p>
 <p>　　总之我们现在要做的其实简而言之就是——用C/C++来实现 <strong>Node.js</strong> 的模块。</p>
@@ -977,7 +1088,7 @@ NODE_MODULE(module_name, Initialize)
     <title><![CDATA[～公众档所～项目解析]]></title>
     <link href="http://xcoder.in/2014/03/27/node-public-file-house/"/>
     <id>http://xcoder.in/2014/03/27/node-public-file-house/</id>
-    <published>2014-03-26T16:34:04.000Z</published>
+    <published>2014-03-26T17:34:04.000Z</published>
     <updated>2014-03-27T08:38:09.000Z</updated>
     <content type="html"><![CDATA[<p>所谓“公众档所”，其实就是一个公共的临时网盘了。这个东西是一个老物了，在我刚接触 <code>Expressjs</code> 的时候写的。当时还随便搞了一下 <code>backbone.js</code>，但是没有深入，勿笑。关于深入构架 <code>Expressjs</code> 方面也没做，只是粗粗写了下最基础的路由，所以整个文件结构也不是很规范。但是应该能比较适合刚学 <code>Node.js</code> 以及刚接触 <code>Expressjs</code> 的人吧。</p>
 <p>　　Repo地址在<a href="https://github.com/XadillaX/public-file-house" target="_blank">我的Github</a>上。Demo地址在 <a href="http://dang.kacaka.ca/" target="_blank">http://dang.kacaka.ca/</a>，由于个人电脑的不稳定性，所以不保证你们随时可以访问，保不定哪天就失效了，所以最好的办法还是自己 <code>clone</code> 下来啪啪啪。</p>
@@ -3792,7 +3903,7 @@ process.stdin.on(<span class="string">"data"</span>, <span class="function"><spa
     <title><![CDATA[关于JavaScript中callback函数的this指针重定义]]></title>
     <link href="http://xcoder.in/2013/07/15/javascript-callback-this-bind/"/>
     <id>http://xcoder.in/2013/07/15/javascript-callback-this-bind/</id>
-    <published>2013-07-15T05:20:29.000Z</published>
+    <published>2013-07-15T06:20:29.000Z</published>
     <updated>2014-04-11T04:19:06.000Z</updated>
     <content type="html"><![CDATA[<p>最近在写 <strong>NBUT Virtual Judge</strong> 的内核框架，用的又是 <strong>Node.JS</strong> 了，把它当作一个本地运行的脚本不断进行轮询。</p>
 <p>　　众所周知JS中的一个精髓就是异步回调。</p>
@@ -3835,7 +3946,7 @@ foo.bar(a, b, cb);
     <title><![CDATA[关于Node.js下的MongoDB阻塞模式实现]]></title>
     <link href="http://xcoder.in/2013/03/29/nodejs-mongodb-sync/"/>
     <id>http://xcoder.in/2013/03/29/nodejs-mongodb-sync/</id>
-    <published>2013-03-29T00:31:38.000Z</published>
+    <published>2013-03-29T01:31:38.000Z</published>
     <updated>2014-04-11T04:39:49.000Z</updated>
     <content type="html"><![CDATA[<p><strong><em>注：本文仅为我初学 Node.JS 的时候的稚嫩笔记。是从 <a href="http://web.archive.org/" target="_blank">http://web.archive.org/</a> 扒回来的。现在看来已无多大参考价值，各位可以略过。我只是把它扒回来纪念一下而已，以记录我的历程。而那个相对应的 <code>SevenzJS</code> 也已经被遗弃</em></strong></p>
 <h2 id="背景">背景</h2>
@@ -3963,7 +4074,7 @@ Fiber(<span class="function"><span class="keyword">function</span><span class="p
     <title><![CDATA[关于jQuery中“animate()”函数对颜色变化的支持]]></title>
     <link href="http://xcoder.in/2012/12/24/jquery-animate-color-support/"/>
     <id>http://xcoder.in/2012/12/24/jquery-animate-color-support/</id>
-    <published>2012-12-24T00:20:16.000Z</published>
+    <published>2012-12-24T01:20:16.000Z</published>
     <updated>2014-04-11T04:37:09.000Z</updated>
     <content type="html"><![CDATA[<p>最近在做一个汽车团购网的项目，由于老大力求简洁，所以界面做得有些小清新。不过得说一下页面不是我设计的，是一位美工同志。</p>
 <p>　　废话不多说，直接切入正题吧——</p>
@@ -4010,7 +4121,7 @@ Fiber(<span class="function"><span class="keyword">function</span><span class="p
     <title><![CDATA[线程安全——Scope Lock模式]]></title>
     <link href="http://xcoder.in/2012/09/08/scope-lock/"/>
     <id>http://xcoder.in/2012/09/08/scope-lock/</id>
-    <published>2012-09-07T16:31:59.000Z</published>
+    <published>2012-09-07T17:31:59.000Z</published>
     <updated>2014-04-11T04:44:23.000Z</updated>
     <content type="html"><![CDATA[<p><strong><em>嘛，本文是建立在M$的Visual Studio基础上的，linux☭勿喷。</em></strong></p>
 <p>　　我最先用到 ScopeLock 模式是在自己开发 <strong>XAE引擎</strong> 的时候。在里面用到挺多的线程函数，那么如何解决临界区就成了一个重要的课题。可能大家想，不就一个线程锁临界区什么的么，一个 <code>EnterCriticalSection</code> 和一个 <code>LeaveCriticalSection</code> 不就解决了么？</p>
@@ -4097,7 +4208,7 @@ CRITICAL_SECTION cs;
     <title><![CDATA[CodeForces Round 128 DIV2]]></title>
     <link href="http://xcoder.in/2012/07/04/codeforces-128-div2/"/>
     <id>http://xcoder.in/2012/07/04/codeforces-128-div2/</id>
-    <published>2012-07-04T02:38:59.000Z</published>
+    <published>2012-07-04T03:38:59.000Z</published>
     <updated>2014-04-11T04:58:57.000Z</updated>
     <content type="html"><![CDATA[<p>这次玩脱了。好不容易四题都做出来，却因为小细节挂了两题。</p>
 <h2 id="Description">Description</h2>
@@ -4755,7 +4866,7 @@ point3 intersection(line3 l,plane3 s){
     <title><![CDATA[HGE做格斗游戏的热点图片碰撞检测法]]></title>
     <link href="http://xcoder.in/2011/10/18/hge-hotspot-collision/"/>
     <id>http://xcoder.in/2011/10/18/hge-hotspot-collision/</id>
-    <published>2011-10-18T06:22:21.000Z</published>
+    <published>2011-10-18T07:22:21.000Z</published>
     <updated>2014-04-11T05:18:04.000Z</updated>
     <content type="html"><![CDATA[<p>碰撞检测始终是做2D游戏中的一个热点话题，我本人并没有做过这类游戏，所以一切只是理论而已，不过正打算做这么个小游戏练练手。</p>
 <p>　　前几天在HGE的群里看到有人突然问到如何判断鼠标有没有点到人（点到纹理的透明区域不算），从而引申出了碰撞检测问题。</p>
@@ -5000,7 +5111,7 @@ point3 intersection(line3 l,plane3 s){
     <title><![CDATA[关于HGE的透明背景处理]]></title>
     <link href="http://xcoder.in/2011/09/13/hge-transparent-color/"/>
     <id>http://xcoder.in/2011/09/13/hge-transparent-color/</id>
-    <published>2011-09-13T03:12:32.000Z</published>
+    <published>2011-09-13T04:12:32.000Z</published>
     <updated>2014-04-11T05:22:23.000Z</updated>
     <content type="html"><![CDATA[<p>嘛 = = 在做那个项目的动画预览器的时候，因为那引擎封装得太麻烦了，于是自己基于HGE再移植一遍，发现其中有一个SetTransparentColor函数，即设置透明色。</p>
 <p>　　拿出来分享一下吧。</p>
@@ -5052,46 +5163,6 @@ point3 intersection(line3 l,plane3 s){
       <category term="C++" scheme="http://xcoder.in/tags/C++/"/>
     
       <category term="HGE" scheme="http://xcoder.in/tags/HGE/"/>
-    
-      <category term="老博客备份归档" scheme="http://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[关于游戏资源包的更新、删除]]></title>
-    <link href="http://xcoder.in/2011/06/16/resource-pack/"/>
-    <id>http://xcoder.in/2011/06/16/resource-pack/</id>
-    <published>2011-06-15T16:20:31.000Z</published>
-    <updated>2014-04-11T05:27:18.000Z</updated>
-    <content type="html"><![CDATA[<p>最近除了忙各种各样的期末考试、去西班牙的签证，就是公司的那个韩国项目了。</p>
-<p>　　我的任务基本完成——将原本单屏的游戏改成三屏，完善整个 GUI系统 以及“劫持”了原游戏中的一些逻辑，比如滚轴的排列可以任意控制等。由于原代码中的GUI系统没有文本编辑框，我还得自己写一个。然而我对于IME的操作、GDI和DX的结合不是非常熟悉，所以还是参照了一下 <strong>ShowLong</strong> 所修改的微妙的平衡给HGE写的中文解决方案。</p>
-<p>　　完成了以上的任务之后，由于我的考试以及签证问题以及我本身的任务差不多了，就把这个摊子就扔回公司去了。在交接的时候，老大给我派了一个任务，让我来写这个游戏资源包的代码。</p>
-<p>　　原版游戏代码中有资源包代码，但是写得非常乱，于是需要我来写一个新的文件结构、新的加密算法，然后仍然是“劫持”掉原代码中的资源包加载函数。</p>
-<p>　　在此之前，我拜读了云风的《<a href="http://blog.codingnow.com/2010/08/resource_pack.html" target="_blank">游戏资源的压缩、打包与补丁更新</a>》，有了点灵感。</p>
-<p>　　<strong>最主要的就是其删除这一块。为了让用户在更新的时候减少大量的文件IO操作，做法就是减少文件内容的大幅度移动。</strong></p>
-<p>　　而我便是参考了云风大大的这个思想来写我的文件包。首先因为在游戏中需要实时读取，所以文件没有压缩，只是做了两层加密处理，密钥也是通过哈希得到的，所以每个文件的密钥是不同的。</p>
-<p>　　然后在文件索引的时候，我这里是分了两种索引：<strong>文件索引</strong>以及<strong>空块索引</strong>。</p>
-<p>　　所谓空块索引就是：在文件包中删除某一个文件的时候，不把后面的文件内容全部往前挪以覆盖这一块的内容、导致整个文件包在删除文件之后的信息全部往前挪而产生的大量IO操作，而是对这一块内容不作任何处理、把这一块内容的索引从文件索引中移除并附加到空块索引中以供以后新文件加入时所用，<strong>这样就只产生了一点对于索引的文件IO更新</strong>，不过索引的更新充其量也就那么点，相对于文件的操作来说只是九牛一毛，当然前提是这个索引是在整个文件包的最后。而在有新文件插入的时候，先在空块索引中找有比新文件大的空块，如果有的话就直接把这个文件插入到那个空块中，然后更新一下文件索引以及空块索引即可，这里又少掉了一些IO操作。</p>
-<p>　　正如云风所说：</p>
-<blockquote>
-<p>如果新增加的文件较之小，就重复利用这个空间。如果利用不上，就浪费在那里。这有点像内存管理算法，<strong>时间久了，资源包内会有一些空洞，但也是可以接受的。</strong></p>
-</blockquote>
-<p>　　接着就是资源包在游戏中的使用了。在原先的游戏代码中是有判断重复加载的代码，也就是说把已加载的资源存到node里，在之后再次需要加载这个资源（通过文件名判断）就直接从node中去，这样就少了很多内存开销，尤其是当我把单屏改为三屏之后，这样的优化效果更为明显（否则相同的资源要加载三次，等于消耗了三倍的内存）。不得赞一下这05年开发的代码，虽然是棒子。不过原游戏代码中的高耦合度让我蛋疼。</p>
-<p>　　想到以后这个资源包类要用到以后的一些项目，于是我自己也写了一个Cache机制。就是在一个包中，当加载某个资源的时候，顺便把这个资源的Buffer加到一个Cache中，当下次再需要用到这个资源的时候就直接从Cache中取就好了，实际上这就还是之前的代码实现的功能，只不过我自己在这基础上精简了一下。最后写一个ClearCache的函数能清除Cache，我这个资源包类就算完成了。</p>
-<p>　　还有在获取资源的时候，为了防止内存突增，我的Buffer是一段一段获取的，类似于Socket中的获取消息一直到消息结束为止。当然，每一段Buffer的大小是可以自己传进去的。我这种以时间换空间的做法还没自己实际测试过效果如何，只不过是自己想想可能会比较优罢了，因为最近实在是太慢，这篇日志还是考完了概率然后摸着黑地写的。</p>
-<p>　　我对文件系统本身不是非常了解，操作系统还没考呢。所以我现在仅仅做到的是云风九年前的一种设计，然后加上了原先代码有的Cache机制而已。不过写下这篇日志来记录我自己成长的足迹罢了。</p>
-]]></content>
-    
-    
-      <category term="二进制文件" scheme="http://xcoder.in/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6/"/>
-    
-      <category term="游戏制作" scheme="http://xcoder.in/tags/%E6%B8%B8%E6%88%8F%E5%88%B6%E4%BD%9C/"/>
-    
-      <category term="资源包" scheme="http://xcoder.in/tags/%E8%B5%84%E6%BA%90%E5%8C%85/"/>
-    
-      <category term="C++" scheme="http://xcoder.in/tags/C++/"/>
-    
-      <category term="老博客备份归档" scheme="http://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
       <category term="老博客备份归档" scheme="http://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
