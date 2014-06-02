@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2014-06-01T21:11:51.654Z</updated>
+  <updated>2014-06-02T16:19:32.737Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -13,6 +13,36 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[一个任务队列的 module]]></title>
+    <link href="http://xcoder.in/2014/06/03/scartlet-task/"/>
+    <id>http://xcoder.in/2014/06/03/scartlet-task/</id>
+    <published>2014-06-02T16:17:38.000Z</published>
+    <updated>2014-06-02T16:19:24.000Z</updated>
+    <content type="html"><![CDATA[<p>事情很曲折，我某天在萌否收音机里面听到了一首歌，很好听，叫 <code>hypnotized</code>，于是红心了。</p>
+<p>　　过了几天我再去听——发现这首歌变了。</p>
+<p>　　最后经过多方面求证，我大概得出结果就是应该有人传错了歌，然后后来有人重新传了一遍，导致我听的不是原来那首歌了。那我那天听的那首歌到底叫什么名字呢？</p>
+<p>　　然后大致看了一下，虽然歌被重新传了，但是<a href="http://moe.fm/music/9600" target="_blank">这里</a>显示的这首歌的时间没变！还是11分钟，目测是数据库没更新。</p>
+<p>　　于是我就想了个笨办法，去爬收音机里面所有 tag 为 <code>東方project</code> 的专辑，然后跑到专辑页看歌曲的长度。</p>
+<p>　　问题来了，如果我直接爬，然后爬完 <code>callback</code> 之后又直接爬，没有任何间隔，就相当于我在 <code>DDOS</code> 它的站子。或者即使没那么严重——反正最后到一定程度并发太大我就访问不了了。</p>
+<p>　　于是我就想到了做一个任务队列的 module。该 module 的作用就是把一堆任务扔到队列中，完成一个才开始下一个。</p>
+<p>　　然后如果同时执行一个也太慢，module 还允许你开多几个子队列同时执行。</p>
+<p>　　模块的 repo 在 <a href="https://github.com/XadillaX/scarlet-task" target="_blank">GitHub</a> 上面。名字叫 <code>Scarlet Task</code> 的原因一是我本身就喜欢二小姐，二是为了纪念这次事件我是为了找有关二小姐的歌。</p>
+<p>　　要安装也很简单：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>$ npm install scarlet-task
+</pre></td></tr></table></figure>
+
+<p>　　然后 repo 的 <code>README.md</code> 里面有使用方法的——大致就是实例化一个对象，然后定义好某个任务的任务标识（可以是字符串，可以是 json 对象，可以是任何类型的数据），然后再定义好处理这个任务的函数，将这个数据推倒队列中即可。然后在处理函数中任务处理完的时候执行以下任务完成的函数即可。</p>
+]]></content>
+    
+    
+      <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
+    
+      <category term="任务队列" scheme="http://xcoder.in/tags/%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[搭建 VIM 下的 Hexo 编辑环境]]></title>
@@ -5094,67 +5124,6 @@ point3 intersection(line3 l,plane3 s){
 </pre></td></tr></table></figure>
 
 <p><a href="src.rar">点击下载</a></p>
-]]></content>
-    
-    
-      <category term="老博客备份归档" scheme="http://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
-    
-      <category term="C++" scheme="http://xcoder.in/tags/C++/"/>
-    
-      <category term="HGE" scheme="http://xcoder.in/tags/HGE/"/>
-    
-      <category term="老博客备份归档" scheme="http://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[关于HGE的透明背景处理]]></title>
-    <link href="http://xcoder.in/2011/09/13/hge-transparent-color/"/>
-    <id>http://xcoder.in/2011/09/13/hge-transparent-color/</id>
-    <published>2011-09-13T04:12:32.000Z</published>
-    <updated>2014-04-11T05:22:23.000Z</updated>
-    <content type="html"><![CDATA[<p>嘛 = = 在做那个项目的动画预览器的时候，因为那引擎封装得太麻烦了，于是自己基于HGE再移植一遍，发现其中有一个SetTransparentColor函数，即设置透明色。</p>
-<p>　　拿出来分享一下吧。</p>
-<p>　　其实方法很简单，<code>HTEXTURE</code> 是纹理句柄，当你用 <code>Texture_Lock</code> 这个函数锁定这个纹理的时候，它的返回值就是这个纹理在内存中的首地址。也就是说接下来的 width * height 个地址中就是这个纹理的每一个像素了。既然要设置透明色，只要对于每个像素判断一下与运算一下就好了。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-</pre></td><td class="code"><pre>HTEXTURE SetTransColor(HTEXTURE hTex, DWORD dwColor)
-{
-    <span class="comment">/** 注：上面的dwColor代表的是RGB，不是ARGB */</span>
-    <span class="keyword">static</span> HGE* hge = hgeCreate(HGE_VERSION);
-
-    <span class="keyword">int</span> size = hge-&gt;Texture_GetWidth(hTex) * hge-&gt;Texture_GetHeight(hTex);
-    DWORD* dwTex = hge-&gt;Texture_Lock(hTex);
-    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++)
-    {
-        <span class="keyword">if</span>((dwTex[i] & <span class="number">0x00FFFFFF</span>) == dwColor)
-        {
-            dwTex[i] &= <span class="number">0x00FFFFFF</span>;
-        }
-    }
-    hge-&gt;Texture_Unlock(hTex);
-
-    <span class="keyword">return</span> hTex;
-}
-</pre></td></tr></table></figure>
-
-<p>　　嘛，这样一来，就透明了~</p>
 ]]></content>
     
     

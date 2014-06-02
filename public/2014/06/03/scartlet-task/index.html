@@ -6,6 +6,11 @@
     
     <meta name="author" content="小鳥遊死月">
     
+    <meta name="description" content="事情很曲折，我某天在萌否收音机里面听到了一首歌，很好听，叫 hypnotized，于是红心了。
+　　过了几天我再去听——发现这首歌变了。
+　　最后经过多方面求证，我大概得出结果就是应该有人传错了歌，然后后来有人重新传了一遍，导致我听的不是原来那首歌了。那我那天听的那首歌到底叫什么名字呢？
+　　然后大">
+    
     
 
     
@@ -15,7 +20,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Archives: 2011/6 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>一个任务队列的 module | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -80,52 +85,64 @@
         
     $(function() {
         // page-id...
-        var pageId = "archives/2011/06/";
+        var pageId = "2014/06/03/scartlet-task/";
         pageId = pageId.substr(0, pageId.indexOf("/"));
         if(pageId === "") pageId = "index";
         
         $("#nav-" + pageId).addClass("active");
     });
     </script>
-    
-
-<div class="container archive-body">
-    <div class="row">
-        <div class="col-xs-2 well">
-            <h2 class="archive-icon">2011/6</h2>
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05">五月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04">四月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12">十二月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08">八月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07">七月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03">三月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12">十二月 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/09">九月 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07">七月 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10">十月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/09">九月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/06">六月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/05">五月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/04">四月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/11">十一月 2010</a><span class="archive-list-count">2</span></li></ul>
+    <article class="post container">
+    <div class="well post-body first-post last-post">
+        <h1>一个任务队列的 module</h1>
+        
+        <div class="time-info">
+发表于:<time datetime="2014-06-02T16:17:38.000Z" itemprop="datePublished">2014年06月03日</time>,
+更新于:<time datetime="2014-06-02T16:19:24.000Z" itemprop="dateModified">2014年06月03日</time>,
+By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
-        <div class="col-xs-10">
+        <div class="post-body-inner">
+            <div id="toc" class="toc-article well">
+                <strong class="toc-title">大纲</strong>
+                
+            </div>
             
-            <article class="post">
-                <div class="jumbotron">
-                    <h1><a href="/2011/06/16/resource-pack/" title="关于游戏资源包的更新、删除">关于游戏资源包的更新、删除</a></h1>
+            <p>事情很曲折，我某天在萌否收音机里面听到了一首歌，很好听，叫 <code>hypnotized</code>，于是红心了。</p>
+<p>　　过了几天我再去听——发现这首歌变了。</p>
+<p>　　最后经过多方面求证，我大概得出结果就是应该有人传错了歌，然后后来有人重新传了一遍，导致我听的不是原来那首歌了。那我那天听的那首歌到底叫什么名字呢？</p>
+<p>　　然后大致看了一下，虽然歌被重新传了，但是<a href="http://moe.fm/music/9600" target="_blank">这里</a>显示的这首歌的时间没变！还是11分钟，目测是数据库没更新。</p>
+<p>　　于是我就想了个笨办法，去爬收音机里面所有 tag 为 <code>東方project</code> 的专辑，然后跑到专辑页看歌曲的长度。</p>
+<p>　　问题来了，如果我直接爬，然后爬完 <code>callback</code> 之后又直接爬，没有任何间隔，就相当于我在 <code>DDOS</code> 它的站子。或者即使没那么严重——反正最后到一定程度并发太大我就访问不了了。</p>
+<p>　　于是我就想到了做一个任务队列的 module。该 module 的作用就是把一堆任务扔到队列中，完成一个才开始下一个。</p>
+<p>　　然后如果同时执行一个也太慢，module 还允许你开多几个子队列同时执行。</p>
+<p>　　模块的 repo 在 <a href="https://github.com/XadillaX/scarlet-task" target="_blank">GitHub</a> 上面。名字叫 <code>Scarlet Task</code> 的原因一是我本身就喜欢二小姐，二是为了纪念这次事件我是为了找有关二小姐的歌。</p>
+<p>　　要安装也很简单：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>$ npm install scarlet-task
+</pre></td></tr></table></figure>
 
-                    
-                        <p>最近除了忙各种各样的期末考试、去西班牙的签证，就是公司的那个韩国项目了。
-　　我的任务基本完成——将原本单屏的游戏改成三屏，完善整个 GUI系统 以及“劫持”了原游戏中的一些逻辑，比如滚轴的排列可以任意控制等。由于原代码中的GUI系统没有文本编辑框，我还得自己写一个。然而我对于I</p>
-                    
+<p>　　然后 repo 的 <code>README.md</code> 里面有使用方法的——大致就是实例化一个对象，然后定义好某个任务的任务标识（可以是字符串，可以是 json 对象，可以是任何类型的数据），然后再定义好处理这个任务的函数，将这个数据推倒队列中即可。然后在处理函数中任务处理完的时候执行以下任务完成的函数即可。</p>
 
-                    <p class="say-title">
-                        —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
-                        <a href="http://xcoder.in/" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-                        于2011年06月16日自豪地以 <a class="article-tag-link" href="/tags/C++/">C++</a>, <a class="article-tag-link" href="/tags/二进制文件/">二进制文件</a>, <a class="article-tag-link" href="/tags/游戏制作/">游戏制作</a>, <a class="article-tag-link" href="/tags/老博客备份归档/">老博客备份归档</a>, <a class="article-tag-link" href="/tags/资源包/">资源包</a> 唠嗑
-                    </p>
-                </div>
-            </article>
             
-            
-            
+            <section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"xcoder-ghost"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
         </div>
     </div>
-</div>
-
-<script>
-$(function() {
-    $(".archive-list-count").addClass("badge");
-});
-</script>
+</article>
 
     <footer id="footer">
     <div id="bottom-tip">
