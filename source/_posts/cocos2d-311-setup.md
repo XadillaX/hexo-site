@@ -1,4 +1,4 @@
-title: Cocos2d 3.1.1 开发环境搭建（Win篇）
+title: Cocos2d-x 3.1.1 开发环境搭建（Win篇）
 date: 2014-06-07 19:34:02
 tags: [ cocos2d ]
 ---
@@ -9,7 +9,7 @@ tags: [ cocos2d ]
 
 ## 前驱工作
 
-　　先去 [cocos2d 官网](http://www.cocos2d-x.org/download)下压缩包，放到一个只有神知道的世界里面。
+　　先去 [cocos2d-x 官网](http://www.cocos2d-x.org/download)下压缩包，放到一个只有神知道的世界里面。
 
 　　接下去需要安装仨东西：
 

@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2014-06-07T14:44:25.719Z</updated>
+  <updated>2014-06-07T14:52:16.170Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -15,15 +15,15 @@
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[Cocos2d 3.1.1 开发环境搭建（Win篇）]]></title>
+    <title><![CDATA[Cocos2d-x 3.1.1 开发环境搭建（Win篇）]]></title>
     <link href="http://xcoder.in/2014/06/07/cocos2d-311-setup/"/>
     <id>http://xcoder.in/2014/06/07/cocos2d-311-setup/</id>
     <published>2014-06-07T10:34:02.000Z</published>
-    <updated>2014-06-07T14:43:07.000Z</updated>
+    <updated>2014-06-07T14:51:55.000Z</updated>
     <content type="html"><![CDATA[<p>由于偷懒，所以在此感谢 Etond 的指导（喂喂喂，明明是自己懒得看文档，明明 <a href="README"><code>READEME.md</code></a> 里面就有！(´≖◞౪◟≖)</p>
 <p>　　另，在搭建环境的时候，最好保证你在<span style="background: #222;">墙外</span>。以及我默认觉得大家已经有了 <code>Python</code> 环境和 <code>JDK</code>。</p>
 <h2 id="前驱工作">前驱工作</h2>
-<p>　　先去 <a href="http://www.cocos2d-x.org/download" target="_blank">cocos2d 官网</a>下压缩包，放到一个只有神知道的世界里面。</p>
+<p>　　先去 <a href="http://www.cocos2d-x.org/download" target="_blank">cocos2d-x 官网</a>下压缩包，放到一个只有神知道的世界里面。</p>
 <p>　　接下去需要安装仨东西：</p>
 <h3 id="Android_SDK">Android SDK</h3>
 <p>　　<a href="http://developer.android.com/sdk/index.html#download" target="_blank">这东西</a>真尼玛大啊！我家的小水管真吃不起。</p>
@@ -260,17 +260,17 @@ Segment      Segment     (Including SACK Blocks)
 9
 10
 11
-</pre></td><td class="code"><pre><span class="xml"><span class="tag"><span class="attribute">Transmitted</span>    <span class="attribute">Received</span>    <span class="attribute">ACK</span> <span class="attribute">Sent</span>
-<span class="attribute">Segment</span>        <span class="attribute">Segment</span>     (<span class="attribute">Including</span> <span class="attribute">SACK</span> <span class="attribute">Blocks</span>)
+</pre></td><td class="code"><pre><span class="attribute">Transmitted    Received    ACK Sent
+Segment        Segment     (Including SACK Blocks)
  
-<span class="attribute">500-999</span>        <span class="attribute">500-999</span>     <span class="attribute">1000</span>
-<span class="attribute">1000-1499</span>      (<span class="attribute">delayed</span>)
-<span class="attribute">1500-1999</span>      <span class="attribute">1500-1999</span>   <span class="attribute">1000</span>, <span class="attribute">SACK</span>=<span class="value">1500-2000</span>
-<span class="attribute">2000-2499</span>      <span class="attribute">2000-2499</span>   <span class="attribute">1000</span>, <span class="attribute">SACK</span>=<span class="value">1500-2500</span>
-<span class="attribute">2500-2999</span>      <span class="attribute">2500-2999</span>   <span class="attribute">1000</span>, <span class="attribute">SACK</span>=<span class="value">1500-3000</span>
-<span class="attribute">1000-1499</span>      <span class="attribute">1000-1499</span>   <span class="attribute">3000</span>
-               <span class="attribute">1000-1499</span>   <span class="attribute">3000</span>, <span class="attribute">SACK</span>=<span class="value">1000-1500</span>
-                                      <span class="attribute">---------</span></span></span>
+500-999        500-999     1000
+1000-1499      (delayed)
+1500-1999      1500-1999   1000, SACK</span>=<span class="string">1500-2000
+2000-2499      2000-2499   1000, SACK=1500-2500
+2500-2999      2500-2999   1000, SACK=1500-3000
+1000-1499      1000-1499   3000
+               1000-1499   3000, SACK=1000-1500
+                                      ---------</span>
 </pre></td></tr></table></figure>
 
 <p>　　可见，引入了 D-SACK，有这么几个好处：</p>
