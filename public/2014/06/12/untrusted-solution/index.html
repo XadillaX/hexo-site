@@ -1,0 +1,752 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    
+    <meta name="author" content="小鳥遊死月">
+    
+    <meta name="description" content="昨天凌晨花了仨小时通关了这个游戏，在这里就粗粗做一下题解吧，好几题都是 Hack 过去的。（不要脸，( ﾟДﾟ)σ
+Ceil Block A
+　　这有点像教学关吧，总之先拿到那台电脑你就能操作了。拿到电脑后你就能修改地图内部黑色底色的代码了。
+　　这个时候你只需要把中间设置墙的代码去掉就可以了，或者">
+    
+    
+
+    
+    
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Untrusted - 游戏题解 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <!-- Javascript -->
+    <script src="/js/jquery-2.1.0.min.js"></script>
+    <script src="/js/jquery.backstretch.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/js/headroom.min.js"></script>
+    <script src="/js/jquery.headroom.min.js"></script> 
+    <script src="/js/common.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="banner">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://xcoder.in/" title="艾克斯の編碼者">艾克斯の編碼者</a>
+            </div>
+
+            <div role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+                <p class="navbar-text pull-right">一個偽宅级别的蒟蒻碼畜。</p>
+
+                <ul class="nav navbar-nav">
+                    
+                    <li id="nav-index"><a href="/">首页</a></li>
+                    
+                    <li id="nav-archives"><a href="/archives">归档</a></li>
+                    
+                    <li id="nav-tags"><a href="/tags">标签</a></li>
+                    
+                    <li id="nav-categories"><a href="/categories">分类</a></li>
+                    
+                    <li id="nav-curriculumvitae"><a href="/curriculumvitae">关于</a></li>
+                    
+                    <li id="nav-links"><a href="/links">链接</a></li>
+                    
+                    
+                    <li><a href="https://github.com/XadillaX" target="_blank">GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <script>
+    var backRoot = "/images/background/";
+    var backArray = [ "1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "6.jpeg", "img/iPad_Photo_20140328181354FGPM.JPG", "img/iPad_Photo_20140328181218SLUY.JPG", "img/iPad_Photo_20140328181239ME9E.JPG", "img/iPad_Photo_20140328175718BF7T.JPG", "likeit/465_16170978_35afb62980c6d1a.jpg", "likeit/wallpaper-86487.jpg", "likeit/wallpaper-651939.jpg", "likeit/wallpaper-648634.jpg", "likeit/wallpaper-657798.jpg", "likeit/wallpaper-1479749.jpg", "likeit/wallpaper-1961179.jpg", "likeit/wallpaper-1947874.jpg", "likeit/wallpaper-2055407.jpg", "likeit/wallpaper-2060090.png", "likeit/wallpaper-2142870.jpg", "likeit/wallpaper-2078006.jpg", "likeit/wallpaper-2127699.jpg", "likeit/wallpaper-2211066.jpg", "likeit/wallpaper-2588686.jpg", "likeit/wallpaper-2639031.jpg", "likeit/wallpaper-2430341.jpg", "likeit/wallpaper-2294985.jpg", "likeit/wallpaper-2705897.jpg", "likeit/wallpaper-2063319.jpg", "likeit/wallpaper-2060101.jpg", "likeit/wallpaper-1970791.jpg", "img/iPad_Photo_20140328174508AZ11.JPG", "img/new/iPad_Photo_201403281903078UKK.JPG", "img/iPad_Photo_20140328175639RA5N.JPG", "img/iPad_Photo_20140328175820DYAC.JPG", "img/iPad_Photo_201403281806230195.JPG", "img/new/iPad_Photo_201403281919292STQ.JPG", "img/new/iPad_Photo_20140328190703781D.JPG", "flandre/p541758_2girls barefoot bat_wings bed blonde_hair blue_hair feet fetal_position flandre_scarlet flat_chest hat nude red_eyes ~.jpg", "flandre/p575023_blonde_hair flandre_scarlet hat horumon multiple_persona ponytail red_eyes side_ponytail touhou wings.jpg", "flandre/p569665_2girls barefoot blonde_hair blue_hair flandre_scarlet hat highres kinoko red_eyes remilia_scarlet siblings sisters to~.jpg", "flandre/p566082_blonde_hair flandre_scarlet hat mitsuki_(artist) ponytail red_eyes short_hair side_ponytail touhou wings.jpg", "flandre/p548132_2girls bat_wings blonde_hair blue_eyes blue_hair flandre_scarlet hat kaedena_akino mask moon red_eyes red_moon remili~.jpg", "flandre/p552906_flandre_scarlet gusutafu hong_meiling izayoi_sakuya koakuma patchouli_knowledge remilia_scarlet swimsuit touhou.jpg", "flandre/p551605_flandre_scarlet kona-ta touhou.jpg", "flandre/p551983_asuka_roze danmaku flandre_scarlet remilia_scarlet touhou.jpg", "likeit/465_16170978_2b89f5997bcff44.jpg", "likeit/wallpaper-616321.jpg", "likeit/wallpaper-343717.jpg", "likeit/wallpaper-1595016.jpg", "likeit/wallpaper-1952396.jpg", "likeit/wallpaper-2060096.jpg", "likeit/wallpaper-2315398.jpg", "likeit/wallpaper-2674370.jpg", "likeit/wallpaper-2838683.jpg", "likeit/wallpaper-2564028.png", "likeit/wallpaper-1382762.jpg", "likeit/wallpaper-1128042.jpg", "likeit/wallpaper-1396368.jpg", "likeit/wallpaper-1403569.png", "likeit/wallpaper-1593633.jpg", "likeit/wallpaper-1395408.jpg", "flandre/p539131_blonde_hair flandre_scarlet hat plastic_eraser red_eyes scenery short_hair solo touhou.jpg", "flandre/p555228_flandre_scarlet hong_meiling izayoi_sakuya patchouli_knowledge remilia_scarlet shomon swimsuit touhou.jpg", "flandre/p556145_book flandre_scarlet flower hairband hakurei_reimu hat hitoto hong_meiling izayoi_sakuya kirisame_marisa koakuma patc~.jpg", "flandre/p561220_arikichi_gen blonde_hair blue_eyes blue_hair braid flandre_scarlet izayoi_sakuya ponytail red_eyes remilia_scarlet sh~.jpg", "flandre/p541363_blonde_hair flandre_scarlet hat laevatein magic_circle poncho_(pixiv) red_eyes side_ponytail touhou wings.jpg",  ];
+    //console.log(backArray);
+        
+    $(function() {
+        // page-id...
+        var pageId = "2014/06/12/untrusted-solution/";
+        pageId = pageId.substr(0, pageId.indexOf("/"));
+        if(pageId === "") pageId = "index";
+        
+        $("#nav-" + pageId).addClass("active");
+    });
+    </script>
+    <article class="post container">
+    <div class="well post-body first-post last-post">
+        <h1>Untrusted - 游戏题解</h1>
+        
+        <div class="time-info">
+发表于:<time datetime="2014-06-12T02:08:34.000Z" itemprop="datePublished">2014年06月12日</time>,
+更新于:<time datetime="2014-06-12T05:13:56.000Z" itemprop="dateModified">2014年06月12日</time>,
+By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
+        </div>
+        
+        <div class="post-body-inner">
+            <div id="toc" class="toc-article well">
+                <strong class="toc-title">大纲</strong>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ceil_Block_A"><span class="toc-number">1.</span> <span class="toc-text">Ceil Block A</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The_Long_Way_Out"><span class="toc-number">2.</span> <span class="toc-text">The Long Way Out</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Validation_Engaged"><span class="toc-number">3.</span> <span class="toc-text">Validation Engaged</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Multiplicity"><span class="toc-number">4.</span> <span class="toc-text">Multiplicity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Minesweeper"><span class="toc-number">5.</span> <span class="toc-text">Minesweeper</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Drones_101"><span class="toc-number">6.</span> <span class="toc-text">Drones 101</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Colors"><span class="toc-number">7.</span> <span class="toc-text">Colors</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Into_the_Woods"><span class="toc-number">8.</span> <span class="toc-text">Into the Woods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fording_the_River"><span class="toc-number">9.</span> <span class="toc-text">Fording the River</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ambush"><span class="toc-number">10.</span> <span class="toc-text">Ambush</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Robot"><span class="toc-number">11.</span> <span class="toc-text">Robot</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Robot_Nav"><span class="toc-number">12.</span> <span class="toc-text">Robot Nav</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Robot_Maze"><span class="toc-number">13.</span> <span class="toc-text">Robot Maze</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Crisps_Contest"><span class="toc-number">14.</span> <span class="toc-text">Crisps Contest</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exceptional_Crossing"><span class="toc-number">15.</span> <span class="toc-text">Exceptional Crossing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lasers"><span class="toc-number">16.</span> <span class="toc-text">Lasers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pointers"><span class="toc-number">17.</span> <span class="toc-text">Pointers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Super_Dr-_Eval_Bros"><span class="toc-number">18.</span> <span class="toc-text">Super Dr. Eval Bros</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Document_Object_Madness"><span class="toc-number">19.</span> <span class="toc-text">Document Object Madness</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Boss_Fight"><span class="toc-number">20.</span> <span class="toc-text">Boss Fight</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#End_of_the_Line"><span class="toc-number">21.</span> <span class="toc-text">End of the Line</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Credits"><span class="toc-number">22.</span> <span class="toc-text">Credits</span></a></li></ol>
+            </div>
+            
+            <p>昨天凌晨花了仨小时通关了这个游戏，在这里就粗粗做一下题解吧，好几题都是 Hack 过去的。（不要脸，( ﾟДﾟ)σ</p>
+<h2 id="Ceil_Block_A">Ceil Block A</h2>
+<p>　　这有点像教学关吧，总之先拿到那台电脑你就能操作了。拿到电脑后你就能修改地图内部黑色底色的代码了。</p>
+<p>　　这个时候你只需要把中间设置墙的代码去掉就可以了，或者注释掉：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="comment">//for(y = 3; y &lt;= map.getHeight() - 10; y++) {</span>
+<span class="comment">//    map.placeObject(5, y, 'block');</span>
+<span class="comment">//    map.placeObject(map.getWidth() - 5, y, 'block');</span>
+<span class="comment">//}</span>
+<span class="comment">//</span>
+<span class="comment">//for(x = 5; x &lt;= map.getWidth() - 5; x++) {</span>
+<span class="comment">//    map.placeObject(x, 3, 'block');</span>
+<span class="comment">//    map.placeObject(x, map.getHeight() - 10, 'block');</span>
+<span class="comment">//}</span>
+</pre></td></tr></table></figure>
+
+<p>　　然后 <code>&lt;ctrl-5&gt;</code> 重新执行——哒哒～墙就消失了，赶紧到蓝色的出口处吧。</p>
+<h2 id="The_Long_Way_Out">The Long Way Out</h2>
+<p>　　代码大致是给你创建了一个迷宫，并且出口处四面用围墙围起来。</p>
+<p>　　我用了一个比较 Hack 的方法，在第一个黑色区域的最上方把 <code>maze.create</code> 重定向到自己的一个空函数，这样下面调用创建迷宫的函数就不会被执行，这个时候再执行的话迷宫就不见了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>maze.create = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>};
+</pre></td></tr></table></figure>
+
+<p>　　迷宫不见了还不靠谱，因为还有一个出口四周有墙——那就自己再建一个出口呗，在第二个黑色区域写上建立一个新出口的代码即可：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>map.placeObject(<span class="number">0</span>, <span class="number">0</span>, <span class="string">"exit"</span>);
+</pre></td></tr></table></figure>
+
+<blockquote>
+<p>勇敢的少年啊，快去创造奇迹！</p>
+</blockquote>
+<h2 id="Validation_Engaged">Validation Engaged</h2>
+<p>　　这题的要求是在还存在着一定量『壁』的情况下你能到达出口，也就是说纯粹地删除它加『壁』的代码是不行的，那我们做点改动就 OK 了。把『壁』往外移动，直到把人和出口都是在『壁』内。</p>
+<blockquote>
+<p>那一天，人类终于回想起曾经一度被他们所支配的恐怖，还有囚禁于鸟笼中的那份屈辱。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="keyword">for</span>(y = <span class="number">0</span>; y &lt;= map.getHeight() - <span class="number">3</span>; y++) {
+    map.placeObject(<span class="number">5</span>, y, <span class="string">'block'</span>);
+    map.placeObject(map.getWidth() - <span class="number">5</span>, y, <span class="string">'block'</span>);
+}
+
+<span class="keyword">for</span>(x = <span class="number">0</span>; x &lt;= map.getWidth() - <span class="number">5</span>; x++) {
+    map.placeObject(x, <span class="number">3</span>, <span class="string">'block'</span>);
+    map.placeObject(x, map.getHeight() - <span class="number">3</span>, <span class="string">'block'</span>);
+}
+</pre></td></tr></table></figure>
+
+<h2 id="Multiplicity">Multiplicity</h2>
+<p>　　嘛嘛，这是第二关的简化版——直接再搞一个出口就 OK 了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>map.placeObject(<span class="number">20</span>, <span class="number">10</span>, <span class="string">'exit'</span>);
+</pre></td></tr></table></figure>
+
+<h2 id="Minesweeper">Minesweeper</h2>
+<p>　　这是一个雷区，你不碰雷就好。从代码里面看出来有个 <code>map.setSquareColor</code> 函数可以设置某个格子的颜色。那好办，我们在设置一个地雷后把它用别的颜色标记出来就好了，然后重新执行只要你不是色盲都能安全通过。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>map.setSquareColor(x, y, <span class="string">"#ff7800"</span>);
+</pre></td></tr></table></figure>
+
+<h2 id="Drones_101">Drones 101</h2>
+<p>　　这题大概就是说有个痴汉会跟你靠近，然后把你先奸后杀。</p>
+<p>　　但是痴汉很笨，在他的必经之路用墙堵住他就不会继续动了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>map.placeObject(<span class="number">30</span>, <span class="number">12</span>, <span class="string">'block'</span>);
+map.placeObject(<span class="number">31</span>, <span class="number">11</span>, <span class="string">'block'</span>);
+</pre></td></tr></table></figure>
+
+<h2 id="Colors">Colors</h2>
+<p>　　这个是那个卖相不错的电话机的教学关卡。所以大致的意思是设置了打电话的回调函数即可。ε٩(๑&gt; ₃ &lt;)۶з</p>
+<p>　　分析代码可知，要通过那几个长得跟菊花一样的带色儿的墙你就要跟那个菊花颜色一样。所以电话机的回调函数大致是让你自己变色就好了。</p>
+<p>　　按照顺序所见，如果人是绿色的通过之后要变成红色，然后再变成黄色再绿色。于是写以下的变色过程就可以了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="code"><pre><span class="keyword">var</span> player = map.getPlayer();
+
+<span class="keyword">var</span> color = player.getColor();
+<span class="keyword">switch</span>(color) {
+    <span class="keyword">case</span> <span class="string">"#0f0"</span>:
+        player.setColor(<span class="string">"#f00"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="string">"#f00"</span>:
+        player.setColor(<span class="string">"#ff0"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="string">"#ff0"</span>:
+        player.setColor(<span class="string">"#0f0"</span>);
+        <span class="keyword">break</span>;
+}
+</pre></td></tr></table></figure>
+
+<p>　　重新执行捡起电话机，然后通过绿菊花之后按 <code>Q</code> 使用电话机让自己变色儿就好了。</p>
+<blockquote>
+<p>“哎呀，天！他是惦记弟弟了。……可我还不知道呢！那么这是他老人家的狗？很高兴。……你把它带去吧。……这条小狗怪不错的。……挺伶俐。……一口就把这家伙的手指咬破了！哈哈哈哈！……咦，你干吗发抖？呜呜，……呜呜。……它生气了，小坏蛋，……好一条小狗……”</p>
+</blockquote>
+<h2 id="Into_the_Woods">Into the Woods</h2>
+<p>　　森林里面有树和墙，我也懒得想或者写代码了。（明明是自己想不出来#ﾟÅﾟ）⊂彡☆))ﾟДﾟ)･∵</p>
+<p>　　总之我是尽可能向出口靠近，然后到死路了赶紧打电话让森林重新生成一遍，如此循环往复直到出口。</p>
+<h2 id="Fording_the_River">Fording the River</h2>
+<p>　　23333333333333！做这题的时候差点没把自己浏览器卡死。</p>
+<p>　　大致的意思是河的上面有一条船，你直接遇水会死，要上船。但是船貌似不跟你走啊 QAQ。</p>
+<p>　　而且设定写着只能有一条 <code>raft</code>。</p>
+<p>　　咱就来个偷天换日，自己造诺亚方舟铺满整条河（因为懒得计算）。</p>
+<p>　　首先定义诺亚方舟的类型：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre>map.defineObject(<span class="string">"noah"</span>, {
+    <span class="string">'type'</span>: <span class="string">'dynamic'</span>,
+    <span class="string">'symbol'</span>: <span class="string">'a'</span>,
+    <span class="string">'color'</span>: <span class="string">'#420'</span>,
+    <span class="string">'transport'</span>: <span class="literal">true</span>,
+    <span class="string">'behavior'</span>: <span class="function"><span class="keyword">function</span><span class="params">(me)</span> {</span>
+    }
+});
+</pre></td></tr></table></figure>
+
+<p>　　然后呢把它铺满整条大河吧：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">for</span>(<span class="keyword">var</span> x = <span class="number">0</span>; x &lt; map.getWidth(); x++) {
+    <span class="keyword">for</span>(<span class="keyword">var</span> y = <span class="number">5</span>; y &lt; <span class="number">15</span>; y++) {
+        map.placeObject(x, y, <span class="string">'noah'</span>);
+    }
+}
+</pre></td></tr></table></figure>
+
+<blockquote>
+<p>一条大河，两岸宽，风吹稻花香两岸。（喂喂喂，小心卡死<em>(┐「ε:)</em></p>
+</blockquote>
+<h2 id="Ambush">Ambush</h2>
+<p>　　后来我去 <code>Untrusted</code> 的 repo 去看题解，发现他们都是去驱使这群痴汉干嘛干嘛。我感觉我的最简单暴力了——直接废了他们。</p>
+<p>　　其实呢只要把碰撞函数重写一遍，这堆痴汉马上就变得人畜无害，你走过去人家还行礼呢233333333333</p>
+<p>　　仔细看一下我们要完成的部分在 <code>behavior</code> 里面，所以在这里面用 <code>this</code> 是妥妥生效的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">this</span>.onCollision = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>};
+</pre></td></tr></table></figure>
+
+<blockquote>
+<p>看我碎蛋大粉拳！（忽然觉得下身一阵疼痛  |Д`)ノ⌒●～*</p>
+</blockquote>
+<h2 id="Robot">Robot</h2>
+<p>　　你走一步机器人走一步，也是教学关卡。</p>
+<p>　　机器人能往下走就往下走，能往右走就往右走就拿到钥匙了，最后你再追上机器人把钥匙抢过来就好了。因为机器人是可以穿过紫翔色的那扇门的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="keyword">if</span>(me.canMove(<span class="string">"down"</span>)) me.move(<span class="string">"down"</span>);
+<span class="keyword">else</span> me.move(<span class="string">"right"</span>);
+</pre></td></tr></table></figure>
+
+<blockquote>
+<p>站住，保护费。你不装 X 我们还是好朋友。</p>
+</blockquote>
+<h2 id="Robot_Nav">Robot Nav</h2>
+<p>　　我居然无聊到自己把路线数出来了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="keyword">var</span> road = <span class="string">"ddddrrrrrrrrrrrrrrrrrrrrrrrrrrrrrruurrrrrrrrrrrrrrrrrddddddd"</span>;
+<span class="keyword">this</span>.cur = <span class="keyword">this</span>.cur === <span class="literal">undefined</span> ? <span class="number">0</span> : (<span class="keyword">this</span>.cur + <span class="number">1</span>);
+
+<span class="keyword">if</span>(<span class="keyword">this</span>.cur &gt;= road.length) <span class="keyword">return</span>;
+
+<span class="keyword">if</span>(road[<span class="keyword">this</span>.cur] === <span class="string">"d"</span>) me.move(<span class="string">"down"</span>);
+<span class="keyword">if</span>(road[<span class="keyword">this</span>.cur] === <span class="string">"r"</span>) me.move(<span class="string">"right"</span>);
+<span class="keyword">if</span>(road[<span class="keyword">this</span>.cur] === <span class="string">"u"</span>) me.move(<span class="string">"up"</span>);
+</pre></td></tr></table></figure>
+
+<h2 id="Robot_Maze">Robot Maze</h2>
+<p>　　好吧作者早就想到了有人会无聊地去数。</p>
+<p>　　嘛嘛，就如作者所愿写个最基础的 DFS 了事吧。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+</pre></td><td class="code"><pre><span class="keyword">var</span> direct = {
+    <span class="string">"d"</span>: <span class="string">"down"</span>,
+    <span class="string">"u"</span>: <span class="string">"up"</span>,
+    <span class="string">"l"</span>: <span class="string">"left"</span>,
+    <span class="string">"r"</span>: <span class="string">"right"</span>
+};
+
+<span class="comment">// dfs...</span>
+<span class="keyword">if</span>(<span class="literal">undefined</span> === <span class="keyword">this</span>.dfs) {
+    <span class="keyword">this</span>.ans = <span class="string">""</span>;
+    <span class="keyword">this</span>.step = <span class="number">0</span>;
+
+    <span class="keyword">var</span> vis = [];
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) {
+        vis.push([]);
+        <span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; <span class="number">100</span>; j++) vis[i].push(<span class="literal">false</span>);
+    }
+
+    <span class="keyword">var</span> dir = [
+        [ <span class="number">0</span>, -<span class="number">1</span>, <span class="string">"u"</span>, <span class="string">"#f00"</span> ],
+        [ <span class="number">0</span>, <span class="number">1</span>, <span class="string">"d"</span>, <span class="string">"#0f0"</span> ],
+        [ -<span class="number">1</span>, <span class="number">0</span>, <span class="string">"l"</span>, <span class="string">"#00f"</span> ],
+        [ <span class="number">1</span>, <span class="number">0</span>, <span class="string">"r"</span>, <span class="string">"#fff"</span> ]
+    ];
+
+    <span class="keyword">this</span>.dfs = <span class="function"><span class="keyword">function</span><span class="params">(x, y)</span> {</span>
+        <span class="keyword">if</span>(x === map.getWidth() - <span class="number">2</span> && y === <span class="number">8</span>) {
+            <span class="keyword">return</span> <span class="literal">true</span>;
+        }
+        vis[y][x] = <span class="literal">true</span>;
+
+        <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) {
+            <span class="keyword">var</span> newx = x + dir[i][<span class="number">0</span>];
+            <span class="keyword">var</span> newy = y + dir[i][<span class="number">1</span>];
+
+            <span class="keyword">if</span>(newx &lt; <span class="number">0</span> || newy &lt; <span class="number">0</span> ||
+                newx &gt;= map.getWidth() ||
+                newy &gt;= map.getHeight() ||
+                vis[newy][newx] ||
+                map.getObjectTypeAt(newx, newy) === <span class="string">"block"</span>
+                ) <span class="keyword">continue</span>;
+
+            <span class="keyword">var</span> oldans = <span class="keyword">this</span>.ans;
+            <span class="keyword">this</span>.ans += dir[i][<span class="number">2</span>];
+
+            <span class="keyword">if</span>(!<span class="keyword">this</span>.dfs(newx, newy)) {
+                <span class="keyword">this</span>.ans = oldans;
+            } <span class="keyword">else</span> {
+                map.setSquareColor(x, y, dir[i][<span class="number">3</span>]);
+
+                <span class="keyword">return</span> <span class="literal">true</span>;
+            }
+        }
+
+        <span class="keyword">return</span> <span class="literal">false</span>;
+    };
+
+    <span class="keyword">this</span>.dfs(<span class="number">1</span>, <span class="number">1</span>);
+    <span class="keyword">this</span>.ans += <span class="string">"dd"</span>;
+}
+
+<span class="keyword">if</span>(<span class="keyword">this</span>.step &gt;= <span class="keyword">this</span>.ans.length) <span class="keyword">return</span>;
+me.move(direct[<span class="keyword">this</span>.ans[<span class="keyword">this</span>.step++]]);
+</pre></td></tr></table></figure>
+
+<blockquote>
+<p>红魔馆的地下室一样呢。反正是机器人多走几步路没事，没必要用 BFS 求最优解2333333333</p>
+</blockquote>
+<h2 id="Crisps_Contest">Crisps Contest</h2>
+<p>　　刚才那仨 2B 机器人引领你拿到了仨颜色的钥匙在这边派上用场了。</p>
+<p>　　钻红菊花你需要有红钥匙，并且用了之后会少掉。其它颜色也一样。最终你要拿到 <code>A</code> 所代表的 <code>theAlgorithm</code> 走到出口。</p>
+<blockquote>
+<p>等等！啊咧？绿钥匙的通过判定有个地方可以修改？就是你通过绿菊花的时候需要有绿钥匙并且你可以选择你丢弃的东西。丢什么好呢？电脑？不行不行，过关还靠它呢。电话机？以后肯定要用到。其它颜色钥匙？那你肯定会被锁在某个地方出不来。那就只有丢弃 <code>theAlgorithm</code> 了——反正只要拿到 <code>theAlgorithm</code> 之后不再通过绿菊花就没事了。</p>
+</blockquote>
+<p>　　于是只要把绿菊花的通过判断函数里面可修改的区域改成 <code>theAlgorithm</code> 就好了。</p>
+<p>　　最后走的顺序大概是：</p>
+<blockquote>
+<p>进左上角的门拿到<span style="color: yellow;">黄药屎</span>和<span style="color: blue;">蓝药屎</span>出来。然后右上角把<span style="color: red;"><strong>红</strong></span>和<span style="color: blue;"><strong>蓝</strong></span>拿出来。然后向下直捣黄龙，左黄菊花进拿到 <code>theAlgorithm</code> 蓝菊花通过拿到<span style="color: yellow;">黄药屎</span>然后再黄菊花出。</p>
+<p>大功告成！走向胜利的出口吧！</p>
+<p><strong>自古红蓝出 CP！</strong></p>
+</blockquote>
+<h2 id="Exceptional_Crossing">Exceptional Crossing</h2>
+<p>　　又是过河啊，这次你只能是死了，因为你的编辑区域只有在 <code>player.killedBy()</code> 里面。</p>
+<blockquote>
+<p>《订制死神》：这个时候让死神笑就可以了。</p>
+</blockquote>
+<p>　　让我们一起来玩坏它吧！在里面填上 <code>) = (0</code> 就好了。什么什么看不懂？你填进去看一下整句话就知道了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>player.killedBy() = (<span class="number">0</span>);
+</pre></td></tr></table></figure>
+
+<p>　　然后死神就会被你玩坏了。你走过去的时候这句话执行出错了2333333</p>
+<h2 id="Lasers">Lasers</h2>
+<p>　　有很多隐藏线，你人必须要跟隐藏线的颜色一致才能通过，然后目前所有线都用白色给画出来。</p>
+<p>　　目测作者的意思是让你把硬编码的白色改成隐藏线的颜色，这样就能把线的颜色给标记出来，然后再给电话机写个函数就是让你自己的人变色。</p>
+<p>　　不过我还是用了个 Hack 的方法——</p>
+<p>　　第一条线他要画就画，咱不碰它就好了，只不过在第一条线画完的后面我们把这个画线函数给 Hack 掉：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="comment">// using canvas to draw the line</span>
+<span class="keyword">var</span> ctx = map.getCanvasContext();
+ctx.beginPath();
+ctx.strokeStyle = <span class="string">'white'</span>;
+ctx.lineWidth = <span class="number">5</span>;
+ctx.moveTo(x1, y1);
+ctx.lineTo(x2, y2);
+ctx.stroke();
+
+createLaser = abc;
+</pre></td></tr></table></figure>
+
+<p>　　接下去是在第二片区域写下自己的画线函数吧，这题最下方检测了线的数量不能少于 25 条。么事，爷高兴画 100 条都么问题，因为我都把它缩在左上角了 2333333</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">abc</span><span class="params">()</span> {</span>
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">25</span>; i++) {
+        map.createLine([<span class="number">1</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">2</span>], <span class="function"><span class="keyword">function</span><span class="params">(player)</span> {</span>
+            <span class="comment">//... Ahahaha</span>
+        });
+
+        <span class="keyword">var</span> ctx = map.getCanvasContext();
+        ctx.beginPath();
+        ctx.strokeStyle = <span class="string">'red'</span>;
+        ctx.lineWidth = <span class="number">5</span>;
+        ctx.moveTo(<span class="number">1</span>, <span class="number">1</span>);
+        ctx.lineTo(<span class="number">2</span>, <span class="number">2</span>);
+        ctx.stroke();
+    }
+}
+</pre></td></tr></table></figure>
+
+<h2 id="Pointers">Pointers</h2>
+<p>　　有好多传送门，每次执行随机生成传送位置，有些传送门会把你传到二小姐的地下室然后被吃掉。</p>
+<p>　　我也懒得多动脑筋或者画线什么的，直接对两个都是传送门的 CP 标记一样的随机颜色就好了，最后跟着颜色走到出口去（有个坑就是有时候这个地图本身就是死局，所以得多试几次重新执行 இдஇ</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="keyword">var</span> dict = <span class="string">"0123456789ABCDEF"</span>;
+<span class="keyword">if</span>(t1.getType() === <span class="string">"teleporter"</span> && t2.getType() === <span class="string">"teleporter"</span>) {
+    <span class="keyword">var</span> color = <span class="string">"#"</span> + dict[<span class="built_in">Math</span>.ceil(<span class="built_in">Math</span>.random() * <span class="number">15</span>)] +
+        dict[<span class="built_in">Math</span>.ceil(<span class="built_in">Math</span>.random() * <span class="number">15</span>)] +
+        dict[<span class="built_in">Math</span>.ceil(<span class="built_in">Math</span>.random() * <span class="number">15</span>)];
+
+    map.setSquareColor(t1.getX(), t1.getY(), color);
+    map.setSquareColor(t2.getX(), t2.getY(), color);
+}
+</pre></td></tr></table></figure>
+
+<h2 id="Super_Dr-_Eval_Bros">Super Dr. Eval Bros</h2>
+<p>　　好吧本意是让你设置一个 <code>timer</code> 然后一直跳啊跳的。</p>
+<p>　　不过呢，定一个新方块给自己搭一座桥就是了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="code"><pre>map.defineObject(<span class="string">"❤"</span>, {
+    impassable: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+        <span class="keyword">return</span> <span class="literal">true</span>;
+    },
+    symbol: <span class="string">"❤"</span>
+});
+map.placeObject(<span class="number">20</span>, <span class="number">12</span>, <span class="string">"❤"</span>);
+map.placeObject(<span class="number">21</span>, <span class="number">12</span>, <span class="string">"❤"</span>);
+map.placeObject(<span class="number">22</span>, <span class="number">12</span>, <span class="string">"❤"</span>);
+map.placeObject(<span class="number">23</span>, <span class="number">12</span>, <span class="string">"❤"</span>);
+map.placeObject(<span class="number">24</span>, <span class="number">12</span>, <span class="string">"❤"</span>);
+map.placeObject(<span class="number">25</span>, <span class="number">12</span>, <span class="string">"❤"</span>);
+map.placeObject(<span class="number">26</span>, <span class="number">12</span>, <span class="string">"❤"</span>);
+map.placeObject(<span class="number">27</span>, <span class="number">12</span>, <span class="string">"❤"</span>);
+map.placeObject(<span class="number">28</span>, <span class="number">12</span>, <span class="string">"❤"</span>);
+map.placeObject(<span class="number">29</span>, <span class="number">12</span>, <span class="string">"❤"</span>);
+</pre></td></tr></table></figure>
+
+<blockquote>
+<p>你只要打个电话桥就会出现的。</p>
+</blockquote>
+<h2 id="Document_Object_Madness">Document Object Madness</h2>
+<p>　　好神奇！好奇葩！我键盘 <code>hjkl</code> 乱按一通就过了。</p>
+<h2 id="Boss_Fight">Boss Fight</h2>
+<p>　　打 Boss 了。</p>
+<p>　　好吧我承认我 Cheat 了——原谅我用了 <code>console.log</code>。</p>
+<blockquote>
+<p>因为当我打开控制台的时候下面的语句出现在我的眼里：</p>
+<blockquote>
+<p><strong><em>If you can read this, you are cheating!</em></strong></p>
+<p><strong><em>But really, you don’t need this console to play the game. Walk around using arrow keys (or Vim keys), and pick up the computer (⌘). Then the fun begins!</em></strong></p>
+</blockquote>
+</blockquote>
+<p>　　嘛嘛，无论如何，过关了就好。</p>
+<p>　　这题呢是要让所有的 <code>boss</code> 给毁灭掉即可—— 当所有的 <code>boss</code> 毁灭之后会爆出任务道具 <code>theAlgorithm</code> 然后就能通关了。</p>
+<p>　　后来我发现可以让子弹消灭 <code>boss</code>。但是我当时没这么做。</p>
+<p>　　我先弄了堵墙把子弹挡住先：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="code"><pre>map.defineObject(<span class="string">"保命的"</span>, {
+    impassable: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+        <span class="keyword">return</span> <span class="literal">true</span>;
+    },
+    symbol: <span class="string">"❤"</span>,
+    onCollision: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    }
+});
+
+<span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; map.getWidth(); i++) {
+    map.placeObject(i, <span class="number">9</span>, <span class="string">"保命的"</span>);
+}
+</pre></td></tr></table></figure>
+
+<p>　　这下你就能捡到电话机了——然后给电话机写回调函数。</p>
+<p>　　怎么说呢，当你每用一次电话机，我就把当前存在于屏幕的 <code>boss</code> 和 <code>bullet</code> 给分开罗列，然后把 <code>boss</code> 的 <code>_destroy</code>（警察叔叔，就是这个函数是我 <code>console.log</code> 出来的）给嫁接到 <code>bullet</code> 的 <code>_destroy</code> 去。</p>
+<p>　　这样会出现什么样的结果呢？——当子弹碰到墙的时候就会销毁，这个时候会触发 <code>_destroy</code> 函数，但是这个时候的 <code>_destroy</code> 函数已经会变成了 <code>boss</code> 的了，也就是说这个时候子弹不会被销毁反而是某一个 <code>boss</code> 的 <code>_destroy</code> 函数被调用然后被销毁了。</p>
+<p>　　再怎么说这都是 Hack 的办法，所以并不会触发 <code>boss</code> 的 <code>onDestroy</code> 函数也就是说即使所有 <code>boss</code> 都没了也不会出现 <code>theAlgorithm</code> 这玩意儿。</p>
+<blockquote>
+<p>自己动手丰衣足食！</p>
+</blockquote>
+<p>　　敌人不给我们我们就自己造呗！反正通关判定是——<code>boss</code> 数量为 <code>0</code> 且你有 <code>theAlgorithm</code> 这个道具。</p>
+<p>　　所以说当所有 <code>boss</code> 都被销毁之后，我们自己去 <code>map.replaceObject</code> 一个 <code>theAlgorithm</code> 道具即可。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="code"><pre>map.getPlayer().setPhoneCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">var</span> bosses = [];
+    <span class="keyword">var</span> bullets = [];
+    <span class="keyword">var</span> objects = map.getDynamicObjects();
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; objects.length; i++) {
+        <span class="keyword">if</span>(objects[i].getType() == <span class="string">"boss"</span>) {
+            bosses.push(objects[i]);
+        } <span class="keyword">else</span> {
+            bullets.push(objects[i]);
+        }
+    }
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="built_in">Math</span>.min(bosses.length, bullets.length); i++) {
+        bullets[i]._destroy = bosses[i]._destroy;
+    }
+
+    <span class="keyword">if</span>(bosses.length === <span class="number">0</span>) {
+        map.placeObject(map.getPlayer().getX(), map.getPlayer().getY() + <span class="number">1</span>,
+            <span class="string">'theAlgorithm'</span>);
+    }
+});
+</pre></td></tr></table></figure>
+
+<p>　　以上代码写完后就开始打 <code>boss</code> 吧！赶紧去拿到电话机，然后你会发现打一个电话 <code>boss</code> 就少一堆，那感觉倍爽儿！</p>
+<h2 id="End_of_the_Line">End of the Line</h2>
+<p>　　马上要通关了。这里是个坑，开始我还以为这里就是真·通关了 QAQ。</p>
+<p>　　随后看看后面还是有关卡啊。但是我突然发现 <code>&lt;ctrl+0&gt;</code> 跳出来的 menu 左边多出了文件夹！然后进去随意翻看了。</p>
+<p>　　最后发现原来是要修改 <code>scripts/objects.js</code> 文件→＿→。</p>
+<p>　　好吧，分析通关验证来看，这一关的 <code>map.finalLevel</code> 为 <code>true</code>。所以我们只需要把 <code>scripts/objects.js</code> 文件里面的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="keyword">if</span>(!game.map.finalLevel) {
+    game._moveToNextLevel();
+}
+</pre></td></tr></table></figure>
+
+<p>给改成如果是 <code>finalLevel</code> 就跑到下一关去就可以了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="keyword">if</span>(game.map.finalLevel) {
+    game._moveToNextLevel();
+}
+</pre></td></tr></table></figure>
+
+<h2 id="Credits">Credits</h2>
+<p>　　由于事先文章结构没有写好，就接这关的坑位来小结吧 0. 0。（反正人家只是序幕章了</p>
+<p>　　好的，其实也什么总结的，但是总觉得得有这么个小结才对。</p>
+<p>　　找工作啊找工作——有想要我的请联系我 2333333333</p>
+<p>　　联系资料在 <a href="http://xcoder.in/curriculumvitae/">CV</a> 里面。</p>
+
+            
+            <section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"xcoder-ghost"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+        </div>
+    </div>
+</article>
+
+    <footer id="footer">
+    <div id="bottom-tip">
+        艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
+    </div>
+        <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
+        <small>&copy; 2014 XadillaX</small>
+    </footer>
+</body>
+</html>
