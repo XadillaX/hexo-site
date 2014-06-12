@@ -3,6 +3,8 @@ date: 2014-06-12 11:08:34
 tags: [ Javascript, untrusted, 游戏 ]
 ---
 
+　　[Trusted](http://alexnisnevich.github.io/untrusted/) 是一个代码解谜游戏，用 Javascript 来过关的。
+
 　　昨天凌晨花了仨小时通关了这个游戏，在这里就粗粗做一下题解吧，好几题都是 Hack 过去的。（不要脸，( ﾟДﾟ)σ
 
 ## Ceil Block A
