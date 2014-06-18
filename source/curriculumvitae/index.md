@@ -21,6 +21,10 @@ I created many independent games during my Bachelor time, almost of them were ba
 
 When I went to Zhejiang University, I came across with `Node.js` and then I fell in love with her. I think she's so elegant and beautiful.
 
+**On 25th, November 2013, I received en email from a Google England Talent Scout. He invited me to discuss if I was fit for their engineering/research teams.** But what a pity, after I've discussed with him, I knew that they were hiring full-time employees but not intern students.
+
+![Google Talent Scout](gibran.png)
+
 ## Education
 
 Sep 2013 - Jun 2015, Zhejiang University
