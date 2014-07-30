@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2014-06-23T10:33:05.578Z</updated>
+  <updated>2014-07-30T08:24:24.587Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -15,11 +15,86 @@
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[开发测试时给 Kafka 发消息的 UI 发送器——Mikasa]]></title>
+    <link href="http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/"/>
+    <id>http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/</id>
+    <published>2014-07-30T02:14:29.000Z</published>
+    <updated>2014-07-30T08:22:06.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="起_(灬ºωº灬)">起 (灬ºωº灬)</h2>
+<p>　　说来话长，自从入了花瓣，整个人就掉进连环坑了。</p>
+<p>　　后端元数据采集是用 Storm 来走拓扑流程的，又因为 @<a href="http://weibo.com/zolazhou" target="_blank">Zola</a> 不是很喜欢 Java，所以退而求其次选择了 Clojure，所以正在苦逼地学习 Clojure 和 Storm 中。</p>
+<p>　　目前来说外面的 Storm 拓扑的 Spout 是从 Kafka 中流入数据的。但是我们要给 Kafka 发送测试数据的时候，就需要跑到 Kafka 的测试服务器打开它的一个发送脚本进去发送，非常蛋疼；要么就是直接通过特定的发送业务逻辑代码测试，没有一个稍微泛一点的测试用发数据工具，于是 Mikasa 诞生了。</p>
+<h2 id="承_(ﾟ3ﾟ)～♪">承 (ﾟ3ﾟ)～♪</h2>
+<p>　　讲到 Mikasa 名字的来源，实际上看过『巨人』都知道，八块腹肌的三爷。</p>
+<p>　　这里小爆料一下，又拍云和花瓣（都是同宗）的项目名很大部分都是以海贼王的角色命名的——尤其是又拍云更是丧心病狂。不过这让我这个伪·二次元的小伙伴异常欣喜，因为我也能用各种啪啪啪来命名我的角色了。比如我的第一个 Storm 相关的项目就叫 Suwako，即诹访子大人，因为脑子需要各种跳，于是就对诹访子大人这位青蛙之神各种膜拜。</p>
+<p>　　至于这个发射器为什么要用三爷呢？因为三爷相当于先锋军哇！</p>
+<p><img src="mikasa.jpeg" alt="Mikasa"></p>
+<p>　　这里的 Kafka 依赖用了搜狐小伙伴 @<a href="http://weibo.com/crzidea" target="_blank">Crzidea</a> 他们团队写的模块。</p>
+<h2 id="转_(ㄏ￣▽￣)ㄏ_ㄟ(￣▽￣ㄟ)">转 (ㄏ￣▽￣)ㄏ   ㄟ(￣▽￣ㄟ)</h2>
+<p>　　于是，话也不多说，直接上 repo 吧。在公司内网的 gitlab 里面有一份，还有一个 repo 在 <a href="https://github.com/" target="_blank">GitHub</a> 上。</p>
+<blockquote>
+<p><a href="https://github.com/XadillaX/mikasa" target="_blank">点我</a></p>
+</blockquote>
+<h3 id="Download_||_Clone">Download || Clone</h3>
+<p>　　如果要直接下载的话就用这个链接：</p>
+<blockquote>
+<p><a href="https://github.com/XadillaX/mikasa/archive/master.zip" target="_blank">https://github.com/XadillaX/mikasa/archive/master.zip</a></p>
+</blockquote>
+<p>　　如果要克隆的话就：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$ </span>git clone <span class="symbol">https:</span>/<span class="regexp">/github.com/</span><span class="constant">XadillaX</span>/mikasa.git
+</pre></td></tr></table></figure>
+
+<h3 id="Setup">Setup</h3>
+<p>　　直接安装一下依赖：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$ </span>npm install
+</pre></td></tr></table></figure>
+
+<h3 id="Configuration">Configuration</h3>
+<p>　　接下去就是简单的配置一下了，其实就是配置下配置文件。由于是快速开发，直接用了自己之前的 <a href="https://github.com/XadillaX/exframess" target="_blank">Exframess</a> 框架，所以很多无用代码也懒得删了。</p>
+<h4 id="config/server-js">config/server.js</h4>
+<p>　　这里其实别的也不用动，主要是修改下端口即可。</p>
+<h4 id="config/kafka-js">config/kafka.js</h4>
+<p>　　这里修改一下 Kafka 的 <code>Connection String</code> 就好了。</p>
+<h3 id="Start_up">Start up</h3>
+<p>　　最后启动服务即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="variable">$ </span>node app.js
+<span class="comment"># or</span>
+<span class="variable">$ </span>pm2 app.js
+<span class="comment"># or some other's</span>
+</pre></td></tr></table></figure>
+
+<h2 id="合_(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧">合 (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</h2>
+<p>　　最后的效果是这样的：</p>
+<p><img src="mikasa-preview.png" alt="Preview"></p>
+<p>　　只要在 Topics 栏里面输入你要发送的 Topic，然后再下面的消息栏里面输入你要传的消息（字符串），最后点击 <code>Send</code> 即可将你的测试消息发进 Kafka 中去了。</p>
+<blockquote>
+<p>托大家的福，今天我的 Suwako 整个逻辑终于跑通了，撒花！ε٩(๑&gt; ₃ &lt;)۶з</p>
+</blockquote>
+]]></content>
+    
+    
+      <category term="Kafka" scheme="http://xcoder.in/tags/Kafka/"/>
+    
+      <category term="Mikasa" scheme="http://xcoder.in/tags/Mikasa/"/>
+    
+      <category term="花瓣" scheme="http://xcoder.in/tags/%E8%8A%B1%E7%93%A3/"/>
+    
+      <category term="Programming" scheme="http://xcoder.in/categories/Programming/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Untrusted - 游戏题解]]></title>
     <link href="http://xcoder.in/2014/06/12/untrusted-solution/"/>
     <id>http://xcoder.in/2014/06/12/untrusted-solution/</id>
-    <published>2014-06-12T02:08:34.000Z</published>
-    <updated>2014-06-12T06:09:37.000Z</updated>
+    <published>2014-06-12T03:08:34.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p><a href="http://alexnisnevich.github.io/untrusted/" target="_blank">Trusted</a> 是一个代码解谜游戏，用 Javascript 来过关的。</p>
 <p>　　昨天凌晨花了仨小时通关了这个游戏，在这里就粗粗做一下题解吧，好几题都是 Hack 过去的。（不要脸，( ﾟДﾟ)σ</p>
 <h2 id="Ceil_Block_A">Ceil Block A</h2>
@@ -648,8 +723,8 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     <title><![CDATA[Cocos2d-x 3.1.1 开发环境搭建（Win篇）]]></title>
     <link href="http://xcoder.in/2014/06/07/cocos2d-311-setup/"/>
     <id>http://xcoder.in/2014/06/07/cocos2d-311-setup/</id>
-    <published>2014-06-07T10:34:02.000Z</published>
-    <updated>2014-06-07T14:51:55.000Z</updated>
+    <published>2014-06-07T11:34:02.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>由于偷懒，所以在此感谢 Etond 的指导（喂喂喂，明明是自己懒得看文档，明明 <a href="README"><code>READEME.md</code></a> 里面就有！(´≖◞౪◟≖)</p>
 <p>　　另，在搭建环境的时候，最好保证你在<span style="background: #222;">墙外</span>。以及我默认觉得大家已经有了 <code>Python</code> 环境和 <code>JDK</code>。</p>
 <h2 id="前驱工作">前驱工作</h2>
@@ -749,8 +824,8 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     <title><![CDATA[【转】TCP 的那些事儿（上）]]></title>
     <link href="http://xcoder.in/2014/06/07/tcp-those-things-1/"/>
     <id>http://xcoder.in/2014/06/07/tcp-those-things-1/</id>
-    <published>2014-06-06T16:47:10.000Z</published>
-    <updated>2014-06-06T17:35:15.000Z</updated>
+    <published>2014-06-06T17:47:10.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>TCP是一个巨复杂的协议，因为他要解决很多问题，而这些问题又带出了很多子问题和阴暗面。所以学习 TCP 本身是个比较痛苦的过程，但对于学习的过程却能让人有很多收获。关于 TCP 这个协议的细节，我还是推荐你去看 <a href="http://www.kohala.com/start/" target="_blank">W.Richard Stevens</a> 的《<a href="http://book.douban.com/subject/1088054/" target="_blank">TCP/IP 详解 卷1：协议</a>》（当然，你也可以去读一下 <a href="http://tools.ietf.org/html/rfc793" target="_blank">RFC793</a> 以及后面 N 多的 RFC）。另外，本文我会使用英文术语，这样方便你通过这些英文关键词来查找相关的技术文档。</p>
 <p>　　之所以想写这篇文章，目的有三个，</p>
 <ul>
@@ -925,8 +1000,8 @@ Segment      Segment     (Including SACK Blocks)
     <title><![CDATA[一个任务队列的 module]]></title>
     <link href="http://xcoder.in/2014/06/03/scartlet-task/"/>
     <id>http://xcoder.in/2014/06/03/scartlet-task/</id>
-    <published>2014-06-02T15:17:38.000Z</published>
-    <updated>2014-06-02T16:19:24.000Z</updated>
+    <published>2014-06-02T16:17:38.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>事情很曲折，我某天在萌否收音机里面听到了一首歌，很好听，叫 <code>hypnotized</code>，于是红心了。</p>
 <p>　　过了几天我再去听——发现这首歌变了。</p>
 <p>　　最后经过多方面求证，我大概得出结果就是应该有人传错了歌，然后后来有人重新传了一遍，导致我听的不是原来那首歌了。那我那天听的那首歌到底叫什么名字呢？</p>
@@ -955,8 +1030,8 @@ Segment      Segment     (Including SACK Blocks)
     <title><![CDATA[搭建 VIM 下的 Hexo 编辑环境]]></title>
     <link href="http://xcoder.in/2014/06/02/vim-hexo-environment/"/>
     <id>http://xcoder.in/2014/06/02/vim-hexo-environment/</id>
-    <published>2014-06-01T19:52:30.000Z</published>
-    <updated>2014-06-01T21:11:21.000Z</updated>
+    <published>2014-06-01T20:52:30.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>本文只讲两个函数，对于 <code>markdown</code> 如何高亮之类的问题还请自行谷歌。</p>
 <p>　　然后请打开你自己的 <code>.vimrc</code> 文件。</p>
 <h2 id="预备工作">预备工作</h2>
@@ -1066,8 +1141,8 @@ endfun
     <title><![CDATA[「NBUT 2014 校赛·网络同步赛」题解 (未完成...)]]></title>
     <link href="http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/"/>
     <id>http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/</id>
-    <published>2014-05-05T06:08:39.000Z</published>
-    <updated>2014-05-20T10:07:24.000Z</updated>
+    <published>2014-05-05T07:08:39.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>这次比赛由 <a href="http://blog.163.com/surgy_han/" target="_blank">Hungar</a>，<a href="http://www.cnblogs.com/Wine93/" target="_blank">8Mao</a> 以及我负责的。明明都读研了，还诈尸回来出题——归结起来大概是因为各种面试不顺吧，想来虐虐学弟妹们怒刷存在感。结果网络赛还是被虐得死去活来。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯</p>
 <p>　　好了废话不多说，还是直接上题解吧。</p>
 <h2 id="Minecraft_Server_Bug">Minecraft Server Bug</h2>
@@ -1232,8 +1307,8 @@ lint solution(lint n)
     <title><![CDATA[死月出品：Hero Snake 英雄蛇]]></title>
     <link href="http://xcoder.in/2014/04/11/hero-snake/"/>
     <id>http://xcoder.in/2014/04/11/hero-snake/</id>
-    <published>2014-04-11T04:53:35.000Z</published>
-    <updated>2014-04-11T06:30:00.000Z</updated>
+    <published>2014-04-11T05:53:35.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>注：备份到这篇日志的时候，感觉眼睛进了什么奇怪的东西。（才……才不是眼泪呢，那一定是沙子！(;´༎ຶД༎ຶ`)</p>
 <p>主要引起感伤的还是这首轩辕剑的 BGM 吧。因为 Hero Snake 的BGM就是这个。</p>
@@ -1288,8 +1363,8 @@ lint solution(lint n)
     <title><![CDATA[让Node.js和C++一起搞基 —— 3 (未完成...)]]></title>
     <link href="http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/"/>
     <id>http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/</id>
-    <published>2014-04-06T07:15:39.000Z</published>
-    <updated>2014-05-20T10:07:31.000Z</updated>
+    <published>2014-04-06T08:15:39.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p><a href="/2014/04/03/nodejs-cpp-addons-2/">上一章</a>我们偷偷学习了如何在 <code>C++</code> 中实现 <code>Node.js</code> 调用时传参数和调用回调函数，并且我自己也心血来潮写了个<a href="/2014/04/05/cpp-class-inline-keng/#simpleini">小 Demo</a> 供大家参考。</p>
 <p>　　今天我们就不复习了，直捣黄龙吧。</p>
 ]]></content>
@@ -1307,8 +1382,8 @@ lint solution(lint n)
     <title><![CDATA[C++中类成员函数 inline 的坑]]></title>
     <link href="http://xcoder.in/2014/04/05/cpp-class-inline-keng/"/>
     <id>http://xcoder.in/2014/04/05/cpp-class-inline-keng/</id>
-    <published>2014-04-05T07:55:57.000Z</published>
-    <updated>2014-04-05T08:21:28.000Z</updated>
+    <published>2014-04-05T08:55:57.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>今天我来讲一讲 <code>C++</code> 中类成员函数 <code>inline</code> 修饰符的一个坑。</p>
 <p>　　这个坑是我在尝试着写我的第一个 <code>Node.js</code> 扩展 <code>simpleini</code> 时候遇到的。</p>
 <h2 id="坑描述">坑描述</h2>
@@ -1392,8 +1467,8 @@ console.log(simpleIni.read(<span class="string">"vals"</span>, <span class="stri
     <title><![CDATA[让Node.js和C++一起搞基 —— 2]]></title>
     <link href="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"/>
     <id>http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/</id>
-    <published>2014-04-03T13:37:15.000Z</published>
-    <updated>2014-04-04T05:47:45.000Z</updated>
+    <published>2014-04-03T14:37:15.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>好，今天让我们更深入地搞基吧！</p>
 <h2 id="温故而知新，可以为湿矣">温故而知新，可以为湿矣</h2>
 <p>　　首先请大家记住这个 V8 的在线手册——<a href="http://izs.me/v8-docs/main.html" target="_blank">http://izs.me/v8-docs/main.html</a>。</p>
@@ -1767,8 +1842,8 @@ NODE_MODULE(addon, Init)
     <title><![CDATA[让Node.js和C++一起搞基 —— 1]]></title>
     <link href="http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/"/>
     <id>http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/</id>
-    <published>2014-04-01T15:53:22.000Z</published>
-    <updated>2014-04-01T17:41:23.000Z</updated>
+    <published>2014-04-01T16:53:22.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>N久之前的一个坑——用 <strong>Node.js</strong> 来重构 NBUT 的 <strong>Online Judge</strong>，包括评测端也得重构一遍。（至于什么时候完成大家就不要关心了，(／‵Д′)／~ ╧╧</p>
 <p>　　总之我们现在要做的其实简而言之就是——用C/C++来实现 <strong>Node.js</strong> 的模块。</p>
 <h2 id="准备工作">准备工作</h2>
@@ -2025,8 +2100,8 @@ NODE_MODULE(module_name, Initialize)
     <title><![CDATA[～公众档所～项目解析]]></title>
     <link href="http://xcoder.in/2014/03/27/node-public-file-house/"/>
     <id>http://xcoder.in/2014/03/27/node-public-file-house/</id>
-    <published>2014-03-26T16:34:04.000Z</published>
-    <updated>2014-03-27T08:38:09.000Z</updated>
+    <published>2014-03-26T17:34:04.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>所谓“公众档所”，其实就是一个公共的临时网盘了。这个东西是一个老物了，在我刚接触 <code>Expressjs</code> 的时候写的。当时还随便搞了一下 <code>backbone.js</code>，但是没有深入，勿笑。关于深入构架 <code>Expressjs</code> 方面也没做，只是粗粗写了下最基础的路由，所以整个文件结构也不是很规范。但是应该能比较适合刚学 <code>Node.js</code> 以及刚接触 <code>Expressjs</code> 的人吧。</p>
 <p>　　Repo地址在<a href="https://github.com/XadillaX/public-file-house" target="_blank">我的Github</a>上。Demo地址在 <a href="http://dang.kacaka.ca/" target="_blank">http://dang.kacaka.ca/</a>，由于个人电脑的不稳定性，所以不保证你们随时可以访问，保不定哪天就失效了，所以最好的办法还是自己 <code>clone</code> 下来啪啪啪。</p>
 <p>　　它所需要的东西大致就是 <code>Expressjs</code> + <code>Redis</code> + <code>Backbone</code> 了。不过都是最最基础的代码。</p>
@@ -2928,7 +3003,7 @@ $(<span class="function"><span class="keyword">function</span><span class="param
     <link href="http://xcoder.in/2013/12/28/xplan-spider-doc/"/>
     <id>http://xcoder.in/2013/12/28/xplan-spider-doc/</id>
     <published>2013-12-28T00:00:00.000Z</published>
-    <updated>2014-03-26T16:51:15.000Z</updated>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<h2 id="前言">前言</h2>
 <p><strong>XPlan</strong> 是一个“基于校园强关系的社交应用”的开发代号。其中有一个功能是从学校网站上通过网络爬虫（Web Crawler）形式将学校新闻抓取到XPlan自身的数据库当中。</p>
 <p>而这里出现的一个问题就是学校网站上面的文章是通过类似于 <a href="http://kindeditor.net/" target="_blank"><code>KindEditor</code></a>、<a href="http://ueditor.baidu.com/website/" target="_blank"><code>UEditor</code></a>这类<strong>在线富文本编辑器</strong>生成的代码。</p>
@@ -3180,7 +3255,7 @@ $ = cheerio.load(<span class="keyword">...</span>);
     <link href="http://xcoder.in/2013/08/31/srm-589-div2/"/>
     <id>http://xcoder.in/2013/08/31/srm-589-div2/</id>
     <published>2013-08-31T00:00:00.000Z</published>
-    <updated>2014-03-24T13:59:55.000Z</updated>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>好久没撸 <strong>TC</strong> 了，手都生了。前两天刚折腾好 <strong>LinuxMint</strong> + <strong>Cinnamon</strong>，顺便手贱把 <strong>TC</strong> 环境配好了。</p>
 <p>　　随便进去扯了一套最新的 <strong>SRM</strong> 来搞，全跑完之后才发现原来这场比赛还处于 <strong>System Running</strong> 阶段。于是知道了比赛一结束还在 <strong>Running</strong> 的时候你就已经可以自己拉出来做了。小绿名大家不要笑。</p>
 <!-- 我是小小分割符 -->
@@ -3769,7 +3844,7 @@ dp2[<span class="link_label">i</span>][<span class="link_reference">0|1</span>]
     <link href="http://xcoder.in/2013/08/16/node-4-base/"/>
     <id>http://xcoder.in/2013/08/16/node-4-base/</id>
     <published>2013-08-16T00:00:00.000Z</published>
-    <updated>2014-03-24T13:40:55.000Z</updated>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p><strong>Node.js</strong> 的基础是 <strong>JavaScript</strong> 这门 <strong><em>脚本语言</em></strong>。而大多数的脚本语言一个共同的特点就是“<a href="http://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1#.E5.BC.B7.E5.9E.8B.E5.88.A5.E5.92.8C.E5.BC.B1.E5.9E.8B.E5.88.A5" target="_blank">弱类型</a>”。</p>
 <p>　　不同于 <strong>PHP</strong> 的是，<strong>PHP</strong> 就是是有了新变量也无需申明，而 <strong>JavaScript</strong> 则还是需要 <code>var</code> 来申明一下的。而这个 <code>var</code> 涵盖了 <strong>C++</strong> 中的<code>int</code>、<code>string</code>、<code>char</code>等一切类型的含义，甚至是 <code>function</code>。</p>
 <p>　　本篇以及后篇的所有内容都是在 <strong>Linux</strong> 或者 <strong>Cygwin</strong> 下用 <strong>vim</strong> 进行编辑（若不是则请自行转变成你自己的方法），然后在命令行下进行查看结果的。</p>
@@ -4493,7 +4568,7 @@ console.<span class="keyword">log</span>(<span class="keyword">str</span>.sb());
     <link href="http://xcoder.in/2013/08/15/node-2-environment-in-windows/"/>
     <id>http://xcoder.in/2013/08/15/node-2-environment-in-windows/</id>
     <published>2013-08-15T00:00:00.000Z</published>
-    <updated>2014-03-24T13:43:21.000Z</updated>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>由于<a href="#linux-环境">Linux</a>中的环境搭建比较简单，所以草草略过。</p>
 <p>　　其实<a href="#windows-环境">Windows</a>下也不算麻烦，但是这里会讲一定量的别的环境的搭建。</p>
 <p><!-- 我是小小分割符 --></p>
@@ -4719,7 +4794,7 @@ $ wget http://blog-xcoder-<span class="keyword">in</span><span class="preprocess
     <link href="http://xcoder.in/2013/08/13/node-1-summary/"/>
     <id>http://xcoder.in/2013/08/13/node-1-summary/</id>
     <published>2013-08-13T00:00:00.000Z</published>
-    <updated>2014-03-24T13:40:41.000Z</updated>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>本系列教程主要是写给我带的那帮熊孩子们看的。我自己的 <strong>Node.js</strong> 水平半斤八两，措辞之中也免不了有自己错误的理解，会误人子弟。但是对于初学者来说，某些自己助记的理解还是可取的。有些概念性的错误可以等他们进一步深入研究之后再自行更正。</p>
 <p>　　由于那帮人大多还处于使用 <strong>M$ Windows</strong> 的令人不愉快的阶段，所以本教程将会退而求其次，使其在 <strong>Cygwin</strong> 中模拟 <strong>linux</strong> 的命令（Windows的bat脚本实在是让人不敢恭维）。以及在这里会讲述一些 <strong>Git</strong> 操作的初步。当然，如果你已经在使用 <strong>linux</strong> 进行开发的话，可以跳过前面一堆令人感到厌烦的环境配置章节。或者你在使用 <strong>M$ Windows</strong> 但却不想改变自己的脚本习惯的话，也可以选择性地跳过一些章节和步骤。</p>
 <p><!-- 我是小小分割符 --></p>
@@ -4840,8 +4915,8 @@ process.stdin.on(<span class="string">"data"</span>, <span class="function"><spa
     <title><![CDATA[关于JavaScript中callback函数的this指针重定义]]></title>
     <link href="http://xcoder.in/2013/07/15/javascript-callback-this-bind/"/>
     <id>http://xcoder.in/2013/07/15/javascript-callback-this-bind/</id>
-    <published>2013-07-15T05:20:29.000Z</published>
-    <updated>2014-04-11T04:19:06.000Z</updated>
+    <published>2013-07-15T06:20:29.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p>最近在写 <strong>NBUT Virtual Judge</strong> 的内核框架，用的又是 <strong>Node.JS</strong> 了，把它当作一个本地运行的脚本不断进行轮询。</p>
 <p>　　众所周知JS中的一个精髓就是异步回调。</p>
 <p>　　所以在我自己写的框架中也经常会出现类似于下面的代码：</p>
@@ -4883,8 +4958,8 @@ foo.bar(a, b, cb);
     <title><![CDATA[关于Node.js下的MongoDB阻塞模式实现]]></title>
     <link href="http://xcoder.in/2013/03/29/nodejs-mongodb-sync/"/>
     <id>http://xcoder.in/2013/03/29/nodejs-mongodb-sync/</id>
-    <published>2013-03-29T00:31:38.000Z</published>
-    <updated>2014-04-11T04:39:49.000Z</updated>
+    <published>2013-03-29T01:31:38.000Z</published>
+    <updated>2014-07-30T03:07:18.000Z</updated>
     <content type="html"><![CDATA[<p><strong><em>注：本文仅为我初学 Node.JS 的时候的稚嫩笔记。是从 <a href="http://web.archive.org/" target="_blank">http://web.archive.org/</a> 扒回来的。现在看来已无多大参考价值，各位可以略过。我只是把它扒回来纪念一下而已，以记录我的历程。而那个相对应的 <code>SevenzJS</code> 也已经被遗弃</em></strong></p>
 <h2 id="背景">背景</h2>
 <p>　　最近在做公司项目的一个模块，主要用于 <strong>JSON Api</strong> 的传输，所以开发环境的目标就锁定在了 <strong>Node.js</strong>。而这一块的登陆用户又是存在 <strong>MongoDB</strong> 里面的，所以就有了如下的问题。</p>
@@ -5002,53 +5077,6 @@ Fiber(<span class="function"><span class="keyword">function</span><span class="p
       <category term="Node.JS" scheme="http://xcoder.in/tags/Node.JS/"/>
     
       <category term="MongoDB" scheme="http://xcoder.in/tags/MongoDB/"/>
-    
-      <category term="老博客备份归档" scheme="http://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[关于jQuery中“animate()”函数对颜色变化的支持]]></title>
-    <link href="http://xcoder.in/2012/12/24/jquery-animate-color-support/"/>
-    <id>http://xcoder.in/2012/12/24/jquery-animate-color-support/</id>
-    <published>2012-12-24T00:20:16.000Z</published>
-    <updated>2014-04-11T04:37:09.000Z</updated>
-    <content type="html"><![CDATA[<p>最近在做一个汽车团购网的项目，由于老大力求简洁，所以界面做得有些小清新。不过得说一下页面不是我设计的，是一位美工同志。</p>
-<p>　　废话不多说，直接切入正题吧——</p>
-<p>　　我要做得就是让下面一段代码生效：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre>$(<span class="string">"#yourid"</span>).stop().animate({ <span class="string">"backgroundColor"</span> : <span class="string">"#rrggbb"</span>, <span class="string">"color"</span> : <span class="string">"#rrggbb"</span> }, <span class="string">"fast"</span>);
-</pre></td></tr></table></figure>
-
-<p>　　但是，很遗憾，一点也没有动。本来效果应该跟这个版本的xcoder博客的天头导航条一样有个动态效果（只不过xcoder的导航条是透明度变化，而项目中我想让它背景色变化）。</p>
-<p>　　原因是什么呢？死月上网查了很久，找到的东西都很简单地说明了一下，貌似都可以。嘛，也许是jQuery新版本不支持这个特性了吧。</p>
-<p>　　最后，死月在jQuery的官方文档中找到了下面这段话——</p>
-<blockquote>
-<p>All animated properties should be animated to <strong><em>a single numeric value</em></strong>, except as noted below; most properties that are non-numeric cannot be animated using basic jQuery functionality (For example, width, height, or left can be animated but background-color cannot be, unless the <a href="https://github.com/jquery/jquery-color" target="_blank">jQuery.Color()</a> plugin is used). Property values are treated as a number of pixels unless otherwise specified. The units em and % can be specified where applicable.</p>
-<p style="text-align: right">—— <a href="http://api.jquery.com/animate/" target="_blank">jQuery官方文檔 .animate()</a></p>
-
-</blockquote>
-<p>　　大致的意思就是说所有动画属性都必须是一个单数字值，所以说大多数非数字的属性是不能被动画化的。例如高度、宽度等可以被动画化，但是背景色就不信了。<span style="color: red;"><strong><em>除非你用了jQuery.Color()插件</em></strong></span>。</p>
-<p>　　所以说问题找到了，我们必须得用一个jQuery.Color()插件来对一些颜色进行动画操作。</p>
-<p>　　话不多说，我们去下一个jQuery.Color()插件。把它加在我们的页面中，然后就可以用如下方式来进行动画操作了：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
-2
-3
-4
-</pre></td><td class="code"><pre>$(<span class="keyword">this</span>).stop().animate({
-    <span class="string">"backgroundColor"</span> : jQuery.Color(<span class="string">"rrggbb"</span>),
-    <span class="string">"color"</span> : jQuery.Color(<span class="string">"rrggbb"</span>)
-}, <span class="string">"fast"</span>);
-</pre></td></tr></table></figure>
-
-]]></content>
-    
-    
-      <category term="老博客备份归档" scheme="http://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
-    
-      <category term="Javascript" scheme="http://xcoder.in/tags/Javascript/"/>
-    
-      <category term="jQuery" scheme="http://xcoder.in/tags/jQuery/"/>
     
       <category term="老博客备份归档" scheme="http://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
