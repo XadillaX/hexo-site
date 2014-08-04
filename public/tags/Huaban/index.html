@@ -15,7 +15,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Archives: 2012/9 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>Tag: Huaban | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -80,7 +80,7 @@
         
     $(function() {
         // page-id...
-        var pageId = "archives/2012/09/";
+        var pageId = "tags/Huaban/";
         pageId = pageId.substr(0, pageId.indexOf("/"));
         if(pageId === "") pageId = "index";
         
@@ -88,29 +88,32 @@
     });
     </script>
     
-
 <div class="container archive-body">
     <div class="row">
-        <div class="col-xs-2 well">
-            <h2 class="archive-icon">2012/9</h2>
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08">八月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07">七月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05">五月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04">四月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12">十二月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08">八月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07">七月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03">三月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12">十二月 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/09">九月 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07">七月 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10">十月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/09">九月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/06">六月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/05">五月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/04">四月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/11">十一月 2010</a><span class="archive-list-count">2</span></li></ul>
+        <div class="col-xs-3 well">
+            <div class="archive-title" >
+                <h2 class="tag-icon">Huaban</h2>
+                <div>
+                    <a href="/tags"><< 返回标签列表</a> 
+                </div>
+            </div>
         </div>
         
-        <div class="col-xs-10">
+        <div class="col-xs-9" id="tag-list-body">
             
             <article class="post">
                 <div class="jumbotron">
-                    <h1><a href="/2012/09/08/scope-lock/" title="线程安全——Scope Lock模式">线程安全——Scope Lock模式</a></h1>
+                    <h1><a href="/2014/08/04/storm-clojure-prepare-bolt/" title="Storm 中 Clojure 的 Prepare Bolt 实现">Storm 中 Clojure 的 Prepare Bolt 实现</a></h1>
 
                     
-                        <p>嘛，本文是建立在M$的Visual Studio基础上的，linux☭勿喷。
-　　我最先用到 ScopeLock 模式是在自己开发 XAE引擎 的时候。在里面用到挺多的线程函数，那么如何解决临界区就成了一个重要的课题。可能大家想，不就一个线程锁临界区什么的么，一个 EnterCr</p>
+                        <p>起因
+Storm 中的 Bolt 都是通过 Nimbus 这个服务将序列化好的 Bolt 断章取义地发到各个 worker 中。所以，任何在 bolt 之外你自认为加载期间初始化计算好的上下文环境并不会被打包上去，Java 我不懂也不知道，但是至少在 Clojure 这个类的概念</p>
                     
 
                     <p class="say-title">
                         —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
                         <a href="http://xcoder.in/" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-                        于2012年09月08日自豪地以 <a class="article-tag-link" href="/tags/C++/">C++</a>, <a class="article-tag-link" href="/tags/ScopeLock/">ScopeLock</a>, <a class="article-tag-link" href="/tags/线程安全/">线程安全</a>, <a class="article-tag-link" href="/tags/线程死锁/">线程死锁</a>, <a class="article-tag-link" href="/tags/老博客备份归档/">老博客备份归档</a> 唠嗑
+                        于2014年08月04日自豪地以 <a class="article-tag-link" href="/tags/Clojure/">Clojure</a>, <a class="article-tag-link" href="/tags/Huaban/">Huaban</a>, <a class="article-tag-link" href="/tags/Storm/">Storm</a> 唠嗑
                     </p>
                 </div>
             </article>
@@ -119,14 +122,10 @@
             
         </div>
     </div>
+        
+    <div class="col-xs-19 all-list-box">
+    </div>
 </div>
-
-<script>
-$(function() {
-    $(".archive-list-count").addClass("badge");
-});
-</script>
-
     <footer id="footer">
     <div id="bottom-tip">
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>

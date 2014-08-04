@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2014-07-30T09:22:20.457Z</updated>
+  <updated>2014-08-04T10:53:01.951Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -13,6 +13,86 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Storm 中 Clojure 的 Prepare Bolt 实现]]></title>
+    <link href="http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/"/>
+    <id>http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/</id>
+    <published>2014-08-04T03:50:21.000Z</published>
+    <updated>2014-08-04T10:52:44.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="起因">起因</h2>
+<p>Storm 中的 Bolt 都是通过 Nimbus 这个服务将序列化好的 Bolt 断章取义地发到各个 worker 中。所以，任何在 bolt 之外你自认为加载期间初始化计算好的上下文环境并不会被打包上去，Java 我不懂也不知道，但是至少在 Clojure 这个类的概念被淡化的 LIST 方言中，你要做的就是把所有跟 bolt 初始化计算相关的代码放到其 <code>prepare</code> 的代码当中去。</p>
+<p>你想一下，当你在文件加载的时候初始化了一个 MongoDB 链接，这个链接总不能被序列化到远程去吧？所以说办法就是把 bolt 搞上去之后，bolt 自动去初始化一个链接——这就是 <code>prepare</code> 的作用了。</p>
+<p>说白了，这个还是我们在 <strong><em>Suwako</em></strong> 当中踩到的坑。</p>
+<h2 id="做法">做法</h2>
+<p>大致的骨架如下：</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="list">(<span class="title">defbolt</span> bolt <span class="collection">[...]</span> <span class="collection">{<span class="attribute">:prepare</span> true}</span>
+ <span class="collection">[...]</span>
+ <span class="list">(<span class="title"><span class="built_in">let</span></span> <span class="collection">[...]</span>
+  <span class="list">(<span class="title">bolt</span>
+   <span class="list">(<span class="title">prepare</span> <span class="collection">[...]</span>
+    <span class="list">(<span class="title">...</span>)</span>)</span>
+   <span class="list">(<span class="title">execute</span> <span class="collection">[tuple]</span>
+    <span class="list">(<span class="title">...</span>)</span>)</span>)</span>)</span></span>
+</pre></td></tr></table></figure>
+
+<p>首先就是 <code>{:prepare true}</code> 代表了它是一个需要初始化的 Bolt。</p>
+<p>然后在 <code>(bolt)</code> 的作用域之内有两个 form——<code>prepare</code> 和 <code>execute</code>。</p>
+<p>其中 <code>prepare</code> 就是你要初始化的语句了。举个例子，我们让这里面初始化一个 <a href="http://clojuremongodb.info/" target="_blank">Monger</a>，于是我们要在 <code>let</code> 里面定义一个用于链接的 <code>atom {}</code>。</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="list">(<span class="title">defbolt</span> bolt <span class="collection">[<span class="string">"..."</span>]</span> <span class="collection">{<span class="attribute">:prepare</span> true}</span>
+ <span class="collection">[conf context collector]</span>
+ <span class="list">(<span class="title"><span class="built_in">let</span></span> <span class="collection">[conn <span class="list">(<span class="title"><span class="built_in">atom</span></span> <span class="collection">{}</span>)</span>
+       db <span class="list">(<span class="title"><span class="built_in">atom</span></span> <span class="collection">{}</span>)</span>]</span>
+   <span class="list">(<span class="title">bolt</span>
+    <span class="list">(<span class="title">prepare</span> <span class="collection">[conf context collector]</span>
+     <span class="list">(<span class="title"><span class="built_in">reset!</span></span> conn <span class="list">(<span class="title">mg/connect</span> ...)</span>)</span>
+     <span class="list">(<span class="title"><span class="built_in">reset!</span></span> db <span class="list">(<span class="title">mg/get-db</span> @conn ...)</span>)</span>)</span>
+    <span class="list">(<span class="title">execute</span> <span class="collection">[tuple]</span>
+     <span class="list">(<span class="title">...</span>)</span>)</span>)</span>)</span>)</span>
+</pre></td></tr></table></figure>
+
+<p>这样一来，当 Bolt 被 Nimbus 打包传到各个 worker 之后，Bolt 执行起来的时候会自动执行 <code>prepare</code> 当中的代码，即初始化 MongoDB 的链接，并且将其赋值给 <code>conn</code> 和 <code>db</code> 两个 atom。</p>
+<p>那么，我们就能在本体 <code>execute</code> 当中使用 <code>@conn</code> 和 <code>@db</code> 来使唤 MongoDB 了。</p>
+<h2 id="思考">思考</h2>
+<p>可能很多人不解，不是说尽量保持 LISP 语系当中值的不变性的么？</p>
+<p>其实不变性只是为了提高程序在运行时的效率——而事实上是，上面那段代码并没有在运行时去做变量。</p>
+<p>虽然说这么说有点牵强，但是的确就是这个意思——因为我们是在程序执行真正有用的好逻辑的时候没有去改变一些值，相反只是在 Bolt 启动的时候做一些变量的操作。</p>
+<p>换句话说，虽然严谨的讲那个时候是算运行时，但是在运行时里面我们却可以把它归类为预处理——这一类东西反正程序还没真正开始跑有用的东西，效率慢一点无所谓，而且就初始化这么屁大点事儿能有多少影响？</p>
+<p>效率和效果之间权衡上面的还是要仁者见仁智者见智了。</p>
+<h2 id="小结">小结</h2>
+<p>本以为 <code>Suwako</code> 终于可以暂时告一段落了，紧要关头居然还是阻塞了。</p>
+<p>说多都是泪，不说了，找 Bug 去了。</p>
+<p><img src="suwako.jpg" alt="泄矢诹访子"></p>
+]]></content>
+    
+    
+      <category term="Storm" scheme="http://xcoder.in/tags/Storm/"/>
+    
+      <category term="Clojure" scheme="http://xcoder.in/tags/Clojure/"/>
+    
+      <category term="Huaban" scheme="http://xcoder.in/tags/Huaban/"/>
+    
+      <category term="Programming" scheme="http://xcoder.in/categories/Programming/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[开发测试时给 Kafka 发消息的 UI 发送器——Mikasa]]></title>
@@ -4949,134 +5029,6 @@ foo.bar(a, b, cb);
       <category term="老博客备份归档" scheme="http://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
       <category term="Javascript" scheme="http://xcoder.in/tags/Javascript/"/>
-    
-      <category term="老博客备份归档" scheme="http://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[关于Node.js下的MongoDB阻塞模式实现]]></title>
-    <link href="http://xcoder.in/2013/03/29/nodejs-mongodb-sync/"/>
-    <id>http://xcoder.in/2013/03/29/nodejs-mongodb-sync/</id>
-    <published>2013-03-29T01:31:38.000Z</published>
-    <updated>2014-07-30T03:07:18.000Z</updated>
-    <content type="html"><![CDATA[<p><strong><em>注：本文仅为我初学 Node.JS 的时候的稚嫩笔记。是从 <a href="http://web.archive.org/" target="_blank">http://web.archive.org/</a> 扒回来的。现在看来已无多大参考价值，各位可以略过。我只是把它扒回来纪念一下而已，以记录我的历程。而那个相对应的 <code>SevenzJS</code> 也已经被遗弃</em></strong></p>
-<h2 id="背景">背景</h2>
-<p>　　最近在做公司项目的一个模块，主要用于 <strong>JSON Api</strong> 的传输，所以开发环境的目标就锁定在了 <strong>Node.js</strong>。而这一块的登陆用户又是存在 <strong>MongoDB</strong> 里面的，所以就有了如下的问题。</p>
-<ul>
-<li>网上的 Node.JS 框架都比较重型或者臃肿的，学了 Node 之后还需要学额外的东西。</li>
-<li>所以我就打算自己写一个专注于 JSON Api 的快速开发框架，于是有了 SevenJS。</li>
-<li>问题出现了，虽然 Node.JS 极度推崇异步非阻塞模式，但是阻塞模式在平常开发中还是太常用了。</li>
-</ul>
-<p>　　我们试想一下，如果我们有几句MongoDB的查询之类的，用node-mongodb-native来写的话是这样的：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-</pre></td><td class="code"><pre><span class="keyword">var</span> client = <span class="keyword">new</span> Db(<span class="string">'test'</span>, <span class="keyword">new</span> Server(<span class="string">"127.0.0.1"</span>, <span class="number">27017</span>, {}));
-<span class="keyword">var</span> test = <span class="function"><span class="keyword">function</span> <span class="params">(err, collection)</span> {</span>
-    collection.insert({a:<span class="number">2</span>}, <span class="function"><span class="keyword">function</span><span class="params">(err, docs)</span> {</span>
-        collection.count(<span class="function"><span class="keyword">function</span><span class="params">(err, count)</span> {</span>
-            test.assertEquals(<span class="number">1</span>, count); });
-
-            <span class="comment">// Locate all the entries using find</span>
-            collection.find().toArray(<span class="function"><span class="keyword">function</span><span class="params">(err, results)</span> {</span>
-            test.assertEquals(<span class="number">1</span>, results.length);
-            test.assertTrue(results[<span class="number">0</span>].a === <span class="number">2</span>);
-
-            <span class="comment">// Let's close the db</span>
-            client.close();
-        });
-    });
-};
-
-client.open(<span class="function"><span class="keyword">function</span><span class="params">(err, client)</span> {</span>
-    client.collection(<span class="string">'test_insert'</span>, test);
-});
-</pre></td></tr></table></figure>
-
-<p>　　各种嵌套回调有木有！这不是我们想要的，尤其是我的那个框架，因为我的框架是流式的。</p>
-<p>　　所以我就想有这样的一种方案：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre><span class="keyword">var</span> client = mongodb.connect();
-<span class="keyword">var</span> collection = mongodb.getCollection(client, <span class="string">"dbname"</span>);
-<span class="keyword">var</span> result = mongodb.find({ <span class="string">"foo"</span> : <span class="string">"bar"</span> });
-</pre></td></tr></table></figure>
-
-<p>　　使得这样就能找出dbname表下的foo为bar值的记录了。</p>
-<h2 id="正题">正题</h2>
-<p>　　出于这样的想法，我在网上找遍了大江南北，除了 CNode 社区有人问到了类似的问题以外，再也找不到音信了，而且那里也没有一个好的回答。</p>
-<p>　　不过这也正常，因为 Node.js 官方本身就不推荐这么做——他们认为异步非阻塞是非常优雅的一件事情。</p>
-<p>　　包括我在 Node.js 的 IRC 聊天室里面问了这个问题，也有人是这么回答我的：</p>
-<blockquote>
-<p>You can’t use a car as a boat. If you want a boat, use a boat.</p>
-</blockquote>
-<p>　　言简意赅，直截了当地说明 Node.js 是不支持这样的，如果你想这样做，就用 python 或者 ruby 去吧。</p>
-<p>　　不过好在后来 IRC 里面有人推荐了我一个模块：<a href="https://github.com/laverdet/node-fibers" target="_blank">fibers</a>。</p>
-<p>　　有了这个模块好啊，直接能用了有木有！</p>
-<p>　　接下来就来讲一下如何使用吧：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">find</span><span class="params">(collection, selector, callback)</span> {</span>
-    collection.find(selector).toArray(callback);
-}
-
-<span class="keyword">var</span> Fiber = <span class="built_in">require</span>(<span class="string">'fibers'</span>);
-<span class="keyword">var</span> Future = <span class="built_in">require</span>(<span class="string">'fibers/future'</span>);
-<span class="keyword">var</span> wait = Future.wait;
-
-Fiber(<span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
-    <span class="keyword">var</span> wrapper = Future.wrap(fund);
-
-    <span class="comment">/** 这里就是正题了，我们假设已经获取一个collection了 */</span>
-    <span class="keyword">var</span> result = wrapper(collection, { <span class="string">"foo"</span> : <span class="string">"bar"</span> }).wait();
-    console.log(<span class="built_in">JSON</span>.stringify(result));
-}).run();
-</pre></td></tr></table></figure>
-
-<p>　　这就是一个非常简单的同步查询 MongoDB 的例子了，实际上本质还是一个异步，注意到没有，其实 <code>Fiber()</code> 内部的那个 <code>function</code> 本质上还是一个回调函数，只不过在这个回调函数里面，里面的所有 <code>callback</code> 都可以被同步了。不过我们只需要小动一些手脚就能加上这个外壳了。具体请参见 <a href="https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/sevenz/sRouter.js" target="_blank">sRouter.js</a> 约 121 行的外壳以及 <a href="https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/sevenz/sMongoSync.js" target="_blank">sMongoSync.js</a> 的实现，加上 <a href="http://web.archive.org/web/20130726042859/https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/actions/index.js" target="_blank">index.js</a> 中的查询 demo。</p>
-<h2 id="结尾">结尾</h2>
-<p>　　所以说当我们做不到某件事的时候，多去IRC看看，多去社区混混，也多去找找模块，要真没有的话就只能自己丰衣足食了（我还没到那水平，笑）。总之这次Fibers帮了我一个大忙。</p>
-<p>　　最后，SevenzJS 欢迎 <a href="https://github.com/XadillaX/SevenzJS" target="_blank">Fork</a>。</p>
-]]></content>
-    
-    
-      <category term="老博客备份归档" scheme="http://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
-    
-      <category term="Node.JS" scheme="http://xcoder.in/tags/Node.JS/"/>
-    
-      <category term="MongoDB" scheme="http://xcoder.in/tags/MongoDB/"/>
     
       <category term="老博客备份归档" scheme="http://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
