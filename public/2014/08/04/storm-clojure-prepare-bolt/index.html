@@ -96,7 +96,7 @@ Storm 中的 Bolt 都是通过 Nimbus 这个服务将序列化好的 Bolt 断章
         
         <div class="time-info">
 发表于:<time datetime="2014-08-04T03:50:21.000Z" itemprop="datePublished">2014年08月04日</time>,
-更新于:<time datetime="2014-08-04T10:52:44.000Z" itemprop="dateModified">2014年08月04日</time>,
+更新于:<time datetime="2014-08-04T10:56:57.000Z" itemprop="dateModified">2014年08月04日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
@@ -130,9 +130,9 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
     <span class="list">(<span class="title">...</span>)</span>)</span>)</span>)</span></span>
 </pre></td></tr></table></figure>
 
-<p>首先就是 <code>{:prepare true}</code> 代表了它是一个需要初始化的 Bolt。</p>
-<p>然后在 <code>(bolt)</code> 的作用域之内有两个 form——<code>prepare</code> 和 <code>execute</code>。</p>
-<p>其中 <code>prepare</code> 就是你要初始化的语句了。举个例子，我们让这里面初始化一个 <a href="http://clojuremongodb.info/" target="_blank">Monger</a>，于是我们要在 <code>let</code> 里面定义一个用于链接的 <code>atom {}</code>。</p>
+<p>　　首先就是 <code>{:prepare true}</code> 代表了它是一个需要初始化的 Bolt。</p>
+<p>　　然后在 <code>(bolt)</code> 的作用域之内有两个 form——<code>prepare</code> 和 <code>execute</code>。</p>
+<p>　　其中 <code>prepare</code> 就是你要初始化的语句了。举个例子，我们让这里面初始化一个 <a href="http://clojuremongodb.info/" target="_blank">Monger</a>，于是我们要在 <code>let</code> 里面定义一个用于链接的 <code>atom {}</code>。</p>
 <figure class="highlight clojure"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -155,17 +155,17 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
      <span class="list">(<span class="title">...</span>)</span>)</span>)</span>)</span>)</span>
 </pre></td></tr></table></figure>
 
-<p>这样一来，当 Bolt 被 Nimbus 打包传到各个 worker 之后，Bolt 执行起来的时候会自动执行 <code>prepare</code> 当中的代码，即初始化 MongoDB 的链接，并且将其赋值给 <code>conn</code> 和 <code>db</code> 两个 atom。</p>
-<p>那么，我们就能在本体 <code>execute</code> 当中使用 <code>@conn</code> 和 <code>@db</code> 来使唤 MongoDB 了。</p>
+<p>　　这样一来，当 Bolt 被 Nimbus 打包传到各个 worker 之后，Bolt 执行起来的时候会自动执行 <code>prepare</code> 当中的代码，即初始化 MongoDB 的链接，并且将其赋值给 <code>conn</code> 和 <code>db</code> 两个 atom。</p>
+<p>　　那么，我们就能在本体 <code>execute</code> 当中使用 <code>@conn</code> 和 <code>@db</code> 来使唤 MongoDB 了。</p>
 <h2 id="思考">思考</h2>
-<p>可能很多人不解，不是说尽量保持 LISP 语系当中值的不变性的么？</p>
-<p>其实不变性只是为了提高程序在运行时的效率——而事实上是，上面那段代码并没有在运行时去做变量。</p>
-<p>虽然说这么说有点牵强，但是的确就是这个意思——因为我们是在程序执行真正有用的好逻辑的时候没有去改变一些值，相反只是在 Bolt 启动的时候做一些变量的操作。</p>
-<p>换句话说，虽然严谨的讲那个时候是算运行时，但是在运行时里面我们却可以把它归类为预处理——这一类东西反正程序还没真正开始跑有用的东西，效率慢一点无所谓，而且就初始化这么屁大点事儿能有多少影响？</p>
-<p>效率和效果之间权衡上面的还是要仁者见仁智者见智了。</p>
+<p>　　可能很多人不解，不是说尽量保持 LISP 语系当中值的不变性的么？</p>
+<p>　　其实不变性只是为了提高程序在运行时的效率——而事实上是，上面那段代码并没有在运行时去做变量。</p>
+<p>　　虽然说这么说有点牵强，但是的确就是这个意思——因为我们是在程序执行真正有用的好逻辑的时候没有去改变一些值，相反只是在 Bolt 启动的时候做一些变量的操作。</p>
+<p>　　换句话说，虽然严谨的讲那个时候是算运行时，但是在运行时里面我们却可以把它归类为预处理——这一类东西反正程序还没真正开始跑有用的东西，效率慢一点无所谓，而且就初始化这么屁大点事儿能有多少影响？</p>
+<p>　　效率和效果之间权衡上面的还是要仁者见仁智者见智了。</p>
 <h2 id="小结">小结</h2>
-<p>本以为 <code>Suwako</code> 终于可以暂时告一段落了，紧要关头居然还是阻塞了。</p>
-<p>说多都是泪，不说了，找 Bug 去了。</p>
+<p>　　本以为 <code>Suwako</code> 终于可以暂时告一段落了，紧要关头居然还是阻塞了。</p>
+<p>　　说多都是泪，不说了，找 Bug 去了。</p>
 <p><img src="suwako.jpg" alt="泄矢诹访子"></p>
 
             
