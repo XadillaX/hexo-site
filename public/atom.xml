@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2014-08-25T13:45:44.411Z</updated>
+  <updated>2014-09-01T13:27:54.371Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -13,6 +13,211 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[我是如何实现简单的随机中文名生成器的（Node 版）]]></title>
+    <link href="http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/"/>
+    <id>http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/</id>
+    <published>2014-09-01T12:36:33.000Z</published>
+    <updated>2014-09-01T13:26:07.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="序">序</h2>
+<p>最近闲着蛋疼实现了两个库。</p>
+<ul>
+<li>随机生成中文名字</li>
+<li>随机生成中文技能名</li>
+</ul>
+<p>我当然不会说去用各种人工智能去实现一个强大的的解析器然后生成，也不会说用一个非常庞大如搜狗拼音的姓名库来随机获取——我只是偶然间知道蘑菇街小侠节一个混战 PK 的 Demo 编写比赛，闲来无聊随便写写，然而这其中我需要随机给 Bot 起名以及技能起名而用到的库。</p>
+<p>不需要有多少正确性——这两个库的结果经常出现非常奇葩的名字，让人哭笑不得，但是我要的就是这种效果。</p>
+<h2 id="结果示范">结果示范</h2>
+<p>就两个库，我各生成一批名字以示效果。</p>
+<h3 id="Chinese_Random_Name">Chinese Random Name</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="code"><pre>阙造
+广锡一
+席寺
+扶驾
+郑萱黄
+林樊牵
+孟登元
+鱼彰
+皮忧暑
+左稗
+宦醇
+糜弋招
+席准
+方抑
+乌泔
+苗鲁
+孟候依
+龙珠饯
+洪打鹰
+缪负铎
+</pre></td></tr></table></figure>
+
+<h3 id="Chinese_Random_SKill">Chinese Random SKill</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="code"><pre>地永心法
+缨枪诀
+冉腿
+尼逻心法
+奠拳谱
+曲掌法
+始刺
+娘桶撷刀
+璋瑾单养刀
+銎刀
+励俭驿媛心诀
+瞻驰刀诀
+晏协骅腿
+示嫩帐羽刀诀
+赛勘神体刀诀
+铸爱指
+施净琮萍棍
+泊临惇枪诀
+我道六分枪
+残亭求拳谱
+</pre></td></tr></table></figure>
+
+<h2 id="解析">解析</h2>
+<p>实际上无论是起名还是技能名，都用了一个相同的起名字库和一段差不多的复用代码（虽然没有真正意义上的复用，只是复制粘贴而已，谁让他们是两个库呢，已经很简单了，我总不能再给他们搞一个依赖出来吧？）</p>
+<h3 id="起姓">起姓</h3>
+<p>关于 <code>chinese-random-name</code> 中的姓氏，我找了一个中国百家姓（包括复姓）比较全的词库。</p>
+<blockquote>
+<p><a href="https://github.com/XadillaX/chinese-random-name/blob/master/dict/f.dict" target="_blank">词库链接</a></p>
+</blockquote>
+<p>比较幸运，我找到的时候已经是这么分段分好了。我也没有详细做研究，随便给了不同的段不同的权值，当然越前面的段权值越高，被随机到的可能性越大。</p>
+<p>首先用 <code>split</code> 来分割不同段：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>dict = dict.split(<span class="string">"\n\n"</span>);
+</pre></td></tr></table></figure>
+
+<p>对于每一段来说通过 <code>Array.reduce</code> (详见 <a href="https://github.com/andrewplummer/Sugar/blob/master/lib/es5.js#L287" target="_blank">SugarJs</a>) 来分割成行再成字。</p>
+<p>看字典一共有 6 大段，每段的权值分别为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">const</span> weights = [ <span class="number">100</span>, <span class="number">70</span>, <span class="number">10</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">1</span> ];
+</pre></td></tr></table></figure>
+
+<p>然后每个字都有一个其权值区间，是累加上去的。</p>
+<p>最后获取姓的时候随机生成一个在总区间内的数字，然后看看数字在哪个姓的区间内，就返回这个姓。</p>
+<h3 id="技能后缀">技能后缀</h3>
+<p>关于 <code>chinese-random-skill</code> 中的技能后缀，我偷懒了。因为那个时候 Demo 就快 Deadline 了，所以随便糊弄了一下——直接把印象里面比较熟的后缀写上去了事，也不给权值了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="keyword">var</span> suffix = [
+    <span class="string">"剑"</span>, <span class="string">"剑法"</span>, <span class="string">"剑谱"</span>, <span class="string">"剑诀"</span>,
+    <span class="string">"枪"</span>, <span class="string">"枪法"</span>, <span class="string">"枪诀"</span>,
+    <span class="string">"拳"</span>, <span class="string">"拳法"</span>, <span class="string">"拳谱"</span>,
+    <span class="string">"刀"</span>, <span class="string">"刀法"</span>, <span class="string">"刀谱"</span>, <span class="string">"刀诀"</span>,
+    <span class="string">"斩"</span>, <span class="string">"刺"</span>, <span class="string">"大法"</span>, <span class="string">"心诀"</span>, <span class="string">"心法"</span>, <span class="string">"诀"</span>, <span class="string">"宝典"</span>,
+    <span class="string">"棍"</span>, <span class="string">"棍法"</span>, <span class="string">"棍谱"</span>, <span class="string">"棍诀"</span>,
+    <span class="string">"指"</span>, <span class="string">"掌"</span>, <span class="string">"掌法"</span>, <span class="string">"腿"</span>, <span class="string">"攻"</span>, <span class="string">"钩"</span>
+];
+</pre></td></tr></table></figure>
+
+<h3 id="共用部分">共用部分</h3>
+<p>名字主体为两个包的共用部分。</p>
+<p>实际上他们依赖于一个特定款式的字库——我也就网上随便那么一搜。</p>
+<blockquote>
+<p><a href="https://github.com/XadillaX/chinese-random-name/blob/master/dict/n.dict" target="_blank">字库链接</a></p>
+</blockquote>
+<p>它每一行的结构一样：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="built_in">Number</span> UniChar UniChar：<span class="built_in">String</span>
+</pre></td></tr></table></figure>
+
+<p>其中第一个数字我目测是繁体的笔画数，比如 899 行的 <code>书</code> 繁体就是 <code>書</code>，数一下的确是 10 划。</p>
+<p>第二个就是字本体，第三个是该字的五行属性，最后是这个字在什么什么命数（请不要迷信）描述。</p>
+<p>为了让名字看起来稍微正常点（只是稍微而已），我尽可能让同属性的字在一块儿，于是有了以下组合：</p>
+<ul>
+<li>金金</li>
+<li>木木</li>
+<li>水水</li>
+<li>火火</li>
+<li>土土</li>
+</ul>
+<p><a href="https://github.com/XadillaX/chinese-random-name/blob/master/lib/name.js#L41" target="_blank">这些字</a>凑在一起的权值为 100。</p>
+<p>然后隔一个属性的话是相克的，我不懂什么起名大法什么的，只是用膝盖想了下相克的属性不好起名吧（猜错了不要怨我），于是给了 20 的权值。</p>
+<p>至于隔壁属性，是相生吧？于是给了 50 权值。</p>
+<p>对于三个字的起名来说，也是用了类似的方法给权值，具体可以参考代码。</p>
+<p>总之就是根据其两两之间的五行关系来起名的，听起来还是有那么点道理的。</p>
+<p>哈哈，权当玩的，认真你就输了。</p>
+<h3 id="综合说明">综合说明</h3>
+<p>上面的分步做完了，然后真·生成名字的步骤是：</p>
+<p>随机生成一个姓（或者技能后缀），然后按照某个权值随机生成一个数字代表剩下的名字的长度，然后随机生成一串该长度的名字即可。</p>
+<p>最后拼接上去就 OK 了。</p>
+<h2 id="无节操小广告">无节操小广告</h2>
+<p>最后还是贴一下两个包的 repo 地址吧：</p>
+<blockquote>
+<ul>
+<li><a href="https://github.com/XadillaX/chinese-random-name" target="_blank">Chinese Random Name</a></li>
+<li><a href="https://github.com/XadillaX/chinese-random-skill" target="_blank">Chinese Random Skill</a></li>
+</ul>
+</blockquote>
+<p>以及安装的话照下去弄就好了</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>$ npm install chinese<span class="attribute">-random</span><span class="attribute">-name</span>
+$ npm install chinese<span class="attribute">-random</span><span class="attribute">-skill</span>
+</pre></td></tr></table></figure>
+
+<p><code>README</code> 文件两个包都有。</p>
+]]></content>
+    
+    
+      <category term="NodeJS" scheme="http://xcoder.in/tags/NodeJS/"/>
+    
+      <category term="中文名" scheme="http://xcoder.in/tags/%E4%B8%AD%E6%96%87%E5%90%8D/"/>
+    
+      <category term="中文技能" scheme="http://xcoder.in/tags/%E4%B8%AD%E6%96%87%E6%8A%80%E8%83%BD/"/>
+    
+      <category term="NodeJS" scheme="http://xcoder.in/categories/NodeJS/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Storm 中 Clojure 的 Prepare Bolt 实现]]></title>
@@ -4988,49 +5193,6 @@ process.stdin.on(<span class="string">"data"</span>, <span class="function"><spa
       <category term="一起撸Node.JS" scheme="http://xcoder.in/tags/%E4%B8%80%E8%B5%B7%E6%92%B8Node.JS/"/>
     
       <category term="NodeJS" scheme="http://xcoder.in/categories/NodeJS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[关于JavaScript中callback函数的this指针重定义]]></title>
-    <link href="http://xcoder.in/2013/07/15/javascript-callback-this-bind/"/>
-    <id>http://xcoder.in/2013/07/15/javascript-callback-this-bind/</id>
-    <published>2013-07-15T06:20:29.000Z</published>
-    <updated>2014-07-30T03:07:18.000Z</updated>
-    <content type="html"><![CDATA[<p>最近在写 <strong>NBUT Virtual Judge</strong> 的内核框架，用的又是 <strong>Node.JS</strong> 了，把它当作一个本地运行的脚本不断进行轮询。</p>
-<p>　　众所周知JS中的一个精髓就是异步回调。</p>
-<p>　　所以在我自己写的框架中也经常会出现类似于下面的代码：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre>foo.bar(a, b, <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>});
-</pre></td></tr></table></figure>
-
-<p>　　总而言之就是写一个函数，这个函数将会调用一个回调函数。</p>
-<p>　　但是问题出现了：在那个回调函数 <code>function</code> 中，你如果使用了一个 <code>this</code> 指针的话，它将会指向根，而不是 <code>foo</code> 的本体。</p>
-<p>　　那么如果我们想在 <code>function</code> 中也用 <code>this</code> 来指代这个 <code>foo</code> 对象该怎么办呢？</p>
-<p>　　结果还是IRC有用。本人跑 <strong>Node.JS</strong> 的 <strong>IRC</strong> 上问了这个问题，结果有人就这样回复我了：</p>
-<blockquote>
-<p>13:07 &lt;shama&gt; xadillax: foo(a, b callback.bind(foo))</p>
-<p>13:10 &lt;olalonde&gt; foo (a, b fn) { fn = fn.bind(this); …. }</p>
-</blockquote>
-<p>　　然后还很热心地给了我个网址：<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind" target="_blank">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind</a></p>
-<p>　　总之最后得出的结论就是说：</p>
-<p>　　你只要给你的 <code>callback</code> 函数指定一个 <code>this</code> 指针即可。</p>
-<p>　　如：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre><span class="keyword">var</span> cb = callback.bind(foo);
-foo.bar(a, b, cb);
-</pre></td></tr></table></figure>
-
-<p>　　这样就能在回调函数中使用foo来作为其this指针了。</p>
-]]></content>
-    
-    
-      <category term="老博客备份归档" scheme="http://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
-    
-      <category term="Javascript" scheme="http://xcoder.in/tags/Javascript/"/>
-    
-      <category term="老博客备份归档" scheme="http://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
   </entry>
   
