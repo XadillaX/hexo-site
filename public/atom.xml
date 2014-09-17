@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2014-09-01T13:27:54.371Z</updated>
+  <updated>2014-09-17T05:18:41.156Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -13,6 +13,474 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[图片主题色提取算法小结]]></title>
+    <link href="http://xcoder.in/2014/09/17/theme-color-extract/"/>
+    <id>http://xcoder.in/2014/09/17/theme-color-extract/</id>
+    <published>2014-09-17T03:34:54.000Z</published>
+    <updated>2014-09-17T05:17:35.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>所谓主题色提取，就是对于一张图片，近似地提取出一个调色板，使得调色板里面的颜色能组成这张图片的主色调。</p>
+</blockquote>
+<p>　　以上定义为我个人胡诌的。</p>
+<p>　　大家不要太把我的东西当成严谨的文章来看，很多东西什么的都是我用我自己的理解去做，并没有做多少考证。</p>
+<p>　　解析中都会以 Node.js 来写一些小 Demo。</p>
+<h2 id="引子">引子</h2>
+<p>　　写该文章主要是为了对我这几天对于『主题色提取』算法研究进行一个小结。</p>
+<p>　　花瓣网需要做一件事，就是把图片的主题色提取出来加入到花瓣网搜索引擎的索引当中，以供用户搜索。</p>
+<p>　　于是有了一个需求：提取出图片中在某个规定调色板中的颜色，加入到搜索引擎。</p>
+<p>　　接下去就开始解析两种不同的算法以及在这种业务场景当中的应用。</p>
+<h2 id="算法解析">算法解析</h2>
+<h3 id="魔法数字法"><del>魔法数字法</del></h3>
+<p>　　这个算法大家可以忽略，可能是我使用的姿势不对，总之提取出来（也许它根本就不是这么用的）的东西错误很大。</p>
+<p>　　不过看一下也好开阔下眼界，尤其是我这种想做游戏又不小心掉进互联网的坑里的蒟蒻来说。</p>
+<p>　　首先该算法我是从<a href="http://dev.gameres.com/Program/Visual/Other/256color.htm" target="_blank">这里</a>找到的。想当年我还是经常逛 <a href="http://www.gameres.com/" target="_blank">GameRes</a> 的。ヾ(;ﾟ;Д;ﾟ;)ﾉﾞ</p>
+<p>　　然后辗转反侧最终发现这段代码是提取自 <a href="https://github.com/liballeg/allegro5/blob/4.3/src/color.c#L268-L328" target="_blank">Allegro</a> 游戏引擎。</p>
+<p>　　具体我也就不讲了，毕竟找不到资料，只是粗粗瞄了眼代码里面有几个魔法数字（在游戏和算法领域魔法数字倒是非常常见的），也没时间深入解读这段代码。</p>
+<p>　　我把它翻译成了 Node.js，然后放在了 <a href="https://github.com/XadillaX/theme-color-test/blob/master/version1/magicnumber.js" target="_blank">Demo</a> 当中。大家有兴趣可以自己去看看。</p>
+<h3 id="八叉树提取法">八叉树提取法</h3>
+<p>　　这个算法在颜色量化中比较常见的。</p>
+<blockquote>
+<p>该算法最早见于 1988 年，<strong><em>M. Gervautz</em></strong> 和 <strong><em>W. Purgathofer</em></strong> 发表的论文<strong><em>《A Simple Method for Color Quantization: Octree Quantization》</em></strong>当中。其时间复杂度和空间复杂度都有很大的优势，并且保真度也是非常的高。</p>
+</blockquote>
+<p>　　大致的思路就是对于某一个像素点的颜色 <strong>R / G / B</strong> 分开来之后，用二进制逐行写下。</p>
+<p>　　如 <code>#FF7800</code>，其中 <strong>R</strong> 通道为 <code>0xFF</code>，也就是 <code>255</code>，<strong>G</strong> 为 <code>0x78</code> 也就是 <code>120</code>，<strong>B</strong> 为 <code>0x00</code> 也就是 <code>0</code>。</p>
+<p>　　接下去我们把它们写成二进制逐行放下，那么就是：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="attribute">R</span>: <span class="string">1111 1111</span>
+<span class="attribute">G</span>: <span class="string">0111 1000</span>
+<span class="attribute">B</span>: <span class="string">0000 0000</span>
+</pre></td></tr></table></figure>
+
+<p>　　<strong>RGB</strong> 通道逐列黏合之后的值就是其在某一层节点的子节点编号了。每一列一共是三位，那么取值范围就是 <code>0 ~ 7</code> 也就是一共有八种情况。这就是为什么这种算法要开八叉树来计算的原因了。</p>
+<p>　　举个例子，上述颜色的第一位黏合起来是 <code>100(2)</code>，转化为十进制就是 4，所以这个颜色在第一层是放在根节点的第五个子节点当中；第二位是 <code>110(2)</code> 也就是 6，那么它就是根节点的第五个儿子的第七个儿子。</p>
+<p>　　于是我们有了这样的一个节点结构：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="code"><pre><span class="keyword">var</span> OctreeNode = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.isLeaf = <span class="literal">false</span>;
+    <span class="keyword">this</span>.pixelCount = <span class="number">0</span>;
+    <span class="keyword">this</span>.red = <span class="number">0</span>;
+    <span class="keyword">this</span>.green = <span class="number">0</span>;
+    <span class="keyword">this</span>.blue = <span class="number">0</span>;
+
+    <span class="keyword">this</span>.children = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">8</span>);
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.children.length; i++) <span class="keyword">this</span>.children[i] = <span class="literal">null</span>;
+
+    <span class="comment">// 这里的 next 不是指兄弟链中的 next 指针</span>
+    <span class="comment">// 而是在 reducible 链表中的下一个节点</span>
+    <span class="keyword">this</span>.next = <span class="literal">null</span>;
+};
+</pre></td></tr></table></figure>
+
+<ul>
+<li><code>isLeaf</code>: 表明该节点是否为叶子节点。</li>
+<li><code>pixelCount</code>: 在该节点的颜色一共插入了几次。</li>
+<li><code>red</code>: 该节点 <strong>R</strong> 通道累加值。</li>
+<li><code>green</code>: <strong>G</strong> 累加值。</li>
+<li><code>blue</code>: <strong>B</strong> 累加值。</li>
+<li><code>children</code>: 八个子节点指针。</li>
+<li><code>next</code>: <strong><em>reducible</em></strong> 链表的下一个节点指针，后面会作详细解释，目前可以先忽略。</li>
+</ul>
+<h4 id="插入颜色">插入颜色</h4>
+<p>　　根据上面的理论，我们大致就知道了往八叉树插入一个像素点颜色的步骤了。</p>
+<p>　　就是每一位 <strong>RGB</strong> 通道黏合的值就是它在树的那一层的子节点的编号。</p>
+<p>　　大致可以看下图：</p>
+<p><img src="http://www.microsoft.com/msj/archive/wicked1.gif" alt="八叉树插入"><br><small>图片来源：<a href="http://www.microsoft.com/msj/archive/S3F1.aspx" target="_blank">http://www.microsoft.com/msj/archive/S3F1.aspx</a></small></p>
+<p>　　由此可以推断，在没有任何颜色合并的情况下，插入一种颜色最坏的情况下是进行 64 次检索。</p>
+<blockquote>
+<p><strong>注意：</strong>我们将会把该颜色的 RGB 分量分别累加到该节点的各分量值中，以便最终求平均数。</p>
+</blockquote>
+<p>　　大致的流程就是从根节点开始 DFS，如果到达的节点是叶子节点，那么分量、颜色总数累加；否则就根据层数和该颜色的第层数位颜色黏合值得到其子节点序号。若该子节点不存在就创建一个子节点并与该父节点关联，否则就直接搜下一层去。</p>
+<p>　　创建的时候根据层数来确定它是不是叶子节点，如果是的话需要标记一下，并且全局的叶子节点数要加一。</p>
+<p>　　还有一点需要注意的就是如果这个节点不是叶子节点，就将其丢到 <strong><em>reducible</em></strong> 相应层数的链表当中去，以供之后颜色合并的时候用。关于颜色合并的内容后面会进行解释。</p>
+<p>　　下面是创建节点的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">createNode</span><span class="params">(idx, level)</span> {</span>
+    <span class="keyword">var</span> node = <span class="keyword">new</span> OctreeNode();
+    <span class="keyword">if</span>(level === <span class="number">7</span>) {
+        node.isLeaf = <span class="literal">true</span>;
+        leafNum++;
+    } <span class="keyword">else</span> {
+        <span class="comment">// 将其丢到第 level 层的 reducible 链表中</span>
+        node.next = reducible[level];
+        reducible[level] = node;
+    }
+
+    <span class="keyword">return</span> node;
+}
+</pre></td></tr></table></figure>
+
+<p>　　以及下面是插入某种颜色的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">addColor</span><span class="params">(node, color, level)</span> {</span>
+    <span class="keyword">if</span>(node.isLeaf) {
+        node.pixelCount++;
+        node.red += color.r;
+        node.green += color.g;
+        node.blue += color.b;
+    } <span class="keyword">else</span> {
+        <span class="comment">// 由于 js 内部都是以浮点型存储数值，所以位运算并没有那么高效</span>
+        <span class="comment">// 在此使用直接转换字符串的方式提取某一位的值</span>
+        <span class="comment">//</span>
+        <span class="comment">// 实际上如果用位运算来做的话就是这样子的：</span>
+        <span class="comment">//   https://github.com/XadillaX/thmclrx/blob/7ab4de9fce583e88da6a41b0e256e91c45a10f67/src/octree.cpp#L91-L103</span>
+        <span class="keyword">var</span> str = <span class="string">""</span>;
+        <span class="keyword">var</span> r = color.r.toString(<span class="number">2</span>);
+        <span class="keyword">var</span> g = color.g.toString(<span class="number">2</span>);
+        <span class="keyword">var</span> b = color.b.toString(<span class="number">2</span>);
+        <span class="keyword">while</span>(r.length &lt; <span class="number">8</span>) r = <span class="string">'0'</span> + r;
+        <span class="keyword">while</span>(g.length &lt; <span class="number">8</span>) g = <span class="string">'0'</span> + g;
+        <span class="keyword">while</span>(b.length &lt; <span class="number">8</span>) b = <span class="string">'0'</span> + b;
+
+        str += r[level];
+        str += g[level];
+        str += b[level];
+        <span class="keyword">var</span> idx = <span class="built_in">parseInt</span>(str, <span class="number">2</span>);
+
+        <span class="keyword">if</span>(<span class="literal">null</span> === node.children[idx]) {
+            node.children[idx] = createNode(node, idx, level + <span class="number">1</span>);
+        }
+
+        <span class="keyword">if</span>(<span class="literal">undefined</span> === node.children[idx]) {
+            console.log(color.r.toString(<span class="number">2</span>));
+        }
+
+        addColor(node.children[idx], color, level + <span class="number">1</span>);
+    }
+}
+</pre></td></tr></table></figure>
+
+<h4 id="合并颜色">合并颜色</h4>
+<p>　　这一步就是八叉树的空间复杂度低和保真度高的另一个原因了。</p>
+<blockquote>
+<p>勿忘初心。</p>
+</blockquote>
+<p>　　我们用这个算法做的是颜色量化，或者说我要拿它提取主题色、调色板，所以肯定是提取几个有代表性的颜色就够了，否则茫茫世界中 <strong>RRGGBB</strong> 一共有 419430400 种颜色，怎么归纳？</p>
+<p>　　我们可以让指定一棵八叉树不超过多少多少叶子节点（也就是最后能归纳出来的主题色数），比如 8，比如 16、64 或者 256 等等。</p>
+<p>　　所以当叶子节点数超过我们规定的叶子节点数的时候，我们就要合并其中一个节点，将其所有子节点的数据都合并到它身上去。</p>
+<p>　　举个例子，我们有一个节点有八个子节点，并且都是叶子节点，那么我们把八个叶子节点的通道分量全累加到该节点中，颜色总数也累加到该节点中，然后删除八个叶子节点并把该节点设置为叶子节点。那么一下子我们就合并了八个节点有木有！</p>
+<p>　　为什么这些节点可以被合并呢？</p>
+<p>　　我们来看看某个节点下的子节点颜色都有神马相似点吧——它们的三个分量前七位（或者说如果已经不是最底层的节点的话那就是前几位）是相同的，那么比如说刚才的 <code>FF7800</code>，跟它同级并且拥有相同父节点（也就是它的兄弟节点）的颜色都是什么呢：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="attribute">R</span>: <span class="string">1111 111(0,1)</span>
+<span class="attribute">G</span>: <span class="string">0111 100(0,1)</span>
+<span class="attribute">B</span>: <span class="string">0000 000(0,1)</span>
+</pre></td></tr></table></figure>
+
+<p>　　整合出来一看：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre>FE7800
+FE7801
+FE7900
+FE7901
+FF7800
+FF7801
+FF7900
+FF7901
+</pre></td></tr></table></figure>
+
+<p>　　怎么样？是不是确实很相近？这就是八叉树的精髓了，所有的兄弟节点肯定是在一个相近的颜色范围内。</p>
+<p>　　所以说我们要合并就先去最底层的 <strong><em>reducible</em></strong> 链表中寻找一个可以合并的节点，把它从链表中删除之后合并叶子节点并且删除其叶子节点就好了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">reduceTree</span><span class="params">()</span> {</span>
+    <span class="comment">// 找到最深层次的并且有可合并节点的链表</span>
+    <span class="keyword">var</span> lv = <span class="number">6</span>;
+    <span class="keyword">while</span>(<span class="literal">null</span> === reducible[lv]) lv--;
+
+    <span class="comment">// 取出链表头并将其从链表中移除</span>
+    <span class="keyword">var</span> node = reducible[lv];
+    reducible[lv] = node.next;
+
+    <span class="comment">// 合并子节点</span>
+    <span class="keyword">var</span> r = <span class="number">0</span>;
+    <span class="keyword">var</span> g = <span class="number">0</span>;
+    <span class="keyword">var</span> b = <span class="number">0</span>;
+    <span class="keyword">var</span> count = <span class="number">0</span>;
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++) {
+        <span class="keyword">if</span>(<span class="literal">null</span> === node.children[i]) <span class="keyword">continue</span>;
+        r += node.children[i].red;
+        g += node.children[i].green;
+        b += node.children[i].blue;
+        count += node.children[i].pixelCount;
+        leafNum--;
+    }
+
+    <span class="comment">// 赋值</span>
+    node.isLeaf = <span class="literal">true</span>;
+    node.red = r;
+    node.green = g;
+    node.blue = b;
+    node.pixelCount = count;
+    leafNum++;
+}
+</pre></td></tr></table></figure>
+
+<p>　　这样一来，就合并了一个最深层次的节点了，如果满打满算的话，一次合并最多会烧掉 7 个节点（我大 FFF 团壮哉）。</p>
+<h4 id="建树">建树</h4>
+<p>　　上面的函数都有了，我们可以开始建树了。</p>
+<p>　　实际上建树的过程就是遍历一遍传入的像素颜色信息，对于每个颜色都插入到八叉树当中；并且每一次插入之后都判断下叶子节点数有没有溢出，如果满出来的话需要及时合并。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">buildOctree</span><span class="params">(pixels, maxColors)</span> {</span>
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; pixels.length; i++) {
+        <span class="comment">// 添加颜色</span>
+        addColor(root, pixels[i], <span class="number">0</span>);
+
+        <span class="comment">// 合并叶子节点</span>
+        <span class="keyword">while</span>(leafNum &gt; maxColors) reduceTree();
+    }
+}
+</pre></td></tr></table></figure>
+
+<p>　　整棵树建好之后，我们应该得到了最多有 <code>maxColors</code> 个叶子节点的高保真八叉树。其根节点为 <code>root</code>。</p>
+<h4 id="主题色提取">主题色提取</h4>
+<p>　　有了这么一棵八叉树之后我们就可以从里面提取我们想要的东西了。</p>
+<p>　　主题色提取实际上就是把八叉树当中剩下的叶子节点 <strong><em>RGB</em></strong> 通道分量求平均，求出来的就是近似的主题色了。（也许有更好的，不是求平均的方法能获得更好的主题色结果，但是我没有深入去研究，欢迎大家一起来指正 (❀╹◡╹)）</p>
+<p>　　于是我们深度遍历这棵树，每遇到叶子节点，就求出颜色加入到我们所存结果的数组或者任意数据结构当中了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">colorsStats</span><span class="params">(node, object)</span> {</span>
+    <span class="keyword">if</span>(node.isLeaf) {
+        <span class="keyword">var</span> r = <span class="built_in">parseInt</span>(node.red / node.pixelCount).toString(<span class="number">16</span>);
+        <span class="keyword">var</span> g = <span class="built_in">parseInt</span>(node.green / node.pixelCount).toString(<span class="number">16</span>);
+        <span class="keyword">var</span> b = <span class="built_in">parseInt</span>(node.blue / node.pixelCount).toString(<span class="number">16</span>);
+        <span class="keyword">if</span>(r.length === <span class="number">1</span>) r = <span class="string">'0'</span> + r;
+        <span class="keyword">if</span>(g.length === <span class="number">1</span>) g = <span class="string">'0'</span> + g;
+        <span class="keyword">if</span>(b.length === <span class="number">1</span>) b = <span class="string">'0'</span> + b;
+
+        <span class="keyword">var</span> color = r + g + b;
+        <span class="keyword">if</span>(object[color]) object[color] += node.pixelCount;
+        <span class="keyword">else</span> object[color] = node.pixelCount;
+        
+        <span class="keyword">return</span>;
+    }
+
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++) {
+        <span class="keyword">if</span>(<span class="literal">null</span> !== node.children[i]) {
+            colorsStats(node.children[i], object);
+        }
+    }
+}
+</pre></td></tr></table></figure>
+
+<h4 id="算法小结">算法小结</h4>
+<p>　　八叉树主题色提取算法提取出来的主题色是一个无固定调色板（Non-palette）的颜色群，它有着对原图的尽量保真性，但是由于没有固定的调色板，有时候对于搜索或者某种需要固定值来解释的场景中还是欠了点火候。但是活灵活现非它莫属了。比如某种图片格式里面预先存调色板然后存各像素的情况下，我们就可以用八叉树提取出来的颜色作为该图片调色板，能很大程度上对这张图片进行保真，并且图片颜色也减到一定的量。</p>
+<p>　　该算法的完整 Demo 大家可以在我的 <a href="https://github.com/XadillaX/theme-color-test/blob/master/version3/octree.js" target="_blank">Github</a> 当中找到。</p>
+<h3 id="最小差值法">最小差值法</h3>
+<p>　　这是一个非常简单又实用的算法。</p>
+<p>　　大致的思想就是给定一个调色板，过来一个颜色就跟调色板中的颜色一一对比，取最小差值的那个调色板里的颜色作为这个颜色的代表。</p>
+<p>　　对比的过程就是分别将 <strong>R / G / B</strong> 通道的值两两相减取绝对值，将三个差相加，得到的这个值就是颜色差值了。</p>
+<p>　　反正最后就是调色板中哪个颜色跟对比的颜色差值最小，就拿过来就是了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre></td><td class="code"><pre><span class="keyword">var</span> best = <span class="number">0</span>;
+<span class="keyword">var</span> bestv = pal[<span class="number">0</span>];
+<span class="keyword">var</span> bestr = <span class="built_in">Math</span>.abs(r - bestv.r) + <span class="built_in">Math</span>.abs(g - bestv.g) + <span class="built_in">Math</span>.abs(b - bestv.b);
+
+<span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">1</span>; j &lt; pal.length; j++) {
+    <span class="keyword">var</span> p = pal[j];
+    <span class="keyword">var</span> res = <span class="built_in">Math</span>.abs(r - p.r) + <span class="built_in">Math</span>.abs(g - p.g) + <span class="built_in">Math</span>.abs(b - p.b);
+    <span class="keyword">if</span>(res &lt; bestr) {
+        best = j;
+        bestv = pal[j];
+        bestr = res;
+    }
+}
+
+r = pal[best].r.toString(<span class="number">16</span>);
+g = pal[best].g.toString(<span class="number">16</span>);
+b = pal[best].b.toString(<span class="number">16</span>);
+
+<span class="keyword">if</span>(r.length === <span class="number">1</span>) r = <span class="string">"0"</span> + r;
+<span class="keyword">if</span>(g.length === <span class="number">1</span>) g = <span class="string">"0"</span> + g;
+<span class="keyword">if</span>(b.length === <span class="number">1</span>) b = <span class="string">"0"</span> + b;
+
+<span class="keyword">if</span>(colors[r + g + b] === <span class="literal">undefined</span>) colors[r + g + b] = -<span class="number">1</span>;
+colors[r + g + b]++;
+</pre></td></tr></table></figure>
+
+<h2 id="我是怎么做的">我是怎么做的</h2>
+<p>　　八叉树的缺点我在之前的八叉树小结中提到过了，就是颜色不固定。对于需要有一定固定值范围的主题色提取需求来说不是那么合人意。</p>
+<p>　　而最小差值法的话又太古板了。</p>
+<p>　　于是我的做法是将这两种算法都过一遍。</p>
+<p>　　比如我要将一张图片提取出少于 256 种颜色，我会用八叉树过滤一遍得出保证的两百多种颜色，然后拿着这批颜色和其数量再扔到最小插值法里面将颜色规范化一遍，得出的最终结果可能就是我想要的结果了。</p>
+<p>　　这期间第二步的效率可以忽略不计，毕竟如果是上面的需求的话第一步的结果也就那么两百多种颜色。</p>
+<p>　　这个方法我已经实现并且用在我自己的颜色提取包 <strong><em><a href="https://github.com/XadillaX/thmclrx" target="_blank">thmclrx</a></em></strong> 里了。大致的代码可以看<a href="https://github.com/XadillaX/thmclrx/blob/7ab4de9fce583e88da6a41b0e256e91c45a10f67/lib/x.js#L95-L145" target="_blank">这里</a>。</p>
+<h2 id="主题色提取_Node-js_包——thmclrx">主题色提取 Node.js 包——thmclrx</h2>
+<p>　　在这几天的辛勤劳作下，总算完成了某种意义上我的第一个 Node.js C++ Addon。</p>
+<p>　　跟算法相关（八叉树、最小差值）的计算全放在了 <a href="https://github.com/XadillaX/thmclrx/tree/master/src" target="_blank">C++ 层</a>进行计算。大家有兴趣的可以去读一下并且帮忙指出各种各样的缺点，算是抛砖引玉了。</p>
+<p>　　这个包的 Repo 在 Github 上面：</p>
+<blockquote>
+<p><a href="https://github.com/XadillaX/thmclrx" target="_blank">https://github.com/XadillaX/thmclrx</a></p>
+</blockquote>
+<p>　　文档自认为还算完整吧。并且也可以通过</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$ </span>npm install thmclrx
+</pre></td></tr></table></figure>
+
+<p>　　进行安装。</p>
+<h2 id="本文小结">本文小结</h2>
+<p>　　进花瓣两个月了，这一次终于如愿以偿地碰触到了一点点的『算法相关』的活。（我不会告诉你这不是我的任务，是我从别人手中抢来的 2333333 <em>ଘ(੭</em>ˊᵕˋ)੭* ੈ✩‧₊˚</p>
+<p>　　总之几种算法和实现在上方介绍了，具体需要怎么用还是要看大家自己了。我反正大致找到了我使用的途径，那你们呢。( ´･･)ﾉ(._.`)</p>
+]]></content>
+    
+    
+      <category term="Algorithm" scheme="http://xcoder.in/tags/Algorithm/"/>
+    
+      <category term="Theme Color" scheme="http://xcoder.in/tags/Theme%20Color/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[我是如何实现简单的随机中文名生成器的（Node 版）]]></title>
@@ -5060,128 +5528,6 @@ $ wget http://blog-xcoder-<span class="keyword">in</span><span class="preprocess
 
 
 <p>终于，<strong>真·Hello world</strong> 出现在了你的眼前，而不需要借助 <strong><a href="http://ideone.com/" target="_blank">IDEOne</a></strong> 了。</p>
-<p><strong><em>To be continued…</em></strong></p>
-]]></content>
-    
-    
-      <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
-    
-      <category term="JavaScript" scheme="http://xcoder.in/tags/JavaScript/"/>
-    
-      <category term="一起撸Node.JS" scheme="http://xcoder.in/tags/%E4%B8%80%E8%B5%B7%E6%92%B8Node.JS/"/>
-    
-      <category term="NodeJS" scheme="http://xcoder.in/categories/NodeJS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[一起撸Node.JS（负叁）——概述]]></title>
-    <link href="http://xcoder.in/2013/08/13/node-1-summary/"/>
-    <id>http://xcoder.in/2013/08/13/node-1-summary/</id>
-    <published>2013-08-13T00:00:00.000Z</published>
-    <updated>2014-07-30T03:07:18.000Z</updated>
-    <content type="html"><![CDATA[<p>本系列教程主要是写给我带的那帮熊孩子们看的。我自己的 <strong>Node.js</strong> 水平半斤八两，措辞之中也免不了有自己错误的理解，会误人子弟。但是对于初学者来说，某些自己助记的理解还是可取的。有些概念性的错误可以等他们进一步深入研究之后再自行更正。</p>
-<p>　　由于那帮人大多还处于使用 <strong>M$ Windows</strong> 的令人不愉快的阶段，所以本教程将会退而求其次，使其在 <strong>Cygwin</strong> 中模拟 <strong>linux</strong> 的命令（Windows的bat脚本实在是让人不敢恭维）。以及在这里会讲述一些 <strong>Git</strong> 操作的初步。当然，如果你已经在使用 <strong>linux</strong> 进行开发的话，可以跳过前面一堆令人感到厌烦的环境配置章节。或者你在使用 <strong>M$ Windows</strong> 但却不想改变自己的脚本习惯的话，也可以选择性地跳过一些章节和步骤。</p>
-<p><!-- 我是小小分割符 --></p>
-<h2 id="Node-JS是什么？">Node.JS是什么？</h2>
-<p>很多人都知道JS是一门语言，而且是一门脚本语言，其全称就是 <strong>JavaScript</strong>，而且与所谓的 <strong>Java</strong> 没有一个屁的关系。</p>
-<h3 id="前端_JavaScript">前端 JavaScript</h3>
-<p>在好多年前，<strong>JavaScript</strong> 是网页的一个寄生虫，它必须依赖于网页的浏览器中才能执行，并且作为网页的一部分，以</p>
-<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript">
-<span class="comment">//blahblah...</span>
-</span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
-</pre></td></tr></table></figure>
-
-
-<p>标签进行包含，这样才能提供其上下文环境。或者说将其单独写入一个 <code>*.js</code> 文件中，并且在网页里以</p>
-<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"foo/bar.js"</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
-</pre></td></tr></table></figure>
-
-
-<p>的形式将其包含进来。</p>
-<p>但总而言之，<strong>JavaScript</strong> 只是寄生在网页里面的一只小小可怜虫罢了。它的作用无非就是使网页的交互性更强，页面效果更多而已。</p>
-<p>后来，这帮不甘寂寞的人类将 <strong>JavaScript</strong> 从网页（或者说前端）的帝国中独立了出来（小心快递），于是就出现了 <strong>CommonJS</strong>。</p>
-<h3 id="CommonJS">CommonJS</h3>
-<p><strong>CommonJS</strong> 其实不是一门新的语言，甚至都不能说它是一个新的解释器——实际上它只是一个概念或者是一个规范。</p>
-<p>在这个规范中，它定义了很多 <strong>API</strong> ，讲通俗点或者直截了当点就是函数啊类啊什么的，而这些 <strong>API</strong> 是为那些普通应用程序（Native App）而非浏览器应用使用。它的终极目标就是提供一个类似于 <strong>Python</strong>、<strong>Ruby</strong> 之类的脚本一样的标准库，开发者可以用这样的东西一样来做到 <strong>Python</strong>、<strong>Ruby</strong> 能做到的事，而非仅仅局限于网页中的效果或者功能实现，它也可以跑在本地。</p>
-<p>所以说下面的事情对于 <strong>JavaScript</strong> 来说不再是梦：</p>
-<ul>
-<li>服务端JavaScript应用</li>
-<li>命令行工具</li>
-<li>图形界面应用</li>
-<li>混合应用（Titanium、Adobe AIR等）</li>
-</ul>
-<p>那么，它具体弥补了 <strong>前端JavaScript</strong> 的哪些空白呢？其实这也涉及了很多 <strong>前端JavaScript</strong> 所没有涉及的东西，如二进制、编码、IO、文件、系统、断言测试、套接字、事件队列、Worker、控制台等等。</p>
-<p>关于 <strong>CommonJS</strong> 的更进一步了解可以翻阅一下其 <strong><a href="http://wiki.commonjs.org/wiki/CommonJS" target="_blank">Wiki</a></strong>。</p>
-<h3 id="Node-JS">Node.JS</h3>
-<p>上面讲了那么多，却始终停留在“规范”这个层面上。而 <strong>Node.JS</strong> 的出现便是让 <strong>CommonJS</strong> 成为了现实。</p>
-<p>这里要大家明确的一点的就是 <strong>Node.JS</strong> 并不是一门新的语言，它的语言还是 <strong>JavaScript</strong> ，硬要说是一门新的语言那也应该是 <strong>Common JavaScript</strong>。<strong>Node.JS</strong> 只是 <strong>CommonJS</strong> 的一个<a href="http://zh.wikipedia.org/wiki/%E8%A7%A3%E9%87%8A%E5%99%A8" target="_blank">解释器</a>罢了。</p>
-<p>它是基于 <strong>Google</strong> 的 <strong>V8虚拟机</strong>(Chrome浏览器所使用的JavaScript执行环境) 的一个解释器。</p>
-<p>很多人印象中的概念还是没能摆脱 <strong>前端JavaScript</strong> 的阴霾，认为 <strong>JavaScript</strong> 就是做网站的， <strong>Node.JS</strong> 也是如此。</p>
-<p>包括本人在 <strong><a href="http://cnodejs.org/" target="_blank">cnodejs.org</a></strong> 中看到的帖子大多也都是讲 <strong>Node.JS</strong> 如何如何做网站（服务端）云云，如何如何使用 <strong>Express</strong> 模块来搭建一个网站云云。</p>
-<blockquote>
-<p>这是一个误区。</p>
-</blockquote>
-<p><strong>PHP</strong> 还能用 <strong><a href="http://www.php-cli.com/" target="_blank">PHP-CLI</a></strong> 来写个脚本放本地跑呢，<strong>Node.JS</strong> 更是可以写任何程序。虽然这么讲有些夸大了，但是我这么说的理由是希望大家能摆脱这么一个误区。</p>
-<p>举个简单的例子吧，大家都是搞过 <strong>ACM</strong> 的孩子了，总对终端窗口的输入输出有一定感觉了吧。现在给我以最快速度码一个 <strong><em><a href="http://acm.nbut.edu.cn/problem/view.xhtml?id=1000" target="_blank">A + B Problem</a></em></strong> 给我看看。</p>
-<p>轻车熟路，我知道。但是你们现在做的事用 <strong>Node.JS</strong> 同样能做到。</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-</pre></td><td class="code"><pre>process.stdin.resume();
-process.stdin.setEncoding(<span class="string">"utf8"</span>);
-process.stdin.on(<span class="string">"data"</span>, <span class="function"><span class="keyword">function</span><span class="params">(chunk)</span> {</span>
-    <span class="keyword">var</span> datas = chunk.trim().split(<span class="string">"\n"</span>);
-    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; datas.length; i++) {
-        <span class="keyword">var</span> ab = datas[i].trim().split(<span class="string">" "</span>);
-        <span class="keyword">var</span> a = <span class="built_in">parseInt</span>(ab[<span class="number">0</span>]);
-        <span class="keyword">var</span> b = <span class="built_in">parseInt</span>(ab[<span class="number">1</span>]);
-        console.log(a + b);
-    }
-});
-</pre></td></tr></table></figure>
-
-
-<p>由于<del>我们学校</del>我的前任学校OJ不支持 <strong>Node.JS</strong>，所以请你们移步到 <strong><a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1000" target="_blank">AIZU OJ</a></strong> 去把上面的代码交过去看看结果看。</p>
-<blockquote>
-<p><strong>注意</strong>：语言要选择 <strong>JavaScript</strong>。</p>
-</blockquote>
-<p>怎么样，同样能过题的对吧？</p>
-<h2 id="小结">小结</h2>
-<p>上面对这些东西做了个简单的介绍，我需要你们知道的东西很简单：</p>
-<ol>
-<li><strong>Node.JS</strong> 是一个脚本解释器，用的语言是 <strong>JavaScript</strong>。</li>
-<li><strong>Node.JS</strong> 功能很强大，不是只能拿来做网站的，眼光放开阔些。</li>
-<li>给我好好学。</li>
-</ol>
-<h2 id="番外">番外</h2>
-<blockquote>
-<p>有个码畜老了，想学学书法来修身养性。当他展开宣纸，犹豫了半天之后，终于挥毫泼墨，在纸上龙飞凤舞写下几个大字：</p>
-<blockquote>
-<p><strong><em>Hello World</em></strong></p>
-</blockquote>
-</blockquote>
-<p>虽然这一篇文章没有讲到任何 <strong>Node.JS</strong> 的语法，但是还是可以让你们练练书法的。</p>
-<p><strong>C语言</strong> 的标准输出函数是 <code>printf</code>，而 <strong>Node.JS</strong> 的标准输出则是：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre>console.<span class="keyword">log</span>(<span class="string">"blahblah..."</span>);
-</pre></td></tr></table></figure>
-
-
-<p>好的，即使没有装上 <strong>Node.JS</strong> 环境也阻止不了我们向世界问好。</p>
-<p>打开 <strong><a href="http://ideone.com/" target="_blank">IDEOne</a></strong>，将你的 <code>Hello World</code> 贴到编辑框中，然后在左侧的语言栏里面选中 <strong>Node.JS</strong> ，点击送出，你就能看到你的第一个 <strong>Node.JS</strong> 程序的运行结果了。</p>
 <p><strong><em>To be continued…</em></strong></p>
 ]]></content>
     
