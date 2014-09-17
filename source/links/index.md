@@ -16,6 +16,7 @@ title       : 链接
 ## Node.js
 
 + [伊凡](http://77.yt/)
++ [大王](http://huangj.in/)
 + [老 JJ 的博客](http://bg.biedalian.com/)
 + [原来是悟空](http://www.robanlee.com)
 
