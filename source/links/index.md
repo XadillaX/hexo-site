@@ -37,3 +37,4 @@ title       : 链接
 
 + [没想好干嘛(http://letme.repair/)](http://letme.repair/)
 + [没想好干嘛(http://youare.ws/)](http://youare.ws/)
++ [没想好干嘛(http://2333.moe/)](http://2333.moe/)
