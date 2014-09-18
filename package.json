@@ -3,6 +3,10 @@
   "version": "2.5.6",
   "private": true,
   "dependencies": {
-    "hexo-generator-feed": "^0.1.0"
+    "hexo-generator-feed": "^0.1.0",
+    "walk": "~2.3.3",
+    "async": "~0.9.0",
+    "scarlet-task": "~0.1.0",
+    "sync-runner": "~0.0.5"
   }
 }

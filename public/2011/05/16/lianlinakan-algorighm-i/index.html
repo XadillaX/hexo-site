@@ -6,10 +6,10 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="注：这篇文章我到现在也没有填第二篇的坑。数据没了重新从 Capture 里面取出来，看看舍不得，于是把这篇文章也拿回来了。权当纪念吧，以及当时和 Kalxd 的对话。
+    <meta name="description" content="注：這篇文章我到現在也沒有填第二篇的坑。數據沒了重新從 Capture 裏面取出來，看看捨不得，於是把這篇文章也拿回來了。權當紀唸吧，以及當時和 Kalxd 的對話。
 正文
-　　刚忙完邀请赛，蹭了块铜。刚才在逛别人博客的时候看别人的文章，突然心血来潮想记一些东西。
-　　连连看是我学HGE做的第一个小">
+　　剛忙完邀請賽，蹭了塊銅。剛纔在逛別人博客的時候看別人的文章，突然心血來潮想記一些東西。
+　　連連看是我學HGE做的第一個小">
     
     
 
@@ -20,7 +20,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>连连看核心算法小分享——1 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>連連看核心算法小分享——1 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -94,33 +94,33 @@
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>连连看核心算法小分享——1</h1>
+        <h1>連連看核心算法小分享——1</h1>
         
         <div class="time-info">
 发表于:<time datetime="2011-05-16T04:30:12.000Z" itemprop="datePublished">2011年05月16日</time>,
-更新于:<time datetime="2014-07-30T03:07:18.000Z" itemprop="dateModified">2014年07月30日</time>,
+更新于:<time datetime="2014-09-18T09:15:27.000Z" itemprop="dateModified">2014年09月18日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
             <div id="toc" class="toc-article well">
                 <strong class="toc-title">大纲</strong>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#正文"><span class="toc-number">1.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#回忆时间"><span class="toc-number">2.</span> <span class="toc-text">回忆时间</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#正文"><span class="toc-number">1.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#回憶時間"><span class="toc-number">2.</span> <span class="toc-text">回憶時間</span></a></li></ol>
             </div>
             
-            <p><strong>注：这篇文章我到现在也没有填第二篇的坑。数据没了重新从 Capture 里面取出来，看看舍不得，于是把这篇文章也拿回来了。权当纪念吧，以及当时和 <code>Kalxd</code> 的对话。</strong></p>
+            <p><strong>注：這篇文章我到現在也沒有填第二篇的坑。數據沒了重新從 Capture 裏面取出來，看看捨不得，於是把這篇文章也拿回來了。權當紀唸吧，以及當時和 <code>Kalxd</code> 的對話。</strong></p>
 <h2 id="正文">正文</h2>
-<p>　　刚忙完邀请赛，蹭了块铜。刚才在逛别人博客的时候看别人的文章，突然心血来潮想记一些东西。</p>
-<p>　　连连看是我学HGE做的第一个小游戏，素材用的是QQ的。时间大概是去年国庆吧。好吧，废话不多说，就讲讲连连看怎么找到能消的两块吧。</p>
-<p>　　首先来回顾一下消方块的规则，一共有三种可能性：</p>
+<p>　　剛忙完邀請賽，蹭了塊銅。剛纔在逛別人博客的時候看別人的文章，突然心血來潮想記一些東西。</p>
+<p>　　連連看是我學HGE做的第一個小遊戲，素材用的是QQ的。時間大概是去年國慶吧。好吧，廢話不多說，就講講連連看怎麼找到能消的兩塊吧。</p>
+<p>　　首先來回顧一下消方塊的規則，一共有三種可能性：</p>
 <ol>
-<li>直线消除（包括水平或者垂直）</li>
-<li>一个拐角消除</li>
-<li>两个拐角消除</li>
+<li>直線消除（包括水平或者垂直）</li>
+<li>一個拐角消除</li>
+<li>兩個拐角消除</li>
 </ol>
-<p>　　嗯，接下去我们就针对每种可能性开始写代码。</p>
-<p>　　首先讲讲一些定义：</p>
-<p>　　坐标结构体，这个结构体包含了x、y的值以及一些坐标中常用的函数。</p>
+<p>　　嗯，接下去我們就針對每種可能性開始寫代碼。</p>
+<p>　　首先講講一些定義：</p>
+<p>　　座標結構體，這個結構體包含了x、y的值以及一些座標中常用的函數。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -198,18 +198,18 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 75
 76
 </pre></td><td class="code"><pre><span class="comment">/**
- * @brief 地图坐标结构体
+ * @brief 地圖座標結構體
  *
- * 地图坐标结构体，包含x轴值、y轴值
- * 以及一些操作函数。
+ * 地圖座標結構體，包含x軸值、y軸值
+ * 以及一些操作函數。
  */</span>
 <span class="keyword">struct</span> CoorType {
-    <span class="keyword">int</span> x;                                          <span class="comment">///&lt; x轴</span>
-    <span class="keyword">int</span> y;                                          <span class="comment">///&lt; y轴</span>
+    <span class="keyword">int</span> x;                                          <span class="comment">///&lt; x軸</span>
+    <span class="keyword">int</span> y;                                          <span class="comment">///&lt; y軸</span>
 
     <span class="comment">/**
-     * 重载构造函数
-     * 将x、y值各初始化为-1
+     * 重載構造函數
+     * 將x、y值各初始化爲-1
      */</span>
     CoorType()
     {
@@ -217,10 +217,10 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
     }
 
     <span class="comment">/**
-     * 构造函数重载
-     * 将x、y各赋值为b、a
-     * @param a 将要赋值的y轴数值
-     * @param b 将要赋值的x轴数值
+     * 構造函數重載
+     * 將x、y各賦值爲b、a
+     * @param a 將要賦值的y軸數值
+     * @param b 將要賦值的x軸數值
      */</span>
     CoorType(<span class="keyword">int</span> a, <span class="keyword">int</span> b)
     {
@@ -228,10 +228,10 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
     }
 
     <span class="comment">/**
-     * 设置坐标
-     * 将x、y各赋值为b、a
-     * @param a 将要赋值的y轴数值
-     * @param b 将要赋值的x轴数值
+     * 設置座標
+     * 將x、y各賦值爲b、a
+     * @param a 將要賦值的y軸數值
+     * @param b 將要賦值的x軸數值
      */</span>
     <span class="keyword">void</span> Set(<span class="keyword">int</span> a, <span class="keyword">int</span> b)
     {
@@ -239,10 +239,10 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
     }
 
     <span class="comment">/**
-     * 运算符"+="重载
-     * 将此坐标与另一坐标相加
-     * @param &a 另一坐标
-     * @return 返回结果坐标值
+     * 運算符"+="重載
+     * 將此座標與另一座標相加
+     * @param &a 另一座標
+     * @return 返回結果座標值
      */</span>
     CoorType & <span class="keyword">operator</span> += (<span class="keyword">const</span> CoorType &a)
     {
@@ -251,10 +251,10 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
     }
 
     <span class="comment">/**
-     * 重载运算符"!="
-     * 判断与另一坐标是否表示同一个值
-     * @param &a 另一坐标
-     * @return 返回布尔类型表示是否相等
+     * 重載運算符"!="
+     * 判斷與另一座標是否表示同一個值
+     * @param &a 另一座標
+     * @return 返回布爾類型表示是否相等
      */</span>
     <span class="keyword">bool</span> <span class="keyword">operator</span> != (<span class="keyword">const</span> CoorType &a)
     {
@@ -263,9 +263,9 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
     }
 
     <span class="comment">/**
-     * 判断此坐标是否合法
-     * 若出界则不合法
-     * @return 返回布尔类型表示是否合法
+     * 判斷此座標是否合法
+     * 若出界則不合法
+     * @return 返回布爾類型表示是否合法
      */</span>
     <span class="keyword">bool</span> isIll()
     {
@@ -275,12 +275,12 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 };
 </pre></td></tr></table></figure>
 
-<p>　　然后是关于地图数组的定义：</p>
+<p>　　然後是關於地圖數組的定義：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre><span class="keyword">int</span> Map[MAP_HEIGHT][MAP_WIDTH];
 </pre></td></tr></table></figure>
 
-<p>　　接着是路径结构体：</p>
+<p>　　接着是路徑結構體：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -293,21 +293,21 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 10
 11
 </pre></td><td class="code"><pre><span class="comment">/**
- * @brief 路线结构体
+ * @brief 路線結構體
  *
- * 合法路线结构体
- * 储存最多四个点（起点终点和两个转折点）
+ * 合法路線結構體
+ * 儲存最多四個點（起點終點和兩個轉折點）
  */</span>
 <span class="keyword">struct</span> PointPath {
-    <span class="keyword">bool</span> bExist;                                    <span class="comment">///&lt; 是否有路径</span>
-    <span class="keyword">int</span> Num;                                        <span class="comment">///&lt; 驻点个数</span>
-    CoorType Points[<span class="number">4</span>];                             <span class="comment">///&lt; 各驻点</span>
+    <span class="keyword">bool</span> bExist;                                    <span class="comment">///&lt; 是否有路徑</span>
+    <span class="keyword">int</span> Num;                                        <span class="comment">///&lt; 駐點個數</span>
+    CoorType Points[<span class="number">4</span>];                             <span class="comment">///&lt; 各駐點</span>
 };
 </pre></td></tr></table></figure>
 
-<p>　　接着可以正式开始了。首先我们来想一下，哪些条件各符合上面三种情况的哪一种。对于一条直线的，显然是x相等或者y相等；对于有一个转折点的话，我们只需要判断起点横向画线（或者纵向），然后终点纵向画线（或者横向），然后从起点到交点以及从交点到终点各可行不；对于两个转折点，其中一个转折点的x或者y跟起点的x或者y相等，另一个转折点跟终点的x或者y相等。于是这两个转折点就根据这样的性质进行枚举。因为连连看的地图比较小，所以这种O(n^2)的时间复杂度不碍事。</p>
-<p>　　为了方便，我们写一个 <code>Abled(CoorType, CoorType, bool, bool);</code> 函数来进行判断两个点（当然两点是在同一直线上的）是否有同路（即中间没有东西挡着）。我们先放着这个Abled不管，先实现寻路过程吧。</p>
-<p>　　我是用一个CMapSearch类来实现的，声明如下：</p>
+<p>　　接着可以正式開始了。首先我們來想一下，哪些條件各符合上面三種情況的哪一種。對於一條直線的，顯然是x相等或者y相等；對於有一個轉折點的話，我們只需要判斷起點橫向畫線（或者縱向），然後終點縱向畫線（或者橫向），然後從起點到交點以及從交點到終點各可行不；對於兩個轉折點，其中一個轉折點的x或者y跟起點的x或者y相等，另一個轉折點跟終點的x或者y相等。於是這兩個轉折點就根據這樣的性質進行枚舉。因爲連連看的地圖比較小，所以這種O(n^2)的時間複雜度不礙事。</p>
+<p>　　爲了方便，我們寫一個 <code>Abled(CoorType, CoorType, bool, bool);</code> 函數來進行判斷兩個點（當然兩點是在同一直線上的）是否有同路（即中間沒有東西擋着）。我們先放着這個Abled不管，先實現尋路過程吧。</p>
+<p>　　我是用一個CMapSearch類來實現的，聲明如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -406,113 +406,113 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 96
 97
 </pre></td><td class="code"><pre><span class="comment">/**
- * @brief 地图搜索类
+ * @brief 地圖搜索類
  *
- * 根据指定地图搜索出各合法路径。
+ * 根據指定地圖搜索出各合法路徑。
  */</span>
 <span class="keyword">class</span> CMapSearch
 {
 <span class="keyword">private</span>:
-    <span class="keyword">int</span> Map[MAP_HEIGHT][MAP_WIDTH];                                             <span class="comment">///&lt; 地图数据矩阵</span>
-    PointPath dis[MAP_HEIGHT][MAP_WIDTH][MAP_HEIGHT][MAP_WIDTH];                <span class="comment">///&lt; 路径数组</span>
+    <span class="keyword">int</span> Map[MAP_HEIGHT][MAP_WIDTH];                                             <span class="comment">///&lt; 地圖數據矩陣</span>
+    PointPath dis[MAP_HEIGHT][MAP_WIDTH][MAP_HEIGHT][MAP_WIDTH];                <span class="comment">///&lt; 路徑數組</span>
     STLMap grap;                                                                <span class="comment">///&lt; STL映射</span>
-    CoorType dir[<span class="number">4</span>];                                                            <span class="comment">///&lt; 常量坐标增量</span>
-    PointPath Hint;                                                             <span class="comment">///&lt; 提示时用的合法路径</span>
+    CoorType dir[<span class="number">4</span>];                                                            <span class="comment">///&lt; 常量座標增量</span>
+    PointPath Hint;                                                             <span class="comment">///&lt; 提示時用的合法路徑</span>
 
     <span class="comment">/**
-     * @brief 两点寻径
+     * @brief 兩點尋徑
      *
-     * 对(x1, y1)和(x2, y2)进行寻径
-     * @param x1 第一个坐标的x轴
-     * @param y1 第一个坐标的y轴
-     * @param x2 第二个坐标的x轴
-     * @param y2 第二个坐标的y轴
-     * @return 返回一个路线结构体的值，若不存在路径，则结构体的bExist为假
+     * 對(x1, y1)和(x2, y2)進行尋徑
+     * @param x1 第一個座標的x軸
+     * @param y1 第一個座標的y軸
+     * @param x2 第二個座標的x軸
+     * @param y2 第二個座標的y軸
+     * @return 返回一個路線結構體的值，若不存在路徑，則結構體的bExist爲假
      * @see Abled
      */</span>
     PointPath DoSearch(<span class="keyword">int</span> y1, <span class="keyword">int</span> x1, <span class="keyword">int</span> y2, <span class="keyword">int</span> x2);
 
 <span class="keyword">public</span>:
     <span class="comment">/**
-     * @brief 构造函数
+     * @brief 構造函數
      *
-     * @param _Map[][Map_Width] 地图矩阵
+     * @param _Map[][Map_Width] 地圖矩陣
      */</span>
     CMapSearch(<span class="keyword">int</span> _Map[][MAP_WIDTH]);
 
     <span class="comment">/**
-     * @brief 析构函数
+     * @brief 析構函數
      */</span>
     ~CMapSearch(<span class="keyword">void</span>);
 
     <span class="comment">/**
-     * @brief 载入地图
-     * 从矩阵中载入地图到对象
+     * @brief 載入地圖
+     * 從矩陣中載入地圖到對象
      *
-     * @param _Map[][Map_Width] 地图矩阵
+     * @param _Map[][Map_Width] 地圖矩陣
      */</span>
     <span class="keyword">void</span> LoadMap(<span class="keyword">int</span> _Map[][MAP_WIDTH]);
 
     <span class="comment">/**
-     * @brief 搜索地图
-     * 对整个地图进行搜索每两个相同方块之间的路径
+     * @brief 搜索地圖
+     * 對整個地圖進行搜索每兩個相同方塊之間的路徑
      *
-     * @return 如果存在至少一条路径则返回真，否则为假，用于是否重列
+     * @return 如果存在至少一條路徑則返回真，否則爲假，用於是否重列
      * @see CreateSTLMap
      * @see DoSearch
      */</span>
     <span class="keyword">bool</span> Search();
 
     <span class="comment">/**
-     * @brief 创建map映射
-     * 创建一个方块ID的映射，对每个ID创建一条的该ID的方块在地图中的各坐标的链表
+     * @brief 創建map映射
+     * 創建一個方塊ID的映射，對每個ID創建一條的該ID的方塊在地圖中的各座標的鏈表
      */</span>
     <span class="keyword">void</span> CreateSTLMap();
 
     <span class="comment">/**
-     * @brief 判断是否有障碍
-     * 对于a、b两坐标（在同一直线）进行判断期间是否有方块障碍而导致不能连线
+     * @brief 判斷是否有障礙
+     * 對於a、b兩座標（在同一直線）進行判斷期間是否有方塊障礙而導致不能連線
      *
-     * @param a 坐标a（头坐标）
-     * @param b 坐标b（尾坐标）
-     * @param head 若包括头坐标则为true，否则为false
-     * @param tail 若包括尾坐标则为true，否则为false
-     * @return 若有障碍则返回false，否则为true
+     * @param a 座標a（頭座標）
+     * @param b 座標b（尾座標）
+     * @param head 若包括頭座標則爲true，否則爲false
+     * @param tail 若包括尾座標則爲true，否則爲false
+     * @return 若有障礙則返回false，否則爲true
      */</span>
     <span class="keyword">bool</span> Abled(CoorType a, CoorType b, <span class="keyword">bool</span> head = <span class="keyword">false</span>, <span class="keyword">bool</span> tail = <span class="keyword">false</span>);
 
     <span class="comment">/**
-     * @brief 得到路径
-     * 得到两个坐标的连线具体路径
+     * @brief 得到路徑
+     * 得到兩個座標的連線具體路徑
      *
-     * @param y1 第一个坐标的y轴
-     * @param x1 第一个坐标的x轴
-     * @param y2 第二个坐标的y轴
-     * @param x2 第二个坐标的x轴
-     * @return 返回一个路线结构体，表示该两个坐标直接的路线
+     * @param y1 第一個座標的y軸
+     * @param x1 第一個座標的x軸
+     * @param y2 第二個座標的y軸
+     * @param x2 第二個座標的x軸
+     * @return 返回一個路線結構體，表示該兩個座標直接的路線
      */</span>
     PointPath GetPath(<span class="keyword">int</span> y1, <span class="keyword">int</span> x1, <span class="keyword">int</span> y2, <span class="keyword">int</span> x2);
 
     <span class="comment">/**
-     * @brief 得到提示路径
-     * 得到一条提示的路径的相应两个方块
+     * @brief 得到提示路徑
+     * 得到一條提示的路徑的相應兩個方塊
      *
-     * @param &a 接受第一个方块ID的变量
-     * @param &b 接受第二个方块ID的变量
+     * @param &a 接受第一個方塊ID的變量
+     * @param &b 接受第二個方塊ID的變量
      */</span>
     <span class="keyword">void</span> GetRandomHint(<span class="keyword">int</span> &a, <span class="keyword">int</span> &b);
 };
 </pre></td></tr></table></figure>
 
-<p>　　然后我这个分享里所讲的算法就是DoSearch和Abled函数了，因为其它函数就是用于“提示”道具的。在DoSearch中我们先定义两个临时变量，一个是返回值（一个PointPath），四个坐标变量：</p>
+<p>　　然後我這個分享裏所講的算法就是DoSearch和Abled函數了，因爲其它函數就是用於“提示”道具的。在DoSearch中我們先定義兩個臨時變量，一個是返回值（一個PointPath），四個座標變量：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
 </pre></td><td class="code"><pre>PointPath ans;
 CoorType a(y1, x1), b(y2, x2), c, d;
 </pre></td></tr></table></figure>
 
-<p>　　其中a、b表示起点和终点，c、d表示可能用到的两个转折点。</p>
-<p>　　首先我们先来判断直线情况吧，这种情况比较简单：</p>
+<p>　　其中a、b表示起點和終點，c、d表示可能用到的兩個轉折點。</p>
+<p>　　首先我們先來判斷直線情況吧，這種情況比較簡單：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -524,7 +524,7 @@ CoorType a(y1, x1), b(y2, x2), c, d;
 9
 10
 11
-</pre></td><td class="code"><pre><span class="comment">//如果是直线</span>
+</pre></td><td class="code"><pre><span class="comment">//如果是直線</span>
 <span class="keyword">if</span>(a.x == b.x || a.y == b.y)
 {
     <span class="keyword">if</span>(Abled(a, b, <span class="keyword">true</span>, <span class="keyword">true</span>))
@@ -537,12 +537,12 @@ CoorType a(y1, x1), b(y2, x2), c, d;
 }
 </pre></td></tr></table></figure>
 
-<p>　　对于这种情况，我们只需直接判断a、b直接有没有通路就好，如果有通路我们就将结果记录到ans中并返回即可。</p>
-<p>　　而有一个转折点、两个转折点的情况以及Abled函数将在下一篇文章中小分享一下。</p>
-<h2 id="回忆时间">回忆时间</h2>
-<p>　　然后下面就是在这篇文章里面我跟 <code>Kalxd</code> 的对话了，想想现在真是沧海桑田啊。</p>
-<p>　　CSS 样式早已经不在了，截图里面是一篇白板</p>
-<p><img src="comment.png" alt="评论回忆"></p>
+<p>　　對於這種情況，我們只需直接判斷a、b直接有沒有通路就好，如果有通路我們就將結果記錄到ans中並返回即可。</p>
+<p>　　而有一個轉折點、兩個轉折點的情況以及Abled函數將在下一篇文章中小分享一下。</p>
+<h2 id="回憶時間">回憶時間</h2>
+<p>　　然後下面就是在這篇文章裏面我跟 <code>Kalxd</code> 的對話了，想想現在真是滄海桑田啊。</p>
+<p>　　CSS 樣式早已經不在了，截圖裏面是一篇白板</p>
+<p><img src="comment.png" alt="評論回憶"></p>
 
             
             <section class="comment">

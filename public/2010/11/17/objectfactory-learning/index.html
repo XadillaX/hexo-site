@@ -6,11 +6,11 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="对象工厂，顾名思义，就是产生对象的一个“工厂”。根据传入的一个参数而产生相应的不同种类的对象。
-　　用于批量生成同一个父类的不同子类的对象时用到。
-　　本学习笔记基于Singleton（单件模式）基础上进行扩展。
-　　看《C++单件模式：Singleton学习笔记》请点击链接。
-　　对于工厂模式，网">
+    <meta name="description" content="對象工廠，顧名思義，就是產生對象的一個“工廠”。根據傳入的一個參數而產生相應的不同種類的對象。
+　　用於批量生成同一個父類的不同子類的對象時用到。
+　　本學習筆記基於Singleton（單件模式）基礎上進行擴展。
+　　看《C++單件模式：Singleton學習筆記》請點擊鏈接。
+　　對於工廠模式，網">
     
     
 
@@ -21,7 +21,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>C++对象工厂模式：ObjectFactory学习笔记 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>C++對象工廠模式：ObjectFactory學習筆記 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -95,11 +95,11 @@
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>C++对象工厂模式：ObjectFactory学习笔记</h1>
+        <h1>C++對象工廠模式：ObjectFactory學習筆記</h1>
         
         <div class="time-info">
 发表于:<time datetime="2010-11-17T07:49:45.000Z" itemprop="datePublished">2010年11月17日</time>,
-更新于:<time datetime="2014-07-30T03:07:18.000Z" itemprop="dateModified">2014年07月30日</time>,
+更新于:<time datetime="2014-09-18T09:15:32.000Z" itemprop="dateModified">2014年09月18日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
@@ -109,12 +109,12 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
                 
             </div>
             
-            <p>对象工厂，顾名思义，就是产生对象的一个“工厂”。根据传入的一个参数而产生相应的不同种类的对象。</p>
-<p>　　用于批量生成同一个父类的不同子类的对象时用到。</p>
-<p>　　本学习笔记基于Singleton（单件模式）基础上进行扩展。</p>
-<p>　　看《C++单件模式：Singleton学习笔记》请点击<a href="/2010/11/13/singleton-learning/">链接</a>。</p>
-<p>　　对于工厂模式，网上有很多不同的实现方法。我这里是一个HGE的RPG Demo中所用的，这段代码本身写的非常的好，开始好些语句没看懂，虽然就这么几句话。花了一点时间去研究了其代码，并自己重新实现了一遍，加上了通俗易懂的注释。</p>
-<p>　　工厂类以模板形式实现，基于Singleton：</p>
+            <p>對象工廠，顧名思義，就是產生對象的一個“工廠”。根據傳入的一個參數而產生相應的不同種類的對象。</p>
+<p>　　用於批量生成同一個父類的不同子類的對象時用到。</p>
+<p>　　本學習筆記基於Singleton（單件模式）基礎上進行擴展。</p>
+<p>　　看《C++單件模式：Singleton學習筆記》請點擊<a href="/2010/11/13/singleton-learning/">鏈接</a>。</p>
+<p>　　對於工廠模式，網上有很多不同的實現方法。我這裏是一個HGE的RPG Demo中所用的，這段代碼本身寫的非常的好，開始好些語句沒看懂，雖然就這麼幾句話。花了一點時間去研究了其代碼，並自己重新實現了一遍，加上了通俗易懂的註釋。</p>
+<p>　　工廠類以模板形式實現，基於Singleton：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -190,7 +190,7 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 73
 74
 </pre></td><td class="code"><pre><span class="comment">/**--------------------------------
- * 对象工厂模式(Object Factory)
+ * 對象工廠模式(Object Factory)
  *
  * Code by XadillaX
  * http://www.xcoder.in
@@ -201,36 +201,36 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 <span class="preprocessor">#pragma once</span>
 <span class="preprocessor">#include &lt;map&gt;</span>
 <span class="preprocessor">#include &lt;string&gt;</span>
-<span class="preprocessor">#include "../单件模式/Singleton.h"</span>
+<span class="preprocessor">#include "../單件模式/Singleton.h"</span>
 
 <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;
 <span class="keyword">class</span> ObjectFactory : <span class="keyword">public</span> Singleton&lt;ObjectFactory&lt;T&gt;&gt;
 {
 <span class="keyword">public</span>:
-    <span class="keyword">typedef</span> T* (*tCreator)();                               <span class="comment">///&lt; 重定义对象生成函数指针</span>
-    <span class="keyword">typedef</span> <span class="built_in">std</span>::<span class="stl_container"><span class="built_in">map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, tCreator&gt;</span> tCreatorMap;    <span class="comment">///&lt; 对象生成函数指针map</span>
+    <span class="keyword">typedef</span> T* (*tCreator)();                               <span class="comment">///&lt; 重定義對象生成函數指針</span>
+    <span class="keyword">typedef</span> <span class="built_in">std</span>::<span class="stl_container"><span class="built_in">map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, tCreator&gt;</span> tCreatorMap;    <span class="comment">///&lt; 對象生成函數指針map</span>
 
     <span class="comment">/**
-     * @brief 注册新“生产车间”
-     * 将生成对象的函数加入对象工厂
+     * @brief 註冊新“生產車間”
+     * 將生成對象的函數加入對象工廠
      *
-     * @param *name 类名称
-     * @param procedure “生产”对象的函数
-     * @return 是否成功注册
+     * @param *name 類名稱
+     * @param procedure “生產”對象的函數
+     * @return 是否成功註冊
      */</span>
     <span class="keyword">bool</span> Register(<span class="keyword">char</span> *type, tCreator procedure);
 
     <span class="comment">/**
-     * @brief 找到“生产车间”
-     * 根据传入的类名返回相应的新对象的生成函数
+     * @brief 找到“生產車間”
+     * 根據傳入的類名返回相應的新對象的生成函數
      *
-     * @param &type 类名
-     * @return 相应的新对象的生成函数
+     * @param &type 類名
+     * @return 相應的新對象的生成函數
      */</span>
     T* Create(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &type);
 
 <span class="keyword">private</span>:
-    <span class="comment">/** “生产车间”映射 */</span>
+    <span class="comment">/** “生產車間”映射 */</span>
     tCreatorMap _map;
 };
 
@@ -238,7 +238,7 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 <span class="keyword">bool</span> ObjectFactory&lt;T&gt;::Register(<span class="keyword">char</span> *type, tCreator procedure)
 {
     <span class="built_in">string</span> tmp(type);
-    <span class="comment">/** 将新函数加入map中 */</span>
+    <span class="comment">/** 將新函數加入map中 */</span>
     _map[tmp] = procedure;
     <span class="keyword">return</span> _map[tmp];
 }
@@ -246,16 +246,16 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;
 T* ObjectFactory&lt;T&gt;::Create(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &type)
 {
-    <span class="comment">/** 在映射中找到相应“生产车间” */</span>
+    <span class="comment">/** 在映射中找到相應“生產車間” */</span>
     tCreatorMap::iterator iter = _map.find(type);
 
-    <span class="comment">/** 检测“车间”是否存在 */</span>
+    <span class="comment">/** 檢測“車間”是否存在 */</span>
     <span class="keyword">if</span>(iter != _map.end())
     {
-        <span class="comment">/** 让返回值为相应的“生产车间” */</span>
+        <span class="comment">/** 讓返回值爲相應的“生產車間” */</span>
         tCreator r = iter-&gt;second;
 
-        <span class="comment">/** 返回“生产车间” */</span>
+        <span class="comment">/** 返回“生產車間” */</span>
         <span class="keyword">return</span> r();
     }
 
@@ -265,17 +265,17 @@ T* ObjectFactory&lt;T&gt;::Create(<span class="keyword">const</span> <span class
 <span class="preprocessor">#endif</span>
 </pre></td></tr></table></figure>
 
-<p>　　以上就是基于单件模式而实现的工厂模式了。</p>
-<p>　　在样例中，我建立了一个基类Base，然后用A和B来继承它。</p>
-<p>　　在一个for循环中，交替建立了A对象和B对象。这只是一个Demo，看不出有什么方便的，感觉用一个if来各自生成就好了，就像</p>
+<p>　　以上就是基於單件模式而實現的工廠模式了。</p>
+<p>　　在樣例中，我建立了一個基類Base，然後用A和B來繼承它。</p>
+<p>　　在一個for循環中，交替建立了A對象和B對象。這只是一個Demo，看不出有什麼方便的，感覺用一個if來各自生成就好了，就像</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
 </pre></td><td class="code"><pre><span class="keyword">if</span>(type == <span class="string">"A"</span>) p = <span class="keyword">new</span> A();
 <span class="keyword">else</span> p = <span class="keyword">new</span> B();
 </pre></td></tr></table></figure>
 
-<p>　　<strong>当然，上面也是一种方法。但是，试想一下，我们将要创建的A、B、C、D、E、F、G类放到一个配置文件中，然后我们从配置文件中读取这些数据并创建相应的对象，并且这些对象的顺序是打乱的，你就要有n个if来判断了，而且扩展性不高。用一个对象工厂进行封装的话，俨然形成了一个静而有序的生产工厂，有秩序地管理着不同的对象车间，不觉得这是一件非常美妙的事情么？</strong></p>
-<p>　　好了，话不多说，直接上Demo。</p>
+<p>　　<strong>當然，上面也是一種方法。但是，試想一下，我們將要創建的A、B、C、D、E、F、G類放到一個配置文件中，然後我們從配置文件中讀取這些數據並創建相應的對象，並且這些對象的順序是打亂的，你就要有n個if來判斷了，而且擴展性不高。用一個對象工廠進行封裝的話，儼然形成了一個靜而有序的生產工廠，有秩序地管理着不同的對象車間，不覺得這是一件非常美妙的事情麼？</strong></p>
+<p>　　好了，話不多說，直接上Demo。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -346,10 +346,10 @@ T* ObjectFactory&lt;T&gt;::Create(<span class="keyword">const</span> <span class
 </pre></td><td class="code"><pre><span class="preprocessor">#include &lt;iostream&gt;</span>
 <span class="preprocessor">#include "ObjectFactory.h"</span>
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
-<span class="comment">/** 基类 */</span>
+<span class="comment">/** 基類 */</span>
 <span class="keyword">class</span> Base;
 
-<span class="comment">/** Base类及其子类的对象工厂 */</span>
+<span class="comment">/** Base類及其子類的對象工廠 */</span>
 <span class="keyword">typedef</span> ObjectFactory&lt;Base&gt; BaseFactory;
 
 <span class="keyword">class</span> Base
@@ -373,28 +373,28 @@ T* ObjectFactory&lt;T&gt;::Create(<span class="keyword">const</span> <span class
     ~B();
 };
 
-<span class="comment">/** 对象A的“生产车间” */</span>
+<span class="comment">/** 對象A的“生產車間” */</span>
 Base* ACreator()
 {
     <span class="keyword">return</span> <span class="keyword">new</span> A();
 }
 
-<span class="comment">/** 对象B的“生产车间” */</span>
+<span class="comment">/** 對象B的“生產車間” */</span>
 Base* BCreator()
 {
     <span class="keyword">return</span> <span class="keyword">new</span> B();
 }
 
 <span class="comment">/**
- * @brief 主函数
+ * @brief 主函數
  */</span>
 <span class="keyword">int</span> main()
 {
-    <span class="comment">/** 将A、B的“生产车间”注册到对象工厂中 */</span>
+    <span class="comment">/** 將A、B的“生產車間”註冊到對象工廠中 */</span>
     <span class="keyword">bool</span> AFlag = BaseFactory::Instance().Register(<span class="string">"A"</span>, ACreator);
     <span class="keyword">bool</span> BFlag = BaseFactory::Instance().Register(<span class="string">"B"</span>, BCreator);
 
-    <span class="comment">/** 若注册失败则退出 */</span>
+    <span class="comment">/** 若註冊失敗則退出 */</span>
     <span class="keyword">if</span>(!AFlag || !BFlag) <span class="built_in">exit</span>(<span class="number">0</span>);
 
     Base *p;
@@ -402,7 +402,7 @@ Base* BCreator()
     {
         <span class="built_in">string</span> type = (i % <span class="number">2</span>) ? <span class="built_in">string</span>(<span class="string">"A"</span>) : <span class="built_in">string</span>(<span class="string">"B"</span>);
 
-        <span class="comment">/** p用相应“生产车间”进行生产 */</span>
+        <span class="comment">/** p用相應“生產車間”進行生產 */</span>
         p = BaseFactory::Instance().Create(type);
 
         <span class="keyword">delete</span> p;

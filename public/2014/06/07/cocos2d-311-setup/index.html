@@ -6,10 +6,10 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="由于偷懒，所以在此感谢 Etond 的指导（喂喂喂，明明是自己懒得看文档，明明 READEME.md 里面就有！(´≖◞౪◟≖)
-　　另，在搭建环境的时候，最好保证你在墙外。以及我默认觉得大家已经有了 Python 环境和 JDK。
-前驱工作
-　　先去 cocos2d-x 官网下压缩包，放到一个只有">
+    <meta name="description" content="由於偷懶，所以在此感謝 Etond 的指導（喂喂喂，明明是自己懶得看文檔，明明 READEME.md 裏面就有！(´≖◞౪◟≖)
+　　另，在搭建環境的時候，最好保證你在牆外。以及我默認覺得大家已經有了 Python 環境和 JDK。
+前驅工作
+　　先去 cocos2d-x 官網下壓縮包，放到一個只有">
     
     
 
@@ -20,7 +20,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cocos2d-x 3.1.1 开发环境搭建（Win篇） | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>Cocos2d-x 3.1.1 開發環境搭建（Win篇） | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -94,108 +94,108 @@
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>Cocos2d-x 3.1.1 开发环境搭建（Win篇）</h1>
+        <h1>Cocos2d-x 3.1.1 開發環境搭建（Win篇）</h1>
         
         <div class="time-info">
 发表于:<time datetime="2014-06-07T11:34:02.000Z" itemprop="datePublished">2014年06月07日</time>,
-更新于:<time datetime="2014-07-30T03:07:18.000Z" itemprop="dateModified">2014年07月30日</time>,
+更新于:<time datetime="2014-09-18T09:15:22.000Z" itemprop="dateModified">2014年09月18日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
             <div id="toc" class="toc-article well">
                 <strong class="toc-title">大纲</strong>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前驱工作"><span class="toc-number">1.</span> <span class="toc-text">前驱工作</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Android_SDK"><span class="toc-number">1.1.</span> <span class="toc-text">Android SDK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NDK"><span class="toc-number">1.2.</span> <span class="toc-text">NDK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ant"><span class="toc-number">1.3.</span> <span class="toc-text">Ant</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#新建一个_Demo_项目"><span class="toc-number">3.</span> <span class="toc-text">新建一个 Demo 项目</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编译_Demo"><span class="toc-number">3.1.</span> <span class="toc-text">编译 Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#打包_Demo"><span class="toc-number">3.2.</span> <span class="toc-text">打包 Demo</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Debug_版本"><span class="toc-number">3.2.1.</span> <span class="toc-text">Debug 版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Release_版本"><span class="toc-number">3.2.2.</span> <span class="toc-text">Release 版本</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Keytool"><span class="toc-number">3.2.2.1.</span> <span class="toc-text">Keytool</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#编译"><span class="toc-number">3.2.2.2.</span> <span class="toc-text">编译</span></a></li></ol><li class="toc-item toc-level-4"><a class="toc-link" href="#仨版本的文件路径"><span class="toc-number">3.2.3.</span> <span class="toc-text">仨版本的文件路径</span></a></li></ol></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">4.</span> <span class="toc-text">小结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前驅工作"><span class="toc-number">1.</span> <span class="toc-text">前驅工作</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Android_SDK"><span class="toc-number">1.1.</span> <span class="toc-text">Android SDK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NDK"><span class="toc-number">1.2.</span> <span class="toc-text">NDK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ant"><span class="toc-number">1.3.</span> <span class="toc-text">Ant</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#安裝"><span class="toc-number">2.</span> <span class="toc-text">安裝</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#新建一個_Demo_項目"><span class="toc-number">3.</span> <span class="toc-text">新建一個 Demo 項目</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#編譯_Demo"><span class="toc-number">3.1.</span> <span class="toc-text">編譯 Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#打包_Demo"><span class="toc-number">3.2.</span> <span class="toc-text">打包 Demo</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Debug_版本"><span class="toc-number">3.2.1.</span> <span class="toc-text">Debug 版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Release_版本"><span class="toc-number">3.2.2.</span> <span class="toc-text">Release 版本</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Keytool"><span class="toc-number">3.2.2.1.</span> <span class="toc-text">Keytool</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#編譯"><span class="toc-number">3.2.2.2.</span> <span class="toc-text">編譯</span></a></li></ol><li class="toc-item toc-level-4"><a class="toc-link" href="#仨版本的文件路徑"><span class="toc-number">3.2.3.</span> <span class="toc-text">仨版本的文件路徑</span></a></li></ol></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#小結"><span class="toc-number">4.</span> <span class="toc-text">小結</span></a></li></ol>
             </div>
             
-            <p>由于偷懒，所以在此感谢 Etond 的指导（喂喂喂，明明是自己懒得看文档，明明 <a href="README"><code>READEME.md</code></a> 里面就有！(´≖◞౪◟≖)</p>
-<p>　　另，在搭建环境的时候，最好保证你在<span style="background: #222;">墙外</span>。以及我默认觉得大家已经有了 <code>Python</code> 环境和 <code>JDK</code>。</p>
-<h2 id="前驱工作">前驱工作</h2>
-<p>　　先去 <a href="http://www.cocos2d-x.org/download" target="_blank">cocos2d-x 官网</a>下压缩包，放到一个只有神知道的世界里面。</p>
-<p>　　接下去需要安装仨东西：</p>
+            <p>由於偷懶，所以在此感謝 Etond 的指導（喂喂喂，明明是自己懶得看文檔，明明 <a href="README"><code>READEME.md</code></a> 裏面就有！(´≖◞౪◟≖)</p>
+<p>　　另，在搭建環境的時候，最好保證你在<span style="background: #222;">牆外</span>。以及我默認覺得大家已經有了 <code>Python</code> 環境和 <code>JDK</code>。</p>
+<h2 id="前驅工作">前驅工作</h2>
+<p>　　先去 <a href="http://www.cocos2d-x.org/download" target="_blank">cocos2d-x 官網</a>下壓縮包，放到一個只有神知道的世界裏面。</p>
+<p>　　接下去需要安裝仨東西：</p>
 <h3 id="Android_SDK">Android SDK</h3>
-<p>　　<a href="http://developer.android.com/sdk/index.html#download" target="_blank">这东西</a>真尼玛大啊！我家的小水管真吃不起。</p>
-<p>　　然后把 <strong>adt-bundle-…zip</strong> 这个包压缩到任意木有中文和空格的路径下面。</p>
+<p>　　<a href="http://developer.android.com/sdk/index.html#download" target="_blank">這東西</a>真尼瑪大啊！我家的小水管真吃不起。</p>
+<p>　　然後把 <strong>adt-bundle-…zip</strong> 這個包壓縮到任意木有中文和空格的路徑下面。</p>
 <h3 id="NDK">NDK</h3>
-<p>　　<a href="http://developer.android.com/tools/sdk/ndk/index.html#download" target="_blank">这小伙伴</a>也不小啊。都是 500M 的主儿啊（٩(ŏ﹏ŏ、)۶</p>
-<p>　　也解压到一个地方不用管它。</p>
+<p>　　<a href="http://developer.android.com/tools/sdk/ndk/index.html#download" target="_blank">這小夥伴</a>也不小啊。都是 500M 的主兒啊（٩(ŏ﹏ŏ、)۶</p>
+<p>　　也解壓到一個地方不用管它。</p>
 <h3 id="Ant">Ant</h3>
-<p>　　据说这货是阿帕奇出的？总之下载地址在<a href="http://ant.apache.org/bindownload.cgi" target="_blank">这里</a>。</p>
-<h2 id="安装">安装</h2>
-<p>　　哦对了你还得有个 Python 路径，这里就不累述了。接下去在命令行里面执行 Cocos2d 的 <code>setup.py</code> 文件即可：</p>
+<p>　　據說這貨是阿帕奇出的？總之下載地址在<a href="http://ant.apache.org/bindownload.cgi" target="_blank">這裏</a>。</p>
+<h2 id="安裝">安裝</h2>
+<p>　　哦對了你還得有個 Python 路徑，這裏就不累述了。接下去在命令行裏面執行 Cocos2d 的 <code>setup.py</code> 文件即可：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>/&gt; py setup<span class="preprocessor">.py</span>
 </pre></td></tr></table></figure>
 
-<p>　　接下去终端会停在下面一行：</p>
+<p>　　接下去終端會停在下面一行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>Please enter <span class="operator">the</span> path <span class="operator">of</span> NDK_ROOT (<span class="operator">or</span> press Enter <span class="built_in">to</span> skip):
 </pre></td></tr></table></figure>
 
-<p>　　在后面输入你放好的 NDK 目录即可。</p>
-<p>　　如果下面又出现了：</p>
+<p>　　在後面輸入你放好的 NDK 目錄即可。</p>
+<p>　　如果下面又出現了：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>Please enter <span class="operator">the</span> path <span class="operator">of</span> ANDROID_SDK_ROOT (<span class="operator">or</span> press Enter <span class="built_in">to</span> skip):
 </pre></td></tr></table></figure>
 
-<p>　　你只需在里面输入你刚放好的 Android SDK 的目录即可。（注意是要刚才的 SDK 压缩包解压出来的 sdk 路径）</p>
-<p>　　再如果下面还出现：</p>
+<p>　　你只需在裏面輸入你剛放好的 Android SDK 的目錄即可。（注意是要剛纔的 SDK 壓縮包解壓出來的 sdk 路徑）</p>
+<p>　　再如果下面還出現：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>Please enter <span class="operator">the</span> path <span class="operator">of</span> ANT_ROOT (<span class="operator">or</span> press Enter <span class="built_in">to</span> skip):
 </pre></td></tr></table></figure>
 
-<p>　　那么再把 Ant 的路径搞上去就好了。（又得注意这里得是 Ant 的 bin 目录）</p>
-<p>　　最后确保终端（或者说命令行）里面出现如下字样：</p>
+<p>　　那麼再把 Ant 的路徑搞上去就好了。（又得注意這裏得是 Ant 的 bin 目錄）</p>
+<p>　　最後確保終端（或者說命令行）裏面出現如下字樣：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>Please restart <span class="operator">the</span> terminal <span class="operator">or</span> restart computer <span class="built_in">to</span> make added <span class="keyword">system</span> variables take effect
 </pre></td></tr></table></figure>
 
-<p>　　然后你把终端关了再开一个就好了。至此，大致就安装完毕了。</p>
-<h2 id="新建一个_Demo_项目">新建一个 Demo 项目</h2>
-<p>　　随意跑到一个目录下面执行下面的命令：</p>
+<p>　　然後你把終端關了再開一個就好了。至此，大致就安裝完畢了。</p>
+<h2 id="新建一個_Demo_項目">新建一個 Demo 項目</h2>
+<p>　　隨意跑到一個目錄下面執行下面的命令：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre><span class="subst">/</span><span class="subst">&gt;</span> cocos <span class="literal">new</span> FirstGame <span class="attribute">-p</span> <span class="keyword">in</span><span class="built_in">.</span>xcoder<span class="built_in">.</span>firstgame <span class="attribute">-l</span> cpp <span class="attribute">-d</span> FirstGame
 </pre></td></tr></table></figure>
 
 <blockquote>
-<p>大致意思就是说创建一个新的项目路径，叫 <code>FirstGame</code>，其包名叫 <code>in.xcoder.firstgame</code>，然后语言是 <code>cpp</code>，最后 <code>-d</code> 是路径。</p>
+<p>大致意思就是說創建一個新的項目路徑，叫 <code>FirstGame</code>，其包名叫 <code>in.xcoder.firstgame</code>，然後語言是 <code>cpp</code>，最後 <code>-d</code> 是路徑。</p>
 </blockquote>
-<p>　　命令详情帮助可以看 <code>cocos --help</code>。</p>
-<h3 id="编译_Demo">编译 Demo</h3>
-<p>　　读标题，是 Win 篇。所以我们跑到项目路径下面的 <code>proj.win32</code> 目录下面用 M$ VS 打开 <code>FirstGame.sln</code> 就可以打开刚创建的模板项目了。</p>
-<p>　　无论如何先编译看看吧！～</p>
-<p>　　如何？跑起来了吧？</p>
+<p>　　命令詳情幫助可以看 <code>cocos --help</code>。</p>
+<h3 id="編譯_Demo">編譯 Demo</h3>
+<p>　　讀標題，是 Win 篇。所以我們跑到項目路徑下面的 <code>proj.win32</code> 目錄下面用 M$ VS 打開 <code>FirstGame.sln</code> 就可以打開剛創建的模板項目了。</p>
+<p>　　無論如何先編譯看看吧！～</p>
+<p>　　如何？跑起來了吧？</p>
 <h3 id="打包_Demo">打包 Demo</h3>
-<p>　　这里就讲讲如何打包安卓的版本吧：</p>
+<p>　　這裏就講講如何打包安卓的版本吧：</p>
 <h4 id="Debug_版本">Debug 版本</h4>
-<p>　　跑到你的项目目录下面（即有 <code>.cocos-project.json</code> 文件的目录），然后执行下面的命令：</p>
+<p>　　跑到你的項目目錄下面（即有 <code>.cocos-project.json</code> 文件的目錄），然後執行下面的命令：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>/&gt; cocos <span class="command">run</span> -p android
 </pre></td></tr></table></figure>
 
-<p>　　等工具编译打包完成就 OK 了。（记得要查安卓手机并且调试模式哦～）</p>
+<p>　　等工具編譯打包完成就 OK 了。（記得要查安卓手機並且調試模式哦～）</p>
 <h4 id="Release_版本">Release 版本</h4>
-<p>　　如果要上传到 Google Play 之类的地方，需要有签名。所以发布 Release 版本之前，你先得搞好自己的签名。</p>
+<p>　　如果要上傳到 Google Play 之類的地方，需要有簽名。所以發佈 Release 版本之前，你先得搞好自己的簽名。</p>
 <h5 id="Keytool">Keytool</h5>
-<p>　　在终端跑到你的项目路径下面，然后执行：</p>
+<p>　　在終端跑到你的項目路徑下面，然後執行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre><span class="subst">/</span><span class="subst">&gt;</span> keytool <span class="attribute">-genkey</span> <span class="attribute">-v</span> <span class="attribute">-keystore</span> FirstGame<span class="built_in">.</span>keystore <span class="attribute">-alias</span> FirstGame <span class="attribute">-keyalg</span> RSA <span class="attribute">-keysize</span> <span class="number">2048</span> <span class="attribute">-validaty</span> <span class="number">10000</span>
 </pre></td></tr></table></figure>
 
-<p>　　照着命令行给的提示完成创建密钥即可。</p>
-<h5 id="编译">编译</h5>
-<p>　　生成之后啊就直接执行编译命令了：</p>
+<p>　　照着命令行給的提示完成創建密鑰即可。</p>
+<h5 id="編譯">編譯</h5>
+<p>　　生成之後啊就直接執行編譯命令了：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre><span class="subst">/</span><span class="subst">&gt;</span> cocos run <span class="attribute">-p</span> android <span class="attribute">-m</span> release
 </pre></td></tr></table></figure>
 
-<p>　　在里面呢最后会让你输入 <code>.keystore</code> 文件的路径。</p>
-<p>　　我们输入相对路径，由于我们刚才把这个文件搞在项目根目录，所以我们只需要输入 <code>../FirstGame.keystore</code> 即可。接下去他会让你输入密码、别名和别名信息的密码。你都正确输入一遍他就会安安分分跑在你的手机里面了。</p>
-<h4 id="仨版本的文件路径">仨版本的文件路径</h4>
-<p>　　上面都弄好之后，你的仨版本 <code>*.apk</code> 文件也就生成了。很多人可能很困惑，为什么是仨版本。因为其中 Release 版本还分带签名和没签名版本。</p>
-<p>　　总之那个路径在 <code>publish/android</code> 下面，里面有仨 <code>*.apk</code> 文件，你拿出来发布就可以了。</p>
-<h2 id="小结">小结</h2>
-<p>　　其实也没什么结不结的，这些东西你们自己去看看官方文档就好了。总之就这样了吧，以上。</p>
+<p>　　在裏面呢最後會讓你輸入 <code>.keystore</code> 文件的路徑。</p>
+<p>　　我們輸入相對路徑，由於我們剛纔把這個文件搞在項目根目錄，所以我們只需要輸入 <code>../FirstGame.keystore</code> 即可。接下去他會讓你輸入密碼、別名和別名信息的密碼。你都正確輸入一遍他就會安安分分跑在你的手機裏面了。</p>
+<h4 id="仨版本的文件路徑">仨版本的文件路徑</h4>
+<p>　　上面都弄好之後，你的仨版本 <code>*.apk</code> 文件也就生成了。很多人可能很困惑，爲什麼是仨版本。因爲其中 Release 版本還分帶簽名和沒簽名版本。</p>
+<p>　　總之那個路徑在 <code>publish/android</code> 下面，裏面有仨 <code>*.apk</code> 文件，你拿出來發佈就可以了。</p>
+<h2 id="小結">小結</h2>
+<p>　　其實也沒什麼結不結的，這些東西你們自己去看看官方文檔就好了。總之就這樣了吧，以上。</p>
 
             
             <section class="comment">

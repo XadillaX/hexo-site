@@ -6,11 +6,11 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="所谓主题色提取，就是对于一张图片，近似地提取出一个调色板，使得调色板里面的颜色能组成这张图片的主色调。
+    <meta name="description" content="所謂主題色提取，就是對於一張圖片，近似地提取出一個調色板，使得調色板裏面的顏色能組成這張圖片的主色調。
 
-　　以上定义为我个人胡诌的。
-　　大家不要太把我的东西当成严谨的文章来看，很多东西什么的都是我用我自己的理解去做，并没有做多少考证。
-　　解析中都会以 Node.js 来写一些小 Demo。
+　　以上定義爲我個人胡謅的。
+　　大家不要太把我的東西當成嚴謹的文章來看，很多東西什麼的都是我用我自己的理解去做，並沒有做多少考證。
+　　解析中都會以 Node.js 來寫一些小 Demo。
 引">
     
     
@@ -22,7 +22,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>图片主题色提取算法小结 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>圖片主題色提取算法小結 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -96,47 +96,47 @@
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>图片主题色提取算法小结</h1>
+        <h1>圖片主題色提取算法小結</h1>
         
         <div class="time-info">
 发表于:<time datetime="2014-09-17T03:34:54.000Z" itemprop="datePublished">2014年09月17日</time>,
-更新于:<time datetime="2014-09-17T05:17:35.000Z" itemprop="dateModified">2014年09月17日</time>,
+更新于:<time datetime="2014-09-18T09:15:36.000Z" itemprop="dateModified">2014年09月18日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
             <div id="toc" class="toc-article well">
                 <strong class="toc-title">大纲</strong>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法解析"><span class="toc-number">2.</span> <span class="toc-text">算法解析</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#魔法数字法"><span class="toc-number">2.1.</span> <span class="toc-text">魔法数字法</del></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#八叉树提取法"><span class="toc-number">2.2.</span> <span class="toc-text">八叉树提取法</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#插入颜色"><span class="toc-number">2.2.1.</span> <span class="toc-text">插入颜色</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#合并颜色"><span class="toc-number">2.2.2.</span> <span class="toc-text">合并颜色</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#建树"><span class="toc-number">2.2.3.</span> <span class="toc-text">建树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#主题色提取"><span class="toc-number">2.2.4.</span> <span class="toc-text">主题色提取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#算法小结"><span class="toc-number">2.2.5.</span> <span class="toc-text">算法小结</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#最小差值法"><span class="toc-number">2.3.</span> <span class="toc-text">最小差值法</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#我是怎么做的"><span class="toc-number">3.</span> <span class="toc-text">我是怎么做的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主题色提取_Node-js_包——thmclrx"><span class="toc-number">4.</span> <span class="toc-text">主题色提取 Node.js 包——thmclrx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本文小结"><span class="toc-number">5.</span> <span class="toc-text">本文小结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法解析"><span class="toc-number">2.</span> <span class="toc-text">算法解析</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#魔法數字法"><span class="toc-number">2.1.</span> <span class="toc-text">魔法數字法</del></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#八叉樹提取法"><span class="toc-number">2.2.</span> <span class="toc-text">八叉樹提取法</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#插入顏色"><span class="toc-number">2.2.1.</span> <span class="toc-text">插入顏色</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#合併顏色"><span class="toc-number">2.2.2.</span> <span class="toc-text">合併顏色</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#建樹"><span class="toc-number">2.2.3.</span> <span class="toc-text">建樹</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#主題色提取"><span class="toc-number">2.2.4.</span> <span class="toc-text">主題色提取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#算法小結"><span class="toc-number">2.2.5.</span> <span class="toc-text">算法小結</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#最小差值法"><span class="toc-number">2.3.</span> <span class="toc-text">最小差值法</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#我是怎麼做的"><span class="toc-number">3.</span> <span class="toc-text">我是怎麼做的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主題色提取_Node-js_包——thmclrx"><span class="toc-number">4.</span> <span class="toc-text">主題色提取 Node.js 包——thmclrx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本文小結"><span class="toc-number">5.</span> <span class="toc-text">本文小結</span></a></li></ol>
             </div>
             
             <blockquote>
-<p>所谓主题色提取，就是对于一张图片，近似地提取出一个调色板，使得调色板里面的颜色能组成这张图片的主色调。</p>
+<p>所謂主題色提取，就是對於一張圖片，近似地提取出一個調色板，使得調色板裏面的顏色能組成這張圖片的主色調。</p>
 </blockquote>
-<p>　　以上定义为我个人胡诌的。</p>
-<p>　　大家不要太把我的东西当成严谨的文章来看，很多东西什么的都是我用我自己的理解去做，并没有做多少考证。</p>
-<p>　　解析中都会以 Node.js 来写一些小 Demo。</p>
+<p>　　以上定義爲我個人胡謅的。</p>
+<p>　　大家不要太把我的東西當成嚴謹的文章來看，很多東西什麼的都是我用我自己的理解去做，並沒有做多少考證。</p>
+<p>　　解析中都會以 Node.js 來寫一些小 Demo。</p>
 <h2 id="引子">引子</h2>
-<p>　　写该文章主要是为了对我这几天对于『主题色提取』算法研究进行一个小结。</p>
-<p>　　花瓣网需要做一件事，就是把图片的主题色提取出来加入到花瓣网搜索引擎的索引当中，以供用户搜索。</p>
-<p>　　于是有了一个需求：提取出图片中在某个规定调色板中的颜色，加入到搜索引擎。</p>
-<p>　　接下去就开始解析两种不同的算法以及在这种业务场景当中的应用。</p>
+<p>　　寫該文章主要是爲了對我這幾天對於『主題色提取』算法研究進行一個小結。</p>
+<p>　　花瓣網需要做一件事，就是把圖片的主題色提取出來加入到花瓣網搜索引擎的索引當中，以供用戶搜索。</p>
+<p>　　於是有了一個需求：提取出圖片中在某個規定調色板中的顏色，加入到搜索引擎。</p>
+<p>　　接下去就開始解析兩種不同的算法以及在這種業務場景當中的應用。</p>
 <h2 id="算法解析">算法解析</h2>
-<h3 id="魔法数字法"><del>魔法数字法</del></h3>
-<p>　　这个算法大家可以忽略，可能是我使用的姿势不对，总之提取出来（也许它根本就不是这么用的）的东西错误很大。</p>
-<p>　　不过看一下也好开阔下眼界，尤其是我这种想做游戏又不小心掉进互联网的坑里的蒟蒻来说。</p>
-<p>　　首先该算法我是从<a href="http://dev.gameres.com/Program/Visual/Other/256color.htm" target="_blank">这里</a>找到的。想当年我还是经常逛 <a href="http://www.gameres.com/" target="_blank">GameRes</a> 的。ヾ(;ﾟ;Д;ﾟ;)ﾉﾞ</p>
-<p>　　然后辗转反侧最终发现这段代码是提取自 <a href="https://github.com/liballeg/allegro5/blob/4.3/src/color.c#L268-L328" target="_blank">Allegro</a> 游戏引擎。</p>
-<p>　　具体我也就不讲了，毕竟找不到资料，只是粗粗瞄了眼代码里面有几个魔法数字（在游戏和算法领域魔法数字倒是非常常见的），也没时间深入解读这段代码。</p>
-<p>　　我把它翻译成了 Node.js，然后放在了 <a href="https://github.com/XadillaX/theme-color-test/blob/master/version1/magicnumber.js" target="_blank">Demo</a> 当中。大家有兴趣可以自己去看看。</p>
-<h3 id="八叉树提取法">八叉树提取法</h3>
-<p>　　这个算法在颜色量化中比较常见的。</p>
+<h3 id="魔法數字法"><del>魔法數字法</del></h3>
+<p>　　這個算法大家可以忽略，可能是我使用的姿勢不對，總之提取出來（也許它根本就不是這麼用的）的東西錯誤很大。</p>
+<p>　　不過看一下也好開闊下眼界，尤其是我這種想做遊戲又不小心掉進互聯網的坑裏的蒟蒻來說。</p>
+<p>　　首先該算法我是從<a href="http://dev.gameres.com/Program/Visual/Other/256color.htm" target="_blank">這裏</a>找到的。想當年我還是經常逛 <a href="http://www.gameres.com/" target="_blank">GameRes</a> 的。ヾ(;ﾟ;Д;ﾟ;)ﾉﾞ</p>
+<p>　　然後輾轉反側最終發現這段代碼是提取自 <a href="https://github.com/liballeg/allegro5/blob/4.3/src/color.c#L268-L328" target="_blank">Allegro</a> 遊戲引擎。</p>
+<p>　　具體我也就不講了，畢竟找不到資料，只是粗粗瞄了眼代碼裏面有幾個魔法數字（在遊戲和算法領域魔法數字倒是非常常見的），也沒時間深入解讀這段代碼。</p>
+<p>　　我把它翻譯成了 Node.js，然後放在了 <a href="https://github.com/XadillaX/theme-color-test/blob/master/version1/magicnumber.js" target="_blank">Demo</a> 當中。大家有興趣可以自己去看看。</p>
+<h3 id="八叉樹提取法">八叉樹提取法</h3>
+<p>　　這個算法在顏色量化中比較常見的。</p>
 <blockquote>
-<p>该算法最早见于 1988 年，<strong><em>M. Gervautz</em></strong> 和 <strong><em>W. Purgathofer</em></strong> 发表的论文<strong><em>《A Simple Method for Color Quantization: Octree Quantization》</em></strong>当中。其时间复杂度和空间复杂度都有很大的优势，并且保真度也是非常的高。</p>
+<p>該算法最早見於 1988 年，<strong><em>M. Gervautz</em></strong> 和 <strong><em>W. Purgathofer</em></strong> 發表的論文<strong><em>《A Simple Method for Color Quantization: Octree Quantization》</em></strong>當中。其時間複雜度和空間複雜度都有很大的優勢，並且保真度也是非常的高。</p>
 </blockquote>
-<p>　　大致的思路就是对于某一个像素点的颜色 <strong>R / G / B</strong> 分开来之后，用二进制逐行写下。</p>
-<p>　　如 <code>#FF7800</code>，其中 <strong>R</strong> 通道为 <code>0xFF</code>，也就是 <code>255</code>，<strong>G</strong> 为 <code>0x78</code> 也就是 <code>120</code>，<strong>B</strong> 为 <code>0x00</code> 也就是 <code>0</code>。</p>
-<p>　　接下去我们把它们写成二进制逐行放下，那么就是：</p>
+<p>　　大致的思路就是對於某一個像素點的顏色 <strong>R / G / B</strong> 分開來之後，用二進制逐行寫下。</p>
+<p>　　如 <code>#FF7800</code>，其中 <strong>R</strong> 通道爲 <code>0xFF</code>，也就是 <code>255</code>，<strong>G</strong> 爲 <code>0x78</code> 也就是 <code>120</code>，<strong>B</strong> 爲 <code>0x00</code> 也就是 <code>0</code>。</p>
+<p>　　接下去我們把它們寫成二進制逐行放下，那麼就是：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -145,9 +145,9 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 <span class="attribute">B</span>: <span class="string">0000 0000</span>
 </pre></td></tr></table></figure>
 
-<p>　　<strong>RGB</strong> 通道逐列黏合之后的值就是其在某一层节点的子节点编号了。每一列一共是三位，那么取值范围就是 <code>0 ~ 7</code> 也就是一共有八种情况。这就是为什么这种算法要开八叉树来计算的原因了。</p>
-<p>　　举个例子，上述颜色的第一位黏合起来是 <code>100(2)</code>，转化为十进制就是 4，所以这个颜色在第一层是放在根节点的第五个子节点当中；第二位是 <code>110(2)</code> 也就是 6，那么它就是根节点的第五个儿子的第七个儿子。</p>
-<p>　　于是我们有了这样的一个节点结构：</p>
+<p>　　<strong>RGB</strong> 通道逐列黏合之後的值就是其在某一層節點的子節點編號了。每一列一共是三位，那麼取值範圍就是 <code>0 ~ 7</code> 也就是一共有八種情況。這就是爲什麼這種算法要開八叉樹來計算的原因了。</p>
+<p>　　舉個例子，上述顏色的第一位黏合起來是 <code>100(2)</code>，轉化爲十進制就是 4，所以這個顏色在第一層是放在根節點的第五個子節點當中；第二位是 <code>110(2)</code> 也就是 6，那麼它就是根節點的第五個兒子的第七個兒子。</p>
+<p>　　於是我們有了這樣的一個節點結構：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -172,34 +172,34 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
     <span class="keyword">this</span>.children = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">8</span>);
     <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.children.length; i++) <span class="keyword">this</span>.children[i] = <span class="literal">null</span>;
 
-    <span class="comment">// 这里的 next 不是指兄弟链中的 next 指针</span>
-    <span class="comment">// 而是在 reducible 链表中的下一个节点</span>
+    <span class="comment">// 這裏的 next 不是指兄弟鏈中的 next 指針</span>
+    <span class="comment">// 而是在 reducible 鏈表中的下一個節點</span>
     <span class="keyword">this</span>.next = <span class="literal">null</span>;
 };
 </pre></td></tr></table></figure>
 
 <ul>
-<li><code>isLeaf</code>: 表明该节点是否为叶子节点。</li>
-<li><code>pixelCount</code>: 在该节点的颜色一共插入了几次。</li>
-<li><code>red</code>: 该节点 <strong>R</strong> 通道累加值。</li>
+<li><code>isLeaf</code>: 表明該節點是否爲葉子節點。</li>
+<li><code>pixelCount</code>: 在該節點的顏色一共插入了幾次。</li>
+<li><code>red</code>: 該節點 <strong>R</strong> 通道累加值。</li>
 <li><code>green</code>: <strong>G</strong> 累加值。</li>
 <li><code>blue</code>: <strong>B</strong> 累加值。</li>
-<li><code>children</code>: 八个子节点指针。</li>
-<li><code>next</code>: <strong><em>reducible</em></strong> 链表的下一个节点指针，后面会作详细解释，目前可以先忽略。</li>
+<li><code>children</code>: 八個子節點指針。</li>
+<li><code>next</code>: <strong><em>reducible</em></strong> 鏈表的下一個節點指針，後面會作詳細解釋，目前可以先忽略。</li>
 </ul>
-<h4 id="插入颜色">插入颜色</h4>
-<p>　　根据上面的理论，我们大致就知道了往八叉树插入一个像素点颜色的步骤了。</p>
-<p>　　就是每一位 <strong>RGB</strong> 通道黏合的值就是它在树的那一层的子节点的编号。</p>
-<p>　　大致可以看下图：</p>
-<p><img src="http://www.microsoft.com/msj/archive/wicked1.gif" alt="八叉树插入"><br><small>图片来源：<a href="http://www.microsoft.com/msj/archive/S3F1.aspx" target="_blank">http://www.microsoft.com/msj/archive/S3F1.aspx</a></small></p>
-<p>　　由此可以推断，在没有任何颜色合并的情况下，插入一种颜色最坏的情况下是进行 64 次检索。</p>
+<h4 id="插入顏色">插入顏色</h4>
+<p>　　根據上面的理論，我們大致就知道了往八叉樹插入一個像素點顏色的步驟了。</p>
+<p>　　就是每一位 <strong>RGB</strong> 通道黏合的值就是它在樹的那一層的子節點的編號。</p>
+<p>　　大致可以看下圖：</p>
+<p><img src="http://www.microsoft.com/msj/archive/wicked1.gif" alt="八叉樹插入"><br><small>圖片來源：<a href="http://www.microsoft.com/msj/archive/S3F1.aspx" target="_blank">http://www.microsoft.com/msj/archive/S3F1.aspx</a></small></p>
+<p>　　由此可以推斷，在沒有任何顏色合併的情況下，插入一種顏色最壞的情況下是進行 64 次檢索。</p>
 <blockquote>
-<p><strong>注意：</strong>我们将会把该颜色的 RGB 分量分别累加到该节点的各分量值中，以便最终求平均数。</p>
+<p><strong>注意：</strong>我們將會把該顏色的 RGB 分量分別累加到該節點的各分量值中，以便最終求平均數。</p>
 </blockquote>
-<p>　　大致的流程就是从根节点开始 DFS，如果到达的节点是叶子节点，那么分量、颜色总数累加；否则就根据层数和该颜色的第层数位颜色黏合值得到其子节点序号。若该子节点不存在就创建一个子节点并与该父节点关联，否则就直接搜下一层去。</p>
-<p>　　创建的时候根据层数来确定它是不是叶子节点，如果是的话需要标记一下，并且全局的叶子节点数要加一。</p>
-<p>　　还有一点需要注意的就是如果这个节点不是叶子节点，就将其丢到 <strong><em>reducible</em></strong> 相应层数的链表当中去，以供之后颜色合并的时候用。关于颜色合并的内容后面会进行解释。</p>
-<p>　　下面是创建节点的代码：</p>
+<p>　　大致的流程就是從根節點開始 DFS，如果到達的節點是葉子節點，那麼分量、顏色總數累加；否則就根據層數和該顏色的第層數位顏色黏合值得到其子節點序號。若該子節點不存在就創建一個子節點並與該父節點關聯，否則就直接搜下一層去。</p>
+<p>　　創建的時候根據層數來確定它是不是葉子節點，如果是的話需要標記一下，並且全局的葉子節點數要加一。</p>
+<p>　　還有一點需要注意的就是如果這個節點不是葉子節點，就將其丟到 <strong><em>reducible</em></strong> 相應層數的鏈表當中去，以供之後顏色合併的時候用。關於顏色合併的內容後面會進行解釋。</p>
+<p>　　下面是創建節點的代碼：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -219,7 +219,7 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         node.isLeaf = <span class="literal">true</span>;
         leafNum++;
     } <span class="keyword">else</span> {
-        <span class="comment">// 将其丢到第 level 层的 reducible 链表中</span>
+        <span class="comment">// 將其丟到第 level 層的 reducible 鏈表中</span>
         node.next = reducible[level];
         reducible[level] = node;
     }
@@ -228,7 +228,7 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 }
 </pre></td></tr></table></figure>
 
-<p>　　以及下面是插入某种颜色的代码：</p>
+<p>　　以及下面是插入某種顏色的代碼：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -272,10 +272,10 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         node.green += color.g;
         node.blue += color.b;
     } <span class="keyword">else</span> {
-        <span class="comment">// 由于 js 内部都是以浮点型存储数值，所以位运算并没有那么高效</span>
-        <span class="comment">// 在此使用直接转换字符串的方式提取某一位的值</span>
+        <span class="comment">// 由於 js 內部都是以浮點型存儲數值，所以位運算並沒有那麼高效</span>
+        <span class="comment">// 在此使用直接轉換字符串的方式提取某一位的值</span>
         <span class="comment">//</span>
-        <span class="comment">// 实际上如果用位运算来做的话就是这样子的：</span>
+        <span class="comment">// 實際上如果用位運算來做的話就是這樣子的：</span>
         <span class="comment">//   https://github.com/XadillaX/thmclrx/blob/7ab4de9fce583e88da6a41b0e256e91c45a10f67/src/octree.cpp#L91-L103</span>
         <span class="keyword">var</span> str = <span class="string">""</span>;
         <span class="keyword">var</span> r = color.r.toString(<span class="number">2</span>);
@@ -303,17 +303,17 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 }
 </pre></td></tr></table></figure>
 
-<h4 id="合并颜色">合并颜色</h4>
-<p>　　这一步就是八叉树的空间复杂度低和保真度高的另一个原因了。</p>
+<h4 id="合併顏色">合併顏色</h4>
+<p>　　這一步就是八叉樹的空間複雜度低和保真度高的另一個原因了。</p>
 <blockquote>
 <p>勿忘初心。</p>
 </blockquote>
-<p>　　我们用这个算法做的是颜色量化，或者说我要拿它提取主题色、调色板，所以肯定是提取几个有代表性的颜色就够了，否则茫茫世界中 <strong>RRGGBB</strong> 一共有 419430400 种颜色，怎么归纳？</p>
-<p>　　我们可以让指定一棵八叉树不超过多少多少叶子节点（也就是最后能归纳出来的主题色数），比如 8，比如 16、64 或者 256 等等。</p>
-<p>　　所以当叶子节点数超过我们规定的叶子节点数的时候，我们就要合并其中一个节点，将其所有子节点的数据都合并到它身上去。</p>
-<p>　　举个例子，我们有一个节点有八个子节点，并且都是叶子节点，那么我们把八个叶子节点的通道分量全累加到该节点中，颜色总数也累加到该节点中，然后删除八个叶子节点并把该节点设置为叶子节点。那么一下子我们就合并了八个节点有木有！</p>
-<p>　　为什么这些节点可以被合并呢？</p>
-<p>　　我们来看看某个节点下的子节点颜色都有神马相似点吧——它们的三个分量前七位（或者说如果已经不是最底层的节点的话那就是前几位）是相同的，那么比如说刚才的 <code>FF7800</code>，跟它同级并且拥有相同父节点（也就是它的兄弟节点）的颜色都是什么呢：</p>
+<p>　　我們用這個算法做的是顏色量化，或者說我要拿它提取主題色、調色板，所以肯定是提取幾個有代表性的顏色就夠了，否則茫茫世界中 <strong>RRGGBB</strong> 一共有 419430400 種顏色，怎麼歸納？</p>
+<p>　　我們可以讓指定一棵八叉樹不超過多少多少葉子節點（也就是最後能歸納出來的主題色數），比如 8，比如 16、64 或者 256 等等。</p>
+<p>　　所以當葉子節點數超過我們規定的葉子節點數的時候，我們就要合併其中一個節點，將其所有子節點的數據都合併到它身上去。</p>
+<p>　　舉個例子，我們有一個節點有八個子節點，並且都是葉子節點，那麼我們把八個葉子節點的通道分量全累加到該節點中，顏色總數也累加到該節點中，然後刪除八個葉子節點並把該節點設置爲葉子節點。那麼一下子我們就合併了八個節點有木有！</p>
+<p>　　爲什麼這些節點可以被合併呢？</p>
+<p>　　我們來看看某個節點下的子節點顏色都有神馬相似點吧——它們的三個分量前七位（或者說如果已經不是最底層的節點的話那就是前幾位）是相同的，那麼比如說剛纔的 <code>FF7800</code>，跟它同級並且擁有相同父節點（也就是它的兄弟節點）的顏色都是什麼呢：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -322,7 +322,7 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 <span class="attribute">B</span>: <span class="string">0000 000(0,1)</span>
 </pre></td></tr></table></figure>
 
-<p>　　整合出来一看：</p>
+<p>　　整合出來一看：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -341,8 +341,8 @@ FF7900
 FF7901
 </pre></td></tr></table></figure>
 
-<p>　　怎么样？是不是确实很相近？这就是八叉树的精髓了，所有的兄弟节点肯定是在一个相近的颜色范围内。</p>
-<p>　　所以说我们要合并就先去最底层的 <strong><em>reducible</em></strong> 链表中寻找一个可以合并的节点，把它从链表中删除之后合并叶子节点并且删除其叶子节点就好了：</p>
+<p>　　怎麼樣？是不是確實很相近？這就是八叉樹的精髓了，所有的兄弟節點肯定是在一個相近的顏色範圍內。</p>
+<p>　　所以說我們要合併就先去最底層的 <strong><em>reducible</em></strong> 鏈表中尋找一個可以合併的節點，把它從鏈表中刪除之後合併葉子節點並且刪除其葉子節點就好了：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -375,15 +375,15 @@ FF7901
 30
 31
 </pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">reduceTree</span><span class="params">()</span> {</span>
-    <span class="comment">// 找到最深层次的并且有可合并节点的链表</span>
+    <span class="comment">// 找到最深層次的並且有可合併節點的鏈表</span>
     <span class="keyword">var</span> lv = <span class="number">6</span>;
     <span class="keyword">while</span>(<span class="literal">null</span> === reducible[lv]) lv--;
 
-    <span class="comment">// 取出链表头并将其从链表中移除</span>
+    <span class="comment">// 取出鏈表頭並將其從鏈表中移除</span>
     <span class="keyword">var</span> node = reducible[lv];
     reducible[lv] = node.next;
 
-    <span class="comment">// 合并子节点</span>
+    <span class="comment">// 合併子節點</span>
     <span class="keyword">var</span> r = <span class="number">0</span>;
     <span class="keyword">var</span> g = <span class="number">0</span>;
     <span class="keyword">var</span> b = <span class="number">0</span>;
@@ -397,7 +397,7 @@ FF7901
         leafNum--;
     }
 
-    <span class="comment">// 赋值</span>
+    <span class="comment">// 賦值</span>
     node.isLeaf = <span class="literal">true</span>;
     node.red = r;
     node.green = g;
@@ -407,10 +407,10 @@ FF7901
 }
 </pre></td></tr></table></figure>
 
-<p>　　这样一来，就合并了一个最深层次的节点了，如果满打满算的话，一次合并最多会烧掉 7 个节点（我大 FFF 团壮哉）。</p>
-<h4 id="建树">建树</h4>
-<p>　　上面的函数都有了，我们可以开始建树了。</p>
-<p>　　实际上建树的过程就是遍历一遍传入的像素颜色信息，对于每个颜色都插入到八叉树当中；并且每一次插入之后都判断下叶子节点数有没有溢出，如果满出来的话需要及时合并。</p>
+<p>　　這樣一來，就合併了一個最深層次的節點了，如果滿打滿算的話，一次合併最多會燒掉 7 個節點（我大 FFF 團壯哉）。</p>
+<h4 id="建樹">建樹</h4>
+<p>　　上面的函數都有了，我們可以開始建樹了。</p>
+<p>　　實際上建樹的過程就是遍歷一遍傳入的像素顏色信息，對於每個顏色都插入到八叉樹當中；並且每一次插入之後都判斷下葉子節點數有沒有溢出，如果滿出來的話需要及時合併。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -422,20 +422,20 @@ FF7901
 9
 </pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">buildOctree</span><span class="params">(pixels, maxColors)</span> {</span>
     <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; pixels.length; i++) {
-        <span class="comment">// 添加颜色</span>
+        <span class="comment">// 添加顏色</span>
         addColor(root, pixels[i], <span class="number">0</span>);
 
-        <span class="comment">// 合并叶子节点</span>
+        <span class="comment">// 合併葉子節點</span>
         <span class="keyword">while</span>(leafNum &gt; maxColors) reduceTree();
     }
 }
 </pre></td></tr></table></figure>
 
-<p>　　整棵树建好之后，我们应该得到了最多有 <code>maxColors</code> 个叶子节点的高保真八叉树。其根节点为 <code>root</code>。</p>
-<h4 id="主题色提取">主题色提取</h4>
-<p>　　有了这么一棵八叉树之后我们就可以从里面提取我们想要的东西了。</p>
-<p>　　主题色提取实际上就是把八叉树当中剩下的叶子节点 <strong><em>RGB</em></strong> 通道分量求平均，求出来的就是近似的主题色了。（也许有更好的，不是求平均的方法能获得更好的主题色结果，但是我没有深入去研究，欢迎大家一起来指正 (❀╹◡╹)）</p>
-<p>　　于是我们深度遍历这棵树，每遇到叶子节点，就求出颜色加入到我们所存结果的数组或者任意数据结构当中了：</p>
+<p>　　整棵樹建好之後，我們應該得到了最多有 <code>maxColors</code> 個葉子節點的高保真八叉樹。其根節點爲 <code>root</code>。</p>
+<h4 id="主題色提取">主題色提取</h4>
+<p>　　有了這麼一棵八叉樹之後我們就可以從裏面提取我們想要的東西了。</p>
+<p>　　主題色提取實際上就是把八叉樹當中剩下的葉子節點 <strong><em>RGB</em></strong> 通道分量求平均，求出來的就是近似的主題色了。（也許有更好的，不是求平均的方法能獲得更好的主題色結果，但是我沒有深入去研究，歡迎大家一起來指正 (❀╹◡╹)）</p>
+<p>　　於是我們深度遍歷這棵樹，每遇到葉子節點，就求出顏色加入到我們所存結果的數組或者任意數據結構當中了：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -482,14 +482,14 @@ FF7901
 }
 </pre></td></tr></table></figure>
 
-<h4 id="算法小结">算法小结</h4>
-<p>　　八叉树主题色提取算法提取出来的主题色是一个无固定调色板（Non-palette）的颜色群，它有着对原图的尽量保真性，但是由于没有固定的调色板，有时候对于搜索或者某种需要固定值来解释的场景中还是欠了点火候。但是活灵活现非它莫属了。比如某种图片格式里面预先存调色板然后存各像素的情况下，我们就可以用八叉树提取出来的颜色作为该图片调色板，能很大程度上对这张图片进行保真，并且图片颜色也减到一定的量。</p>
-<p>　　该算法的完整 Demo 大家可以在我的 <a href="https://github.com/XadillaX/theme-color-test/blob/master/version3/octree.js" target="_blank">Github</a> 当中找到。</p>
+<h4 id="算法小結">算法小結</h4>
+<p>　　八叉樹主題色提取算法提取出來的主題色是一個無固定調色板（Non-palette）的顏色羣，它有着對原圖的儘量保真性，但是由於沒有固定的調色板，有時候對於搜索或者某種需要固定值來解釋的場景中還是欠了點火候。但是活靈活現非它莫屬了。比如某種圖片格式裏面預先存調色板然後存各像素的情況下，我們就可以用八叉樹提取出來的顏色作爲該圖片調色板，能很大程度上對這張圖片進行保真，並且圖片顏色也減到一定的量。</p>
+<p>　　該算法的完整 Demo 大家可以在我的 <a href="https://github.com/XadillaX/theme-color-test/blob/master/version3/octree.js" target="_blank">Github</a> 當中找到。</p>
 <h3 id="最小差值法">最小差值法</h3>
-<p>　　这是一个非常简单又实用的算法。</p>
-<p>　　大致的思想就是给定一个调色板，过来一个颜色就跟调色板中的颜色一一对比，取最小差值的那个调色板里的颜色作为这个颜色的代表。</p>
-<p>　　对比的过程就是分别将 <strong>R / G / B</strong> 通道的值两两相减取绝对值，将三个差相加，得到的这个值就是颜色差值了。</p>
-<p>　　反正最后就是调色板中哪个颜色跟对比的颜色差值最小，就拿过来就是了。</p>
+<p>　　這是一個非常簡單又實用的算法。</p>
+<p>　　大致的思想就是給定一個調色板，過來一個顏色就跟調色板中的顏色一一對比，取最小差值的那個調色板裏的顏色作爲這個顏色的代表。</p>
+<p>　　對比的過程就是分別將 <strong>R / G / B</strong> 通道的值兩兩相減取絕對值，將三個差相加，得到的這個值就是顏色差值了。</p>
+<p>　　反正最後就是調色板中哪個顏色跟對比的顏色差值最小，就拿過來就是了。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -540,29 +540,29 @@ b = pal[best].b.toString(<span class="number">16</span>);
 colors[r + g + b]++;
 </pre></td></tr></table></figure>
 
-<h2 id="我是怎么做的">我是怎么做的</h2>
-<p>　　八叉树的缺点我在之前的八叉树小结中提到过了，就是颜色不固定。对于需要有一定固定值范围的主题色提取需求来说不是那么合人意。</p>
-<p>　　而最小差值法的话又太古板了。</p>
-<p>　　于是我的做法是将这两种算法都过一遍。</p>
-<p>　　比如我要将一张图片提取出少于 256 种颜色，我会用八叉树过滤一遍得出保证的两百多种颜色，然后拿着这批颜色和其数量再扔到最小插值法里面将颜色规范化一遍，得出的最终结果可能就是我想要的结果了。</p>
-<p>　　这期间第二步的效率可以忽略不计，毕竟如果是上面的需求的话第一步的结果也就那么两百多种颜色。</p>
-<p>　　这个方法我已经实现并且用在我自己的颜色提取包 <strong><em><a href="https://github.com/XadillaX/thmclrx" target="_blank">thmclrx</a></em></strong> 里了。大致的代码可以看<a href="https://github.com/XadillaX/thmclrx/blob/7ab4de9fce583e88da6a41b0e256e91c45a10f67/lib/x.js#L95-L145" target="_blank">这里</a>。</p>
-<h2 id="主题色提取_Node-js_包——thmclrx">主题色提取 Node.js 包——thmclrx</h2>
-<p>　　在这几天的辛勤劳作下，总算完成了某种意义上我的第一个 Node.js C++ Addon。</p>
-<p>　　跟算法相关（八叉树、最小差值）的计算全放在了 <a href="https://github.com/XadillaX/thmclrx/tree/master/src" target="_blank">C++ 层</a>进行计算。大家有兴趣的可以去读一下并且帮忙指出各种各样的缺点，算是抛砖引玉了。</p>
-<p>　　这个包的 Repo 在 Github 上面：</p>
+<h2 id="我是怎麼做的">我是怎麼做的</h2>
+<p>　　八叉樹的缺點我在之前的八叉樹小結中提到過了，就是顏色不固定。對於需要有一定固定值範圍的主題色提取需求來說不是那麼合人意。</p>
+<p>　　而最小差值法的話又太古板了。</p>
+<p>　　於是我的做法是將這兩種算法都過一遍。</p>
+<p>　　比如我要將一張圖片提取出少於 256 種顏色，我會用八叉樹過濾一遍得出保證的兩百多種顏色，然後拿着這批顏色和其數量再扔到最小插值法裏面將顏色規範化一遍，得出的最終結果可能就是我想要的結果了。</p>
+<p>　　這期間第二步的效率可以忽略不計，畢竟如果是上面的需求的話第一步的結果也就那麼兩百多種顏色。</p>
+<p>　　這個方法我已經實現並且用在我自己的顏色提取包 <strong><em><a href="https://github.com/XadillaX/thmclrx" target="_blank">thmclrx</a></em></strong> 裏了。大致的代碼可以看<a href="https://github.com/XadillaX/thmclrx/blob/7ab4de9fce583e88da6a41b0e256e91c45a10f67/lib/x.js#L95-L145" target="_blank">這裏</a>。</p>
+<h2 id="主題色提取_Node-js_包——thmclrx">主題色提取 Node.js 包——thmclrx</h2>
+<p>　　在這幾天的辛勤勞作下，總算完成了某種意義上我的第一個 Node.js C++ Addon。</p>
+<p>　　跟算法相關（八叉樹、最小差值）的計算全放在了 <a href="https://github.com/XadillaX/thmclrx/tree/master/src" target="_blank">C++ 層</a>進行計算。大家有興趣的可以去讀一下並且幫忙指出各種各樣的缺點，算是拋磚引玉了。</p>
+<p>　　這個包的 Repo 在 Github 上面：</p>
 <blockquote>
 <p><a href="https://github.com/XadillaX/thmclrx" target="_blank">https://github.com/XadillaX/thmclrx</a></p>
 </blockquote>
-<p>　　文档自认为还算完整吧。并且也可以通过</p>
+<p>　　文檔自認爲還算完整吧。並且也可以通過</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre><span class="variable">$ </span>npm install thmclrx
 </pre></td></tr></table></figure>
 
-<p>　　进行安装。</p>
-<h2 id="本文小结">本文小结</h2>
-<p>　　进花瓣两个月了，这一次终于如愿以偿地碰触到了一点点的『算法相关』的活。（我不会告诉你这不是我的任务，是我从别人手中抢来的 2333333 <em>ଘ(੭</em>ˊᵕˋ)੭* ੈ✩‧₊˚</p>
-<p>　　总之几种算法和实现在上方介绍了，具体需要怎么用还是要看大家自己了。我反正大致找到了我使用的途径，那你们呢。( ´･･)ﾉ(._.`)</p>
+<p>　　進行安裝。</p>
+<h2 id="本文小結">本文小結</h2>
+<p>　　進花瓣兩個月了，這一次終於如願以償地碰觸到了一點點的『算法相關』的活。（我不會告訴你這不是我的任務，是我從別人手中搶來的 2333333 <em>ଘ(੭</em>ˊᵕˋ)੭* ੈ✩‧₊˚</p>
+<p>　　總之幾種算法和實現在上方介紹了，具體需要怎麼用還是要看大家自己了。我反正大致找到了我使用的途徑，那你們呢。( ´･･)ﾉ(._.`)</p>
 
             
             <section class="comment">

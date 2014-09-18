@@ -6,10 +6,10 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="这次比赛由 Hungar，8Mao 以及我负责的。明明都读研了，还诈尸回来出题——归结起来大概是因为各种面试不顺吧，想来虐虐学弟妹们怒刷存在感。结果网络赛还是被虐得死去活来。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯
-　　好了废话不多说，还是直接上题解吧。
+    <meta name="description" content="這次比賽由 Hungar，8Mao 以及我負責的。明明都讀研了，還詐屍回來出題——歸結起來大概是因爲各種面試不順吧，想來虐虐學弟妹們怒刷存在感。結果網絡賽還是被虐得死去活來。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯
+　　好了廢話不多說，還是直接上題解吧。
 Minecraft Server Bug
-　　题意">
+　　題意">
     
     
 
@@ -20,7 +20,7 @@ Minecraft Server Bug
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>「NBUT 2014 校赛·网络同步赛」题解 (未完成...) | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>「NBUT 2014 校賽·網絡同步賽」題解 (未完成...) | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -94,11 +94,11 @@ Minecraft Server Bug
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>「NBUT 2014 校赛·网络同步赛」题解 (未完成...)</h1>
+        <h1>「NBUT 2014 校賽·網絡同步賽」題解 (未完成...)</h1>
         
         <div class="time-info">
 发表于:<time datetime="2014-05-05T07:08:39.000Z" itemprop="datePublished">2014年05月05日</time>,
-更新于:<time datetime="2014-07-30T03:07:18.000Z" itemprop="dateModified">2014年07月30日</time>,
+更新于:<time datetime="2014-09-18T09:15:28.000Z" itemprop="dateModified">2014年09月18日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
@@ -108,11 +108,11 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
                 <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Minecraft_Server_Bug"><span class="toc-number">1.</span> <span class="toc-text">Minecraft Server Bug</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Beautiful_Walls"><span class="toc-number">2.</span> <span class="toc-text">Beautiful Walls</span></a></li></ol>
             </div>
             
-            <p>这次比赛由 <a href="http://blog.163.com/surgy_han/" target="_blank">Hungar</a>，<a href="http://www.cnblogs.com/Wine93/" target="_blank">8Mao</a> 以及我负责的。明明都读研了，还诈尸回来出题——归结起来大概是因为各种面试不顺吧，想来虐虐学弟妹们怒刷存在感。结果网络赛还是被虐得死去活来。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯</p>
-<p>　　好了废话不多说，还是直接上题解吧。</p>
+            <p>這次比賽由 <a href="http://blog.163.com/surgy_han/" target="_blank">Hungar</a>，<a href="http://www.cnblogs.com/Wine93/" target="_blank">8Mao</a> 以及我負責的。明明都讀研了，還詐屍回來出題——歸結起來大概是因爲各種面試不順吧，想來虐虐學弟妹們怒刷存在感。結果網絡賽還是被虐得死去活來。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯</p>
+<p>　　好了廢話不多說，還是直接上題解吧。</p>
 <h2 id="Minecraft_Server_Bug">Minecraft Server Bug</h2>
-<p>　　题意大概就是说一排岩浆和水，你要拿一桶水和岩浆，并且水的下标小于岩浆。</p>
-<p>　　为了更便于理解，我们从后往前做。首先将序列读进来之后从后往前遍历——若是岩浆，那么岩浆数加一，如果是水，那么这桶水能选择后面岩浆的任意一桶，也就是说答案加上当前的岩浆数即可。</p>
+<p>　　題意大概就是說一排巖漿和水，你要拿一桶水和巖漿，並且水的下標小於巖漿。</p>
+<p>　　爲了更便於理解，我們從後往前做。首先將序列讀進來之後從後往前遍歷——若是巖漿，那麼巖漿數加一，如果是水，那麼這桶水能選擇後面巖漿的任意一桶，也就是說答案加上當前的巖漿數即可。</p>
 <blockquote>
 <p>注意用 <code>__int64</code>。</p>
 </blockquote>
@@ -175,8 +175,8 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 </pre></td></tr></table></figure>
 
 <h2 id="Beautiful_Walls">Beautiful Walls</h2>
-<p>　　一堵墙，每单位高度不定。你需要选择其中任意连续的墙，使得你选择的墙每单位的高度都是唯一的——问有多少种选法。</p>
-<p>　　先求出总的种数，然后求不满足的数量，最后用总数减去不满足数即为答案。</p>
+<p>　　一堵牆，每單位高度不定。你需要選擇其中任意連續的牆，使得你選擇的牆每單位的高度都是唯一的——問有多少種選法。</p>
+<p>　　先求出總的種數，然後求不滿足的數量，最後用總數減去不滿足數即爲答案。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
 3

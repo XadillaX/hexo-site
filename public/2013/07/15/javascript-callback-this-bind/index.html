@@ -6,9 +6,9 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="最近在写 NBUT Virtual Judge 的内核框架，用的又是 Node.JS 了，把它当作一个本地运行的脚本不断进行轮询。
-　　众所周知JS中的一个精髓就是异步回调。
-　　所以在我自己写的框架中也经常会出现类似于下面的代码：
+    <meta name="description" content="最近在寫 NBUT Virtual Judge 的內核框架，用的又是 Node.JS 了，把它當作一個本地運行的腳本不斷進行輪詢。
+　　衆所周知JS中的一個精髓就是異步回調。
+　　所以在我自己寫的框架中也經常會出現類似於下面的代碼：
 1
 foo.bar(a, b, function(){});
 
@@ -24,7 +24,7 @@ foo.bar(a, b, function(){});
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>关于JavaScript中callback函数的this指针重定义 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>關於JavaScript中callback函數的this指針重定義 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -98,11 +98,11 @@ foo.bar(a, b, function(){});
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>关于JavaScript中callback函数的this指针重定义</h1>
+        <h1>關於JavaScript中callback函數的this指針重定義</h1>
         
         <div class="time-info">
 发表于:<time datetime="2013-07-15T06:20:29.000Z" itemprop="datePublished">2013年07月15日</time>,
-更新于:<time datetime="2014-07-30T03:07:18.000Z" itemprop="dateModified">2014年07月30日</time>,
+更新于:<time datetime="2014-09-18T09:15:25.000Z" itemprop="dateModified">2014年09月18日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
@@ -112,24 +112,24 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
                 
             </div>
             
-            <p>最近在写 <strong>NBUT Virtual Judge</strong> 的内核框架，用的又是 <strong>Node.JS</strong> 了，把它当作一个本地运行的脚本不断进行轮询。</p>
-<p>　　众所周知JS中的一个精髓就是异步回调。</p>
-<p>　　所以在我自己写的框架中也经常会出现类似于下面的代码：</p>
+            <p>最近在寫 <strong>NBUT Virtual Judge</strong> 的內核框架，用的又是 <strong>Node.JS</strong> 了，把它當作一個本地運行的腳本不斷進行輪詢。</p>
+<p>　　衆所周知JS中的一個精髓就是異步回調。</p>
+<p>　　所以在我自己寫的框架中也經常會出現類似於下面的代碼：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>foo.bar(a, b, <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>});
 </pre></td></tr></table></figure>
 
-<p>　　总而言之就是写一个函数，这个函数将会调用一个回调函数。</p>
-<p>　　但是问题出现了：在那个回调函数 <code>function</code> 中，你如果使用了一个 <code>this</code> 指针的话，它将会指向根，而不是 <code>foo</code> 的本体。</p>
-<p>　　那么如果我们想在 <code>function</code> 中也用 <code>this</code> 来指代这个 <code>foo</code> 对象该怎么办呢？</p>
-<p>　　结果还是IRC有用。本人跑 <strong>Node.JS</strong> 的 <strong>IRC</strong> 上问了这个问题，结果有人就这样回复我了：</p>
+<p>　　總而言之就是寫一個函數，這個函數將會調用一個回調函數。</p>
+<p>　　但是問題出現了：在那個回調函數 <code>function</code> 中，你如果使用了一個 <code>this</code> 指針的話，它將會指向根，而不是 <code>foo</code> 的本體。</p>
+<p>　　那麼如果我們想在 <code>function</code> 中也用 <code>this</code> 來指代這個 <code>foo</code> 對象該怎麼辦呢？</p>
+<p>　　結果還是IRC有用。本人跑 <strong>Node.JS</strong> 的 <strong>IRC</strong> 上問了這個問題，結果有人就這樣回覆我了：</p>
 <blockquote>
 <p>13:07 &lt;shama&gt; xadillax: foo(a, b callback.bind(foo))</p>
 <p>13:10 &lt;olalonde&gt; foo (a, b fn) { fn = fn.bind(this); …. }</p>
 </blockquote>
-<p>　　然后还很热心地给了我个网址：<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind" target="_blank">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind</a></p>
-<p>　　总之最后得出的结论就是说：</p>
-<p>　　你只要给你的 <code>callback</code> 函数指定一个 <code>this</code> 指针即可。</p>
+<p>　　然後還很熱心地給了我個網址：<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind" target="_blank">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind</a></p>
+<p>　　總之最後得出的結論就是說：</p>
+<p>　　你只要給你的 <code>callback</code> 函數指定一個 <code>this</code> 指針即可。</p>
 <p>　　如：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
 2
@@ -137,7 +137,7 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 foo.bar(a, b, cb);
 </pre></td></tr></table></figure>
 
-<p>　　这样就能在回调函数中使用foo来作为其this指针了。</p>
+<p>　　這樣就能在回調函數中使用foo來作爲其this指針了。</p>
 
             
             <section class="comment">

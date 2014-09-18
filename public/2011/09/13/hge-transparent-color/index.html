@@ -6,9 +6,9 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="嘛 = = 在做那个项目的动画预览器的时候，因为那引擎封装得太麻烦了，于是自己基于HGE再移植一遍，发现其中有一个SetTransparentColor函数，即设置透明色。
-　　拿出来分享一下吧。
-　　其实方法很简单，HTEXTURE 是纹理句柄，当你用 Texture_Lock 这个函数锁定这个纹">
+    <meta name="description" content="嘛 = = 在做那個項目的動畫預覽器的時候，因爲那引擎封裝得太麻煩了，於是自己基於HGE再移植一遍，發現其中有一個SetTransparentColor函數，即設置透明色。
+　　拿出來分享一下吧。
+　　其實方法很簡單，HTEXTURE 是紋理句柄，當你用 Texture_Lock 這個函數鎖定這個紋">
     
     
 
@@ -19,7 +19,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>关于HGE的透明背景处理 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>關於HGE的透明背景處理 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -93,11 +93,11 @@
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>关于HGE的透明背景处理</h1>
+        <h1>關於HGE的透明背景處理</h1>
         
         <div class="time-info">
 发表于:<time datetime="2011-09-13T04:12:32.000Z" itemprop="datePublished">2011年09月13日</time>,
-更新于:<time datetime="2014-07-30T03:07:18.000Z" itemprop="dateModified">2014年07月30日</time>,
+更新于:<time datetime="2014-09-18T09:15:24.000Z" itemprop="dateModified">2014年09月18日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
@@ -107,9 +107,9 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
                 
             </div>
             
-            <p>嘛 = = 在做那个项目的动画预览器的时候，因为那引擎封装得太麻烦了，于是自己基于HGE再移植一遍，发现其中有一个SetTransparentColor函数，即设置透明色。</p>
-<p>　　拿出来分享一下吧。</p>
-<p>　　其实方法很简单，<code>HTEXTURE</code> 是纹理句柄，当你用 <code>Texture_Lock</code> 这个函数锁定这个纹理的时候，它的返回值就是这个纹理在内存中的首地址。也就是说接下来的 width * height 个地址中就是这个纹理的每一个像素了。既然要设置透明色，只要对于每个像素判断一下与运算一下就好了。</p>
+            <p>嘛 = = 在做那個項目的動畫預覽器的時候，因爲那引擎封裝得太麻煩了，於是自己基於HGE再移植一遍，發現其中有一個SetTransparentColor函數，即設置透明色。</p>
+<p>　　拿出來分享一下吧。</p>
+<p>　　其實方法很簡單，<code>HTEXTURE</code> 是紋理句柄，當你用 <code>Texture_Lock</code> 這個函數鎖定這個紋理的時候，它的返回值就是這個紋理在內存中的首地址。也就是說接下來的 width * height 個地址中就是這個紋理的每一個像素了。既然要設置透明色，只要對於每個像素判斷一下與運算一下就好了。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -148,7 +148,7 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 }
 </pre></td></tr></table></figure>
 
-<p>　　嘛，这样一来，就透明了~</p>
+<p>　　嘛，這樣一來，就透明瞭~</p>
 
             
             <section class="comment">

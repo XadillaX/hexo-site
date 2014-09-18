@@ -7,7 +7,7 @@
     <meta name="author" content="小鳥遊死月">
     
     <meta name="description" content="起因
-　　Storm 中的 Bolt 都是通过 Nimbus 这个服务将序列化好的 Bolt 断章取义地发到各个 worker 中。所以，任何在 bolt 之外你自认为加载期间初始化计算好的上下文环境并不会被打包上去，Java 我不懂也不知道，但是至少在 Clojure 这个类的概念被淡化的 LIS">
+　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIS">
     
     
 
@@ -18,7 +18,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Storm 中 Clojure 的 Prepare Bolt 实现 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>Storm 中 Clojure 的 Prepare Bolt 實現 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -92,24 +92,24 @@
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>Storm 中 Clojure 的 Prepare Bolt 实现</h1>
+        <h1>Storm 中 Clojure 的 Prepare Bolt 實現</h1>
         
         <div class="time-info">
 发表于:<time datetime="2014-08-04T03:50:21.000Z" itemprop="datePublished">2014年08月04日</time>,
-更新于:<time datetime="2014-08-04T10:58:32.000Z" itemprop="dateModified">2014年08月04日</time>,
+更新于:<time datetime="2014-09-18T09:15:35.000Z" itemprop="dateModified">2014年09月18日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
             <div id="toc" class="toc-article well">
                 <strong class="toc-title">大纲</strong>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#起因"><span class="toc-number">1.</span> <span class="toc-text">起因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#做法"><span class="toc-number">2.</span> <span class="toc-text">做法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-number">3.</span> <span class="toc-text">思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">4.</span> <span class="toc-text">小结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#起因"><span class="toc-number">1.</span> <span class="toc-text">起因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#做法"><span class="toc-number">2.</span> <span class="toc-text">做法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-number">3.</span> <span class="toc-text">思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小結"><span class="toc-number">4.</span> <span class="toc-text">小結</span></a></li></ol>
             </div>
             
             <h2 id="起因">起因</h2>
-<p>　　Storm 中的 Bolt 都是通过 Nimbus 这个服务将序列化好的 Bolt 断章取义地发到各个 worker 中。所以，任何在 bolt 之外你自认为加载期间初始化计算好的上下文环境并不会被打包上去，Java 我不懂也不知道，但是至少在 Clojure 这个类的概念被淡化的 LIST 方言中，你要做的就是把所有跟 bolt 初始化计算相关的代码放到其 <code>prepare</code> 的代码当中去。</p>
-<p>　　你想一下，当你在文件加载的时候初始化了一个 MongoDB 链接，这个链接总不能被序列化到远程去吧？所以说办法就是把 bolt 搞上去之后，bolt 自动去初始化一个链接——这就是 <code>prepare</code> 的作用了。</p>
-<p>　　说白了，这个还是我们在 <strong><em>Suwako</em></strong> 当中踩到的坑。</p>
+<p>　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIST 方言中，你要做的就是把所有跟 bolt 初始化計算相關的代碼放到其 <code>prepare</code> 的代碼當中去。</p>
+<p>　　你想一下，當你在文件加載的時候初始化了一個 MongoDB 鏈接，這個鏈接總不能被序列化到遠程去吧？所以說辦法就是把 bolt 搞上去之後，bolt 自動去初始化一個鏈接——這就是 <code>prepare</code> 的作用了。</p>
+<p>　　說白了，這個還是我們在 <strong><em>Suwako</em></strong> 當中踩到的坑。</p>
 <h2 id="做法">做法</h2>
 <p>　　大致的骨架如下：</p>
 <figure class="highlight clojure"><table><tr><td class="gutter"><pre>1
@@ -130,9 +130,9 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
     <span class="list">(<span class="title">...</span>)</span>)</span>)</span>)</span></span>
 </pre></td></tr></table></figure>
 
-<p>　　首先就是 <code>{:prepare true}</code> 代表了它是一个需要初始化的 Bolt。</p>
-<p>　　然后在 <code>(bolt)</code> 的作用域之内有两个 form——<code>prepare</code> 和 <code>execute</code>。</p>
-<p>　　其中 <code>prepare</code> 就是你要初始化的语句了。举个例子，我们让这里面初始化一个 <a href="http://clojuremongodb.info/" target="_blank">Monger</a>，于是我们要在 <code>let</code> 里面定义一个用于链接的 <code>atom {}</code>。</p>
+<p>　　首先就是 <code>{:prepare true}</code> 代表了它是一個需要初始化的 Bolt。</p>
+<p>　　然後在 <code>(bolt)</code> 的作用域之內有兩個 form——<code>prepare</code> 和 <code>execute</code>。</p>
+<p>　　其中 <code>prepare</code> 就是你要初始化的語句了。舉個例子，我們讓這裏面初始化一個 <a href="http://clojuremongodb.info/" target="_blank">Monger</a>，於是我們要在 <code>let</code> 裏面定義一個用於鏈接的 <code>atom {}</code>。</p>
 <figure class="highlight clojure"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -155,18 +155,18 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
      <span class="list">(<span class="title">...</span>)</span>)</span>)</span>)</span>)</span>
 </pre></td></tr></table></figure>
 
-<p>　　这样一来，当 Bolt 被 Nimbus 打包传到各个 worker 之后，Bolt 执行起来的时候会自动执行 <code>prepare</code> 当中的代码，即初始化 MongoDB 的链接，并且将其赋值给 <code>conn</code> 和 <code>db</code> 两个 atom。</p>
-<p>　　那么，我们就能在本体 <code>execute</code> 当中使用 <code>@conn</code> 和 <code>@db</code> 来使唤 MongoDB 了。</p>
+<p>　　這樣一來，當 Bolt 被 Nimbus 打包傳到各個 worker 之後，Bolt 執行起來的時候會自動執行 <code>prepare</code> 當中的代碼，即初始化 MongoDB 的鏈接，並且將其賦值給 <code>conn</code> 和 <code>db</code> 兩個 atom。</p>
+<p>　　那麼，我們就能在本體 <code>execute</code> 當中使用 <code>@conn</code> 和 <code>@db</code> 來使喚 MongoDB 了。</p>
 <h2 id="思考">思考</h2>
-<p>　　可能很多人不解，不是说尽量保持 LISP 语系当中值的不变性的么？</p>
-<p>　　其实不变性只是为了提高程序在运行时的效率——而事实上是，上面那段代码并没有在运行时去做变量。</p>
-<p>　　虽然说这么说有点牵强，但是的确就是这个意思——因为我们是在程序执行真正有用的好逻辑的时候没有去改变一些值，相反只是在 Bolt 启动的时候做一些变量的操作。</p>
-<p>　　换句话说，虽然严谨的讲那个时候是算运行时，但是在运行时里面我们却可以把它归类为预处理——这一类东西反正程序还没真正开始跑有用的东西，效率慢一点无所谓，而且就初始化这么屁大点事儿能有多少影响？</p>
-<p>　　效率和效果之间权衡上面的还是要仁者见仁智者见智了。</p>
-<h2 id="小结">小结</h2>
-<p>　　本以为 <code>Suwako</code> 终于可以暂时告一段落了，紧要关头居然还是阻塞了。</p>
-<p>　　说多都是泪，不说了，找 Bug 去了。</p>
-<p><img src="suwako.jpg" alt="泄矢诹访子"></p>
+<p>　　可能很多人不解，不是說儘量保持 LISP 語系當中值的不變性的麼？</p>
+<p>　　其實不變性只是爲了提高程序在運行時的效率——而事實上是，上面那段代碼並沒有在運行時去做變量。</p>
+<p>　　雖然說這麼說有點牽強，但是的確就是這個意思——因爲我們是在程序執行真正有用的好邏輯的時候沒有去改變一些值，相反只是在 Bolt 啓動的時候做一些變量的操作。</p>
+<p>　　換句話說，雖然嚴謹的講那個時候是算運行時，但是在運行時裏面我們卻可以把它歸類爲預處理——這一類東西反正程序還沒真正開始跑有用的東西，效率慢一點無所謂，而且就初始化這麼屁大點事兒能有多少影響？</p>
+<p>　　效率和效果之間權衡上面的還是要仁者見仁智者見智了。</p>
+<h2 id="小結">小結</h2>
+<p>　　本以爲 <code>Suwako</code> 終於可以暫時告一段落了，緊要關頭居然還是阻塞了。</p>
+<p>　　說多都是淚，不說了，找 Bug 去了。</p>
+<p><img src="suwako.jpg" alt="泄矢諏訪子"></p>
 
             
             <section class="comment">

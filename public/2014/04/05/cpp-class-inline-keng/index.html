@@ -6,10 +6,10 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="今天我来讲一讲 C++ 中类成员函数 inline 修饰符的一个坑。
-　　这个坑是我在尝试着写我的第一个 Node.js 扩展 simpleini 时候遇到的。
+    <meta name="description" content="今天我來講一講 C++ 中類成員函數 inline 修飾符的一個坑。
+　　這個坑是我在嘗試着寫我的第一個 Node.js 擴展 simpleini 時候遇到的。
 坑描述
-　　因为只是尝试着写，所以懒得自己实现，于是网上找了个开源的 C++ 阅读 ini 文件的项目，名不见经传，叫 miniini。
+　　因爲只是嘗試着寫，所以懶得自己實現，於是網上找了個開源的 C++ 閱讀 ini 文件的項目，名不見經傳，叫 miniini。
 ">
     
     
@@ -21,7 +21,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>C++中类成员函数 inline 的坑 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>C++中類成員函數 inline 的坑 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -95,35 +95,35 @@
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>C++中类成员函数 inline 的坑</h1>
+        <h1>C++中類成員函數 inline 的坑</h1>
         
         <div class="time-info">
 发表于:<time datetime="2014-04-05T08:55:57.000Z" itemprop="datePublished">2014年04月05日</time>,
-更新于:<time datetime="2014-07-30T03:07:18.000Z" itemprop="dateModified">2014年07月30日</time>,
+更新于:<time datetime="2014-09-18T09:15:23.000Z" itemprop="dateModified">2014年09月18日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
             <div id="toc" class="toc-article well">
                 <strong class="toc-title">大纲</strong>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#坑描述"><span class="toc-number">1.</span> <span class="toc-text">坑描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题分析"><span class="toc-number">2.</span> <span class="toc-text">问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-number">3.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#simpleini"><span class="toc-number">4.</span> <span class="toc-text">simpleini</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#坑描述"><span class="toc-number">1.</span> <span class="toc-text">坑描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#問題分析"><span class="toc-number">2.</span> <span class="toc-text">問題分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解決方案"><span class="toc-number">3.</span> <span class="toc-text">解決方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#simpleini"><span class="toc-number">4.</span> <span class="toc-text">simpleini</span></a></li></ol>
             </div>
             
-            <p>今天我来讲一讲 <code>C++</code> 中类成员函数 <code>inline</code> 修饰符的一个坑。</p>
-<p>　　这个坑是我在尝试着写我的第一个 <code>Node.js</code> 扩展 <code>simpleini</code> 时候遇到的。</p>
+            <p>今天我來講一講 <code>C++</code> 中類成員函數 <code>inline</code> 修飾符的一個坑。</p>
+<p>　　這個坑是我在嘗試着寫我的第一個 <code>Node.js</code> 擴展 <code>simpleini</code> 時候遇到的。</p>
 <h2 id="坑描述">坑描述</h2>
-<p>　　因为只是尝试着写，所以懒得自己实现，于是网上找了个开源的 <code>C++</code> 阅读 ini 文件的项目，名不见经传，叫 <a href="http://miniini.tuxfamily.org/" target="_blank">miniini</a>。</p>
-<p>　　好了，问题来了，当我写好我的源文件的时候，然后写好了我的 <code>binding.gyp</code> ，总之一切大功告成开始编译的时候—— <code>Windows</code> 下没问题，<code>MacOS</code> 下也可以正常运行，但是在 <code>Linux</code> 下就出问题了：</p>
+<p>　　因爲只是嘗試着寫，所以懶得自己實現，於是網上找了個開源的 <code>C++</code> 閱讀 ini 文件的項目，名不見經傳，叫 <a href="http://miniini.tuxfamily.org/" target="_blank">miniini</a>。</p>
+<p>　　好了，問題來了，當我寫好我的源文件的時候，然後寫好了我的 <code>binding.gyp</code> ，總之一切大功告成開始編譯的時候—— <code>Windows</code> 下沒問題，<code>MacOS</code> 下也可以正常運行，但是在 <code>Linux</code> 下就出問題了：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>node: symbol lookup err: <span class="keyword">...</span>/simpleIni.node: undefined symbol: _ZNK10INISection10ReadStringEPKcRS1_
 </pre></td></tr></table></figure>
 
-<p>　　大致的意思呢就是说找不到 <code>INISection</code> 的 <code>ReadString</code> 函数符号。</p>
-<h2 id="问题分析">问题分析</h2>
-<p>　　又是怀着崇敬的心情去 <a href="http://stackoverflow.com/questions/22868307/undefined-symbol-in-node-js-c-addon-under-linux-why" target="_blank">SO</a> 求解了。</p>
-<p>　　最后的解答大概<a href="http://isocpp.org/wiki/faq/inline-functions#inline-member-fns" target="_blank">如下</a>：</p>
+<p>　　大致的意思呢就是說找不到 <code>INISection</code> 的 <code>ReadString</code> 函數符號。</p>
+<h2 id="問題分析">問題分析</h2>
+<p>　　又是懷着崇敬的心情去 <a href="http://stackoverflow.com/questions/22868307/undefined-symbol-in-node-js-c-addon-under-linux-why" target="_blank">SO</a> 求解了。</p>
+<p>　　最後的解答大概<a href="http://isocpp.org/wiki/faq/inline-functions#inline-member-fns" target="_blank">如下</a>：</p>
 <blockquote>
-<p>内联成员函数的声明看起来像一个非内联函数的声明：</p>
+<p>內聯成員函數的聲明看起來像一個非內聯函數的聲明：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -134,7 +134,7 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 };
 </pre></td></tr></table></figure>
 
-<p>但是你的内敛成员函数定义前面又加了 <code>inline</code> 这个关键字时，你必须把这个定义放到头文件中：</p>
+<p>但是你的內斂成員函數定義前面又加了 <code>inline</code> 這個關鍵字時，你必須把這個定義放到頭文件中：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -147,19 +147,19 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 }
 </pre></td></tr></table></figure>
 
-<p>这么做的原因就是为了避免链接器 <code>unresolved external</code> 的发生。如果你不这么做，这个错误就将会在你从另外一个 <code>.cpp</code> 文件中调用它时出现。</p>
+<p>這麼做的原因就是爲了避免鏈接器 <code>unresolved external</code> 的發生。如果你不這麼做，這個錯誤就將會在你從另外一個 <code>.cpp</code> 文件中調用它時出現。</p>
 </blockquote>
-<p>　　好嘛，原来是原作者自己写的代码有问题啊。但是不得不说一下又涨姿势了。C++还真是有千奇百怪的坑和错误啊。</p>
-<h2 id="解决方案">解决方案</h2>
-<p>　　最后的解决方案大致就是把函数定义放到头文件中去，或者在函数声明前面也加上 <code>inline</code> 关键字。</p>
+<p>　　好嘛，原來是原作者自己寫的代碼有問題啊。但是不得不說一下又漲姿勢了。C++還真是有千奇百怪的坑和錯誤啊。</p>
+<h2 id="解決方案">解決方案</h2>
+<p>　　最後的解決方案大致就是把函數定義放到頭文件中去，或者在函數聲明前面也加上 <code>inline</code> 關鍵字。</p>
 <h2 id="simpleini">simpleini</h2>
-<p>　　我的第一个 <code>C++</code> 模块，叫 <code>simpleini</code> ，其实只是抱着试试看 <code>Node.j</code> 的 <code>C++</code> 模块是不是这么写的而已，并没有多大实际用处。Repo 在 <a href="https://github.com/XadillaX/node-simple-ini" target="_blank">Github</a> 上。</p>
-<p>　　然后用法很简单，先安装：</p>
+<p>　　我的第一個 <code>C++</code> 模塊，叫 <code>simpleini</code> ，其實只是抱着試試看 <code>Node.j</code> 的 <code>C++</code> 模塊是不是這麼寫的而已，並沒有多大實際用處。Repo 在 <a href="https://github.com/XadillaX/node-simple-ini" target="_blank">Github</a> 上。</p>
+<p>　　然後用法很簡單，先安裝：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre><span class="variable">$ </span>npm install simpleini
 </pre></td></tr></table></figure>
 
-<p>　　然后下面的代码就是例子了：</p>
+<p>　　然後下面的代碼就是例子了：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -176,7 +176,7 @@ console.log(simpleIni.read(<span class="string">"SETTINGS"</span>, <span class="
 console.log(simpleIni.read(<span class="string">"vals"</span>, <span class="string">"float"</span>));
 </pre></td></tr></table></figure>
 
-<p>　　读取配置的时候第一个参数是 <code>Section</code>，第二个参数是 <code>Key</code>，第三个参数是取不到该值时的默认值。</p>
+<p>　　讀取配置的時候第一個參數是 <code>Section</code>，第二個參數是 <code>Key</code>，第三個參數是取不到該值時的默認值。</p>
 
             
             <section class="comment">

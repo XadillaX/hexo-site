@@ -6,8 +6,8 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="本系列教程主要是写给我带的那帮熊孩子们看的。我自己的 Node.js 水平半斤八两，措辞之中也免不了有自己错误的理解，会误人子弟。但是对于初学者来说，某些自己助记的理解还是可取的。有些概念性的错误可以等他们进一步深入研究之后再自行更正。
-　　由于那帮人大多还处于使用 M$ Windows 的令人不愉">
+    <meta name="description" content="本系列教程主要是寫給我帶的那幫熊孩子們看的。我自己的 Node.js 水平半斤八兩，措辭之中也免不了有自己錯誤的理解，會誤人子弟。但是對於初學者來說，某些自己助記的理解還是可取的。有些概念性的錯誤可以等他們進一步深入研究之後再自行更正。
+　　由於那幫人大多還處於使用 M$ Windows 的令人不愉">
     
     
 
@@ -18,7 +18,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>一起撸Node.JS（负叁）——概述 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>一起擼Node.JS（負叄）——概述 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -92,27 +92,27 @@
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>一起撸Node.JS（负叁）——概述</h1>
+        <h1>一起擼Node.JS（負叄）——概述</h1>
         
         <div class="time-info">
 发表于:<time datetime="2013-08-13T00:00:00.000Z" itemprop="datePublished">2013年08月13日</time>,
-更新于:<time datetime="2014-07-30T03:07:18.000Z" itemprop="dateModified">2014年07月30日</time>,
+更新于:<time datetime="2014-09-18T09:15:28.000Z" itemprop="dateModified">2014年09月18日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
             <div id="toc" class="toc-article well">
                 <strong class="toc-title">大纲</strong>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Node-JS是什么？"><span class="toc-number">1.</span> <span class="toc-text">Node.JS是什么？</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#前端_JavaScript"><span class="toc-number">1.1.</span> <span class="toc-text">前端 JavaScript</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CommonJS"><span class="toc-number">1.2.</span> <span class="toc-text">CommonJS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Node-JS"><span class="toc-number">1.3.</span> <span class="toc-text">Node.JS</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">2.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#番外"><span class="toc-number">3.</span> <span class="toc-text">番外</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Node-JS是什麼？"><span class="toc-number">1.</span> <span class="toc-text">Node.JS是什麼？</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#前端_JavaScript"><span class="toc-number">1.1.</span> <span class="toc-text">前端 JavaScript</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CommonJS"><span class="toc-number">1.2.</span> <span class="toc-text">CommonJS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Node-JS"><span class="toc-number">1.3.</span> <span class="toc-text">Node.JS</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#小結"><span class="toc-number">2.</span> <span class="toc-text">小結</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#番外"><span class="toc-number">3.</span> <span class="toc-text">番外</span></a></li></ol>
             </div>
             
-            <p>本系列教程主要是写给我带的那帮熊孩子们看的。我自己的 <strong>Node.js</strong> 水平半斤八两，措辞之中也免不了有自己错误的理解，会误人子弟。但是对于初学者来说，某些自己助记的理解还是可取的。有些概念性的错误可以等他们进一步深入研究之后再自行更正。</p>
-<p>　　由于那帮人大多还处于使用 <strong>M$ Windows</strong> 的令人不愉快的阶段，所以本教程将会退而求其次，使其在 <strong>Cygwin</strong> 中模拟 <strong>linux</strong> 的命令（Windows的bat脚本实在是让人不敢恭维）。以及在这里会讲述一些 <strong>Git</strong> 操作的初步。当然，如果你已经在使用 <strong>linux</strong> 进行开发的话，可以跳过前面一堆令人感到厌烦的环境配置章节。或者你在使用 <strong>M$ Windows</strong> 但却不想改变自己的脚本习惯的话，也可以选择性地跳过一些章节和步骤。</p>
+            <p>本系列教程主要是寫給我帶的那幫熊孩子們看的。我自己的 <strong>Node.js</strong> 水平半斤八兩，措辭之中也免不了有自己錯誤的理解，會誤人子弟。但是對於初學者來說，某些自己助記的理解還是可取的。有些概念性的錯誤可以等他們進一步深入研究之後再自行更正。</p>
+<p>　　由於那幫人大多還處於使用 <strong>M$ Windows</strong> 的令人不愉快的階段，所以本教程將會退而求其次，使其在 <strong>Cygwin</strong> 中模擬 <strong>linux</strong> 的命令（Windows的bat腳本實在是讓人不敢恭維）。以及在這裏會講述一些 <strong>Git</strong> 操作的初步。當然，如果你已經在使用 <strong>linux</strong> 進行開發的話，可以跳過前面一堆令人感到厭煩的環境配置章節。或者你在使用 <strong>M$ Windows</strong> 但卻不想改變自己的腳本習慣的話，也可以選擇性地跳過一些章節和步驟。</p>
 <p><!-- 我是小小分割符 --></p>
-<h2 id="Node-JS是什么？">Node.JS是什么？</h2>
-<p>很多人都知道JS是一门语言，而且是一门脚本语言，其全称就是 <strong>JavaScript</strong>，而且与所谓的 <strong>Java</strong> 没有一个屁的关系。</p>
+<h2 id="Node-JS是什麼？">Node.JS是什麼？</h2>
+<p>很多人都知道JS是一門語言，而且是一門腳本語言，其全稱就是 <strong>JavaScript</strong>，而且與所謂的 <strong>Java</strong> 沒有一個屁的關係。</p>
 <h3 id="前端_JavaScript">前端 JavaScript</h3>
-<p>在好多年前，<strong>JavaScript</strong> 是网页的一个寄生虫，它必须依赖于网页的浏览器中才能执行，并且作为网页的一部分，以</p>
+<p>在好多年前，<strong>JavaScript</strong> 是網頁的一個寄生蟲，它必須依賴於網頁的瀏覽器中才能執行，並且作爲網頁的一部分，以</p>
 <figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
 2
 3
@@ -122,39 +122,39 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 </pre></td></tr></table></figure>
 
 
-<p>标签进行包含，这样才能提供其上下文环境。或者说将其单独写入一个 <code>*.js</code> 文件中，并且在网页里以</p>
+<p>標籤進行包含，這樣才能提供其上下文環境。或者說將其單獨寫入一個 <code>*.js</code> 文件中，並且在網頁裏以</p>
 <figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"foo/bar.js"</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
 </pre></td></tr></table></figure>
 
 
-<p>的形式将其包含进来。</p>
-<p>但总而言之，<strong>JavaScript</strong> 只是寄生在网页里面的一只小小可怜虫罢了。它的作用无非就是使网页的交互性更强，页面效果更多而已。</p>
-<p>后来，这帮不甘寂寞的人类将 <strong>JavaScript</strong> 从网页（或者说前端）的帝国中独立了出来（小心快递），于是就出现了 <strong>CommonJS</strong>。</p>
+<p>的形式將其包含進來。</p>
+<p>但總而言之，<strong>JavaScript</strong> 只是寄生在網頁裏面的一隻小小可憐蟲罷了。它的作用無非就是使網頁的交互性更強，頁面效果更多而已。</p>
+<p>後來，這幫不甘寂寞的人類將 <strong>JavaScript</strong> 從網頁（或者說前端）的帝國中獨立了出來（小心快遞），於是就出現了 <strong>CommonJS</strong>。</p>
 <h3 id="CommonJS">CommonJS</h3>
-<p><strong>CommonJS</strong> 其实不是一门新的语言，甚至都不能说它是一个新的解释器——实际上它只是一个概念或者是一个规范。</p>
-<p>在这个规范中，它定义了很多 <strong>API</strong> ，讲通俗点或者直截了当点就是函数啊类啊什么的，而这些 <strong>API</strong> 是为那些普通应用程序（Native App）而非浏览器应用使用。它的终极目标就是提供一个类似于 <strong>Python</strong>、<strong>Ruby</strong> 之类的脚本一样的标准库，开发者可以用这样的东西一样来做到 <strong>Python</strong>、<strong>Ruby</strong> 能做到的事，而非仅仅局限于网页中的效果或者功能实现，它也可以跑在本地。</p>
-<p>所以说下面的事情对于 <strong>JavaScript</strong> 来说不再是梦：</p>
+<p><strong>CommonJS</strong> 其實不是一門新的語言，甚至都不能說它是一個新的解釋器——實際上它只是一個概念或者是一個規範。</p>
+<p>在這個規範中，它定義了很多 <strong>API</strong> ，講通俗點或者直截了當點就是函數啊類啊什麼的，而這些 <strong>API</strong> 是爲那些普通應用程序（Native App）而非瀏覽器應用使用。它的終極目標就是提供一個類似於 <strong>Python</strong>、<strong>Ruby</strong> 之類的腳本一樣的標準庫，開發者可以用這樣的東西一樣來做到 <strong>Python</strong>、<strong>Ruby</strong> 能做到的事，而非僅僅侷限於網頁中的效果或者功能實現，它也可以跑在本地。</p>
+<p>所以說下面的事情對於 <strong>JavaScript</strong> 來說不再是夢：</p>
 <ul>
-<li>服务端JavaScript应用</li>
+<li>服務端JavaScript應用</li>
 <li>命令行工具</li>
-<li>图形界面应用</li>
-<li>混合应用（Titanium、Adobe AIR等）</li>
+<li>圖形界面應用</li>
+<li>混合應用（Titanium、Adobe AIR等）</li>
 </ul>
-<p>那么，它具体弥补了 <strong>前端JavaScript</strong> 的哪些空白呢？其实这也涉及了很多 <strong>前端JavaScript</strong> 所没有涉及的东西，如二进制、编码、IO、文件、系统、断言测试、套接字、事件队列、Worker、控制台等等。</p>
-<p>关于 <strong>CommonJS</strong> 的更进一步了解可以翻阅一下其 <strong><a href="http://wiki.commonjs.org/wiki/CommonJS" target="_blank">Wiki</a></strong>。</p>
+<p>那麼，它具體彌補了 <strong>前端JavaScript</strong> 的哪些空白呢？其實這也涉及了很多 <strong>前端JavaScript</strong> 所沒有涉及的東西，如二進制、編碼、IO、文件、系統、斷言測試、套接字、事件隊列、Worker、控制檯等等。</p>
+<p>關於 <strong>CommonJS</strong> 的更進一步瞭解可以翻閱一下其 <strong><a href="http://wiki.commonjs.org/wiki/CommonJS" target="_blank">Wiki</a></strong>。</p>
 <h3 id="Node-JS">Node.JS</h3>
-<p>上面讲了那么多，却始终停留在“规范”这个层面上。而 <strong>Node.JS</strong> 的出现便是让 <strong>CommonJS</strong> 成为了现实。</p>
-<p>这里要大家明确的一点的就是 <strong>Node.JS</strong> 并不是一门新的语言，它的语言还是 <strong>JavaScript</strong> ，硬要说是一门新的语言那也应该是 <strong>Common JavaScript</strong>。<strong>Node.JS</strong> 只是 <strong>CommonJS</strong> 的一个<a href="http://zh.wikipedia.org/wiki/%E8%A7%A3%E9%87%8A%E5%99%A8" target="_blank">解释器</a>罢了。</p>
-<p>它是基于 <strong>Google</strong> 的 <strong>V8虚拟机</strong>(Chrome浏览器所使用的JavaScript执行环境) 的一个解释器。</p>
-<p>很多人印象中的概念还是没能摆脱 <strong>前端JavaScript</strong> 的阴霾，认为 <strong>JavaScript</strong> 就是做网站的， <strong>Node.JS</strong> 也是如此。</p>
-<p>包括本人在 <strong><a href="http://cnodejs.org/" target="_blank">cnodejs.org</a></strong> 中看到的帖子大多也都是讲 <strong>Node.JS</strong> 如何如何做网站（服务端）云云，如何如何使用 <strong>Express</strong> 模块来搭建一个网站云云。</p>
+<p>上面講了那麼多，卻始終停留在“規範”這個層面上。而 <strong>Node.JS</strong> 的出現便是讓 <strong>CommonJS</strong> 成爲了現實。</p>
+<p>這裏要大家明確的一點的就是 <strong>Node.JS</strong> 並不是一門新的語言，它的語言還是 <strong>JavaScript</strong> ，硬要說是一門新的語言那也應該是 <strong>Common JavaScript</strong>。<strong>Node.JS</strong> 只是 <strong>CommonJS</strong> 的一個<a href="http://zh.wikipedia.org/wiki/%E8%A7%A3%E9%87%8A%E5%99%A8" target="_blank">解釋器</a>罷了。</p>
+<p>它是基於 <strong>Google</strong> 的 <strong>V8虛擬機</strong>(Chrome瀏覽器所使用的JavaScript執行環境) 的一個解釋器。</p>
+<p>很多人印象中的概念還是沒能擺脫 <strong>前端JavaScript</strong> 的陰霾，認爲 <strong>JavaScript</strong> 就是做網站的， <strong>Node.JS</strong> 也是如此。</p>
+<p>包括本人在 <strong><a href="http://cnodejs.org/" target="_blank">cnodejs.org</a></strong> 中看到的帖子大多也都是講 <strong>Node.JS</strong> 如何如何做網站（服務端）云云，如何如何使用 <strong>Express</strong> 模塊來搭建一個網站云云。</p>
 <blockquote>
-<p>这是一个误区。</p>
+<p>這是一個誤區。</p>
 </blockquote>
-<p><strong>PHP</strong> 还能用 <strong><a href="http://www.php-cli.com/" target="_blank">PHP-CLI</a></strong> 来写个脚本放本地跑呢，<strong>Node.JS</strong> 更是可以写任何程序。虽然这么讲有些夸大了，但是我这么说的理由是希望大家能摆脱这么一个误区。</p>
-<p>举个简单的例子吧，大家都是搞过 <strong>ACM</strong> 的孩子了，总对终端窗口的输入输出有一定感觉了吧。现在给我以最快速度码一个 <strong><em><a href="http://acm.nbut.edu.cn/problem/view.xhtml?id=1000" target="_blank">A + B Problem</a></em></strong> 给我看看。</p>
-<p>轻车熟路，我知道。但是你们现在做的事用 <strong>Node.JS</strong> 同样能做到。</p>
+<p><strong>PHP</strong> 還能用 <strong><a href="http://www.php-cli.com/" target="_blank">PHP-CLI</a></strong> 來寫個腳本放本地跑呢，<strong>Node.JS</strong> 更是可以寫任何程序。雖然這麼講有些誇大了，但是我這麼說的理由是希望大家能擺脫這麼一個誤區。</p>
+<p>舉個簡單的例子吧，大家都是搞過 <strong>ACM</strong> 的孩子了，總對終端窗口的輸入輸出有一定感覺了吧。現在給我以最快速度碼一個 <strong><em><a href="http://acm.nbut.edu.cn/problem/view.xhtml?id=1000" target="_blank">A + B Problem</a></em></strong> 給我看看。</p>
+<p>輕車熟路，我知道。但是你們現在做的事用 <strong>Node.JS</strong> 同樣能做到。</p>
 <figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
 2
 3
@@ -180,34 +180,34 @@ process.stdin.on(<span class="string">"data"</span>, <span class="function"><spa
 </pre></td></tr></table></figure>
 
 
-<p>由于<del>我们学校</del>我的前任学校OJ不支持 <strong>Node.JS</strong>，所以请你们移步到 <strong><a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1000" target="_blank">AIZU OJ</a></strong> 去把上面的代码交过去看看结果看。</p>
+<p>由於<del>我們學校</del>我的前任學校OJ不支持 <strong>Node.JS</strong>，所以請你們移步到 <strong><a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1000" target="_blank">AIZU OJ</a></strong> 去把上面的代碼交過去看看結果看。</p>
 <blockquote>
-<p><strong>注意</strong>：语言要选择 <strong>JavaScript</strong>。</p>
+<p><strong>注意</strong>：語言要選擇 <strong>JavaScript</strong>。</p>
 </blockquote>
-<p>怎么样，同样能过题的对吧？</p>
-<h2 id="小结">小结</h2>
-<p>上面对这些东西做了个简单的介绍，我需要你们知道的东西很简单：</p>
+<p>怎麼樣，同樣能過題的對吧？</p>
+<h2 id="小結">小結</h2>
+<p>上面對這些東西做了個簡單的介紹，我需要你們知道的東西很簡單：</p>
 <ol>
-<li><strong>Node.JS</strong> 是一个脚本解释器，用的语言是 <strong>JavaScript</strong>。</li>
-<li><strong>Node.JS</strong> 功能很强大，不是只能拿来做网站的，眼光放开阔些。</li>
-<li>给我好好学。</li>
+<li><strong>Node.JS</strong> 是一個腳本解釋器，用的語言是 <strong>JavaScript</strong>。</li>
+<li><strong>Node.JS</strong> 功能很強大，不是只能拿來做網站的，眼光放開闊些。</li>
+<li>給我好好學。</li>
 </ol>
 <h2 id="番外">番外</h2>
 <blockquote>
-<p>有个码畜老了，想学学书法来修身养性。当他展开宣纸，犹豫了半天之后，终于挥毫泼墨，在纸上龙飞凤舞写下几个大字：</p>
+<p>有個碼畜老了，想學學書法來修身養性。當他展開宣紙，猶豫了半天之後，終於揮毫潑墨，在紙上龍飛鳳舞寫下幾個大字：</p>
 <blockquote>
 <p><strong><em>Hello World</em></strong></p>
 </blockquote>
 </blockquote>
-<p>虽然这一篇文章没有讲到任何 <strong>Node.JS</strong> 的语法，但是还是可以让你们练练书法的。</p>
-<p><strong>C语言</strong> 的标准输出函数是 <code>printf</code>，而 <strong>Node.JS</strong> 的标准输出则是：</p>
+<p>雖然這一篇文章沒有講到任何 <strong>Node.JS</strong> 的語法，但是還是可以讓你們練練書法的。</p>
+<p><strong>C語言</strong> 的標準輸出函數是 <code>printf</code>，而 <strong>Node.JS</strong> 的標準輸出則是：</p>
 <figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>console.<span class="keyword">log</span>(<span class="string">"blahblah..."</span>);
 </pre></td></tr></table></figure>
 
 
-<p>好的，即使没有装上 <strong>Node.JS</strong> 环境也阻止不了我们向世界问好。</p>
-<p>打开 <strong><a href="http://ideone.com/" target="_blank">IDEOne</a></strong>，将你的 <code>Hello World</code> 贴到编辑框中，然后在左侧的语言栏里面选中 <strong>Node.JS</strong> ，点击送出，你就能看到你的第一个 <strong>Node.JS</strong> 程序的运行结果了。</p>
+<p>好的，即使沒有裝上 <strong>Node.JS</strong> 環境也阻止不了我們向世界問好。</p>
+<p>打開 <strong><a href="http://ideone.com/" target="_blank">IDEOne</a></strong>，將你的 <code>Hello World</code> 貼到編輯框中，然後在左側的語言欄裏面選中 <strong>Node.JS</strong> ，點擊送出，你就能看到你的第一個 <strong>Node.JS</strong> 程序的運行結果了。</p>
 <p><strong><em>To be continued…</em></strong></p>
 
             

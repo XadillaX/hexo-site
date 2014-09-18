@@ -6,9 +6,9 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="N久之前的一个坑——用 Node.js 来重构 NBUT 的 Online Judge，包括评测端也得重构一遍。（至于什么时候完成大家就不要关心了，(／‵Д′)／~ ╧╧
-　　总之我们现在要做的其实简而言之就是——用C/C++来实现 Node.js 的模块。
-准备工作
+    <meta name="description" content="N久之前的一個坑——用 Node.js 來重構 NBUT 的 Online Judge，包括評測端也得重構一遍。（至於什麼時候完成大家就不要關心了，(／‵Д′)／~ ╧╧
+　　總之我們現在要做的其實簡而言之就是——用C/C++來實現 Node.js 的模塊。
+準備工作
 　　工欲善其事，必先耍流氓利其">
     
     
@@ -20,7 +20,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>让Node.js和C++一起搞基 —— 1 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>讓Node.js和C++一起搞基 —— 1 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -94,46 +94,46 @@
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>让Node.js和C++一起搞基 —— 1</h1>
+        <h1>讓Node.js和C++一起搞基 —— 1</h1>
         
         <div class="time-info">
 发表于:<time datetime="2014-04-01T16:53:22.000Z" itemprop="datePublished">2014年04月02日</time>,
-更新于:<time datetime="2014-07-30T03:07:18.000Z" itemprop="dateModified">2014年07月30日</time>,
+更新于:<time datetime="2014-09-18T09:15:30.000Z" itemprop="dateModified">2014年09月18日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
             <div id="toc" class="toc-article well">
                 <strong class="toc-title">大纲</strong>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#准备工作"><span class="toc-number">1.</span> <span class="toc-text">准备工作</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#node-gyp"><span class="toc-number">1.1.</span> <span class="toc-text">node-gyp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python"><span class="toc-number">1.2.</span> <span class="toc-text">Python</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译环境"><span class="toc-number">1.3.</span> <span class="toc-text">编译环境</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#入门"><span class="toc-number">2.</span> <span class="toc-text">入门</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hello_World"><span class="toc-number">2.1.</span> <span class="toc-text">Hello World</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#主要函数"><span class="toc-number">2.1.1.</span> <span class="toc-text">主要函数</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Handle&lt;Value&gt;"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">Handle&lt;Value&gt;</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Arguments"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">Arguments</span></a></li></ol><li class="toc-item toc-level-4"><a class="toc-link" href="#添砖加瓦"><span class="toc-number">2.1.2.</span> <span class="toc-text">添砖加瓦</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#HandleScope"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">HandleScope</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#String::New"><span class="toc-number">2.1.2.2.</span> <span class="toc-text">String::New</span></a></li></ol><li class="toc-item toc-level-4"><a class="toc-link" href="#导出对象"><span class="toc-number">2.1.3.</span> <span class="toc-text">导出对象</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#初始化函数"><span class="toc-number">2.1.3.1.</span> <span class="toc-text">初始化函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#真·导出"><span class="toc-number">2.1.3.2.</span> <span class="toc-text">真·导出</span></a></li></ol></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#编译_(๑•́_₃_•̀๑)"><span class="toc-number">2.2.</span> <span class="toc-text">编译 (๑•́ ₃ •̀๑)</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#configure"><span class="toc-number">2.2.1.</span> <span class="toc-text">configure</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#build"><span class="toc-number">2.2.2.</span> <span class="toc-text">build</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#搞基吧！Node_ヽ(✿ﾟ▽ﾟ)ノ_C++"><span class="toc-number">2.3.</span> <span class="toc-text">搞基吧！Node ヽ(✿ﾟ▽ﾟ)ノ C++</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#洗洗睡吧，下节更深入"><span class="toc-number">3.</span> <span class="toc-text">洗洗睡吧，下节更深入</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#準備工作"><span class="toc-number">1.</span> <span class="toc-text">準備工作</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#node-gyp"><span class="toc-number">1.1.</span> <span class="toc-text">node-gyp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python"><span class="toc-number">1.2.</span> <span class="toc-text">Python</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#編譯環境"><span class="toc-number">1.3.</span> <span class="toc-text">編譯環境</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#入門"><span class="toc-number">2.</span> <span class="toc-text">入門</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hello_World"><span class="toc-number">2.1.</span> <span class="toc-text">Hello World</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#主要函數"><span class="toc-number">2.1.1.</span> <span class="toc-text">主要函數</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Handle&lt;Value&gt;"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">Handle&lt;Value&gt;</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Arguments"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">Arguments</span></a></li></ol><li class="toc-item toc-level-4"><a class="toc-link" href="#添磚加瓦"><span class="toc-number">2.1.2.</span> <span class="toc-text">添磚加瓦</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#HandleScope"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">HandleScope</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#String::New"><span class="toc-number">2.1.2.2.</span> <span class="toc-text">String::New</span></a></li></ol><li class="toc-item toc-level-4"><a class="toc-link" href="#導出對象"><span class="toc-number">2.1.3.</span> <span class="toc-text">導出對象</span></a></li><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#初始化函數"><span class="toc-number">2.1.3.1.</span> <span class="toc-text">初始化函數</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#真·導出"><span class="toc-number">2.1.3.2.</span> <span class="toc-text">真·導出</span></a></li></ol></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#編譯_(๑•́_₃_•̀๑)"><span class="toc-number">2.2.</span> <span class="toc-text">編譯 (๑•́ ₃ •̀๑)</span></a></li><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#configure"><span class="toc-number">2.2.1.</span> <span class="toc-text">configure</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#build"><span class="toc-number">2.2.2.</span> <span class="toc-text">build</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#搞基吧！Node_ヽ(✿ﾟ▽ﾟ)ノ_C++"><span class="toc-number">2.3.</span> <span class="toc-text">搞基吧！Node ヽ(✿ﾟ▽ﾟ)ノ C++</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#洗洗睡吧，下節更深入"><span class="toc-number">3.</span> <span class="toc-text">洗洗睡吧，下節更深入</span></a></li></ol>
             </div>
             
-            <p>N久之前的一个坑——用 <strong>Node.js</strong> 来重构 NBUT 的 <strong>Online Judge</strong>，包括评测端也得重构一遍。（至于什么时候完成大家就不要关心了，(／‵Д′)／~ ╧╧</p>
-<p>　　总之我们现在要做的其实简而言之就是——用C/C++来实现 <strong>Node.js</strong> 的模块。</p>
-<h2 id="准备工作">准备工作</h2>
+            <p>N久之前的一個坑——用 <strong>Node.js</strong> 來重構 NBUT 的 <strong>Online Judge</strong>，包括評測端也得重構一遍。（至於什麼時候完成大家就不要關心了，(／‵Д′)／~ ╧╧</p>
+<p>　　總之我們現在要做的其實簡而言之就是——用C/C++來實現 <strong>Node.js</strong> 的模塊。</p>
+<h2 id="準備工作">準備工作</h2>
 <p>　　工欲善其事，必先<del>耍流氓</del>利其器。</p>
 <h3 id="node-gyp">node-gyp</h3>
-<p>　　首先你需要一个 <code>node-gyp</code> 模块。</p>
-<p>　　在任意角落，执行：</p>
+<p>　　首先你需要一個 <code>node-gyp</code> 模塊。</p>
+<p>　　在任意角落，執行：</p>
 <figure class="highlight"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>$ npm install node<span class="attribute">-gyp</span> <span class="attribute">-g</span>
 </pre></td></tr></table></figure>
 
 
-<p>　　在进行一系列的 <code>blahblah</code> 之后，你就安装好了。</p>
+<p>　　在進行一系列的 <code>blahblah</code> 之後，你就安裝好了。</p>
 <h3 id="Python">Python</h3>
-<p>　　然后你需要有个 <code>python</code> 环境。</p>
-<p>　　自己去<a href="http://python.org/" target="_blank">官网</a>搞一个来。</p>
+<p>　　然後你需要有個 <code>python</code> 環境。</p>
+<p>　　自己去<a href="http://python.org/" target="_blank">官網</a>搞一個來。</p>
 <blockquote>
-<p><strong>注意：</strong> 根据 <code>node-gyp</code> 的<a href="https://github.com/TooTallNate/node-gyp#installation" target="_blank">GitHub</a>显示，请务必保证你的 <code>python</code> 版本介于 <code>2.5.0</code> 和 <code>3.0.0</code> 之间。</p>
+<p><strong>注意：</strong> 根據 <code>node-gyp</code> 的<a href="https://github.com/TooTallNate/node-gyp#installation" target="_blank">GitHub</a>顯示，請務必保證你的 <code>python</code> 版本介於 <code>2.5.0</code> 和 <code>3.0.0</code> 之間。</p>
 </blockquote>
-<h3 id="编译环境">编译环境</h3>
-<p>　　嘛嘛，我就偷懒点不细写了，还请自己移步到 <a href="https://github.com/TooTallNate/node-gyp#installation" target="_blank">node-gyp</a> 去看编译器的需求。并且倒腾好。</p>
-<h2 id="入门">入门</h2>
-<p>　　我就拿<a href="http://nodejs.org/api/addons.html#addons_hello_world" target="_blank">官网的入门 Hello World</a>说事儿了。</p>
+<h3 id="編譯環境">編譯環境</h3>
+<p>　　嘛嘛，我就偷懶點不細寫了，還請自己移步到 <a href="https://github.com/TooTallNate/node-gyp#installation" target="_blank">node-gyp</a> 去看編譯器的需求。並且倒騰好。</p>
+<h2 id="入門">入門</h2>
+<p>　　我就拿<a href="http://nodejs.org/api/addons.html#addons_hello_world" target="_blank">官網的入門 Hello World</a>說事兒了。</p>
 <h3 id="Hello_World">Hello World</h3>
-<p>　　请准备一个 <code>C++</code> 文件，比如就叫 <del>sb.cc</del> hello.cc。</p>
-<p>　　然后我们一步步来，先往里面搞出头文件和定义好命名空间：</p>
+<p>　　請準備一個 <code>C++</code> 文件，比如就叫 <del>sb.cc</del> hello.cc。</p>
+<p>　　然後我們一步步來，先往裏面搞出頭文件和定義好命名空間：</p>
 <figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
 2
 3
@@ -143,36 +143,36 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 </pre></td></tr></table></figure>
 
 
-<h4 id="主要函数">主要函数</h4>
-<p>　　接下去我们写一个函数，其返回值是 <code>Handle&lt;Value&gt;</code>。</p>
+<h4 id="主要函數">主要函數</h4>
+<p>　　接下去我們寫一個函數，其返回值是 <code>Handle&lt;Value&gt;</code>。</p>
 <figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
 2
 3
 4
 </pre></td><td class="code"><pre>Handle&lt;Value&gt; Hello(const Arguments&amp; args)
 {
-    //<span class="keyword">...</span> 嗷嗷待写
+    //<span class="keyword">...</span> 嗷嗷待寫
 }
 </pre></td></tr></table></figure>
 
 
-<p>　　然后我来粗粗解析一下这些东西：</p>
+<p>　　然後我來粗粗解析一下這些東西：</p>
 <h5 id="Handle&lt;Value&gt;">Handle&lt;Value&gt;</h5>
-<p>　　做人要有节操，我事先申明我是从<a href="http://cnodejs.org/topic/4f16442ccae1f4aa270010c5" target="_blank">这里</a>(<a href="http://cnodejs.org/user/fool" target="_blank">@fool</a>)参考的。</p>
+<p>　　做人要有節操，我事先申明我是從<a href="http://cnodejs.org/topic/4f16442ccae1f4aa270010c5" target="_blank">這裏</a>(<a href="http://cnodejs.org/user/fool" target="_blank">@fool</a>)參考的。</p>
 <blockquote>
-<p>V8 里使用 Handle 类型来托管 JavaScript 对象，与 C++ 的 std::sharedpointer 类似，Handle 类型间的赋值均是直接传递对象引用，但不同的是，V8 使用自己的 GC 来管理对象生命周期，而不是智能指针常用的引用计数。</p>
-<p>JavaScript 类型在 C++ 中均有对应的自定义类型，如 String 、 Integer 、 Object 、 Date 、 Array 等，严格遵守在 JavaScript 中的继承关系。 C++ 中使用这些类型时，必须使用 Handle 托管，以使用 GC 来管理它们的生命周期，而不使用原生栈和堆。</p>
+<p>V8 裏使用 Handle 類型來託管 JavaScript 對象，與 C++ 的 std::sharedpointer 類似，Handle 類型間的賦值均是直接傳遞對象引用，但不同的是，V8 使用自己的 GC 來管理對象生命週期，而不是智能指針常用的引用計數。</p>
+<p>JavaScript 類型在 C++ 中均有對應的自定義類型，如 String 、 Integer 、 Object 、 Date 、 Array 等，嚴格遵守在 JavaScript 中的繼承關係。 C++ 中使用這些類型時，必須使用 Handle 託管，以使用 GC 來管理它們的生命週期，而不使用原生棧和堆。</p>
 </blockquote>
-<p>　　而这个所谓的 <strong>Value</strong> ，从 V8 引擎的头文件 <a href="http://code.google.com/p/v8/source/browse/trunk/include/v8.h#1417" target="_blank">v8.h</a> 中的各种继承关系中可以看出来，其实就是 JavaScript 中各种对象的基类。</p>
-<p>　　在了解了这件事之后，我们大致能明白上面那段函数的申明的意思就是说，我们写一个 <code>Hello</code> 函数，其返回的是一个不定类型的值。</p>
+<p>　　而這個所謂的 <strong>Value</strong> ，從 V8 引擎的頭文件 <a href="http://code.google.com/p/v8/source/browse/trunk/include/v8.h#1417" target="_blank">v8.h</a> 中的各種繼承關係中可以看出來，其實就是 JavaScript 中各種對象的基類。</p>
+<p>　　在了解了這件事之後，我們大致能明白上面那段函數的申明的意思就是說，我們寫一個 <code>Hello</code> 函數，其返回的是一個不定類型的值。</p>
 <blockquote>
-<p><strong>注意：</strong> 我们只能返回特定的类型，即在 Handle 托管下的 String 啊 Integer 啊等等等等。</p>
+<p><strong>注意：</strong> 我們只能返回特定的類型，即在 Handle 託管下的 String 啊 Integer 啊等等等等。</p>
 </blockquote>
 <h5 id="Arguments">Arguments</h5>
-<p>　　这个就是传入这个函数的参数了。我们都知道在 <code>Node.js</code> 中，参数个数是乱来的。而这些参数传进去到 <code>C++</code> 中的时候，就转变成了这个 <code>Arguments</code> 类型的对象了。</p>
-<p>　　具体的用法我们在后面再说，在这里只需要明白这个是个什么东西就好。（为毛要卖关子？因为 <code>Node.js</code> 官方文档中的<a href="https://github.com/rvagg/node-addon-examples" target="_blank">例子</a>就是分开来讲的，我现在只是讲第一个 <code>Hello World</code> 的例子而已( ´థ౪థ）σ</p>
-<h4 id="添砖加瓦">添砖加瓦</h4>
-<p>　　接下去我们就开始添砖加瓦了。就最简单的两句话：</p>
+<p>　　這個就是傳入這個函數的參數了。我們都知道在 <code>Node.js</code> 中，參數個數是亂來的。而這些參數傳進去到 <code>C++</code> 中的時候，就轉變成了這個 <code>Arguments</code> 類型的對象了。</p>
+<p>　　具體的用法我們在後面再說，在這裏只需要明白這個是個什麼東西就好。（爲毛要賣關子？因爲 <code>Node.js</code> 官方文檔中的<a href="https://github.com/rvagg/node-addon-examples" target="_blank">例子</a>就是分開來講的，我現在只是講第一個 <code>Hello World</code> 的例子而已( ´థ౪థ）σ</p>
+<h4 id="添磚加瓦">添磚加瓦</h4>
+<p>　　接下去我們就開始添磚加瓦了。就最簡單的兩句話：</p>
 <figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
 2
 3
@@ -186,13 +186,13 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 </pre></td></tr></table></figure>
 
 
-<p>　　这两句话是什么意思呢？大致的意思就是返回一个 <code>Node.js</code> 中的字符串 <code>&quot;world&quot;</code>。</p>
+<p>　　這兩句話是什麼意思呢？大致的意思就是返回一個 <code>Node.js</code> 中的字符串 <code>&quot;world&quot;</code>。</p>
 <h5 id="HandleScope">HandleScope</h5>
-<p>　　同参考自<a href="http://cnodejs.org/topic/4f16442ccae1f4aa270010c5" target="_blank">这里</a>。</p>
+<p>　　同參考自<a href="http://cnodejs.org/topic/4f16442ccae1f4aa270010c5" target="_blank">這裏</a>。</p>
 <blockquote>
-<p>Handle 的生命周期和 C++ 智能指针不同，并不是在 C++ 语义的 scope 内生存（即{} 包围的部分），而需要通过 HandleScope 手动指定。HandleScope 只能分配在栈上，HandleScope 对象声明后，其后建立的 Handle 都由 HandleScope 来管理生命周期，HandleScope 对象析构后，其管理的 Handle 将由 GC 判断是否回收。</p>
+<p>Handle 的生命週期和 C++ 智能指針不同，並不是在 C++ 語義的 scope 內生存（即{} 包圍的部分），而需要通過 HandleScope 手動指定。HandleScope 只能分配在棧上，HandleScope 對象聲明後，其後建立的 Handle 都由 HandleScope 來管理生命週期，HandleScope 對象析構後，其管理的 Handle 將由 GC 判斷是否回收。</p>
 </blockquote>
-<p>　　所以呢，我们得在需要管理他的生命周期的时候申明这个 <code>Scope</code> 。好的，那么为什么我们的代码不这么写呢？</p>
+<p>　　所以呢，我們得在需要管理他的生命週期的時候申明這個 <code>Scope</code> 。好的，那麼爲什麼我們的代碼不這麼寫呢？</p>
 <figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
 2
 3
@@ -206,11 +206,11 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 </pre></td></tr></table></figure>
 
 
-<p>　　因为当函数返回时，<code>scope</code> 会被析构，其管理的Handle也都将被回收，所以这个 <code>String</code> 就会变得没有意义。</p>
-<p>　　所以呢 V8 就想出了个神奇的点子——<code>HandleScope::Close(Handle&lt;T&gt; Value)</code> 函数！这个函数的用处就是关闭这个 Scope 并且把里面的参数转交给上一个 Scope 管理，也就是进入这个函数前的 Scope。</p>
-<p>　　于是就有了我们之前的代码 <code>scope.Close(String::New(&quot;world&quot;));</code>。</p>
+<p>　　因爲當函數返回時，<code>scope</code> 會被析構，其管理的Handle也都將被回收，所以這個 <code>String</code> 就會變得沒有意義。</p>
+<p>　　所以呢 V8 就想出了個神奇的點子——<code>HandleScope::Close(Handle&lt;T&gt; Value)</code> 函數！這個函數的用處就是關閉這個 Scope 並且把裏面的參數轉交給上一個 Scope 管理，也就是進入這個函數前的 Scope。</p>
+<p>　　於是就有了我們之前的代碼 <code>scope.Close(String::New(&quot;world&quot;));</code>。</p>
 <h5 id="String::New">String::New</h5>
-<p>　　这个 <code>String</code> 类所对应的就是 <code>Node.js</code> 中原生的字符串类。继承自 <code>Value</code> 类。与此类似，还有：</p>
+<p>　　這個 <code>String</code> 類所對應的就是 <code>Node.js</code> 中原生的字符串類。繼承自 <code>Value</code> 類。與此類似，還有：</p>
 <ul>
 <li>Array</li>
 <li>Integer</li>
@@ -221,32 +221,32 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 <li>Function</li>
 <li>…</li>
 </ul>
-<p>　　这些东西有些是继承自 <code>Value</code>，有些是二次继承。我们这里就不多做研究，自己可以看看 V8 的代码（至少是头文件）研究研究或者看看这个<a href="http://bespin.cz/~ondras/html/classv8_1_1Value.html#a70d4afaccc7903e6a01f40a46ad04188" target="_blank">手册</a>。</p>
-<p>　　而这个 <code>New</code> 呢？<a href="http://bespin.cz/~ondras/html/classv8_1_1String.html" target="_blank">这里</a>可以看的。就是新建一个 <code>String</code> 对象。</p>
-<p>　　至此，这个主要函数我们就解析完毕了。</p>
-<h4 id="导出对象">导出对象</h4>
-<p>　　我们来温习一下，如果是在 <code>Node.js</code> 里面写的话，我们怎么导出函数或者对象什么的呢？</p>
+<p>　　這些東西有些是繼承自 <code>Value</code>，有些是二次繼承。我們這裏就不多做研究，自己可以看看 V8 的代碼（至少是頭文件）研究研究或者看看這個<a href="http://bespin.cz/~ondras/html/classv8_1_1Value.html#a70d4afaccc7903e6a01f40a46ad04188" target="_blank">手冊</a>。</p>
+<p>　　而這個 <code>New</code> 呢？<a href="http://bespin.cz/~ondras/html/classv8_1_1String.html" target="_blank">這裏</a>可以看的。就是新建一個 <code>String</code> 對象。</p>
+<p>　　至此，這個主要函數我們就解析完畢了。</p>
+<h4 id="導出對象">導出對象</h4>
+<p>　　我們來溫習一下，如果是在 <code>Node.js</code> 裏面寫的話，我們怎麼導出函數或者對象什麼的呢？</p>
 <figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>exports.hello = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>}
 </pre></td></tr></table></figure>
 
 
-<p>　　那么，在 <code>C++</code> 中我们该如何做到这一步呢？</p>
-<h5 id="初始化函数">初始化函数</h5>
-<p>　　首先，我们写个初始化函数：</p>
+<p>　　那麼，在 <code>C++</code> 中我們該如何做到這一步呢？</p>
+<h5 id="初始化函數">初始化函數</h5>
+<p>　　首先，我們寫個初始化函數：</p>
 <figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
 2
 3
 4
 </pre></td><td class="code"><pre>void init(Handle&lt;Object&gt; exports)
 {
-    //<span class="keyword">...</span> 嗷嗷待写你妹啊！<span class="comment">#ﾟÅﾟ）⊂彡☆))ﾟДﾟ)･∵</span>
+    //<span class="keyword">...</span> 嗷嗷待寫你妹啊！<span class="comment">#ﾟÅﾟ）⊂彡☆))ﾟДﾟ)･∵</span>
 }
 </pre></td></tr></table></figure>
 
 
-<p>　　这是龟腚！函数名什么的无所谓，但是传入的参数一定是一个 <code>Handle&amp;lt;Object&gt;</code>，代表我们下面将要在这货上导出东西。</p>
-<p>　　然后，我们就在这里面写上导出的东西了：</p>
+<p>　　這是龜腚！函數名什麼的無所謂，但是傳入的參數一定是一個 <code>Handle&amp;lt;Object&gt;</code>，代表我們下面將要在這貨上導出東西。</p>
+<p>　　然後，我們就在這裏面寫上導出的東西了：</p>
 <figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
 2
 3
@@ -260,8 +260,8 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 </pre></td></tr></table></figure>
 
 
-<p>　　大致的意思就是说，为这个 <code>exports</code> 对象添加一个字段叫 <code>hello</code>，所对应的东西是一个<a href="http://bespin.cz/~ondras/html/classv8_1_1FunctionTemplate.html" target="_blank">函数</a>，而这个函数就是我们亲爱的 <code>Hello</code> 函数了。</p>
-<p>　　用伪代码写直白点就是：</p>
+<p>　　大致的意思就是說，爲這個 <code>exports</code> 對象添加一個字段叫 <code>hello</code>，所對應的東西是一個<a href="http://bespin.cz/~ondras/html/classv8_1_1FunctionTemplate.html" target="_blank">函數</a>，而這個函數就是我們親愛的 <code>Hello</code> 函數了。</p>
+<p>　　用僞代碼寫直白點就是：</p>
 <figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
 2
 3
@@ -274,18 +274,18 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 
 
 <p>　　大功告成！</p>
-<p>　　（大功告成你妹啊！闭嘴( ‘д‘⊂彡☆))Д´)</p>
-<h5 id="真·导出">真·导出</h5>
-<p>　　这才是最后一步，我们最后要申明，这个就是导出的入口，所以我们在代码的末尾加上这一行：</p>
+<p>　　（大功告成你妹啊！閉嘴( ‘д‘⊂彡☆))Д´)</p>
+<h5 id="真·導出">真·導出</h5>
+<p>　　這纔是最後一步，我們最後要申明，這個就是導出的入口，所以我們在代碼的末尾加上這一行：</p>
 <figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre><span class="function">NODE_MODULE(hello, init)</span>
 </pre></td></tr></table></figure>
 
 
-<p>　　纳了个尼？！这又是什么东西？</p>
-<p>　　别着急，这个 <code>NODE_MODULE</code> 是一个宏，它的意思呢就是说我们采用 <code>init</code> 这个初始化函数来把要导出的东西导出到 <code>hello</code> 中。那么这个 <code>hello</code> 哪来呢？</p>
-<p>　　<strong>它来自文件名！</strong>对，没错，它来自文件名。你并不需要事先申明它，你也不必担心不能用，总之你的这个最终编译好的二进制文件名叫什么，这里的 <code>hello</code> 你就填什么，当然要除去后缀名了。</p>
-<p>　　详见<a href="http://nodejs.org/api/addons.html#addons_hello_world" target="_blank">官方文档</a>。</p>
+<p>　　納了個尼？！這又是什麼東西？</p>
+<p>　　彆着急，這個 <code>NODE_MODULE</code> 是一個宏，它的意思呢就是說我們採用 <code>init</code> 這個初始化函數來把要導出的東西導出到 <code>hello</code> 中。那麼這個 <code>hello</code> 哪來呢？</p>
+<p>　　<strong>它來自文件名！</strong>對，沒錯，它來自文件名。你並不需要事先申明它，你也不必擔心不能用，總之你的這個最終編譯好的二進制文件名叫什麼，這裏的 <code>hello</code> 你就填什麼，當然要除去後綴名了。</p>
+<p>　　詳見<a href="http://nodejs.org/api/addons.html#addons_hello_world" target="_blank">官方文檔</a>。</p>
 <blockquote>
 <p>Note that all Node addons must export an initialization function:</p>
 <figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
@@ -297,10 +297,10 @@ NODE_MODULE(module_name, Initialize)
 <p>There is no semi-colon after NODE_MODULE as it’s not a function (see node.h).</p>
 <p>The module_name needs to match the filename of the final binary (minus the .node suffix).</p>
 </blockquote>
-<h3 id="编译_(๑•́_₃_•̀๑)">编译 (๑•́ ₃ •̀๑)</h3>
-<p>　　来吧，让我们一起编译吧！</p>
-<p>　　我们再新建一个类似于 <code>Makefile</code> 的归档文件吧——<code>binding.gyp</code>。</p>
-<p>　　并且在里面添加这样的<a href="https://github.com/TooTallNate/node-gyp#the-bindinggyp-file" target="_blank">代码</a>：</p>
+<h3 id="編譯_(๑•́_₃_•̀๑)">編譯 (๑•́ ₃ •̀๑)</h3>
+<p>　　來吧，讓我們一起編譯吧！</p>
+<p>　　我們再新建一個類似於 <code>Makefile</code> 的歸檔文件吧——<code>binding.gyp</code>。</p>
+<p>　　並且在裏面添加這樣的<a href="https://github.com/TooTallNate/node-gyp#the-bindinggyp-file" target="_blank">代碼</a>：</p>
 <figure class="highlight"><figcaption><span>json</span></figcaption><table><tr><td class="gutter"><pre>1
 2
 3
@@ -320,25 +320,25 @@ NODE_MODULE(module_name, Initialize)
 </pre></td></tr></table></figure>
 
 
-<p>　　为什么这么写呢？可以参考 <code>node-gyp</code> 的<a href="http://code.google.com/p/gyp/wiki/GypUserDocumentation#Skeleton_of_a_typical_Chromium_.gyp_file" target="_blank">官方文档</a>。</p>
+<p>　　爲什麼這麼寫呢？可以參考 <code>node-gyp</code> 的<a href="http://code.google.com/p/gyp/wiki/GypUserDocumentation#Skeleton_of_a_typical_Chromium_.gyp_file" target="_blank">官方文檔</a>。</p>
 <h4 id="configure">configure</h4>
-<p>　　在文件搞好之后，我们要在这个目录下面执行这个命令了：</p>
+<p>　　在文件搞好之後，我們要在這個目錄下面執行這個命令了：</p>
 <figure class="highlight"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre><span class="variable">$ </span>node-gyp configure
 </pre></td></tr></table></figure>
 
 
-<p>　　如果一切正常的话，应该会生成一个 <code>build</code> 的目录，然后里面有相关文件，也许是 <strong>M$ Visual Studio</strong> 的 <code>vcxproj</code> 文件等，也许是 <code>Makefile</code> ，视平台而定。</p>
+<p>　　如果一切正常的話，應該會生成一個 <code>build</code> 的目錄，然后里面有相關文件，也許是 <strong>M$ Visual Studio</strong> 的 <code>vcxproj</code> 文件等，也許是 <code>Makefile</code> ，視平臺而定。</p>
 <h4 id="build">build</h4>
-<p>　　<code>Makefile</code> 也生成好之后，我们就开始构造编译了：</p>
+<p>　　<code>Makefile</code> 也生成好之後，我們就開始構造編譯了：</p>
 <figure class="highlight"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre><span class="variable">$ </span>node-gyp build
 </pre></td></tr></table></figure>
 
 
-<p>　　等到一切编译完成，才算是真正的大功告成了！不信你去看看 <code>build/Release</code> 目录，下面是不是有一个 <code>hello.node</code> 文件了？没错，这个就是 C++ 等下要给 Node.js 捡的肥皂！</p>
+<p>　　等到一切編譯完成，纔算是真正的大功告成了！不信你去看看 <code>build/Release</code> 目錄，下面是不是有一個 <code>hello.node</code> 文件了？沒錯，這個就是 C++ 等下要給 Node.js 撿的肥皂！</p>
 <h3 id="搞基吧！Node_ヽ(✿ﾟ▽ﾟ)ノ_C++">搞基吧！Node ヽ(✿ﾟ▽ﾟ)ノ C++</h3>
-<p>　　我们在刚才那个目录下新建一个文件 <code>jianfeizao.js</code>：</p>
+<p>　　我們在剛纔那個目錄下新建一個文件 <code>jianfeizao.js</code>：</p>
 <figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
 2
 </pre></td><td class="code"><pre><span class="reserved">var</span> addon = <span class="built_in">require</span>(<span class="string">"./build/Release/hello"</span>);
@@ -346,9 +346,9 @@ NODE_MODULE(module_name, Initialize)
 </pre></td></tr></table></figure>
 
 
-<p>　　看到没！看到没！出来了出来了！Node.js 和 C++ 搞基的结果！这个 <code>addon.hello()</code> 就是我们之前在 C++ 代码中写的 <code>Handle&lt;Value&gt; Hello(const Arguments&amp; args)</code> 了，我们现在就已经把它返回的值给输出了。</p>
-<h2 id="洗洗睡吧，下节更深入">洗洗睡吧，下节更深入</h2>
-<p>　　时间不早了，今天就写到这里了，至此为止大家都能搞出最基础的 <strong>Hello world</strong> 的 C++ 扩展了吧。下一次写的应该会更深入一点，至于下一次是什么时候，我也不知道啦其实。<br>　　（喂喂喂，撸主怎么可以这么不负责！(ｏﾟﾛﾟ)┌┛Σ(ﾉ´<em>ω</em>`)ﾉ</p>
+<p>　　看到沒！看到沒！出來了出來了！Node.js 和 C++ 搞基的結果！這個 <code>addon.hello()</code> 就是我們之前在 C++ 代碼中寫的 <code>Handle&lt;Value&gt; Hello(const Arguments&amp; args)</code> 了，我們現在就已經把它返回的值給輸出了。</p>
+<h2 id="洗洗睡吧，下節更深入">洗洗睡吧，下節更深入</h2>
+<p>　　時間不早了，今天就寫到這裏了，至此爲止大家都能搞出最基礎的 <strong>Hello world</strong> 的 C++ 擴展了吧。下一次寫的應該會更深入一點，至於下一次是什麼時候，我也不知道啦其實。<br>　　（喂喂喂，擼主怎麼可以這麼不負責！(ｏﾟﾛﾟ)┌┛Σ(ﾉ´<em>ω</em>`)ﾉ</p>
 
             
             <section class="comment">
