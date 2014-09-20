@@ -9,6 +9,8 @@ var walk = require("walk");
 var fs = require("fs");
 var run = require("sync-runner");
 var walker = walk.walk("source");
+var OpenCC = require("opencc");
+var opencc = new OpenCC();
 
 walker.on("file", function(root, fileStats, next) {
     var filetype = path.extname(fileStats.name);
@@ -24,7 +26,13 @@ walker.on("file", function(root, fileStats, next) {
         }
 
         console.log("Transforming [" + filename + "]...");
-        console.log(run("opencc -i " + oldFilename + " -o " + filename));
+        //console.log(run("opencc -i " + oldFilename + " -o " + filename));
+
+        var text = fs.readFileSync(oldFilename, { encoding: "utf8" });
+        text = opencc.convertSync(text);
+        fs.writeFileSync(filename, text, { encoding: "utf8" });
+
+        fs.unlinkSync(oldFilename);
 
         next();
     });

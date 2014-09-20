@@ -98,7 +98,7 @@
         
         <div class="time-info">
 发表于:<time datetime="2014-04-01T16:53:22.000Z" itemprop="datePublished">2014年04月02日</time>,
-更新于:<time datetime="2014-09-18T09:15:30.000Z" itemprop="dateModified">2014年09月18日</time>,
+更新于:<time datetime="2014-09-20T07:47:07.000Z" itemprop="dateModified">2014年09月20日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
@@ -164,7 +164,7 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
 <p>JavaScript 類型在 C++ 中均有對應的自定義類型，如 String 、 Integer 、 Object 、 Date 、 Array 等，嚴格遵守在 JavaScript 中的繼承關係。 C++ 中使用這些類型時，必須使用 Handle 託管，以使用 GC 來管理它們的生命週期，而不使用原生棧和堆。</p>
 </blockquote>
 <p>　　而這個所謂的 <strong>Value</strong> ，從 V8 引擎的頭文件 <a href="http://code.google.com/p/v8/source/browse/trunk/include/v8.h#1417" target="_blank">v8.h</a> 中的各種繼承關係中可以看出來，其實就是 JavaScript 中各種對象的基類。</p>
-<p>　　在了解了這件事之後，我們大致能明白上面那段函數的申明的意思就是說，我們寫一個 <code>Hello</code> 函數，其返回的是一個不定類型的值。</p>
+<p>　　在瞭解了這件事之後，我們大致能明白上面那段函數的申明的意思就是說，我們寫一個 <code>Hello</code> 函數，其返回的是一個不定類型的值。</p>
 <blockquote>
 <p><strong>注意：</strong> 我們只能返回特定的類型，即在 Handle 託管下的 String 啊 Integer 啊等等等等。</p>
 </blockquote>
@@ -328,7 +328,7 @@ NODE_MODULE(module_name, Initialize)
 </pre></td></tr></table></figure>
 
 
-<p>　　如果一切正常的話，應該會生成一個 <code>build</code> 的目錄，然后里面有相關文件，也許是 <strong>M$ Visual Studio</strong> 的 <code>vcxproj</code> 文件等，也許是 <code>Makefile</code> ，視平臺而定。</p>
+<p>　　如果一切正常的話，應該會生成一個 <code>build</code> 的目錄，然後裏面有相關文件，也許是 <strong>M$ Visual Studio</strong> 的 <code>vcxproj</code> 文件等，也許是 <code>Makefile</code> ，視平臺而定。</p>
 <h4 id="build">build</h4>
 <p>　　<code>Makefile</code> 也生成好之後，我們就開始構造編譯了：</p>
 <figure class="highlight"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre>1

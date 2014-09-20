@@ -75,7 +75,7 @@ Handle<Value> Hello(const Arguments& args)
 
 　　而這個所謂的 **Value** ，從 V8 引擎的頭文件 [v8.h](http://code.google.com/p/v8/source/browse/trunk/include/v8.h#1417) 中的各種繼承關係中可以看出來，其實就是 JavaScript 中各種對象的基類。
 
-　　在了解了這件事之後，我們大致能明白上面那段函數的申明的意思就是說，我們寫一個 `Hello` 函數，其返回的是一個不定類型的值。
+　　在瞭解了這件事之後，我們大致能明白上面那段函數的申明的意思就是說，我們寫一個 `Hello` 函數，其返回的是一個不定類型的值。
 
 > **注意：** 我們只能返回特定的類型，即在 Handle 託管下的 String 啊 Integer 啊等等等等。
 
@@ -244,7 +244,7 @@ NODE_MODULE(module_name, Initialize)
 $ node-gyp configure
 {% endcode %}
 
-　　如果一切正常的話，應該會生成一個 `build` 的目錄，然后里面有相關文件，也許是 **M$ Visual Studio** 的 `vcxproj` 文件等，也許是 `Makefile` ，視平臺而定。
+　　如果一切正常的話，應該會生成一個 `build` 的目錄，然後裏面有相關文件，也許是 **M$ Visual Studio** 的 `vcxproj` 文件等，也許是 `Makefile` ，視平臺而定。
 
 #### build
 
