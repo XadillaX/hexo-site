@@ -1,3 +1,3 @@
-node gen.js
+node smp-trd.js
 hexo generate
 
