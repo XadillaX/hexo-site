@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2014-09-20T07:49:46.508Z</updated>
+  <updated>2014-09-22T05:53:45.201Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -15,11 +15,301 @@
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[讓我們用 Node.js 寫自己的 DDNS 動態域名程序]]></title>
+    <link href="http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/"/>
+    <id>http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/</id>
+    <published>2014-09-20T07:51:40.000Z</published>
+    <updated>2014-09-22T05:53:37.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="起因">起因</h2>
+<p>一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 <a href="http://kacaka.ca/" target="_blank">kacaka.ca</a>（目前暫失效）。</p>
+<p>爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 <a href="http://cloudflare.com/" target="_blank">CloudFlare</a>。而且它也有提供 API 讓開發者自己開發通過他的服務解析域名的服務。</p>
+<p>再然後，去年的九月份，我的早期 Node.js 作品 <strong><a href="https://github.com/XadillaX/dloucflare/tree/0.0.2" target="_blank">dloucflare</a></strong> 發佈了。所以就有了<a href="http://cnodejs.org/topic/522b64c3101e574521332451" target="_blank">這個帖子</a>。</p>
+<p>現在，我已經搬到電信了，然後舊版的貌似不能用了，因爲 <strong>CloudFlare</strong> 貌似 API 都遷移到了 <code>https</code> 上面。然後我爲了我的小夥伴們能訪問我出租屋裏的舊電腦，又重構了一遍<a href="https://github.com/XadillaX/dloucflare" target="_blank">這個項目</a>。</p>
+<h2 id="使用_dlouc-flare_構建">使用 dlouc-flare 構建</h2>
+<p>首先安裝最新的 <code>dlouc-flare</code> 包：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="variable">$ </span>npm install dlouc-flare
+</pre></td></tr></table></figure>
+
+<p>然後去創建一個 <strong>DF</strong> 對象：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="keyword">var</span> DloucFlare = <span class="built_in">require</span>(<span class="string">"dlouc-flare"</span>);
+<span class="keyword">var</span> df = DloucFlare.create(<span class="string">"你的郵箱"</span>, <span class="string">"API KEY"</span>, <span class="string">"域名（不需要 www）"</span>);
+</pre></td></tr></table></figure>
+
+<p><strong>CloudFlare</strong> 如何使用的話這裏就不多做解釋了，至於 <strong>API KEY</strong> 的話，可以在<a href="https://www.cloudflare.com/my-account" target="_blank">這裏</a>獲取到。</p>
+<p>然後調用 <code>df.dynamicDomains</code> 函數去把你這個域名下面的一些子域名加入你這個腳本的動態域名範疇當中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>df.dynamicDomains([ <span class="string">"@"</span>, <span class="string">"www"</span>, <span class="string">"子域名3"</span>, <span class="string">"子域名4"</span>, ... ], 檢測時間間隔);
+</pre></td></tr></table></figure>
+
+<blockquote>
+<p>其中 <code>&quot;@&quot;</code> 代表的是域名沒有 <code>www</code> 前綴的本身。檢測時間間隔以毫秒爲單位。</p>
+</blockquote>
+<p>事實上，你也可以自定義一個檢測你當前主機的 IP 地址的函數（如果你不喜歡用包內的默認檢測 IP 函數）。</p>
+<p>只要你寫一個函數：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">checkIp</span><span class="params">(callback)</span> {</span>
+    <span class="comment">// blahblah...</span>
+    callback(<span class="literal">undefined</span>, IP地址);
+}
+</pre></td></tr></table></figure>
+
+<p>然後覆蓋掉默認的 IP 檢測函數即可：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>df.getIpFunction = checkIp;
+</pre></td></tr></table></figure>
+
+<p>最後保存退出並用 <code>node</code> 執行你的程序就好了，程序就會開始歡快地跑了。</p>
+<p><img src="preview.png" alt="Preview"></p>
+<h2 id="如何自己寫？">如何自己寫？</h2>
+<p>其實要完全自己寫也是很簡單的——無非就是調用一下 <strong>CloudFlare</strong> 的 API 而已。</p>
+<p>我們定位明確就是要做 DDNS，所以沒必要關係其它很多不相關的 API，只需要最基礎的幾個就夠了。</p>
+<h3 id="API_解析">API 解析</h3>
+<p>所有 API 的基礎 URI 都爲：<a href="https://www.cloudflare.com/api_json.html" target="_blank">https://www.cloudflare.com/api_json.html</a>。</p>
+<h4 id="驗證信息">驗證信息</h4>
+<p>根據 <strong>CloudFlare</strong> 文檔所說，所有的提交都要黏上<a href="https://www.cloudflare.com/docs/client-api.html#s2.1" target="_blank">驗證信息</a>給 POST 過去。而驗證的字段如下：</p>
+<ul>
+<li><strong>tkn:</strong> 從你的個人頁面當中複製出來的 API KEY。</li>
+<li><strong>email:</strong> 你的登錄郵箱。</li>
+<li><strong>a:</strong> 操作名，每種操作都有其特有的操作名。</li>
+</ul>
+<h4 id="獲取域名下的子域名記錄">獲取域名下的子域名記錄</h4>
+<p>其操作名爲 <code>rec_load_all</code>，我們不關心其它不重要的參數，只需要再傳一個 <code>z</code> 字段代表其域名就好了，舉個例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+</pre></td><td class="code"><pre><span class="keyword">var</span> self = <span class="keyword">this</span>;
+<span class="keyword">var</span> param = {
+    a       : <span class="string">"rec_load_all"</span>,
+    tkn     : <span class="keyword">this</span>.apiKey,
+    email   : <span class="keyword">this</span>.email,
+    z       : <span class="keyword">this</span>.domain
+};
+
+<span class="keyword">var</span> url = <span class="string">"https://www.cloudflare.com/api_json.html"</span>;
+spidex.post(url, <span class="function"><span class="keyword">function</span><span class="params">(html, status)</span> {</span>
+    <span class="keyword">if</span>(status !== <span class="number">200</span>) {
+        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Error status while fetching DNS records."</span>));
+    }
+
+    <span class="keyword">var</span> json;
+    <span class="keyword">try</span> {
+        json = <span class="built_in">JSON</span>.parse(html);
+    } <span class="keyword">catch</span>(e) {
+        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Error while parsing DNS records: "</span> + e.message));
+    }
+
+    <span class="keyword">if</span>(json.result === <span class="string">"error"</span>) {
+        <span class="keyword">var</span> msg = json.msg;
+        <span class="keyword">if</span>(<span class="literal">undefined</span> === msg) msg = <span class="string">"Unknown error."</span>;
+        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(msg));
+    } <span class="keyword">else</span> <span class="keyword">if</span>(json.result === <span class="string">"success"</span>) {
+        <span class="keyword">var</span> count = json.response.recs.count;
+        <span class="keyword">var</span> objects = json.response.recs.objs;
+        <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; count; i++) {
+            self.records.push(<span class="keyword">new</span> DNSRecordObject(self, objects[i]));
+        }
+
+        callback(<span class="literal">undefined</span>, self.records);
+    } <span class="keyword">else</span> {
+        callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Unknown error."</span>));
+    }
+}, param, <span class="string">"utf8"</span>).on(<span class="string">"error"</span>, callback);
+</pre></td></tr></table></figure>
+
+<p>上述代碼就是把 <code>param</code> 數據給 POST 到 API 的 RESTful 裏面去。然後根據返回值進行解析。</p>
+<blockquote>
+<p>關於 <code>DNSRecordObject</code> 的代碼可以自行翻閱<a href="https://github.com/XadillaX/dloucflare/blob/master/lib/dnsrecordobject.js" target="_blank">這裏</a>。</p>
+<p>以及 <strong>spidex</strong> 的文檔在<a href="https://www.npmjs.org/package/spidex#readme" target="_blank">這裏</a>。</p>
+</blockquote>
+<h4 id="修改某記錄">修改某記錄</h4>
+<p>其操作名爲 <code>rec_edit</code>，如<a href="https://www.cloudflare.com/docs/client-api.html#s5.2" target="_blank">文檔</a>所說，除了固有的幾個參數之外，我們還需要有如下參數：</p>
+<ul>
+<li><code>z:</code> 域名。</li>
+<li><code>id:</code> 域名記錄編號，從 <code>rec_load_all</code> 中獲取。</li>
+<li><code>type:</code> 記錄類型。如 <code>A</code> / <code>CNAME</code> 等等。</li>
+<li><code>name:</code> 子域名名，如果無前綴子域名則與域名相同。</li>
+<li><code>content:</code> 值。如果我們只是做動態域名的話，這裏的值就是 IP。</li>
+<li><code>service_mode:</code> 服務類型，填原值即可。</li>
+<li><code>ttl</code>: TTL，填原值即可。</li>
+</ul>
+<blockquote>
+<p>上面參數的解說只是對於我們要做 DDNS 腳本而言的解釋。</p>
+</blockquote>
+<p>所以說在 <strong><a href="https://github.com/XadillaX/dloucflare/blob/master/lib/dnsrecordobject.js" target="_blank">dnsrecordobject.js</a></strong> 中我是這麼做的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+</pre></td><td class="code"><pre><span class="keyword">var</span> param = {
+    a       : <span class="string">"rec_edit"</span>,
+    tkn     : <span class="keyword">this</span>.dloucflare.apiKey,
+    email   : <span class="keyword">this</span>.dloucflare.email,
+    id      : <span class="keyword">this</span>.recordId(),
+
+    z       : <span class="keyword">this</span>.domain,
+    type    : <span class="keyword">this</span>.recordType(),
+    name    : <span class="keyword">this</span>.name,
+    content : ip,
+
+    service_mode    : <span class="keyword">this</span>.object.service_mode,
+    ttl     : <span class="keyword">this</span>.object.ttl
+};
+
+<span class="keyword">var</span> self = <span class="keyword">this</span>;
+spidex.post(config.baseUrl, <span class="function"><span class="keyword">function</span><span class="params">(html, status, respHeader)</span> {</span>
+    <span class="keyword">if</span>(status !== <span class="number">200</span>) {
+        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Error status while editing "</span> + self.name + <span class="string">"."</span>));
+    }
+
+    <span class="keyword">var</span> json;
+    <span class="keyword">try</span> {
+        json = <span class="built_in">JSON</span>.parse(html);
+    } <span class="keyword">catch</span>(e) {
+        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Error while parsing editing result: "</span> + e.message));
+    }
+
+    <span class="keyword">if</span>(json.result === <span class="string">"success"</span>) {
+        self.object.content = ip;
+        <span class="keyword">return</span> callback();
+    } <span class="keyword">else</span> {
+        <span class="keyword">var</span> msg = json.msg || <span class="string">"Unknown error."</span>;
+        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(msg));
+    }
+}, param, <span class="string">"utf8"</span>).on(<span class="string">"error"</span>, callback);
+</pre></td></tr></table></figure>
+
+<blockquote>
+<p>上面的代碼就能將你某個域名（<code>this.domain</code>）下的子域名 <code>this.name</code> 的 IP 給修改成 <code>ip</code> 了。</p>
+</blockquote>
+<h4 id="探測_IP">探測 IP</h4>
+<p>這種 API 網上就多了去了。</p>
+<p>舉個簡單的例子，我的 <code>dlouc-flare</code> 的獲取 IP 的 API 就是從</p>
+<blockquote>
+<p><a href="http://www.telize.com/ip" target="_blank">http://www.telize.com/ip</a></p>
+</blockquote>
+<p>來的。</p>
+<p>請求上面的地址之後，輸出的內容（注意有換行符）就是你當前機子所在的網絡的公網 IP 了。</p>
+<p>類似的 API 還有很多：</p>
+<ul>
+<li><strong><a href="http://ip-api.com/json" target="_blank">http://ip-api.com/json</a></strong>: 這個 API 就會輸出一堆的 JSON，需要自行解析。</li>
+<li><strong><a href="http://ip.taobao.com/service/getIpInfo2.php?ip=myip" target="_blank">http://ip.taobao.com/service/getIpInfo2.php?ip=myip</a></strong>: 這個是淘寶提供的 RESTful 獲取 IP 的 API。</li>
+<li>…（其它的可以自己去發現）</li>
+</ul>
+<h3 id="流程">流程</h3>
+<p>有了上面的仨 API，一切都好說了，流程很簡單：</p>
+<ul>
+<li>獲取自己某個使用 <code>CloudFlare</code> 解析的域名下的<a href="#獲取域名下的子域名記錄">子域名</a>。</li>
+<li>自己設置幾個子域名名拿來做 DDNS。</li>
+<li>設置一個定時器，每次定時器到時的時候都進行如下操作：<ol>
+<li>通過 <a href="#探測_IP">IP 的 API</a> 獲取當前 IP。</li>
+<li>循環遍歷每個自己設置的子域名名。</li>
+<li>對於每個子域名，都判斷其當前記錄 IP 是否等於當前剛探測的 IP。<ul>
+<li><strong>是</strong>：<a href="#修改某記錄">修改該子域名的記錄值</a>爲剛探測的 IP。</li>
+<li><strong>否</strong>：不作任何操作。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<p>有了上面的幾個步驟，加上之前我們講的幾個 API，大家就能輕鬆加愉快地完成自己的 DDNS 腳本了。</p>
+<p>當然，如果自己懶的話也可以用本文一開始的方法，使用 <code>dlouc-flare</code> 這個包，通過簡單的編碼就能實現自己的 DDNS 動態域名腳本了。</p>
+<blockquote>
+<p>這裏的定時器時間自己按需而定，就我自己而言，我是給設置了 <code>1000 * 60</code> 毫秒的間隔。</p>
+</blockquote>
+<h2 id="小結">小結</h2>
+<p>最早與動態域名結緣的時候是初中的時候，大概七八年前了吧，那個時候花生殼什麼的，但是最終用的是 <code>3322.org</code>。</p>
+<p>其實基本的動態域名的原理很簡單，無非就是本地開一個腳本，不停去探測本機 IP，一旦有變化就去解析服務器修改。</p>
+<p>本人在這裏拋磚引玉。如果哪裏有別的解析商的 API，大家自己也可以舉一反三，寫什麼 DNSPod 的動態域名，寫什麼 jiasule 的動態域名等等等等。</p>
+<p>喵~<em>ଘ(੭</em>ˊᵕˋ)੭* ੈ✩‧₊˚</p>
+]]></content>
+    
+    
+      <category term="DDNS" scheme="http://xcoder.in/tags/DDNS/"/>
+    
+      <category term="動態域名" scheme="http://xcoder.in/tags/%E5%8B%95%E6%85%8B%E5%9F%9F%E5%90%8D/"/>
+    
+      <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[圖片主題色提取算法小結]]></title>
     <link href="http://xcoder.in/2014/09/17/theme-color-extract/"/>
     <id>http://xcoder.in/2014/09/17/theme-color-extract/</id>
     <published>2014-09-17T03:34:54.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>所謂主題色提取，就是對於一張圖片，近似地提取出一個調色板，使得調色板裏面的顏色能組成這張圖片的主色調。</p>
 </blockquote>
@@ -487,7 +777,7 @@ colors[r + g + b]++;
     <link href="http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/"/>
     <id>http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/</id>
     <published>2014-09-01T12:36:33.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<h2 id="序">序</h2>
 <p>最近閒着蛋疼實現了兩個庫。</p>
 <ul>
@@ -692,7 +982,7 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <link href="http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/"/>
     <id>http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/</id>
     <published>2014-08-04T03:50:21.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2>
 <p>　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIST 方言中，你要做的就是把所有跟 bolt 初始化計算相關的代碼放到其 <code>prepare</code> 的代碼當中去。</p>
 <p>　　你想一下，當你在文件加載的時候初始化了一個 MongoDB 鏈接，這個鏈接總不能被序列化到遠程去吧？所以說辦法就是把 bolt 搞上去之後，bolt 自動去初始化一個鏈接——這就是 <code>prepare</code> 的作用了。</p>
@@ -772,7 +1062,7 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <link href="http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/"/>
     <id>http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/</id>
     <published>2014-07-30T02:14:29.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起_(灬ºωº灬)">起 (灬ºωº灬)</h2>
 <p>　　說來話長，自從入了花瓣，整個人就掉進連環坑了。</p>
 <p>　　後端元數據採集是用 Storm 來走拓撲流程的，又因爲 @<a href="http://weibo.com/zolazhou" target="_blank">Zola</a> 不是很喜歡 Java，所以退而求其次選擇了 Clojure，所以正在苦逼地學習 Clojure 和 Storm 中。</p>
@@ -847,7 +1137,7 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <link href="http://xcoder.in/2014/06/12/untrusted-solution/"/>
     <id>http://xcoder.in/2014/06/12/untrusted-solution/</id>
     <published>2014-06-12T03:08:34.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p><a href="http://alexnisnevich.github.io/untrusted/" target="_blank">Trusted</a> 是一個代碼解謎遊戲，用 Javascript 來過關的。</p>
 <p>　　昨天凌晨花了仨小時通關了這個遊戲，在這裏就粗粗做一下題解吧，好幾題都是 Hack 過去的。（不要臉，( ﾟДﾟ)σ</p>
 <h2 id="Ceil_Block_A">Ceil Block A</h2>
@@ -1477,7 +1767,7 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     <link href="http://xcoder.in/2014/06/07/cocos2d-311-setup/"/>
     <id>http://xcoder.in/2014/06/07/cocos2d-311-setup/</id>
     <published>2014-06-07T11:34:02.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p>由於偷懶，所以在此感謝 Etond 的指導（喂喂喂，明明是自己懶得看文檔，明明 <a href="README"><code>READEME.md</code></a> 裏面就有！(´≖◞౪◟≖)</p>
 <p>　　另，在搭建環境的時候，最好保證你在<span style="background: #222;">牆外</span>。以及我默認覺得大家已經有了 <code>Python</code> 環境和 <code>JDK</code>。</p>
 <h2 id="前驅工作">前驅工作</h2>
@@ -1571,6 +1861,8 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     
       <category term="cocos2d" scheme="http://xcoder.in/tags/cocos2d/"/>
     
+      <category term="遊戲開發" scheme="http://xcoder.in/categories/%E9%81%8A%E6%88%B2%E9%96%8B%E7%99%BC/"/>
+    
   </entry>
   
   <entry>
@@ -1578,7 +1870,7 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     <link href="http://xcoder.in/2014/06/07/tcp-those-things-1/"/>
     <id>http://xcoder.in/2014/06/07/tcp-those-things-1/</id>
     <published>2014-06-06T17:47:10.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p>TCP是一個巨複雜的協議，因爲他要解決很多問題，而這些問題又帶出了很多子問題和陰暗面。所以學習 TCP 本身是個比較痛苦的過程，但對於學習的過程卻能讓人有很多收穫。關於 TCP 這個協議的細節，我還是推薦你去看 <a href="http://www.kohala.com/start/" target="_blank">W.Richard Stevens</a> 的《<a href="http://book.douban.com/subject/1088054/" target="_blank">TCP/IP 詳解 卷1：協議</a>》（當然，你也可以去讀一下 <a href="http://tools.ietf.org/html/rfc793" target="_blank">RFC793</a> 以及後面 N 多的 RFC）。另外，本文我會使用英文術語，這樣方便你通過這些英文關鍵詞來查找相關的技術文檔。</p>
 <p>　　之所以想寫這篇文章，目的有三個，</p>
 <ul>
@@ -1754,7 +2046,7 @@ Segment      Segment     (Including SACK Blocks)
     <link href="http://xcoder.in/2014/06/03/scartlet-task/"/>
     <id>http://xcoder.in/2014/06/03/scartlet-task/</id>
     <published>2014-06-02T16:17:38.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p>事情很曲折，我某天在萌否收音機裏面聽到了一首歌，很好聽，叫 <code>hypnotized</code>，於是紅心了。</p>
 <p>　　過了幾天我再去聽——發現這首歌變了。</p>
 <p>　　最後經過多方面求證，我大概得出結果就是應該有人傳錯了歌，然後後來有人重新傳了一遍，導致我聽的不是原來那首歌了。那我那天聽的那首歌到底叫什麼名字呢？</p>
@@ -1784,7 +2076,7 @@ Segment      Segment     (Including SACK Blocks)
     <link href="http://xcoder.in/2014/06/02/vim-hexo-environment/"/>
     <id>http://xcoder.in/2014/06/02/vim-hexo-environment/</id>
     <published>2014-06-01T20:52:30.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p>本文只講兩個函數，對於 <code>markdown</code> 如何高亮之類的問題還請自行谷歌。</p>
 <p>　　然後請打開你自己的 <code>.vimrc</code> 文件。</p>
 <h2 id="預備工作">預備工作</h2>
@@ -1895,7 +2187,7 @@ endfun
     <link href="http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/"/>
     <id>http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/</id>
     <published>2014-05-05T07:08:39.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p>這次比賽由 <a href="http://blog.163.com/surgy_han/" target="_blank">Hungar</a>，<a href="http://www.cnblogs.com/Wine93/" target="_blank">8Mao</a> 以及我負責的。明明都讀研了，還詐屍回來出題——歸結起來大概是因爲各種面試不順吧，想來虐虐學弟妹們怒刷存在感。結果網絡賽還是被虐得死去活來。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯</p>
 <p>　　好了廢話不多說，還是直接上題解吧。</p>
 <h2 id="Minecraft_Server_Bug">Minecraft Server Bug</h2>
@@ -2061,7 +2353,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/11/hero-snake/"/>
     <id>http://xcoder.in/2014/04/11/hero-snake/</id>
     <published>2014-04-11T05:53:35.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>注：備份到這篇日誌的時候，感覺眼睛進了什麼奇怪的東西。（才……纔不是眼淚呢，那一定是沙子！(;´༎ຶД༎ຶ`)</p>
 <p>主要引起感傷的還是這首軒轅劍的 BGM 吧。因爲 Hero Snake 的BGM就是這個。</p>
@@ -2117,7 +2409,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/"/>
     <id>http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/</id>
     <published>2014-04-06T08:15:39.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p><a href="/2014/04/03/nodejs-cpp-addons-2/">上一章</a>我們偷偷學習瞭如何在 <code>C++</code> 中實現 <code>Node.js</code> 調用時傳參數和調用回調函數，並且我自己也心血來潮寫了個<a href="/2014/04/05/cpp-class-inline-keng/#simpleini">小 Demo</a> 供大家參考。</p>
 <p>　　今天我們就不複習了，直搗黃龍吧。</p>
 ]]></content>
@@ -2136,7 +2428,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/05/cpp-class-inline-keng/"/>
     <id>http://xcoder.in/2014/04/05/cpp-class-inline-keng/</id>
     <published>2014-04-05T08:55:57.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p>今天我來講一講 <code>C++</code> 中類成員函數 <code>inline</code> 修飾符的一個坑。</p>
 <p>　　這個坑是我在嘗試着寫我的第一個 <code>Node.js</code> 擴展 <code>simpleini</code> 時候遇到的。</p>
 <h2 id="坑描述">坑描述</h2>
@@ -2221,7 +2513,7 @@ console.log(simpleIni.read(<span class="string">"vals"</span>, <span class="stri
     <link href="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"/>
     <id>http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/</id>
     <published>2014-04-03T14:37:15.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p>好，今天讓我們更深入地搞基吧！</p>
 <h2 id="溫故而知新，可以爲溼矣">溫故而知新，可以爲溼矣</h2>
 <p>　　首先請大家記住這個 V8 的在線手冊——<a href="http://izs.me/v8-docs/main.html" target="_blank">http://izs.me/v8-docs/main.html</a>。</p>
@@ -2596,7 +2888,7 @@ NODE_MODULE(addon, Init)
     <link href="http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/"/>
     <id>http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/</id>
     <published>2014-04-01T16:53:22.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p>N久之前的一個坑——用 <strong>Node.js</strong> 來重構 NBUT 的 <strong>Online Judge</strong>，包括評測端也得重構一遍。（至於什麼時候完成大家就不要關心了，(／‵Д′)／~ ╧╧</p>
 <p>　　總之我們現在要做的其實簡而言之就是——用C/C++來實現 <strong>Node.js</strong> 的模塊。</p>
 <h2 id="準備工作">準備工作</h2>
@@ -2854,7 +3146,7 @@ NODE_MODULE(module_name, Initialize)
     <link href="http://xcoder.in/2014/03/27/node-public-file-house/"/>
     <id>http://xcoder.in/2014/03/27/node-public-file-house/</id>
     <published>2014-03-26T17:34:04.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p>所謂“公衆檔所”，其實就是一個公共的臨時網盤了。這個東西是一個老物了，在我剛接觸 <code>Expressjs</code> 的時候寫的。當時還隨便搞了一下 <code>backbone.js</code>，但是沒有深入，勿笑。關於深入構架 <code>Expressjs</code> 方面也沒做，只是粗粗寫了下最基礎的路由，所以整個文件結構也不是很規範。但是應該能比較適合剛學 <code>Node.js</code> 以及剛接觸 <code>Expressjs</code> 的人吧。</p>
 <p>　　Repo地址在<a href="https://github.com/XadillaX/public-file-house" target="_blank">我的Github</a>上。Demo地址在 <a href="http://dang.kacaka.ca/" target="_blank">http://dang.kacaka.ca/</a>，由於個人電腦的不穩定性，所以不保證你們隨時可以訪問，保不定哪天就失效了，所以最好的辦法還是自己 <code>clone</code> 下來啪啪啪。</p>
 <p>　　它所需要的東西大致就是 <code>Expressjs</code> + <code>Redis</code> + <code>Backbone</code> 了。不過都是最最基礎的代碼。</p>
@@ -3756,7 +4048,7 @@ $(<span class="function"><span class="keyword">function</span><span class="param
     <link href="http://xcoder.in/2013/12/28/xplan-spider-doc/"/>
     <id>http://xcoder.in/2013/12/28/xplan-spider-doc/</id>
     <published>2013-12-28T00:00:00.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<h2 id="前言">前言</h2>
 <p><strong>XPlan</strong> 是一個“基於校園強關係的社交應用”的開發代號。其中有一個功能是從學校網站上通過網絡爬蟲（Web Crawler）形式將學校新聞抓取到XPlan自身的數據庫當中。</p>
 <p>而這裏出現的一個問題就是學校網站上面的文章是通過類似於 <a href="http://kindeditor.net/" target="_blank"><code>KindEditor</code></a>、<a href="http://ueditor.baidu.com/website/" target="_blank"><code>UEditor</code></a>這類<strong>在線富文本編輯器</strong>生成的代碼。</p>
@@ -4008,7 +4300,7 @@ $ = cheerio.load(<span class="keyword">...</span>);
     <link href="http://xcoder.in/2013/08/31/srm-589-div2/"/>
     <id>http://xcoder.in/2013/08/31/srm-589-div2/</id>
     <published>2013-08-31T00:00:00.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p>好久沒擼 <strong>TC</strong> 了，手都生了。前兩天剛折騰好 <strong>LinuxMint</strong> + <strong>Cinnamon</strong>，順便手賤把 <strong>TC</strong> 環境配好了。</p>
 <p>　　隨便進去扯了一套最新的 <strong>SRM</strong> 來搞，全跑完之後才發現原來這場比賽還處於 <strong>System Running</strong> 階段。於是知道了比賽一結束還在 <strong>Running</strong> 的時候你就已經可以自己拉出來做了。小綠名大家不要笑。</p>
 <!-- 我是小小分割符 -->
@@ -4597,7 +4889,7 @@ dp2[<span class="link_label">i</span>][<span class="link_reference">0|1</span>]
     <link href="http://xcoder.in/2013/08/16/node-4-base/"/>
     <id>http://xcoder.in/2013/08/16/node-4-base/</id>
     <published>2013-08-16T00:00:00.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
+    <updated>2014-09-22T05:53:37.000Z</updated>
     <content type="html"><![CDATA[<p><strong>Node.js</strong> 的基礎是 <strong>JavaScript</strong> 這門 <strong><em>腳本語言</em></strong>。而大多數的腳本語言一個共同的特點就是“<a href="http://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1#.E5.BC.B7.E5.9E.8B.E5.88.A5.E5.92.8C.E5.BC.B1.E5.9E.8B.E5.88.A5" target="_blank">弱類型</a>”。</p>
 <p>　　不同於 <strong>PHP</strong> 的是，<strong>PHP</strong> 就是是有了新變量也無需申明，而 <strong>JavaScript</strong> 則還是需要 <code>var</code> 來申明一下的。而這個 <code>var</code> 涵蓋了 <strong>C++</strong> 中的<code>int</code>、<code>string</code>、<code>char</code>等一切類型的含義，甚至是 <code>function</code>。</p>
 <p>　　本篇以及後篇的所有內容都是在 <strong>Linux</strong> 或者 <strong>Cygwin</strong> 下用 <strong>vim</strong> 進行編輯（若不是則請自行轉變成你自己的方法），然後在命令行下進行查看結果的。</p>
@@ -5303,232 +5595,6 @@ console.<span class="keyword">log</span>(<span class="keyword">str</span>.sb());
 <li><strong>日期</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_date.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_date.asp</a></li>
 <li><strong>數學庫</strong>：<a href="http://www.w3school.com.cn/js/jsref_obj_math.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_math.asp</a></li>
 </ul>
-]]></content>
-    
-    
-      <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
-    
-      <category term="JavaScript" scheme="http://xcoder.in/tags/JavaScript/"/>
-    
-      <category term="一起擼Node.JS" scheme="http://xcoder.in/tags/%E4%B8%80%E8%B5%B7%E6%93%BCNode.JS/"/>
-    
-      <category term="NodeJS" scheme="http://xcoder.in/categories/NodeJS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[一起擼Node.JS（負貳）——環境]]></title>
-    <link href="http://xcoder.in/2013/08/15/node-2-environment-in-windows/"/>
-    <id>http://xcoder.in/2013/08/15/node-2-environment-in-windows/</id>
-    <published>2013-08-15T00:00:00.000Z</published>
-    <updated>2014-09-20T07:49:40.000Z</updated>
-    <content type="html"><![CDATA[<p>由於<a href="#linux-環境">Linux</a>中的環境搭建比較簡單，所以草草略過。</p>
-<p>　　其實<a href="#windows-環境">Windows</a>下也不算麻煩，但是這裏會講一定量的別的環境的搭建。</p>
-<p><!-- 我是小小分割符 --></p>
-<h2 id="Linux_環境">Linux 環境</h2>
-<p>講到這個就很簡單了，跟着下面的 <strong>bash</strong> 操作即可：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-</pre></td><td class="code"><pre>$ cd /usr/<span class="built_in">local</span>/bin
-$ wget http:<span class="comment">//nodejs.org/dist/v0.00.00/node-v0.00.00-linux-x00.tar.gz</span>
-$ tar zxf node<span class="attribute">-v0</span><span class="number">.00</span><span class="number">.00</span><span class="attribute">-linux</span><span class="attribute">-x00</span><span class="built_in">.</span>tar<span class="built_in">.</span>gz
-$ cd node<span class="attribute">-v0</span><span class="number">.00</span><span class="number">.00</span><span class="attribute">-linux</span><span class="attribute">-x00</span>
-</pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>其中將上方的 <strong>v0.00.00</strong> 替換成 <strong>Node.js</strong> 最新的版本號，把 <strong>x00</strong> 替換成你自己電腦的位數。</p>
-<p>也可以直接去官網 <a href="http://nodejs.org/download/" target="_blank">http://nodejs.org/download/</a> 找到相應的地址。</p>
-</blockquote>
-<p>最後將其的連接加入到 <code>/usr/bin</code> 下即可。</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre><span class="variable">$ </span>cd bin
-<span class="variable">$ </span>ln node /usr/bin
-<span class="variable">$ </span>ln npm /usr/bin
-</pre></td></tr></table></figure>
-
-
-<blockquote>
-<p><strong>注意</strong>： 該用 <code>sudo</code> 的地方就用 <code>sudo</code> 或者 <code>su</code> 。</p>
-</blockquote>
-<p>至此，<strong>Linux</strong> 下的 <strong>Node.js</strong> 環境基本搭建完畢。</p>
-<h2 id="Windows_環境">Windows 環境</h2>
-<h3 id="Cygwin_安裝和配置">Cygwin 安裝和配置</h3>
-<p><strong><em>Cygwin</em></strong> 是一個在 <strong><em>Windows</em></strong> 平臺上運行的 <strong><em>Unix</em></strong> 模擬環境。對於學習 <strong><em>Unix/Linux</em></strong> 操作環境，或者從 <strong><em>Unix</em></strong> 到 <strong><em>Windows</em></strong> 的應用程序移植，或者進行某些特殊的開發工作，尤其是使用 <strong><em>GNU工具集</em></strong> 在 <strong><em>Windows</em></strong> 上進行嵌入式系統開發，非常有用。</p>
-<h4 id="Cygwin_安裝">Cygwin 安裝</h4>
-<p>我們先跑到 <strong>Cygwin</strong> 的官網上去把東西下來：</p>
-<blockquote>
-<p><a href="http://cygwin.com/install.html" target="_blank">http://cygwin.com/install.html</a></p>
-<blockquote>
-<p>注意，最好下 <strong>x86</strong> 的包，因爲我們之後要講一個 <code>cyg-apt</code> 的腳本插件，這是一個能讓 <strong>Cygwin</strong> 能跟 <strong>Linux</strong> 一樣通過腳本從源安裝軟件包的腳本。爲了方便修改，我們將其下成 <strong>x86</strong> 的版本。</p>
-</blockquote>
-</blockquote>
-<p>然後就是安裝步驟了。</p>
-<center><img src="http://blog-xcoder-in.qiniudn.com/cygwin-install-1.png" alt="從網絡安裝"></center><br><center><small>[圖2.1]</small></center>
-
-<p>到 <strong>[圖2.1]</strong> 這個步驟的時候，選擇默認的 <code>Install from Internet</code> 即可。</p>
-<center><img src="http://blog-xcoder-in.qiniudn.com/cygwin-install-2.png" alt="選擇安裝路徑"></center><br><center><small>[圖2.2]</small></center>
-
-<p>在 <strong>[圖2.2]</strong> 的時候選一個安裝路徑。</p>
-<blockquote>
-<p><strong>注意</strong>：儘可能讓這個安裝路徑簡單，而不要是類似於</p>
-<p><code>c:\Program Files\blahblah</code></p>
-<p>這樣的文件路徑。</p>
-</blockquote>
-<center><img src="http://blog-xcoder-in.qiniudn.com/cygwin-install-3.png" alt="本地包路徑"></center><br><center><small>[圖2.3]</small></center>
-
-<p><strong>[圖2.3]</strong> 的時候選一個本地包的路徑，我這裏選的是 <code>e:\cygwin\tmp</code>。</p>
-<center><img src="http://blog-xcoder-in.qiniudn.com/cygwin-install-4.png" alt="直連"></center><br><center><small>[圖2.4]</small></center>
-
-<p><strong>[圖2.4]</strong> 選擇直接連接。</p>
-<center><img src="http://blog-xcoder-in.qiniudn.com/cygwin-install-5.png" alt="163"></center><br><center><small>[圖2.5]</small></center>
-
-<p>我們國內的用戶源還是選擇 <code>163</code> 的速度比較快。所以在 <strong>[圖2.5]</strong> 這一步的時候就直接選用默認的 <code>163</code> 的源了。如果不是默認的話，請選中它。</p>
-<p>在 <strong>Select Package</strong> 也就是選擇預安裝的軟件的時候，把下列表中的軟件包勾選起來：</p>
-<blockquote>
-<ul>
-<li><strong>wget</strong>: 在 <strong>Utils</strong> 中</li>
-<li><strong>vim</strong>: 在 <strong>Editors</strong> 中</li>
-<li><strong>gcc</strong>: 在 <strong>Devel</strong> 中</li>
-<li><strong>gcc-g++</strong>: 在 <strong>Devel</strong> 中</li>
-<li><strong>make</strong>: 在 <strong>Devel</strong> 中</li>
-<li><strong>cmake</strong>: 在 <strong>Devel</strong> 中</li>
-</ul>
-</blockquote>
-<p>若是這些選項已經被選起來了就不用再選了，如果沒有選起來則把它選中。</p>
-<p>勾選好了之後就可以下一步安裝了，直至安裝完畢，你就可以打開你的 <strong>Cygwin</strong> 了。</p>
-<center><img src="http://blog-xcoder-in.qiniudn.com/cygwin-install-6.png" alt="Cygwin"></center><br><center><small>[圖2.6]</small></center>
-
-<blockquote>
-<p><strong>提示</strong>：你可以點擊窗口左上角的小圖片，然後裏面的 <strong>Options</strong> 中，你可以調整你自己的 <strong>Cygwin</strong> 外觀。</p>
-</blockquote>
-<h3 id="vim_配置">vim 配置</h3>
-<p>上一步我們已經選中了 <strong>vim</strong> ，也就是說我們已經在 <strong>Cygwin</strong> 中裝上了 <strong>vim</strong>。但是由於這裏的 <strong>vim</strong> 默認配置非常蛋疼，所以我們得改一下。</p>
-<p>在你的 <strong>Cygwin</strong> 中一句句輸入下面的命令：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td><td class="code"><pre>$ cd /home/&lt;你自己的用戶名&gt;
-$ wget http://blog-xcoder-<span class="keyword">in</span><span class="preprocessor">.qiniudn</span><span class="preprocessor">.com</span>/<span class="preprocessor">.vimrc</span>
-$ mkdir <span class="preprocessor">.vim</span>
-$ cd <span class="preprocessor">.vim</span>
-$ mkdir colors
-$ cd colors
-$ wget http://blog-xcoder-<span class="keyword">in</span><span class="preprocessor">.qiniudn</span><span class="preprocessor">.com</span>/molokai<span class="preprocessor">.vim</span>
-</pre></td></tr></table></figure>
-
-
-<p>這樣你的 <strong>vim</strong> 就用上了上面的那個地址的配置文件，當然你也可以編輯你自己的配置文件或者說從網上下別的配置文件以滿足你的個性化需求。</p>
-<p><strong>vim</strong> 配置以及使用請參照：<a href="https://wiki.archlinux.org/index.php/Vim" target="_blank">https://wiki.archlinux.org/index.php/Vim</a></p>
-<blockquote>
-<p>事無鉅細問 <strong>ArchWiki</strong>。</p>
-<div style="text-align: right;"><em>— <a href="https://github.com/kalxd" target="_blank">kalxd</a></em></div>
-
-</blockquote>
-<h3 id="apt-cyg">apt-cyg</h3>
-<blockquote>
-<p>apt-cyg is a command-line installer for Cygwin which cooperates with Cygwin Setup and uses the same repository. The syntax is similar to apt-get.</p>
-<div style="text-align: right;"><em>— From apt-cyg googlecode page</em></div>
-
-</blockquote>
-<p>總之意思就是說 <code>apt-cyg</code> 是類似於 <strong>Linux</strong> 中的 <code>apt-get</code>， <code>yum</code>, <code>zypper</code> 等命令行軟件包安裝器一樣，可以通過</p>
-<ul>
-<li><code>apt-cyg install &lt;package names&gt;</code> 來安裝軟件包</li>
-<li><code>apt-cyg remove &lt;package names&gt;</code> 來移除軟件包</li>
-<li><code>apt-cyg update</code> 來更新 setup.ini</li>
-<li><code>apt-cyg show</code> 來列出已安裝的軟件包</li>
-<li><code>apt-cyg find &lt;pattern(s)&gt;</code> 來查找符合條件的軟件包</li>
-<li><code>apt-cyg describe &lt;pattern(s)&gt;</code> 來描述符合條件的軟件包</li>
-<li><code>apt-cyg packageof &lt;commands or files&gt;</code> 來定位其父軟件包</li>
-</ul>
-<h4 id="apt-cyg_安裝">apt-cyg 安裝</h4>
-<p>其實也不能說是安裝，純粹是把腳本從網絡上拷到自己的 <strong>Cygwin</strong> 的環境目錄中。</p>
-<p>在你的 <strong>Cygwin</strong> 中輸入以下命令：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre><span class="variable">$ </span>cd /usr/local/bin
-<span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/apt-cyg.googlecode.com/svn</span><span class="regexp">/trunk/apt</span>-cyg
-</pre></td></tr></table></figure>
-
-
-<p>這樣你就“安裝”好了 <strong>apt-cyg</strong> 了。不過這裏用的是默認的源，所有東西都是默認的。</p>
-<p>如果你現在已經心安理得或者不想折騰了可以跳過 <strong><a href="#apt-cyg-修改">2.1.3.2. apt-cyg 修改</a></strong>，如果你想把源換成 <code>163</code> 的話那麼稍微看一下吧。</p>
-<h4 id="apt-cyg_修改">apt-cyg 修改</h4>
-<p>接下去我們要對 <strong>apt-cyg</strong> 做一些編輯。</p>
-<p>你有下面兩個選擇：</p>
-<ol>
-<li>如果你想學習 <strong>vim</strong> 操作或者你已經熟悉了，那麼直接使用 <code>vim apt-cyg</code> 來進行編輯。</li>
-<li>如果你是懶人還是想要直接編輯的話，請跑到你的 <strong>Cygwin</strong> 的安裝目錄，找到 <strong>usr</strong> 文件夾，飛進 <strong>local/bin</strong> 目錄中去，用你自己喜歡的文本編輯器打開並編輯。</li>
-</ol>
-<p>大約是 <code>68</code> 行上下吧，有一句是：</p>
-<figure class="highlight"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre>  mirror=ftp://mirror<span class="preprocessor">.mcs</span><span class="preprocessor">.anl</span><span class="preprocessor">.gov</span>/pub/cygwin
-</pre></td></tr></table></figure>
-
-
-<p>將其改成：</p>
-<figure class="highlight"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre><span class="attribute">  mirror</span>=<span class="string">http://mirrors.163.com/cygwin</span>
-</pre></td></tr></table></figure>
-
-
-<p>還有就是大概在 <code>98</code> 行和 <code>105</code> 行左右：</p>
-<figure class="highlight"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre>    wget -N $mirror/setup.bz2
-    <span class="keyword">...</span>
-    wget -N $mirror/setup.ini
-</pre></td></tr></table></figure>
-
-
-<p>修改成：</p>
-<figure class="highlight"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre>    wget -N $mirror/x86/setup.bz2
-    <span class="keyword">...</span>
-    wget -N $mirror/x86/setup.ini
-</pre></td></tr></table></figure>
-
-
-<p>至此，你的 <strong>Cygwin</strong> 環境基本完成，以後可以再慢慢完善。</p>
-<h3 id="Node-js_安裝">Node.js 安裝</h3>
-<p>這個就很簡單了，打開 <strong><a href="http://nodejs.org/download/" target="_blank">Node.js</a></strong> 官網下載安裝即可。</p>
-<blockquote>
-<p>選擇 <strong>Windows Installer (.msi)</strong> 或者 <strong>Windows Binary (.exe)</strong>。</p>
-</blockquote>
-<p>安裝好後就能直接在 <strong>Cygwin</strong> 裏面使用了。</p>
-<h2 id="真·Hello_World">真·Hello World</h2>
-<p>現在，無論你是 <strong>Linux</strong> 用戶還是 <strong>Windows</strong> 用戶，都可以用一樣的步驟來完成下面的 <code>Hello World</code> 了。</p>
-<p>隨便跑一個目錄裏面新建一個文件並且用 <strong>vim</strong> 編輯：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre><span class="variable">$ </span>vim hello.js
-</pre></td></tr></table></figure>
-
-
-<p>在裏面輸入下面的東西：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre>console.<span class="keyword">log</span>(<span class="string">"Hello world!"</span>);
-</pre></td></tr></table></figure>
-
-
-<p>然後退出 <strong>vim</strong> 執行：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre><span class="variable">$ </span>node hello.js
-</pre></td></tr></table></figure>
-
-
-<p>終於，<strong>真·Hello world</strong> 出現在了你的眼前，而不需要藉助 <strong><a href="http://ideone.com/" target="_blank">IDEOne</a></strong> 了。</p>
-<p><strong><em>To be continued…</em></strong></p>
 ]]></content>
     
     

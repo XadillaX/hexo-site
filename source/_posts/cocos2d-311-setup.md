@@ -1,7 +1,7 @@
 title: Cocos2d-x 3.1.1 開發環境搭建（Win篇）
 date: 2014-06-07 19:34:02
 tags: [ cocos2d ]
-category: 游戏开发
+category: 遊戲開發
 ---
 
 　　由於偷懶，所以在此感謝 Etond 的指導（喂喂喂，明明是自己懶得看文檔，明明 [`READEME.md`](README) 裏面就有！(´≖◞౪◟≖)
