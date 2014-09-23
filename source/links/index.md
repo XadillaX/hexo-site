@@ -20,6 +20,10 @@ title       : 鏈接
 + [老 JJ 的博客](http://bg.biedalian.com/)
 + [原來是悟空](http://www.robanlee.com)
 
+## 二次元の生物
+
++ [論野生技術 & 二次元](http://yooooo.us/)
+
 ## PHP
 
 + [團哥](http://crazyphper.com/)
