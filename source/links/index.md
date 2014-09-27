@@ -26,6 +26,11 @@ title       : 鏈接
 + [論野生技術 & 二次元](http://yooooo.us/)
 + [宅憶](http://www.qqntr.com/)
 
+## 熊孩子們
+
++ [Lucifer](http://ikaros.club/)
++ [MapleinCode](http://mapleincode.com/)
+
 ## PHP
 
 + [團哥](http://crazyphper.com/)
