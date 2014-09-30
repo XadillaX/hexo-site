@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2014-09-27T16:49:56.496Z</updated>
+  <updated>2014-09-30T07:42:46.293Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -15,11 +15,140 @@
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[用 Node.js 實現一個 Singleton]]></title>
+    <link href="http://xcoder.in/2014/09/30/javascript-singleton/"/>
+    <id>http://xcoder.in/2014/09/30/javascript-singleton/</id>
+    <published>2014-09-30T07:21:13.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
+    <content type="html"><![CDATA[<p>今天隨便玩了一道 <a href="http://www.codewars.com/kata/singleton-pattern/javascript" target="_blank">CodeWar 的題</a>。</p>
+<p>　　題意大致就是你需要實現一個 <code>Singleton</code> 也就是單件模式的類，讓其下面代碼執行成功：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">var</span> obj1 = <span class="keyword">new</span> Singleton();
+<span class="keyword">var</span> obj2 = <span class="keyword">new</span> Singleton();
+obj1 === obj2; <span class="comment">// =&gt; true</span>
+obj1.test = <span class="number">1</span>;
+obj2.test; <span class="comment">// =&gt; 1</span>
+</pre></td></tr></table></figure>
+
+<p>　　並且還有很重要的一點就是 <code>Singleton</code> 的對象的 <code>instanceof</code> 也得的確是 <code>Singleton</code> 才行。</p>
+<h2 id="開始試驗">開始試驗</h2>
+<p>　　我們猜想 <code>new Singleton()</code> 的結果，如果 <code>Singleton</code> 函數也就是這個類的構造函數沒返回值的話，直接會返回 <code>this</code>，有返回值的話，那麼就是等於其返回值了。</p>
+<p>　　我們碼下面的代碼看一下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">var</span> Singleton = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">return</span> { foo: <span class="string">"bar"</span> };
+};
+
+console.log(<span class="keyword">new</span> Singleton());
+</pre></td></tr></table></figure>
+
+<p>　　跑一遍之後我們的確發現了輸出的值就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>{ foo: <span class="string">"bar"</span> }
+</pre></td></tr></table></figure>
+
+<h2 id="小作弊失敗">小作弊失敗</h2>
+<p>　　於是我這麼做：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">var</span> foo = {};
+<span class="keyword">var</span> Singleton = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">return</span> foo;
+};
+</pre></td></tr></table></figure>
+
+<p>　　結果上面的幾個條件都符合了，不信大家可以自己輸出一遍看看。</p>
+<p>　　但是——</p>
+<p>　　這東西不是一個 <code>Singleton</code> 的實例，它只是一個簡單的 <code>JSON</code> 對象，所以還是無法通過。</p>
+<h2 id="死月の正解">死月の正解</h2>
+<p>　　答案有很多，CodeWar 上面每個人的解法都不一樣，但是歸根結底本質還是大同小異的。</p>
+<p>　　就是第一次的時候先直接返回 <code>this</code>，並且把 <code>this</code> 放在某個地方。以後每次來這裏創建的時候返回之前存好的 <code>this</code> 即可：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="keyword">var</span> Singleton = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">if</span>(Singleton.prototype.instance) <span class="keyword">return</span> Singleton.prototype.instance = <span class="keyword">this</span>;
+
+    <span class="comment">// Do some initialize things</span>
+    <span class="comment">// ...</span>
+
+    Singleton.prototype.instance = <span class="keyword">this</span>;
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+};
+</pre></td></tr></table></figure>
+
+<h2 id="別的寫法">別的寫法</h2>
+<p>　　寫法很多，我這裏隨意挑幾個別人的答案吧。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="comment">/**
+ * By tjwudi
+ */</span>
+<span class="keyword">var</span> Singleton = <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
+  <span class="keyword">return</span> Singleton.ins = Singleton.ins ? Singleton.ins : <span class="keyword">this</span>;
+};
+</pre></td></tr></table></figure>
+
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="comment">/**
+ * By nonowarn
+ */</span>
+<span class="keyword">var</span> Singleton = (<span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+  <span class="keyword">var</span> instance = <span class="literal">null</span>;
+
+  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
+    <span class="keyword">return</span> instance || (instance = <span class="keyword">this</span>);
+  };
+})();
+</pre></td></tr></table></figure>
+
+]]></content>
+    
+    
+      <category term="設計模式" scheme="http://xcoder.in/tags/%E8%A8%AD%E8%A8%88%E6%A8%A1%E5%BC%8F/"/>
+    
+      <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
+    
+      <category term="Node.js" scheme="http://xcoder.in/categories/Node.js/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[讓我們用 Node.js 寫自己的 DDNS 動態域名程序]]></title>
     <link href="http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/"/>
     <id>http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/</id>
-    <published>2014-09-20T06:51:40.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-09-20T07:51:40.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2>
 <p>　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 <a href="http://kacaka.ca/" target="_blank">kacaka.ca</a>（目前暫失效）。</p>
 <p>　　爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 <a href="http://cloudflare.com/" target="_blank">CloudFlare</a>。而且它也有提供 API 讓開發者自己開發通過他的服務解析域名的服務。</p>
@@ -308,8 +437,8 @@ spidex.post(config.baseUrl, <span class="function"><span class="keyword">functio
     <title><![CDATA[圖片主題色提取算法小結]]></title>
     <link href="http://xcoder.in/2014/09/17/theme-color-extract/"/>
     <id>http://xcoder.in/2014/09/17/theme-color-extract/</id>
-    <published>2014-09-17T02:34:54.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-09-17T03:34:54.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>所謂主題色提取，就是對於一張圖片，近似地提取出一個調色板，使得調色板裏面的顏色能組成這張圖片的主色調。</p>
 </blockquote>
@@ -776,8 +905,8 @@ colors[r + g + b]++;
     <title><![CDATA[我是如何實現簡單的隨機中文名生成器的（Node 版）]]></title>
     <link href="http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/"/>
     <id>http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/</id>
-    <published>2014-09-01T11:36:33.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-09-01T12:36:33.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<h2 id="序">序</h2>
 <p>最近閒着蛋疼實現了兩個庫。</p>
 <ul>
@@ -981,8 +1110,8 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <title><![CDATA[Storm 中 Clojure 的 Prepare Bolt 實現]]></title>
     <link href="http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/"/>
     <id>http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/</id>
-    <published>2014-08-04T02:50:21.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-08-04T03:50:21.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2>
 <p>　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIST 方言中，你要做的就是把所有跟 bolt 初始化計算相關的代碼放到其 <code>prepare</code> 的代碼當中去。</p>
 <p>　　你想一下，當你在文件加載的時候初始化了一個 MongoDB 鏈接，這個鏈接總不能被序列化到遠程去吧？所以說辦法就是把 bolt 搞上去之後，bolt 自動去初始化一個鏈接——這就是 <code>prepare</code> 的作用了。</p>
@@ -1061,8 +1190,8 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <title><![CDATA[開發測試時給 Kafka 發消息的 UI 發送器——Mikasa]]></title>
     <link href="http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/"/>
     <id>http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/</id>
-    <published>2014-07-30T01:14:29.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-07-30T02:14:29.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起_(灬ºωº灬)">起 (灬ºωº灬)</h2>
 <p>　　說來話長，自從入了花瓣，整個人就掉進連環坑了。</p>
 <p>　　後端元數據採集是用 Storm 來走拓撲流程的，又因爲 @<a href="http://weibo.com/zolazhou" target="_blank">Zola</a> 不是很喜歡 Java，所以退而求其次選擇了 Clojure，所以正在苦逼地學習 Clojure 和 Storm 中。</p>
@@ -1136,8 +1265,8 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <title><![CDATA[Untrusted - 遊戲題解]]></title>
     <link href="http://xcoder.in/2014/06/12/untrusted-solution/"/>
     <id>http://xcoder.in/2014/06/12/untrusted-solution/</id>
-    <published>2014-06-12T02:08:34.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-06-12T03:08:34.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<p><a href="http://alexnisnevich.github.io/untrusted/" target="_blank">Trusted</a> 是一個代碼解謎遊戲，用 Javascript 來過關的。</p>
 <p>　　昨天凌晨花了仨小時通關了這個遊戲，在這裏就粗粗做一下題解吧，好幾題都是 Hack 過去的。（不要臉，( ﾟДﾟ)σ</p>
 <h2 id="Ceil_Block_A">Ceil Block A</h2>
@@ -1766,8 +1895,8 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     <title><![CDATA[Cocos2d-x 3.1.1 開發環境搭建（Win篇）]]></title>
     <link href="http://xcoder.in/2014/06/07/cocos2d-311-setup/"/>
     <id>http://xcoder.in/2014/06/07/cocos2d-311-setup/</id>
-    <published>2014-06-07T10:34:02.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-06-07T11:34:02.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<p>由於偷懶，所以在此感謝 Etond 的指導（喂喂喂，明明是自己懶得看文檔，明明 <a href="README"><code>READEME.md</code></a> 裏面就有！(´≖◞౪◟≖)</p>
 <p>　　另，在搭建環境的時候，最好保證你在<span style="background: #222;">牆外</span>。以及我默認覺得大家已經有了 <code>Python</code> 環境和 <code>JDK</code>。</p>
 <h2 id="前驅工作">前驅工作</h2>
@@ -1869,8 +1998,8 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     <title><![CDATA[【轉】TCP 的那些事兒（上）]]></title>
     <link href="http://xcoder.in/2014/06/07/tcp-those-things-1/"/>
     <id>http://xcoder.in/2014/06/07/tcp-those-things-1/</id>
-    <published>2014-06-06T16:47:10.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-06-06T17:47:10.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<p>TCP是一個巨複雜的協議，因爲他要解決很多問題，而這些問題又帶出了很多子問題和陰暗面。所以學習 TCP 本身是個比較痛苦的過程，但對於學習的過程卻能讓人有很多收穫。關於 TCP 這個協議的細節，我還是推薦你去看 <a href="http://www.kohala.com/start/" target="_blank">W.Richard Stevens</a> 的《<a href="http://book.douban.com/subject/1088054/" target="_blank">TCP/IP 詳解 卷1：協議</a>》（當然，你也可以去讀一下 <a href="http://tools.ietf.org/html/rfc793" target="_blank">RFC793</a> 以及後面 N 多的 RFC）。另外，本文我會使用英文術語，這樣方便你通過這些英文關鍵詞來查找相關的技術文檔。</p>
 <p>　　之所以想寫這篇文章，目的有三個，</p>
 <ul>
@@ -2045,8 +2174,8 @@ Segment      Segment     (Including SACK Blocks)
     <title><![CDATA[一個任務隊列的 module]]></title>
     <link href="http://xcoder.in/2014/06/03/scartlet-task/"/>
     <id>http://xcoder.in/2014/06/03/scartlet-task/</id>
-    <published>2014-06-02T15:17:38.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-06-02T16:17:38.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<p>事情很曲折，我某天在萌否收音機裏面聽到了一首歌，很好聽，叫 <code>hypnotized</code>，於是紅心了。</p>
 <p>　　過了幾天我再去聽——發現這首歌變了。</p>
 <p>　　最後經過多方面求證，我大概得出結果就是應該有人傳錯了歌，然後後來有人重新傳了一遍，導致我聽的不是原來那首歌了。那我那天聽的那首歌到底叫什麼名字呢？</p>
@@ -2075,8 +2204,8 @@ Segment      Segment     (Including SACK Blocks)
     <title><![CDATA[搭建 VIM 下的 Hexo 編輯環境]]></title>
     <link href="http://xcoder.in/2014/06/02/vim-hexo-environment/"/>
     <id>http://xcoder.in/2014/06/02/vim-hexo-environment/</id>
-    <published>2014-06-01T19:52:30.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-06-01T20:52:30.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<p>本文只講兩個函數，對於 <code>markdown</code> 如何高亮之類的問題還請自行谷歌。</p>
 <p>　　然後請打開你自己的 <code>.vimrc</code> 文件。</p>
 <h2 id="預備工作">預備工作</h2>
@@ -2186,8 +2315,8 @@ endfun
     <title><![CDATA[「NBUT 2014 校賽·網絡同步賽」題解 (未完成...)]]></title>
     <link href="http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/"/>
     <id>http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/</id>
-    <published>2014-05-05T06:08:39.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-05-05T07:08:39.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<p>這次比賽由 <a href="http://blog.163.com/surgy_han/" target="_blank">Hungar</a>，<a href="http://www.cnblogs.com/Wine93/" target="_blank">8Mao</a> 以及我負責的。明明都讀研了，還詐屍回來出題——歸結起來大概是因爲各種面試不順吧，想來虐虐學弟妹們怒刷存在感。結果網絡賽還是被虐得死去活來。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯</p>
 <p>　　好了廢話不多說，還是直接上題解吧。</p>
 <h2 id="Minecraft_Server_Bug">Minecraft Server Bug</h2>
@@ -2352,8 +2481,8 @@ lint solution(lint n)
     <title><![CDATA[死月出品：Hero Snake 英雄蛇]]></title>
     <link href="http://xcoder.in/2014/04/11/hero-snake/"/>
     <id>http://xcoder.in/2014/04/11/hero-snake/</id>
-    <published>2014-04-11T04:53:35.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-04-11T05:53:35.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>注：備份到這篇日誌的時候，感覺眼睛進了什麼奇怪的東西。（才……纔不是眼淚呢，那一定是沙子！(;´༎ຶД༎ຶ`)</p>
 <p>主要引起感傷的還是這首軒轅劍的 BGM 吧。因爲 Hero Snake 的BGM就是這個。</p>
@@ -2408,8 +2537,8 @@ lint solution(lint n)
     <title><![CDATA[讓Node.js和C++一起搞基 —— 3 (未完成...)]]></title>
     <link href="http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/"/>
     <id>http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/</id>
-    <published>2014-04-06T07:15:39.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-04-06T08:15:39.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<p><a href="/2014/04/03/nodejs-cpp-addons-2/">上一章</a>我們偷偷學習瞭如何在 <code>C++</code> 中實現 <code>Node.js</code> 調用時傳參數和調用回調函數，並且我自己也心血來潮寫了個<a href="/2014/04/05/cpp-class-inline-keng/#simpleini">小 Demo</a> 供大家參考。</p>
 <p>　　今天我們就不複習了，直搗黃龍吧。</p>
 ]]></content>
@@ -2427,8 +2556,8 @@ lint solution(lint n)
     <title><![CDATA[C++中類成員函數 inline 的坑]]></title>
     <link href="http://xcoder.in/2014/04/05/cpp-class-inline-keng/"/>
     <id>http://xcoder.in/2014/04/05/cpp-class-inline-keng/</id>
-    <published>2014-04-05T07:55:57.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-04-05T08:55:57.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<p>今天我來講一講 <code>C++</code> 中類成員函數 <code>inline</code> 修飾符的一個坑。</p>
 <p>　　這個坑是我在嘗試着寫我的第一個 <code>Node.js</code> 擴展 <code>simpleini</code> 時候遇到的。</p>
 <h2 id="坑描述">坑描述</h2>
@@ -2512,8 +2641,8 @@ console.log(simpleIni.read(<span class="string">"vals"</span>, <span class="stri
     <title><![CDATA[讓Node.js和C++一起搞基 —— 2]]></title>
     <link href="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"/>
     <id>http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/</id>
-    <published>2014-04-03T13:37:15.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-04-03T14:37:15.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<p>好，今天讓我們更深入地搞基吧！</p>
 <h2 id="溫故而知新，可以爲溼矣">溫故而知新，可以爲溼矣</h2>
 <p>　　首先請大家記住這個 V8 的在線手冊——<a href="http://izs.me/v8-docs/main.html" target="_blank">http://izs.me/v8-docs/main.html</a>。</p>
@@ -2887,8 +3016,8 @@ NODE_MODULE(addon, Init)
     <title><![CDATA[讓Node.js和C++一起搞基 —— 1]]></title>
     <link href="http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/"/>
     <id>http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/</id>
-    <published>2014-04-01T15:53:22.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-04-01T16:53:22.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<p>N久之前的一個坑——用 <strong>Node.js</strong> 來重構 NBUT 的 <strong>Online Judge</strong>，包括評測端也得重構一遍。（至於什麼時候完成大家就不要關心了，(／‵Д′)／~ ╧╧</p>
 <p>　　總之我們現在要做的其實簡而言之就是——用C/C++來實現 <strong>Node.js</strong> 的模塊。</p>
 <h2 id="準備工作">準備工作</h2>
@@ -3145,8 +3274,8 @@ NODE_MODULE(module_name, Initialize)
     <title><![CDATA[～公衆檔所～項目解析]]></title>
     <link href="http://xcoder.in/2014/03/27/node-public-file-house/"/>
     <id>http://xcoder.in/2014/03/27/node-public-file-house/</id>
-    <published>2014-03-26T16:34:04.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <published>2014-03-26T17:34:04.000Z</published>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<p>所謂“公衆檔所”，其實就是一個公共的臨時網盤了。這個東西是一個老物了，在我剛接觸 <code>Expressjs</code> 的時候寫的。當時還隨便搞了一下 <code>backbone.js</code>，但是沒有深入，勿笑。關於深入構架 <code>Expressjs</code> 方面也沒做，只是粗粗寫了下最基礎的路由，所以整個文件結構也不是很規範。但是應該能比較適合剛學 <code>Node.js</code> 以及剛接觸 <code>Expressjs</code> 的人吧。</p>
 <p>　　Repo地址在<a href="https://github.com/XadillaX/public-file-house" target="_blank">我的Github</a>上。Demo地址在 <a href="http://dang.kacaka.ca/" target="_blank">http://dang.kacaka.ca/</a>，由於個人電腦的不穩定性，所以不保證你們隨時可以訪問，保不定哪天就失效了，所以最好的辦法還是自己 <code>clone</code> 下來啪啪啪。</p>
 <p>　　它所需要的東西大致就是 <code>Expressjs</code> + <code>Redis</code> + <code>Backbone</code> 了。不過都是最最基礎的代碼。</p>
@@ -4048,7 +4177,7 @@ $(<span class="function"><span class="keyword">function</span><span class="param
     <link href="http://xcoder.in/2013/12/28/xplan-spider-doc/"/>
     <id>http://xcoder.in/2013/12/28/xplan-spider-doc/</id>
     <published>2013-12-28T00:00:00.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<h2 id="前言">前言</h2>
 <p><strong>XPlan</strong> 是一個“基於校園強關係的社交應用”的開發代號。其中有一個功能是從學校網站上通過網絡爬蟲（Web Crawler）形式將學校新聞抓取到XPlan自身的數據庫當中。</p>
 <p>而這裏出現的一個問題就是學校網站上面的文章是通過類似於 <a href="http://kindeditor.net/" target="_blank"><code>KindEditor</code></a>、<a href="http://ueditor.baidu.com/website/" target="_blank"><code>UEditor</code></a>這類<strong>在線富文本編輯器</strong>生成的代碼。</p>
@@ -4300,7 +4429,7 @@ $ = cheerio.load(<span class="keyword">...</span>);
     <link href="http://xcoder.in/2013/08/31/srm-589-div2/"/>
     <id>http://xcoder.in/2013/08/31/srm-589-div2/</id>
     <published>2013-08-31T00:00:00.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
+    <updated>2014-09-30T07:39:10.000Z</updated>
     <content type="html"><![CDATA[<p>好久沒擼 <strong>TC</strong> 了，手都生了。前兩天剛折騰好 <strong>LinuxMint</strong> + <strong>Cinnamon</strong>，順便手賤把 <strong>TC</strong> 環境配好了。</p>
 <p>　　隨便進去扯了一套最新的 <strong>SRM</strong> 來搞，全跑完之後才發現原來這場比賽還處於 <strong>System Running</strong> 階段。於是知道了比賽一結束還在 <strong>Running</strong> 的時候你就已經可以自己拉出來做了。小綠名大家不要笑。</p>
 <!-- 我是小小分割符 -->
@@ -4881,730 +5010,6 @@ dp2[<span class="link_label">i</span>][<span class="link_reference">0|1</span>]
       <category term="SRM" scheme="http://xcoder.in/tags/SRM/"/>
     
       <category term="Programming" scheme="http://xcoder.in/categories/Programming/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[一起擼Node.JS（壹）——基本語法和類型]]></title>
-    <link href="http://xcoder.in/2013/08/16/node-4-base/"/>
-    <id>http://xcoder.in/2013/08/16/node-4-base/</id>
-    <published>2013-08-16T00:00:00.000Z</published>
-    <updated>2014-09-27T16:41:49.000Z</updated>
-    <content type="html"><![CDATA[<p><strong>Node.js</strong> 的基礎是 <strong>JavaScript</strong> 這門 <strong><em>腳本語言</em></strong>。而大多數的腳本語言一個共同的特點就是“<a href="http://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1#.E5.BC.B7.E5.9E.8B.E5.88.A5.E5.92.8C.E5.BC.B1.E5.9E.8B.E5.88.A5" target="_blank">弱類型</a>”。</p>
-<p>　　不同於 <strong>PHP</strong> 的是，<strong>PHP</strong> 就是是有了新變量也無需申明，而 <strong>JavaScript</strong> 則還是需要 <code>var</code> 來申明一下的。而這個 <code>var</code> 涵蓋了 <strong>C++</strong> 中的<code>int</code>、<code>string</code>、<code>char</code>等一切類型的含義，甚至是 <code>function</code>。</p>
-<p>　　本篇以及後篇的所有內容都是在 <strong>Linux</strong> 或者 <strong>Cygwin</strong> 下用 <strong>vim</strong> 進行編輯（若不是則請自行轉變成你自己的方法），然後在命令行下進行查看結果的。</p>
-<p><!-- 我是小小分割符 --></p>
-<h2 id="基本語法">基本語法</h2>
-<h3 id="變量聲明">變量聲明</h3>
-<p>在 <strong>C/C++</strong> 中，我們這麼聲明變量的：</p>
-<figure class="highlight"><figcaption><span>c++</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-</pre></td><td class="code"><pre><span class="keyword">void</span> foo() {}
-
-<span class="keyword">int</span> a = <span class="number">0</span>;
-<span class="keyword">char</span> b = <span class="string">'a'</span>;
-<span class="keyword">float</span> c = <span class="number">1.0f</span>;
-<span class="keyword">void</span> (*d)() = foo;  <span class="comment">///&lt; 忘了是不是這麼寫的了，總之是函數指針</span>
-</pre></td></tr></table></figure>
-
-
-<p>而在 <strong>Node.js</strong> 中則是這樣的：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span> {</span>}
-
-<span class="keyword">var</span> a = <span class="number">0</span>;
-<span class="keyword">var</span> b = <span class="string">'a'</span>;
-<span class="keyword">var</span> c = <span class="number">1.0</span>;
-<span class="keyword">var</span> d = foo;
-</pre></td></tr></table></figure>
-
-
-<p>所以，無論是什麼類型的變量，在 <strong>Node.js</strong> 中都是以一個 <code>var</code> 來解決的。</p>
-<h3 id="循環語句">循環語句</h3>
-<h4 id="for…i">for…i</h4>
-<p>這個循環語句基本上跟 <strong>C/C++</strong> 一樣，都是</p>
-<figure class="highlight"><figcaption><span>c++</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-</pre></td><td class="code"><pre><span class="keyword">for</span>(int i = <span class="number">0</span>; i &lt; foo; i++)
-{
-    //<span class="keyword">...</span>
-}
-</pre></td></tr></table></figure>
-
-
-<p>而鑑於 <strong>Node.js</strong> 是弱類型，所以只需要：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre><span class="keyword">for</span>(var i = <span class="number">0</span>; i &lt; foo; i++) {
-    //<span class="keyword">...</span>
-}
-</pre></td></tr></table></figure>
-
-
-<h4 id="for…in">for…in</h4>
-<p>這是一種後有型的循環語句，類似於 <strong>PHP</strong> 的 <code>foreach</code>。</p>
-<p>比如我們有一個 <strong>JSON對象</strong> 如下：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-</pre></td><td class="code"><pre><span class="keyword">var</span> foo = {
-    <span class="string">"hello"</span>     : <span class="string">"world"</span>,
-    <span class="string">"node"</span>      : <span class="string">"js"</span>,
-    <span class="string">"blahblah"</span>  : <span class="string">"bar"</span>
-};
-</pre></td></tr></table></figure>
-
-
-<p>這個時候我們就可以用 <code>for...in</code> 來循環遍歷了：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre><span class="keyword">for</span>(<span class="reserved">var</span> key <span class="keyword">in</span> foo) {
-    <span class="built_in">console</span>.log(key + <span class="string">": "</span> + foo[key]);
-}
-</pre></td></tr></table></figure>
-
-
-<p>我們如果在命令行中打入下面的命令：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre><span class="variable">$ </span>node foo.js
-</pre></td></tr></table></figure>
-
-
-<p>屏幕上就會顯示下面的內容了：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre><span class="attribute">hello</span>: <span class="string">world</span>
-<span class="attribute">node</span>: <span class="string">js</span>
-<span class="attribute">blahblah</span>: <span class="string">bar</span>
-</pre></td></tr></table></figure>
-
-
-<blockquote>
-<p><strong>提示</strong>：由上可知，<code>for...in</code> 語句是用來遍歷 <strong>JSON對象</strong>、<strong>數組</strong>、<strong>對象</strong>的鍵名的，而不提供鍵值的遍歷。如果要獲取鍵值，只能通過</p>
-</blockquote>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre>foo[<span class="tag">&lt;<span class="title">當前鍵名</span>&gt;</span>]
-</pre></td></tr></table></figure>
-
-
-<p>的形式來獲取。這個跟 <strong>PHP</strong> 的 <code>foreach</code> 還是有一定區別的。</p>
-<h4 id="while…do,_do…while">while…do, do…while</h4>
-<p>這個就不多做解釋了，跟其它語言沒什麼大的區別，無非就是如果有變量聲明的話，需要用 <code>var</code> 就夠了。</p>
-<h3 id="運算符">運算符</h3>
-<h4 id="+,_-,_*,_/">+, -, *, /</h4>
-<p>這幾個運算符也就這樣，要注意的是 <code>+</code>。它既可以作用於字符串，也可以作用於數值運算。弱類型語言雖然說類型是弱的，數字有時候可以以字符串的形態出現，字符串有時候可以用數值的形態出現，但是在必要的時候也還是要說一下它是什麼類型的，我們可以用下面的代碼去看看結果：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-</pre></td><td class="code"><pre><span class="reserved">var</span> a = <span class="string">"1"</span>;
-<span class="reserved">var</span> b = <span class="number">2</span>;
-<span class="built_in">console</span>.log(a + b);
-<span class="built_in">console</span>.log(parseInt(a) + b);
-</pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>這裏的 <code>parseInt</code> 是 <strong>Node.js</strong> 的一個內置函數，作用是將一個字符串解析成 <code>int</code> 類型的變量。</p>
-</blockquote>
-<p>上面的代碼執行結果是</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre>12
-3
-</pre></td></tr></table></figure>
-
-
-<p>第一個 <code>console.log</code> 結果是 <code>12</code>，由於 <code>a</code> 是字符串，所以 <code>b</code> 也被系統以字符串的姿態進行加操作，結果就是將兩個字符串黏連在一起就變成了 <code>12</code>。而第二個 <code>console.log</code> 結果是 <code>3</code>，是因爲我們將第一個 <code>a</code> 轉變爲了 <code>int</code> 類型，兩個 <code>int</code> 型的變量相加即數值相加，結果當然就是 <code>3</code> 了。</p>
-<h4 id="==,_===,_!=,_!==">==, ===, !=, !==</h4>
-<p>這裏有一點要解釋，當這個邏輯運算符長度爲 <code>2</code> 的時候（<code>==</code>, <code>!=</code>），只是判斷外在的值是不是一樣的，而不會判斷類型。如</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre>var <span class="literal">a</span> = <span class="number">1</span>, b = <span class="string">"1"</span><span class="comment">;</span>
-console.log(<span class="literal">a</span> == b)<span class="comment">;</span>
-</pre></td></tr></table></figure>
-
-
-<p>它輸出的結果就是 <code>true</code>。但是如果我們在中間判斷的時候再加上一個等號，那麼就是嚴格判斷了，需要類型和值都一樣的時候纔會是 <code>true</code>，否則就是 <code>false</code>。也就是說</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre>var <span class="literal">a</span> = <span class="number">1</span>, b = <span class="string">"1"</span><span class="comment">;</span>
-console.log(<span class="literal">a</span> === b)<span class="comment">;</span>
-</pre></td></tr></table></figure>
-
-
-<p>的時候，返回的結果就是 <code>false</code> 了，因爲 <code>a</code> 是 <code>int</code> 型的，而 <code>b</code> 則是字符串。</p>
-<blockquote>
-<p>順帶着就把條件語句講了吧，其實這裏的 <code>if</code> 跟別的語言沒什麼兩樣，就是幾個邏輯運算符兩個等號三個等號的問題。所以就不多做累述了。</p>
-</blockquote>
-<h4 id="typeof">typeof</h4>
-<p>這裏我姑且把它當成是一個運算符而不是函數了。</p>
-<p>這個運算符的作用是判斷一個變量的類型，會返回一個字符串，即類型名，具體的執行下面的代碼就知道了：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-</pre></td><td class="code"><pre><span class="reserved">function</span> foo() {}
-
-<span class="reserved">var</span> a = <span class="number">0</span>;
-<span class="reserved">var</span> b = <span class="string">'噓~蛋花湯在睡覺。'</span>;
-<span class="reserved">var</span> c = <span class="number">1.0</span>;
-<span class="reserved">var</span> d = foo;
-<span class="reserved">var</span> e = { <span class="string">"a"</span> : a };
-<span class="reserved">var</span> f = [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> ];
-<span class="reserved">var</span> g = <span class="literal">null</span>;
-<span class="reserved">var</span> h = <span class="literal">undefined</span>;
-
-<span class="built_in">console</span>.log(<span class="keyword">typeof</span> a);
-<span class="built_in">console</span>.log(<span class="keyword">typeof</span> b);
-<span class="built_in">console</span>.log(<span class="keyword">typeof</span> c);
-<span class="built_in">console</span>.log(<span class="keyword">typeof</span> d);
-<span class="built_in">console</span>.log(<span class="keyword">typeof</span> e);
-<span class="built_in">console</span>.log(<span class="keyword">typeof</span> f);
-<span class="built_in">console</span>.log(<span class="keyword">typeof</span> g);
-<span class="built_in">console</span>.log(<span class="keyword">typeof</span> h);
-</pre></td></tr></table></figure>
-
-
-<p>這裏的執行結果就將會是：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-</pre></td><td class="code"><pre><span class="built_in">number</span>
-<span class="keyword">string</span>
-<span class="built_in">number</span>
-<span class="function"><span class="keyword">function</span></span>
-object
-object
-object
-undefined
-</pre></td></tr></table></figure>
-
-
-<h3 id="null,_undefined,_NaN">null, undefined, NaN</h3>
-<p>在 <strong>JavaScript</strong> 中，有三個特殊的值，如標題所示。其中第一個大家可能都比較熟悉吧，<strong>C/C++</strong> 裏面也有，不過是大寫的，其本質就是一個</p>
-<figure class="highlight"><figcaption><span>c++</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre><span class="preprocessor">#<span class="keyword">define</span> NULL 0</span>
-</pre></td></tr></table></figure>
-
-
-<p>而在 <strong>JavaScript</strong> 中，這三個值所代表的意義都不同。</p>
-<h4 id="null">null</h4>
-<p><code>null</code> 是一種特殊的 <strong>object</strong>，大致的意思就是空。比如說：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre><span class="keyword">var</span> a = <span class="keyword">null</span>;
-</pre></td></tr></table></figure>
-
-
-<p>大家都能看懂，就不多做解釋了。但是跟 <strong>C/C++</strong> 不同的是，這個 <code>null</code> 跟 <code>0</code> 不相等。</p>
-<h4 id="undefined">undefined</h4>
-<p>這個東西的意思就是說這個變量未聲明。爲了能夠更好地區分 <code>null</code>，我們的樣例代碼如下寫：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-</pre></td><td class="code"><pre><span class="reserved">var</span> a = {
-    <span class="string">"foo"</span>       : <span class="literal">null</span>
-};
-<span class="built_in">console</span>.log(a[<span class="string">"foo"</span>]);
-<span class="built_in">console</span>.log(a[<span class="string">"bar"</span>]);
-</pre></td></tr></table></figure>
-
-
-<p>上面的代碼中，我們讓 <code>a[&quot;foo&quot;]</code> 的值爲空，即 <code>null</code>。而壓根沒有聲明 <code>a[&quot;bar&quot;]</code> 這個東西，它連空都不是。輸出的結果大家都差不多應該猜到了：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre><span class="literal">null</span>
-<span class="literal">undefined</span>
-</pre></td></tr></table></figure>
-
-
-<h4 id="NaN">NaN</h4>
-<p>這是一個空的數值，是一個特殊的 <code>number</code>。它的全稱是 <code>Not a Number</code>。有點奇怪，大家可以理解爲 <strong>不是數字形態，或者數值出錯的 <code>number</code> 類型變量</strong>。</p>
-<p>多在浮點型數值運算錯誤（如被0除）的情況下出現，甚至可以是用戶自己讓一個變量等於 <code>NaN</code> 以便返回一個錯誤值讓大家知道這個函數運算出錯了云云。</p>
-<h3 id="小雜碎">小雜碎</h3>
-<p>其它剩餘的語句也跟已存在的其它語言差不多，比如說 <code>break</code> 啊、<code>switch</code> 啊、<code>continue</code> 啊等等等等。</p>
-<h2 id="變量類型">變量類型</h2>
-<p>這一節主要講的是 <strong>JavaScript</strong> 對象，其它類型差不多一帶而過吧。</p>
-<h3 id="基礎類型">基礎類型</h3>
-<p><strong>Node.js</strong> 包含的基礎類型差不多有如下幾個：</p>
-<ul>
-<li>number</li>
-<li>string</li>
-<li>boolean</li>
-<li>array</li>
-</ul>
-<p>其中前三種類型可以直接賦值，而 <code>array</code> 的賦值只是一個引用賦值而已，在新變量中改變某個值的話舊變量的值也會改變，直接可以試試下面的代碼：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-</pre></td><td class="code"><pre><span class="reserved">var</span> foo = [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> ];
-<span class="reserved">var</span> bar = foo;
-bar[<span class="number">0</span>] = <span class="number">3</span>;
-<span class="built_in">console</span>.log(foo);
-</pre></td></tr></table></figure>
-
-
-<p>它得出的結果是：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre>[ <span class="number">3</span>, <span class="number">2</span>, <span class="number">3</span> ]
-</pre></td></tr></table></figure>
-
-
-<p>也就是說 <code>array</code> 要是複製出一個新的數組的話，不能用直接賦值的方法，而必須“<strong><a href="#深拷貝">深拷貝</a></strong>”。</p>
-<p>這裏有必要講一下 <code>array</code> 的三種創建方法。</p>
-<p>第一種：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-</pre></td><td class="code"><pre><span class="keyword">var</span> dog = <span class="keyword">new</span> <span class="built_in">Array</span>();
-dog[<span class="number">0</span>] = <span class="string">"噓~"</span>;
-dog[<span class="number">1</span>] = <span class="string">"蛋花湯"</span>;
-dog[<span class="number">2</span>] = <span class="string">"在睡覺"</span>;
-</pre></td></tr></table></figure>
-
-
-<p>第二種：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre><span class="keyword">var</span> dog = <span class="keyword">new</span> <span class="built_in">Array</span>( <span class="string">"噓~"</span>, <span class="string">"蛋花湯"</span>, <span class="string">"在睡覺"</span> );
-</pre></td></tr></table></figure>
-
-
-<p>第四種：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-</pre></td><td class="code"><pre><span class="keyword">var</span> dog = [
-    <span class="string">"噓~"</span>,
-    <span class="string">"蛋花湯"</span>,
-    <span class="string">"在睡覺"</span>
-];
-</pre></td></tr></table></figure>
-
-
-<p>我個人比較喜歡第三種寫法，比較簡潔。</p>
-<h3 id="JSON對象">JSON對象</h3>
-<p>這裏我把 <strong>JSON對象</strong> 單獨拎出來而不是把它歸類爲 <strong>JavaScript對象</strong>，如果覺得我有點誤人子弟就可以直接跳過這一節了。</p>
-<p>本人對於 <strong>JSON對象</strong> 和 <strong>JavaScript</strong> 對象的區分放在 <strong>是否只用來存儲數據，而並非是一個類的實例化</strong>。其實 <strong>JSON</strong> 的本質便是 <strong>JavaScript Object Notation</strong>。</p>
-<blockquote>
-<p>更多有關 <strong><a href="http://zh.wikipedia.org/wiki/JSON" target="_blank">JSON</a></strong> 的信息請自行百科。</p>
-</blockquote>
-<p>在 <strong>Node.js</strong> 中聲明一個 <strong>JSON對象</strong> 非常簡單：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-</pre></td><td class="code"><pre><span class="keyword">var</span> dog = {
-    <span class="string">"pre"</span>       : <span class="string">"噓~"</span>,
-    <span class="string">"sub"</span>       : {
-        <span class="string">"name"</span>  : <span class="string">"蛋花湯"</span>,
-        <span class="string">"act"</span>   : <span class="string">"在睡覺"</span>,
-        <span class="string">"time"</span>  : <span class="number">12</span>
-    },
-
-    <span class="string">"suf"</span>       : [ <span class="string">"我說了"</span>, <span class="string">"它在睡覺"</span>, <span class="string">"就是在睡覺"</span> ]
-};
-</pre></td></tr></table></figure>
-
-
-<p>有兩種方式能得到 <strong>JSON對象</strong> 中的某個鍵名的鍵值，第一種是用點連接，第二種是用中括號：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre>dog<span class="preprocessor">.pre</span><span class="comment">;</span>
-dog[<span class="string">"pre"</span>]<span class="comment">;</span>
-</pre></td></tr></table></figure>
-
-
-<blockquote>
-<p><strong>試試看</strong>：現在你自己動手試試看，用 <code>for...in</code> 的形式遍歷一遍上面的 <code>JSON對象</code>。別忘了用上 <code>typeof</code> 喵~</p>
-</blockquote>
-<h3 id="類（對象）的基礎">類（對象）的基礎</h3>
-<p>嚴格意義上來講，<strong>Node.js</strong> 的類不能算是類，其實它只是一個函數的集合體，加一些成員變量。它的本質其實是一個函數。</p>
-<p>不過爲了通俗地講，我們接下去以及以後都將其稱爲“類”，實例化的叫“對象”。</p>
-<p>因爲類有着很多 <strong>函數</strong> 的特性，或者說它的本質就是一個 <strong>函數</strong>，所以這裏面我們可能一不留神就順帶着把函數基礎給講了。</p>
-<h4 id="類的聲明和實例化">類的聲明和實例化</h4>
-<p>聲明一個類非常簡單，大家不要笑：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre><span class="keyword">function</span> foo() {
-    //<span class="keyword">...</span>
-}
-</pre></td></tr></table></figure>
-
-
-<p>好了，我們已經寫好了一個 <code>foo</code> 類了。</p>
-<blockquote>
-<p>真的假的？！真的。</p>
-</blockquote>
-<p>不信？不信你可以接下去打一段代碼看看：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre><span class="keyword">var</span> bar = <span class="keyword">new</span> foo();
-</pre></td></tr></table></figure>
-
-
-<p>別看它是一個函數，如果以這樣的形式（<code>new</code>）寫出來，它就是這個類的實例化。</p>
-<p>而這個所謂的 <code>foo()</code> 其實就是這個 <code>foo()</code> 類的構造函數。</p>
-<h4 id="成員變量">成員變量</h4>
-<p>成員變量有好兩種方法。</p>
-<p>第一種就是在類的構造函數或者任何構造函數中使用 <code>this.&lt;變量名&gt;</code> 。你可以在任何時候聲明一個成員變量，在外部不影響使用，反正就算在還未聲明的時候使用它，也會有一個 <code>undefined</code> 來撐着。所以說這就是第一種方法：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span> {</span>
-    <span class="keyword">this</span>.hello = <span class="string">"world"</span>;
-}
-</pre></td></tr></table></figure>
-
-
-<blockquote>
-<p><strong>注意</strong>：只有在加了 <code>this</code> 的時候纔是調用類的<strong>成員變量</strong>，否則只是函數內的一個局部變量而已。要分清楚有沒有 <code>this</code> 的時候變量的作用範圍。</p>
-</blockquote>
-<p>第二種方法就是在構造函數或者任何成員函數外部聲明，其格式是 <code>&lt;類名&gt;.prototype.&lt;變量名&gt;</code>：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-</pre></td><td class="code"><pre><span class="keyword">function</span> foo() {
-    //<span class="keyword">...</span>
-}
-
-foo.prototype.hello = <span class="string">"world"</span>;
-</pre></td></tr></table></figure>
-
-
-<p>無聊上面哪種方法都是對成員變量的聲明，我們可以看看效果：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre><span class="reserved">var</span> bar = <span class="keyword">new</span> foo();
-<span class="built_in">console</span>.log(bar.hello);
-</pre></td></tr></table></figure>
-
-
-<p>甚至你可以這麼修改這個類：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span> {</span>
-    <span class="keyword">this</span>.hello = <span class="string">"world"</span>;
-}
-
-foo.prototype.hello = <span class="string">"蛋花湯"</span>;
-</pre></td></tr></table></figure>
-
-
-<p>然後再用上面的代碼輸出。</p>
-<blockquote>
-<p>想想看爲什麼輸出的還是 <code>world</code> 而不是 <code>蛋花湯</code>。</p>
-</blockquote>
-<h4 id="構造函數">構造函數</h4>
-<p>我們之前說過了這個 <code>foo()</code> 實際上是一個 <strong>構造函數</strong>。那麼顯然我們可以給構造函數傳參數，所以就有了下面的代碼：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-</pre></td><td class="code"><pre><span class="comment">// 代碼2.1</span>
-<span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">(hello)</span> {</span>
-    <span class="keyword">if</span>(hello === <span class="literal">undefined</span>) {
-        <span class="keyword">this</span>.hello = <span class="string">"world"</span>;
-    } <span class="keyword">else</span> {
-        <span class="keyword">this</span>.hello = hello;
-    }
-}
-</pre></td></tr></table></figure>
-
-
-<p>我們看到上面有一個奇葩的判斷 <code>if(hello === undefined)</code>，這個判斷有什麼用呢？第一種可能，就是開發者很蛋疼地特意傳進去一個 <code>undefined</code> 進去，這個時候它是 <code>undefined</code> 無可厚非。</p>
-<p>還有一種情況。我們一開始就說了 <strong>JavaScript</strong> 是一門弱類型語言，其實不僅僅是弱類型，它的傳參數也非常不嚴謹。你可以多傳或者少傳（只要保證你多傳或者少傳的時候可以保證程序不出錯，或者邏輯不出錯），原則上都是可以的。多傳的參數會被自動忽略，而少傳的參數會以 <code>undefined</code> 補足。</p>
-<p>看看下面的代碼就明白了：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre><span class="comment">// 上接代碼2.1</span>
-<span class="keyword">var</span> bar1 = <span class="keyword">new</span> foo();
-<span class="keyword">var</span> bar2 = <span class="keyword">new</span> foo(<span class="string">"蛋花湯"</span>);
-</pre></td></tr></table></figure>
-
-
-<p>請自行輸出一下兩個 <code>bar</code> 的 <code>hello</code> 變量，會發現一個是 <strong>world</strong> 一個是 <strong>蛋花湯</strong>。顯而易見，我們的第一個 <code>bar1</code> 在聲明的時候，被 <strong>Node.js</strong> 自動看成了：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre><span class="keyword">var</span> bar1 = <span class="keyword">new</span> foo(<span class="literal">undefined</span>);
-</pre></td></tr></table></figure>
-
-
-<p>所以就有了它是 <strong>world</strong> 一說。</p>
-<p>還有就是在這個構造函數中，我們看到了傳進去的參數是 <code>hello</code> 而這個類中本來就有個成員變量就是 <code>this.hello</code>。不過我們之前說過了有 <code>this</code> 和沒 <code>this</code> 的時候作用域不同，那個參數只是作用於構造函數中，而加了 <code>this</code> 的那個則是成員變量。用一個 <code>this</code> 就馬上區分開來他們了，所以即使同名也沒關係。</p>
-<h4 id="成員函數">成員函數</h4>
-<h5 id="成員函數聲明">成員函數聲明</h5>
-<p>成員函數的聲明跟成員變量的第二種聲明方法差不多，即 <code>&lt;類名&gt;.prototype.&lt;函數名&gt; = &lt;函數&gt;;</code></p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td><td class="code"><pre><span class="comment">// 上接代碼2.1</span>
-<span class="function"><span class="keyword">function</span> <span class="title">setHello</span><span class="params">(hello)</span> {</span>
-    <span class="keyword">this</span>.hello = hello;
-}
-foo.prototype.setHello = setHello;
-
-bar1.setHello(<span class="string">"雞蛋餅"</span>);
-</pre></td></tr></table></figure>
-
-
-<p>上面這段代碼顯而易見，我們實現了 <code>foo</code> 類的 <code>setHello</code> 函數，能通過它修改 <code>foo.hello</code> 的值。</p>
-<p>但是這麼寫是不是有點麻煩？接下去我要講一個 <strong>JavaScript</strong> 函數重要的特性了。</p>
-<h4 id="★_匿名函數">★ 匿名函數</h4>
-<p>很多時候我們的某些函數只在一個地方被引用或者調用，那麼我們爲這個函數起一個名字就太不值了，沒必要，所以我們可以臨時寫好這個函數，直接讓引用它的人引用它，調用它的人調用它。所以函數可以省略函數名，如：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span><span class="params">(hello)</span> {</span>
-    <span class="keyword">this</span>.hello = hello;
-}
-</pre></td></tr></table></figure>
-
-
-<p>至於怎麼引用或者調用呢？如果是上面的那個類需要引用的話，就是寫成這樣的：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre>foo.prototype.setHello = <span class="function"><span class="keyword">function</span><span class="params">(hello)</span> {</span>
-    <span class="keyword">this</span>.hello = hello;
-}
-</pre></td></tr></table></figure>
-
-
-<p>這樣的寫法跟 <strong><a href="#成員函數聲明">2.3.3.1. 成員函數聲明</a></strong> 是一個效果的，而且省了很多的代碼量。而且實際上，基本上的類成員函數的聲明都是採用這種匿名函數的方式來聲明的。</p>
-<p>至於說怎麼樣讓匿名函數被調用呢？這通常用於傳入一個只被某個函數調用的函數時這樣寫。</p>
-<p>比如我們有一個函數的原型是：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td><td class="code"><pre><span class="javadoc">/**
- * 我們將傳入a，b兩個變量，
- * 在算出a+b的值後，交由func(num)
- * 去進行輸出
- */</span>
-function sumab(a, b, func) {
-    <span class="keyword">var</span> c = a + b;
-    func(a, b, c);
-}
-</pre></td></tr></table></figure>
-
-
-<p>比如我們有兩個版本的輸出函數，一個是中文輸出，一個是英文輸出，那麼如果不用匿名函數時候是這麼寫的：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">zh</span><span class="params">(a, b, sum)</span> {</span>
-    <span class="transposed_variable">console.</span>log(a + <span class="string">" + "</span> + b + <span class="string">" 的值是："</span> + <span class="built_in">sum</span>);
-}
-
-<span class="function"><span class="keyword">function</span> <span class="title">en</span><span class="params">(a, b, sum)</span> {</span>
-    <span class="transposed_variable">console.</span>log(a + <span class="string">" plus "</span> + b + <span class="string">" is "</span> + <span class="built_in">sum</span>);
-}
-
-sumab(<span class="number">1</span>, <span class="number">2</span>, zh);
-sumab(<span class="number">3</span>, <span class="number">4</span>, en);
-</pre></td></tr></table></figure>
-
-
-<p>執行一遍這段代碼，輸出的結果將會是：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre><span class="number">1</span> + <span class="number">2</span> 的值是：<span class="number">3</span>
-<span class="number">3</span> plus <span class="number">4</span> <span class="keyword">is</span> <span class="number">7</span>
-</pre></td></tr></table></figure>
-
-
-<p>這樣的代碼如果採用匿名函數的形式則將會是：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-</pre></td><td class="code"><pre>sumab(<span class="number">1</span>, <span class="number">2</span>, <span class="function"><span class="keyword">function</span><span class="params">(a, b, sum)</span> {</span>
-    <span class="transposed_variable">console.</span>log(a + <span class="string">" + "</span> + b + <span class="string">" 的值是："</span> + <span class="built_in">sum</span>);
-});
-sumab(<span class="number">3</span>, <span class="number">4</span>, <span class="function"><span class="keyword">function</span><span class="params">(a, b, sum)</span> {</span>
-    <span class="transposed_variable">console.</span>log(a + <span class="string">" plus "</span> + b + <span class="string">" is "</span> + <span class="built_in">sum</span>);
-});
-</pre></td></tr></table></figure>
-
-
-<p>這種形式通常使用於回調函數。回調機制算是 <strong>Node.js</strong> 或者說 <strong>JavaScript</strong> 的精髓。在以後的篇章會做介紹。</p>
-<h4 id="成員函數聲明的匿名函數聲明方式">成員函數聲明的匿名函數聲明方式</h4>
-<p>雖然上一節講過了，不過還是再講一遍吧。</p>
-<p>通常我們聲明類的成員函數時候都是用匿名函數來聲明的，因爲反正那個函數也就是這個類的一個成員函數而已，不會在其它地方被單獨引用或者調用，所以就有了下面的代碼：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-</pre></td><td class="code"><pre><span class="comment">// 上接代碼2.1</span>
-foo.prototype.setHello = <span class="function"><span class="keyword">function</span><span class="params">(hello)</span> {</span>
-    <span class="keyword">this</span>.hello = hello;
-}
-</pre></td></tr></table></figure>
-
-
-<p>這樣我們就使得 <code>foo</code> 類有了 <code>setHello</code> 這個函數了。</p>
-<h4 id="類的隨意性">類的隨意性</h4>
-<p>這個又是我胡扯的。所謂類的隨意性即 <strong>JavaScript</strong> 中你可以在任何地方修改你的類，這跟 <strong>Ruby</strong> 有着一定的相似之處。</p>
-<p>比如說 <code>string</code> ，它其實也是一個類，有着諸如 <code>length</code> 這樣的成員變量，也有 <code>indexOf</code>、<code>substr</code> 等成員函數。但是萬一我們覺得這個 <code>string</code> 有些地方不完善，想加自己的方法，那麼可以在你想要的地方給它增加一個函數，比如：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td><td class="code"><pre><span class="built_in">String</span>.prototype.sb = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-    <span class="keyword">var</span> newstr = <span class="string">""</span>;
-    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.length; i++) {
-        <span class="keyword">if</span>(i % <span class="number">2</span> === <span class="number">0</span>) newstr += <span class="string">"s"</span>;
-        <span class="keyword">else</span> newstr += <span class="string">"b"</span>;
-    }
-
-    <span class="keyword">return</span> newstr;
-};
-</pre></td></tr></table></figure>
-
-
-<p>這個函數的意思就是填充一個字符串，使其變成 <code>sb</code> 的化身。</p>
-<p>我們來測試一下：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre>var <span class="keyword">str</span> = <span class="string">"噓~蛋花湯在睡覺。"</span>;
-console.<span class="keyword">log</span>(<span class="keyword">str</span>.sb());
-</pre></td></tr></table></figure>
-
-
-<p>你將會得到這樣的結果：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre>sbsbsbsbs
-</pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>你跟你的電腦說“噓~蛋花湯在睡覺。”，你的電腦會罵你四次半傻逼。（趕快砸了它）</p>
-</blockquote>
-<h2 id="附">附</h2>
-<h3 id="深拷貝">深拷貝</h3>
-<p>所謂深拷貝就是自己新建一個數組或者對象，把源數組或者對象中的基礎類型變量值一個個手動拷過去，而不是隻把源數組或者對象的引用拿過來。所以這就涉及到了一個遞歸的調用什麼的。</p>
-<p>下面是我實現的一個深拷貝函數，大家可以寫一個自己的然後加入到自己的 <strong>Node.js</strong> 知識庫中。</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">cloneObject</span><span class="params">(src)</span> {</span>
-    <span class="keyword">var</span> dest = {};
-    <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> src) {
-        <span class="keyword">if</span>(<span class="keyword">typeof</span> src === <span class="string">"object"</span>) dest[key] = cloneObject(src[key]);
-        <span class="keyword">else</span> dest[key] = src[key];
-    }
-
-    <span class="keyword">return</span> dest;
-}
-</pre></td></tr></table></figure>
-
-
-<h3 id="系統默認對象參考手冊">系統默認對象參考手冊</h3>
-<ul>
-<li><strong>字符串</strong>：<a href="http://www.w3school.com.cn/js/jsref_obj_string.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_string.asp</a></li>
-<li><strong>數字</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_number.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_number.asp</a></li>
-<li><strong>數組</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_array.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_array.asp</a></li>
-<li><strong>布爾</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_boolean.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_boolean.asp</a></li>
-<li><strong>日期</strong>: <a href="http://www.w3school.com.cn/js/jsref_obj_date.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_date.asp</a></li>
-<li><strong>數學庫</strong>：<a href="http://www.w3school.com.cn/js/jsref_obj_math.asp" target="_blank">http://www.w3school.com.cn/js/jsref_obj_math.asp</a></li>
-</ul>
-]]></content>
-    
-    
-      <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
-    
-      <category term="JavaScript" scheme="http://xcoder.in/tags/JavaScript/"/>
-    
-      <category term="一起擼Node.JS" scheme="http://xcoder.in/tags/%E4%B8%80%E8%B5%B7%E6%93%BCNode.JS/"/>
-    
-      <category term="NodeJS" scheme="http://xcoder.in/categories/NodeJS/"/>
     
   </entry>
   

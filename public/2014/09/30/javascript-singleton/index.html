@@ -6,9 +6,16 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="注：備份到這篇日誌的時候，感覺眼睛進了什麼奇怪的東西。（才……纔不是眼淚呢，那一定是沙子！(;´༎ຶД༎ຶ`)
-主要引起感傷的還是這首軒轅劍的 BGM 吧。因爲 Hero Snake 的BGM就是這個。
-這篇文章原文是在 2011年5月1日 發的。遊戲是跟 MatRush 在2011年寒假一起寫的，">
+    <meta name="description" content="今天隨便玩了一道 CodeWar 的題。
+　　題意大致就是你需要實現一個 Singleton 也就是單件模式的類，讓其下面代碼執行成功：
+1
+2
+3
+4
+5
+var obj1 = new Singleton();
+var obj2 = new Singleton();
+obj1 === obj2; ">
     
     
 
@@ -19,7 +26,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>死月出品：Hero Snake 英雄蛇 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>用 Node.js 實現一個 Singleton | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -84,7 +91,7 @@
         
     $(function() {
         // page-id...
-        var pageId = "2014/04/11/hero-snake/";
+        var pageId = "2014/09/30/javascript-singleton/";
         pageId = pageId.substr(0, pageId.indexOf("/"));
         if(pageId === "") pageId = "index";
         
@@ -93,10 +100,10 @@
     </script>
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>死月出品：Hero Snake 英雄蛇</h1>
+        <h1>用 Node.js 實現一個 Singleton</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-04-11T05:53:35.000Z" itemprop="datePublished">2014年04月11日</time>,
+发表于:<time datetime="2014-09-30T07:21:13.000Z" itemprop="datePublished">2014年09月30日</time>,
 更新于:<time datetime="2014-09-30T07:39:10.000Z" itemprop="dateModified">2014年09月30日</time>,
 By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
@@ -104,44 +111,121 @@ By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         <div class="post-body-inner">
             <div id="toc" class="toc-article well">
                 <strong class="toc-title">大纲</strong>
-                
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#開始試驗"><span class="toc-number">1.</span> <span class="toc-text">開始試驗</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小作弊失敗"><span class="toc-number">2.</span> <span class="toc-text">小作弊失敗</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#死月の正解"><span class="toc-number">3.</span> <span class="toc-text">死月の正解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#別的寫法"><span class="toc-number">4.</span> <span class="toc-text">別的寫法</span></a></li></ol>
             </div>
             
-            <blockquote>
-<p>注：備份到這篇日誌的時候，感覺眼睛進了什麼奇怪的東西。（才……纔不是眼淚呢，那一定是沙子！(;´༎ຶД༎ຶ`)</p>
-<p>主要引起感傷的還是這首軒轅劍的 BGM 吧。因爲 Hero Snake 的BGM就是這個。</p>
-<p>這篇文章原文是在 2011年5月1日 發的。遊戲是跟 <strong>MatRush</strong> 在2011年寒假一起寫的，雖然是我邊教邊寫的。呵呵，轉眼間三年過去了。</p>
-<p>想當年我還是那麼執着於遊戲行業，現在糾結於到底要從事遊戲行業還是互聯網呢？半年真的能改變很多，要是我當時沒有去汽族網實習，也許現在並不會有那麼大的改變吧。</p>
-<p>自從被 <a href="http://weibo.com/shyvo" target="_blank">@樸大</a> 刷了之後，我又開始着重考慮了。是不是我玩互聯網只是覺得新鮮好玩而已呢？畢竟我是半路出家的，雖然有着十來年的 <code>Web經歷</code>，但那都是小打小鬧哇。還記得小學的時候買的第一本電腦書——<a href="http://www.amazon.cn/%E5%9C%A8%E7%BD%91%E4%B8%8A%E5%AE%89%E4%B8%AA%E5%AE%B6-%E6%9C%B1%E6%83%A0%E5%BC%BA/dp/B0011A9QSA/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1397196202&amp;sr=1-1&amp;keywords=%E5%9C%A8%E7%BD%91%E4%B8%8A%E5%AE%89%E4%B8%AA%E5%AE%B6" target="_blank">《在網上安個家》</a>，到現在還記得那個時候捧着書的激動心情。</p>
-<p>我是不是有點偏離了自己本身的軌道呢？總之還是在這兩塊領域猶豫不決。</p>
-<p>廢話有點扯遠了，還是把文章從 Capture 備份回來再說吧。</p>
-</blockquote>
-<p>　　這是一款正宗基於HGE的小遊戲，算是我做的遊戲中自己比較滿意的小遊戲吧。</p>
-<p>　　幕後故事是這樣的：MatRush寒假找我一起做遊戲，因爲他們學校弄了一個蛋疼的遊戲製作比賽。然後命題是貪吃蛇，於是我們加了一點自己的小創意，給他講解了一些HGE的基礎之後，就寫了這個遊戲了。然後因爲我們都比較喜歡軒轅劍，於是BGM就是軒轅劍的《永遠的三個人的快樂時光》，由於MatRush比較喜歡MapleStory，便有了素材是那些像素畫面。</p>
-<p>　　首先這個遊戲有兩種模式：單人模式和雙人模式。</p>
-<p>　　關於單人模式，這是一個闖關型模式，大家在每一關必須通過吃道具獲得一定的分數以及吃圈圈獲得一定圈圈數才能開啓通往下一關的門，默認一共20關，可以自己編輯關卡，這是後話。下面是幾種道具的解說：</p>
-<blockquote>
-<p><img src="treasure0.png" alt="開山斧"></p>
-<p>開山斧：撿到這貨隨機獲得1~3個斧頭並且附贈100分數。斧頭的作用是能破開木桶，安全通過，一個斧頭用一次。斧頭數在左下角的Axe(s)後面。</p>
-<p><img src="treasure1.png" alt="命運之剪"></p>
-<p>命運之剪：撿到這個之後獲得100分並且給你斷掉一個尾巴以降低難度。</p>
-<p><img src="treasure2.png" alt="降速器"></p>
-<p>降速器：因爲你每吃一個圈圈會增加一定速度，而這個降速器是降低你的速度讓你容易些。並且附贈100分。</p>
-<p><img src="treasure8.png" alt="藥水"></p>
-<p>藥水：藥水是裝飾變色用的，其實是送分的。前四種藥水100分，紫色的300分。</p>
-<p><img src="treasure3.png" alt="降速器"></p>
-<p>骷髏頭：想死的話就碰碰它試試。</p>
-<p><img src="door.png" alt="傳送門"></p>
-<p>傳送門：遇到這貨就說明你功德圓滿了。恭喜，可以通過它前往下一關。</p>
-</blockquote>
-<p>　　接下去是雙人模式。雙人模式因爲當初設想有些問題，所以實現起來僅僅是簡單的雙人走啊走，看誰碰到誰誰就輸。在雙人模式中，先要選擇一張對戰地圖，然後開始雙人走啊走啊走。</p>
-<p>　　然後Rank是排行榜，Option是遊戲的一些選項，Introduction是遊戲介紹，這個介紹有些蛋疼，最後不用說Exit就是退出了。</p>
-<p>　　下面是關於地圖編輯器的說明：</p>
-<p>　　首先在遊戲目錄小有一個config.ini文件，是一些遊戲設置。其中levelnum是遊戲關卡數。注意這個數字必須要跟地圖數量一致或者小於它，否則會因爲找不到之後的地圖而出錯。地圖就存在data裏，命名方式是mapX.txt，從0開始。地圖編輯器則在MapEditor文件夾下。操作很簡單，說明都在編輯器下方的文字上，就幾個快捷鍵。可以用鼠標操作也可以用上下左右控制方向。</p>
-<p>　　最後，預祝大家玩得愉快。附上下載地址和幾張預覽圖吧：</p>
-<p>　　<a href="bin.7z">點擊下載</a></p>
-<p>　　<a href="https://github.com/XadillaX/hero-snake" target="_blank">代碼地址</a></p>
-<p><img src="1.png" alt="標題畫面"><br><img src="2.png" alt="玩的畫面"><br><img src="4.png" alt="雙人模式"></p>
+            <p>今天隨便玩了一道 <a href="http://www.codewars.com/kata/singleton-pattern/javascript" target="_blank">CodeWar 的題</a>。</p>
+<p>　　題意大致就是你需要實現一個 <code>Singleton</code> 也就是單件模式的類，讓其下面代碼執行成功：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">var</span> obj1 = <span class="keyword">new</span> Singleton();
+<span class="keyword">var</span> obj2 = <span class="keyword">new</span> Singleton();
+obj1 === obj2; <span class="comment">// =&gt; true</span>
+obj1.test = <span class="number">1</span>;
+obj2.test; <span class="comment">// =&gt; 1</span>
+</pre></td></tr></table></figure>
+
+<p>　　並且還有很重要的一點就是 <code>Singleton</code> 的對象的 <code>instanceof</code> 也得的確是 <code>Singleton</code> 才行。</p>
+<h2 id="開始試驗">開始試驗</h2>
+<p>　　我們猜想 <code>new Singleton()</code> 的結果，如果 <code>Singleton</code> 函數也就是這個類的構造函數沒返回值的話，直接會返回 <code>this</code>，有返回值的話，那麼就是等於其返回值了。</p>
+<p>　　我們碼下面的代碼看一下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">var</span> Singleton = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">return</span> { foo: <span class="string">"bar"</span> };
+};
+
+console.log(<span class="keyword">new</span> Singleton());
+</pre></td></tr></table></figure>
+
+<p>　　跑一遍之後我們的確發現了輸出的值就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>{ foo: <span class="string">"bar"</span> }
+</pre></td></tr></table></figure>
+
+<h2 id="小作弊失敗">小作弊失敗</h2>
+<p>　　於是我這麼做：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">var</span> foo = {};
+<span class="keyword">var</span> Singleton = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">return</span> foo;
+};
+</pre></td></tr></table></figure>
+
+<p>　　結果上面的幾個條件都符合了，不信大家可以自己輸出一遍看看。</p>
+<p>　　但是——</p>
+<p>　　這東西不是一個 <code>Singleton</code> 的實例，它只是一個簡單的 <code>JSON</code> 對象，所以還是無法通過。</p>
+<h2 id="死月の正解">死月の正解</h2>
+<p>　　答案有很多，CodeWar 上面每個人的解法都不一樣，但是歸根結底本質還是大同小異的。</p>
+<p>　　就是第一次的時候先直接返回 <code>this</code>，並且把 <code>this</code> 放在某個地方。以後每次來這裏創建的時候返回之前存好的 <code>this</code> 即可：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="keyword">var</span> Singleton = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">if</span>(Singleton.prototype.instance) <span class="keyword">return</span> Singleton.prototype.instance = <span class="keyword">this</span>;
+
+    <span class="comment">// Do some initialize things</span>
+    <span class="comment">// ...</span>
+
+    Singleton.prototype.instance = <span class="keyword">this</span>;
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+};
+</pre></td></tr></table></figure>
+
+<h2 id="別的寫法">別的寫法</h2>
+<p>　　寫法很多，我這裏隨意挑幾個別人的答案吧。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="comment">/**
+ * By tjwudi
+ */</span>
+<span class="keyword">var</span> Singleton = <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
+  <span class="keyword">return</span> Singleton.ins = Singleton.ins ? Singleton.ins : <span class="keyword">this</span>;
+};
+</pre></td></tr></table></figure>
+
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="comment">/**
+ * By nonowarn
+ */</span>
+<span class="keyword">var</span> Singleton = (<span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+  <span class="keyword">var</span> instance = <span class="literal">null</span>;
+
+  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
+    <span class="keyword">return</span> instance || (instance = <span class="keyword">this</span>);
+  };
+})();
+</pre></td></tr></table></figure>
+
 
             
             <section class="comment">
