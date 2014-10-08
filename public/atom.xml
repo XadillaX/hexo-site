@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2014-10-06T12:40:15.644Z</updated>
+  <updated>2014-10-08T04:56:32.087Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -15,11 +15,444 @@
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[用 Javascript 實現一個簡易 BrainF**k 解釋器]]></title>
+    <link href="http://xcoder.in/2014/10/08/brainf**k/"/>
+    <id>http://xcoder.in/2014/10/08/brainf**k/</id>
+    <published>2014-10-08T03:42:32.000Z</published>
+    <updated>2014-10-08T04:56:24.000Z</updated>
+    <content type="html"><![CDATA[<p>首先祝賀自己在 <a href="http://www.codewars.com/users/XadillaX" target="_blank">CodeWars</a> 升級到 3 Kyu，以及感謝 @<a href="http://www.html-js.com/card/473" target="_blank">Bolt_白衣蒼狗</a> 童鞋讓我知道有 CodeWars 這麼個好玩的東西。</p>
+<p>　　雖然裏面水題居多，不過在上班比較空閒的檔口 #<strong>帶薪刷題</strong># 的感覺還是蠻不錯的。</p>
+<h2 id="話嘮一下">話嘮一下</h2>
+<p>　　高中的時候就跟 @<a href="http://www.lvchaoshuai.com/" target="_blank">MatRush</a> 發現了一個名字超級好玩的編程語言叫 <a href="http://en.wikipedia.org/wiki/Brainfuck" target="_blank">BrainF**k</a>，它比較搞腦筋，因爲所有的編程操作都是集合在操作符裏面，然後控制指針偏移和內存值的修改來進行一系列操作。</p>
+<p>　　這與後面發現的 <a href="http://www.hacker.org/hvm/" target="_blank">HVM</a>（Hack Virtual Machine）有異曲同工之妙。其實之前也出過一個“<a href="http://acm.nbut.edu.cn/Problem/view.xhtml?id=1062" target="_blank">實現一個簡易 HVM 解釋器</a>”的題目，所以在 CodeWars 看到這個題目的時候還感覺蠻親切的。</p>
+<h2 id="問題描述">問題描述</h2>
+<p>　　問題很簡單，就是讓你實現一個函數來解釋一句 BrainF**k 的語句，並且根據輸入數據來輸出相應的內容。</p>
+<p>　　至於這題所需的 BrainF**k 的語法，大致如下：</p>
+<ul>
+<li><code>&gt;</code>: 指針右移一位。</li>
+<li><code>&lt;</code>: 指針左移一位。</li>
+<li><code>+</code>: 當前指針所指的內存值加一，以 255 爲界，溢出爲 0，即 <code>255 + 1 = 0</code>。</li>
+<li><code>-</code>: 當前指針所指的內存值減一，以 0 爲界，溢出爲 255，即 <code>0 - 1 = 255</code>。</li>
+<li><code>.</code>: 輸出當前指針所指的值，即輸出該值 ASCII 碼所對應的字符。</li>
+<li><code>,</code>: 從輸入取一個字符轉爲 ASCII 碼存入當前指針所指的內存。</li>
+<li><code>[</code>: 若當前指針所指的值爲 0，則命令跳到該 <code>[</code> 匹配的結束 <code>]</code> 符號位置的下一位置的指令。</li>
+<li><code>]</code>: 若當前指針所指的值不爲 0，則指令向前跳到該 <code>]</code> 匹配到的 <code>[</code> 符號位置的下一位置的指令。</li>
+</ul>
+<p>　　舉個例子：</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="string">,</span><span class="literal">+</span><span class="title">[</span><span class="literal">-</span><span class="string">.</span><span class="string">,</span><span class="literal">+</span><span class="title">]</span>
+</pre></td></tr></table></figure>
+
+<p>　　上面的句子大致就是說：</p>
+<ol>
+<li>獲取輸入到當前指針。</li>
+<li>當前指針值加一。</li>
+<li>如果當前指針的值爲 0，那麼跳到結束位置；否則下一步。</li>
+<li>當前指針值減一。</li>
+<li>輸出當前指針的值（綜上所述，就是輸出輸入的值）。</li>
+<li>獲取輸入到當前指針。</li>
+<li>當前指針值加一。</li>
+<li>若當前指針值不爲 0，那麼跳到 <code>[</code> 後面的位置——即第四步。</li>
+</ol>
+<p>　　說白了，就是不斷獲取輸入的值，如果輸入的值是 255，那麼就跳出循環，否則原樣輸出。</p>
+<h2 id="開始實現">開始實現</h2>
+<p>　　明白了上面的題意之後就可以開始實現了，步驟大致上就是逐位遍歷指令，然後一個 <code>switch</code> 來處理各種指令即可。</p>
+<p>　　<strong>CodeWars</strong> 給了你一個函數原型，你在裏面實現代碼就好了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">brainLuck</span><span class="params">(code, input)</span>{</span>
+  <span class="keyword">return</span> output;
+}
+</pre></td></tr></table></figure>
+
+<h3 id="前趨工作">前趨工作</h3>
+<p>　　在開始之前，我們做一些初始化工作，比如申明幾個變量什麼的：</p>
+<ul>
+<li>輸入數據當前的位置，也就是說讀取幾個之後，這個位置要偏移幾位。</li>
+<li>當前指令的位置。</li>
+<li>當前指針的位置。</li>
+<li>“僞內存塊”的值，用一個數組表示，默認一個 <code>[ 0 ]</code>。</li>
+<li>需要 <code>return</code> 的字符串，即輸出的值。</li>
+<li>某個括號匹配的括號的指令下標的這麼一個映射數組。</li>
+</ul>
+<p>　　所以接下去我們要把架子填成這樣：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">brainLuck</span><span class="params">(code, input)</span> {</span>
+    <span class="keyword">var</span> inputPos = <span class="number">0</span>;
+    <span class="keyword">var</span> commandPos = <span class="number">0</span>;
+    <span class="keyword">var</span> pointerPos = <span class="number">0</span>;
+    <span class="keyword">var</span> bytes = [ <span class="number">0</span> ];
+    <span class="keyword">var</span> output = <span class="string">""</span>;
+    <span class="keyword">var</span> matching = getMatchingBra(code);    <span class="comment">///&lt; 人家纔不是罩罩呢，我是 Brackets 的縮寫</span>
+}
+</pre></td></tr></table></figure>
+
+<h4 id="括號匹配函數">括號匹配函數</h4>
+<p>　　上面的 <code>getMatchingBra</code> 就是我們要實現的一個括號匹配函數了，思想就是用棧。</p>
+<p>　　碰到前括號就把這個前括號的下標入棧；碰到後括號，就把棧頂元素即前括號的下標推出，這個時候括號匹配數組的這個前括號下標的值就是當前後括號的下標，而後括號下標的值就是前括號的下標了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="code"><pre><span class="comment">/**
+ * 你纔是 Bra ／/( ◕‿‿◕ )＼
+ */</span>
+<span class="function"><span class="keyword">function</span> <span class="title">getMatchingBra</span><span class="params">(code)</span> {</span>
+    <span class="keyword">var</span> stack = [];
+    <span class="keyword">var</span> bra = [];
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; code.length; i++) bra.push(-<span class="number">1</span>);
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; code.length; i++) {
+        <span class="keyword">if</span>(code[i] === <span class="string">'['</span>) {
+            stack.push(i);
+        } <span class="keyword">else</span> <span class="keyword">if</span>(code[i] === <span class="string">']'</span>) {
+            bra[i] = stack.pop();
+            bra[bra[i]] = i;
+        }
+    }
+    <span class="keyword">return</span> bra;
+}
+</pre></td></tr></table></figure>
+
+<p>　　有了這個數組就可以隨便跳了，如果指令第 <code>i</code> 位是一個括號（不管前括號還是後括號），那麼它的匹配括號下標就是 <code>matching[i]</code> 了。</p>
+<h3 id="各種指令的處理">各種指令的處理</h3>
+<p>　　要處理指令的話實際上就是一個 <code>while</code> 語句不斷循環指令，然後判斷當前指令是什麼然後做相應的事，最後指令位置加一就好了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="code"><pre><span class="keyword">while</span>(commandPos &lt; code.length) {
+    <span class="keyword">switch</span>(code[commandPos]) {
+        <span class="keyword">case</span> <span class="string">'&gt;'</span>: {}
+        <span class="keyword">case</span> <span class="string">'&lt;'</span>: {}
+        <span class="keyword">case</span> <span class="string">'+'</span>: {}
+        <span class="keyword">case</span> <span class="string">'-'</span>: {}
+        <span class="keyword">case</span> <span class="string">'.'</span>: {}
+        <span class="keyword">case</span> <span class="string">','</span>: {}
+        <span class="keyword">case</span> <span class="string">'['</span>: {}
+        <span class="keyword">case</span> <span class="string">']'</span>: {}
+    }
+    commandPos++;
+}
+</pre></td></tr></table></figure>
+
+<h4 id="&gt;">&gt;</h4>
+<p>　　指針右移的話就把指針位置加一，如果內存數組還沒當前指針位置的值的話 <code>push</code> 一個 <code>0</code> 就好了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">case</span> <span class="string">'&gt;'</span>: {
+    <span class="keyword">if</span>(<span class="literal">undefined</span> === bytes[++pointerPos]) bytes.push(<span class="number">0</span>);
+    <span class="keyword">break</span>;
+}
+</pre></td></tr></table></figure>
+
+<h4 id="&lt;">&lt;</h4>
+<p>　　左移就是減一，如果位置小於 0，那麼內存數組從前推入一個值，並讓指針等於 0。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="keyword">case</span> <span class="string">'&lt;'</span>: {
+    <span class="keyword">if</span>(--pointerPos &lt; <span class="number">0</span>) {
+        bytes.unshift(<span class="number">0</span>);
+        pointerPos = <span class="number">0</span>;
+    }
+    <span class="keyword">break</span>;
+}
+</pre></td></tr></table></figure>
+
+<h4 id="+">+</h4>
+<p>　　沒什麼好說的，內存加一就好了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">case</span> <span class="string">'+'</span>: {
+    bytes[pointerPos] = (bytes[pointerPos] + <span class="number">1</span>) % <span class="number">256</span>;
+    <span class="keyword">break</span>;
+}
+</pre></td></tr></table></figure>
+
+<h4 id="-">-</h4>
+<p>　　減一。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="keyword">case</span> <span class="string">'-'</span>: {
+    bytes[pointerPos]--;
+    <span class="keyword">if</span>(bytes[pointerPos] &lt; <span class="number">0</span>) bytes[pointerPos] = <span class="number">0</span>;
+    <span class="keyword">break</span>;
+}
+</pre></td></tr></table></figure>
+
+<h4 id="--1">.</h4>
+<p>　　輸出的話直接往 <code>output</code> 字符串裏面加上當前指針的值就好了，注意要 ASCII 轉變之後的字符。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">case</span> <span class="string">'.'</span>: {
+    output += <span class="built_in">String</span>.fromCharCode(bytes[pointerPos]);
+    <span class="keyword">break</span>;
+}
+</pre></td></tr></table></figure>
+
+<h4 id=",">,</h4>
+<p>　　輸入的話就讓 <code>input</code> 當前位置的值變成 ASCII 存進當前指針，然後輸入位置加一就好了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">case</span> <span class="string">','</span>: {
+    bytes[pointerPos] = input.charCodeAt(inputPos++);
+    <span class="keyword">break</span>;
+}
+</pre></td></tr></table></figure>
+
+<h4 id="[">[</h4>
+<p>　　由於之前已經做好了匹配數組，所以我們只需要判斷當前指針是不是 0，然後如果是就跳到匹配括號處。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">case</span> <span class="string">'['</span>: {
+    commandPos = !bytes[pointerPos] ? matching[commandPos] : commandPos;
+    <span class="keyword">break</span>;
+}
+</pre></td></tr></table></figure>
+
+<h4 id="]">]</h4>
+<p>　　同上，只不過條件改一下而已。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="keyword">case</span> <span class="string">']'</span>: {
+    commandPos = bytes[pointerPos] ? matching[commandPos] : commandPos;
+    <span class="keyword">break</span>;
+}
+</pre></td></tr></table></figure>
+
+<h3 id="善後工作">善後工作</h3>
+<p>　　上面的函數體完成之後，我們只需要在最後把 <code>output</code> 給返回就好了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">return</span> output;
+</pre></td></tr></table></figure>
+
+<h2 id="肢體組裝">肢體組裝</h2>
+<p>　　完成了上面七零八落的肢體之後，我們要把五馬分屍的代碼給湊回去，所以最後就長這個樣子了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+</pre></td><td class="code"><pre><span class="function"><span class="keyword">function</span> <span class="title">getMatchingBra</span><span class="params">(code)</span> {</span>
+    <span class="keyword">var</span> stack = [];
+    <span class="keyword">var</span> bra = [];
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; code.length; i++) bra.push(-<span class="number">1</span>);
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; code.length; i++) {
+        <span class="keyword">if</span>(code[i] === <span class="string">'['</span>) {
+            stack.push(i);
+        } <span class="keyword">else</span> <span class="keyword">if</span>(code[i] === <span class="string">']'</span>) {
+            bra[i] = stack.pop();
+            bra[bra[i]] = i;
+        }
+    }
+    <span class="keyword">return</span> bra;
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">brainLuck</span><span class="params">(code, input)</span> {</span>
+    <span class="keyword">var</span> inputPos = <span class="number">0</span>;
+    <span class="keyword">var</span> commandPos = <span class="number">0</span>;
+    <span class="keyword">var</span> pointerPos = <span class="number">0</span>;
+    <span class="keyword">var</span> bytes = [ <span class="number">0</span> ];
+    <span class="keyword">var</span> output = <span class="string">""</span>;
+    <span class="keyword">var</span> matching = getMatchingBra(code);
+    
+    <span class="keyword">while</span>(commandPos &lt; code.length) {
+        <span class="keyword">switch</span>(code[commandPos]) {
+            <span class="keyword">case</span> <span class="string">'&gt;'</span>: {
+                pointerPos++;
+                <span class="keyword">if</span>(<span class="literal">undefined</span> === bytes[pointerPos]) {
+                    bytes.push(<span class="number">0</span>);
+                }
+                <span class="keyword">break</span>;
+            }
+            <span class="keyword">case</span> <span class="string">'&lt;'</span>: {
+                pointerPos--;
+                <span class="keyword">if</span>(<span class="number">0</span> &gt; pointerPos) {
+                    bytes.unshift(<span class="number">0</span>);
+                    pointerPos = <span class="number">0</span>;
+                }
+                <span class="keyword">break</span>;
+            }
+            <span class="keyword">case</span> <span class="string">'+'</span>: {
+                bytes[pointerPos] = (bytes[pointerPos] + <span class="number">1</span>) % <span class="number">256</span>;
+                <span class="keyword">break</span>;
+            }
+            <span class="keyword">case</span> <span class="string">'-'</span>: {
+                bytes[pointerPos]--;
+                <span class="keyword">if</span>(bytes[pointerPos] &lt; <span class="number">0</span>) bytes[pointerPos] = <span class="number">0</span>;
+                <span class="keyword">break</span>;
+            }
+            <span class="keyword">case</span> <span class="string">'.'</span>: {
+                output += <span class="built_in">String</span>.fromCharCode(bytes[pointerPos]);
+                <span class="keyword">break</span>;
+            }
+            <span class="keyword">case</span> <span class="string">','</span>: {
+                <span class="keyword">var</span> temp = input.charCodeAt(inputPos++);
+                bytes[pointerPos] = temp;
+                <span class="keyword">break</span>;
+            }
+            <span class="keyword">case</span> <span class="string">'['</span>: {
+                <span class="keyword">if</span>(!bytes[pointerPos]) {
+                    commandPos = matching[commandPos];
+                }
+                <span class="keyword">break</span>;
+            }
+            <span class="keyword">case</span> <span class="string">']'</span>: {
+                <span class="keyword">if</span>(bytes[pointerPos]) {
+                    commandPos = matching[commandPos];
+                }
+                <span class="keyword">break</span>;
+            }
+        }
+        commandPos++;
+    }
+    
+    <span class="keyword">return</span> output;
+}
+</pre></td></tr></table></figure>
+
+<h2 id="題後語">題後語</h2>
+<p>　　艾瑪，忘了放題目鏈接了：<a href="http://www.codewars.com/kata/526156943dfe7ce06200063e" target="_blank">http://www.codewars.com/kata/526156943dfe7ce06200063e</a>。以及大家如果有興趣的話也可以去試試看寫個 <a href="http://acm.nbut.edu.cn/Problem/view.xhtml?id=1062" target="_blank">HVM</a> 看看。</p>
+<p>　　實際上本文實現的東西實用性幾乎沒有，只不過是拋磚引玉，讓大家在做一些模擬題邏輯（或者說是簡單模擬邏輯）的時候理清思路、按部就班，切忌自己亂了思路和邏輯。</p>
+]]></content>
+    
+    
+      <category term="Javascript" scheme="http://xcoder.in/tags/Javascript/"/>
+    
+      <category term="解釋器" scheme="http://xcoder.in/tags/%E8%A7%A3%E9%87%8B%E5%99%A8/"/>
+    
+      <category term="BrainFuck" scheme="http://xcoder.in/tags/BrainFuck/"/>
+    
+      <category term="Programming" scheme="http://xcoder.in/categories/Programming/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[用 Node.js 實現一個 Singleton]]></title>
     <link href="http://xcoder.in/2014/09/30/javascript-singleton/"/>
     <id>http://xcoder.in/2014/09/30/javascript-singleton/</id>
     <published>2014-09-30T07:21:13.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<p>今天隨便玩了一道 <a href="http://www.codewars.com/kata/singleton-pattern/javascript" target="_blank">CodeWar 的題</a>。</p>
 <p>　　題意大致就是你需要實現一個 <code>Singleton</code> 也就是單件模式的類，讓其下面代碼執行成功：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
@@ -148,7 +581,7 @@ console.log(<span class="keyword">new</span> Singleton());
     <link href="http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/"/>
     <id>http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/</id>
     <published>2014-09-20T07:51:40.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2>
 <p>　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 <a href="http://kacaka.ca/" target="_blank">kacaka.ca</a>（目前暫失效）。</p>
 <p>　　爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 <a href="http://cloudflare.com/" target="_blank">CloudFlare</a>。而且它也有提供 API 讓開發者自己開發通過他的服務解析域名的服務。</p>
@@ -438,7 +871,7 @@ spidex.post(config.baseUrl, <span class="function"><span class="keyword">functio
     <link href="http://xcoder.in/2014/09/17/theme-color-extract/"/>
     <id>http://xcoder.in/2014/09/17/theme-color-extract/</id>
     <published>2014-09-17T03:34:54.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>所謂主題色提取，就是對於一張圖片，近似地提取出一個調色板，使得調色板裏面的顏色能組成這張圖片的主色調。</p>
 </blockquote>
@@ -906,7 +1339,7 @@ colors[r + g + b]++;
     <link href="http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/"/>
     <id>http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/</id>
     <published>2014-09-01T12:36:33.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<h2 id="序">序</h2>
 <p>最近閒着蛋疼實現了兩個庫。</p>
 <ul>
@@ -1111,7 +1544,7 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <link href="http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/"/>
     <id>http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/</id>
     <published>2014-08-04T03:50:21.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2>
 <p>　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIST 方言中，你要做的就是把所有跟 bolt 初始化計算相關的代碼放到其 <code>prepare</code> 的代碼當中去。</p>
 <p>　　你想一下，當你在文件加載的時候初始化了一個 MongoDB 鏈接，這個鏈接總不能被序列化到遠程去吧？所以說辦法就是把 bolt 搞上去之後，bolt 自動去初始化一個鏈接——這就是 <code>prepare</code> 的作用了。</p>
@@ -1191,7 +1624,7 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <link href="http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/"/>
     <id>http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/</id>
     <published>2014-07-30T02:14:29.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起_(灬ºωº灬)">起 (灬ºωº灬)</h2>
 <p>　　說來話長，自從入了花瓣，整個人就掉進連環坑了。</p>
 <p>　　後端元數據採集是用 Storm 來走拓撲流程的，又因爲 @<a href="http://weibo.com/zolazhou" target="_blank">Zola</a> 不是很喜歡 Java，所以退而求其次選擇了 Clojure，所以正在苦逼地學習 Clojure 和 Storm 中。</p>
@@ -1266,7 +1699,7 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <link href="http://xcoder.in/2014/06/12/untrusted-solution/"/>
     <id>http://xcoder.in/2014/06/12/untrusted-solution/</id>
     <published>2014-06-12T03:08:34.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<p><a href="http://alexnisnevich.github.io/untrusted/" target="_blank">Trusted</a> 是一個代碼解謎遊戲，用 Javascript 來過關的。</p>
 <p>　　昨天凌晨花了仨小時通關了這個遊戲，在這裏就粗粗做一下題解吧，好幾題都是 Hack 過去的。（不要臉，( ﾟДﾟ)σ</p>
 <h2 id="Ceil_Block_A">Ceil Block A</h2>
@@ -1896,7 +2329,7 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     <link href="http://xcoder.in/2014/06/07/cocos2d-311-setup/"/>
     <id>http://xcoder.in/2014/06/07/cocos2d-311-setup/</id>
     <published>2014-06-07T11:34:02.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<p>由於偷懶，所以在此感謝 Etond 的指導（喂喂喂，明明是自己懶得看文檔，明明 <a href="README"><code>READEME.md</code></a> 裏面就有！(´≖◞౪◟≖)</p>
 <p>　　另，在搭建環境的時候，最好保證你在<span style="background: #222;">牆外</span>。以及我默認覺得大家已經有了 <code>Python</code> 環境和 <code>JDK</code>。</p>
 <h2 id="前驅工作">前驅工作</h2>
@@ -1999,7 +2432,7 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     <link href="http://xcoder.in/2014/06/07/tcp-those-things-1/"/>
     <id>http://xcoder.in/2014/06/07/tcp-those-things-1/</id>
     <published>2014-06-06T17:47:10.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<p>TCP是一個巨複雜的協議，因爲他要解決很多問題，而這些問題又帶出了很多子問題和陰暗面。所以學習 TCP 本身是個比較痛苦的過程，但對於學習的過程卻能讓人有很多收穫。關於 TCP 這個協議的細節，我還是推薦你去看 <a href="http://www.kohala.com/start/" target="_blank">W.Richard Stevens</a> 的《<a href="http://book.douban.com/subject/1088054/" target="_blank">TCP/IP 詳解 卷1：協議</a>》（當然，你也可以去讀一下 <a href="http://tools.ietf.org/html/rfc793" target="_blank">RFC793</a> 以及後面 N 多的 RFC）。另外，本文我會使用英文術語，這樣方便你通過這些英文關鍵詞來查找相關的技術文檔。</p>
 <p>　　之所以想寫這篇文章，目的有三個，</p>
 <ul>
@@ -2175,7 +2608,7 @@ Segment      Segment     (Including SACK Blocks)
     <link href="http://xcoder.in/2014/06/03/scartlet-task/"/>
     <id>http://xcoder.in/2014/06/03/scartlet-task/</id>
     <published>2014-06-02T16:17:38.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<p>事情很曲折，我某天在萌否收音機裏面聽到了一首歌，很好聽，叫 <code>hypnotized</code>，於是紅心了。</p>
 <p>　　過了幾天我再去聽——發現這首歌變了。</p>
 <p>　　最後經過多方面求證，我大概得出結果就是應該有人傳錯了歌，然後後來有人重新傳了一遍，導致我聽的不是原來那首歌了。那我那天聽的那首歌到底叫什麼名字呢？</p>
@@ -2205,7 +2638,7 @@ Segment      Segment     (Including SACK Blocks)
     <link href="http://xcoder.in/2014/06/02/vim-hexo-environment/"/>
     <id>http://xcoder.in/2014/06/02/vim-hexo-environment/</id>
     <published>2014-06-01T20:52:30.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<p>本文只講兩個函數，對於 <code>markdown</code> 如何高亮之類的問題還請自行谷歌。</p>
 <p>　　然後請打開你自己的 <code>.vimrc</code> 文件。</p>
 <h2 id="預備工作">預備工作</h2>
@@ -2316,7 +2749,7 @@ endfun
     <link href="http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/"/>
     <id>http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/</id>
     <published>2014-05-05T07:08:39.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<p>這次比賽由 <a href="http://blog.163.com/surgy_han/" target="_blank">Hungar</a>，<a href="http://www.cnblogs.com/Wine93/" target="_blank">8Mao</a> 以及我負責的。明明都讀研了，還詐屍回來出題——歸結起來大概是因爲各種面試不順吧，想來虐虐學弟妹們怒刷存在感。結果網絡賽還是被虐得死去活來。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯</p>
 <p>　　好了廢話不多說，還是直接上題解吧。</p>
 <h2 id="Minecraft_Server_Bug">Minecraft Server Bug</h2>
@@ -2482,7 +2915,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/11/hero-snake/"/>
     <id>http://xcoder.in/2014/04/11/hero-snake/</id>
     <published>2014-04-11T05:53:35.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>注：備份到這篇日誌的時候，感覺眼睛進了什麼奇怪的東西。（才……纔不是眼淚呢，那一定是沙子！(;´༎ຶД༎ຶ`)</p>
 <p>主要引起感傷的還是這首軒轅劍的 BGM 吧。因爲 Hero Snake 的BGM就是這個。</p>
@@ -2538,7 +2971,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/"/>
     <id>http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/</id>
     <published>2014-04-06T08:15:39.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<p><a href="/2014/04/03/nodejs-cpp-addons-2/">上一章</a>我們偷偷學習瞭如何在 <code>C++</code> 中實現 <code>Node.js</code> 調用時傳參數和調用回調函數，並且我自己也心血來潮寫了個<a href="/2014/04/05/cpp-class-inline-keng/#simpleini">小 Demo</a> 供大家參考。</p>
 <p>　　今天我們就不複習了，直搗黃龍吧。</p>
 ]]></content>
@@ -2557,7 +2990,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/05/cpp-class-inline-keng/"/>
     <id>http://xcoder.in/2014/04/05/cpp-class-inline-keng/</id>
     <published>2014-04-05T08:55:57.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<p>今天我來講一講 <code>C++</code> 中類成員函數 <code>inline</code> 修飾符的一個坑。</p>
 <p>　　這個坑是我在嘗試着寫我的第一個 <code>Node.js</code> 擴展 <code>simpleini</code> 時候遇到的。</p>
 <h2 id="坑描述">坑描述</h2>
@@ -2642,7 +3075,7 @@ console.log(simpleIni.read(<span class="string">"vals"</span>, <span class="stri
     <link href="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"/>
     <id>http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/</id>
     <published>2014-04-03T14:37:15.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<p>好，今天讓我們更深入地搞基吧！</p>
 <h2 id="溫故而知新，可以爲溼矣">溫故而知新，可以爲溼矣</h2>
 <p>　　首先請大家記住這個 V8 的在線手冊——<a href="http://izs.me/v8-docs/main.html" target="_blank">http://izs.me/v8-docs/main.html</a>。</p>
@@ -3017,7 +3450,7 @@ NODE_MODULE(addon, Init)
     <link href="http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/"/>
     <id>http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/</id>
     <published>2014-04-01T16:53:22.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<p>N久之前的一個坑——用 <strong>Node.js</strong> 來重構 NBUT 的 <strong>Online Judge</strong>，包括評測端也得重構一遍。（至於什麼時候完成大家就不要關心了，(／‵Д′)／~ ╧╧</p>
 <p>　　總之我們現在要做的其實簡而言之就是——用C/C++來實現 <strong>Node.js</strong> 的模塊。</p>
 <h2 id="準備工作">準備工作</h2>
@@ -3275,7 +3708,7 @@ NODE_MODULE(module_name, Initialize)
     <link href="http://xcoder.in/2014/03/27/node-public-file-house/"/>
     <id>http://xcoder.in/2014/03/27/node-public-file-house/</id>
     <published>2014-03-26T17:34:04.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<p>所謂“公衆檔所”，其實就是一個公共的臨時網盤了。這個東西是一個老物了，在我剛接觸 <code>Expressjs</code> 的時候寫的。當時還隨便搞了一下 <code>backbone.js</code>，但是沒有深入，勿笑。關於深入構架 <code>Expressjs</code> 方面也沒做，只是粗粗寫了下最基礎的路由，所以整個文件結構也不是很規範。但是應該能比較適合剛學 <code>Node.js</code> 以及剛接觸 <code>Expressjs</code> 的人吧。</p>
 <p>　　Repo地址在<a href="https://github.com/XadillaX/public-file-house" target="_blank">我的Github</a>上。Demo地址在 <a href="http://dang.kacaka.ca/" target="_blank">http://dang.kacaka.ca/</a>，由於個人電腦的不穩定性，所以不保證你們隨時可以訪問，保不定哪天就失效了，所以最好的辦法還是自己 <code>clone</code> 下來啪啪啪。</p>
 <p>　　它所需要的東西大致就是 <code>Expressjs</code> + <code>Redis</code> + <code>Backbone</code> 了。不過都是最最基礎的代碼。</p>
@@ -4177,7 +4610,7 @@ $(<span class="function"><span class="keyword">function</span><span class="param
     <link href="http://xcoder.in/2013/12/28/xplan-spider-doc/"/>
     <id>http://xcoder.in/2013/12/28/xplan-spider-doc/</id>
     <published>2013-12-28T00:00:00.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
+    <updated>2014-10-08T04:56:24.000Z</updated>
     <content type="html"><![CDATA[<h2 id="前言">前言</h2>
 <p><strong>XPlan</strong> 是一個“基於校園強關係的社交應用”的開發代號。其中有一個功能是從學校網站上通過網絡爬蟲（Web Crawler）形式將學校新聞抓取到XPlan自身的數據庫當中。</p>
 <p>而這裏出現的一個問題就是學校網站上面的文章是通過類似於 <a href="http://kindeditor.net/" target="_blank"><code>KindEditor</code></a>、<a href="http://ueditor.baidu.com/website/" target="_blank"><code>UEditor</code></a>這類<strong>在線富文本編輯器</strong>生成的代碼。</p>
@@ -4419,595 +4852,6 @@ $ = cheerio.load(<span class="keyword">...</span>);
       <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
     
       <category term="XPlan" scheme="http://xcoder.in/tags/XPlan/"/>
-    
-      <category term="Programming" scheme="http://xcoder.in/categories/Programming/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[TopCoder SRM 589 DIV 2]]></title>
-    <link href="http://xcoder.in/2013/08/31/srm-589-div2/"/>
-    <id>http://xcoder.in/2013/08/31/srm-589-div2/</id>
-    <published>2013-08-31T00:00:00.000Z</published>
-    <updated>2014-09-30T07:39:10.000Z</updated>
-    <content type="html"><![CDATA[<p>好久沒擼 <strong>TC</strong> 了，手都生了。前兩天剛折騰好 <strong>LinuxMint</strong> + <strong>Cinnamon</strong>，順便手賤把 <strong>TC</strong> 環境配好了。</p>
-<p>　　隨便進去扯了一套最新的 <strong>SRM</strong> 來搞，全跑完之後才發現原來這場比賽還處於 <strong>System Running</strong> 階段。於是知道了比賽一結束還在 <strong>Running</strong> 的時候你就已經可以自己拉出來做了。小綠名大家不要笑。</p>
-<!-- 我是小小分割符 -->
-
-<h2 id="Summary">Summary</h2>
-<p>　　這次 <strong>DIV 2</strong> 的難度一般，一道簽到題加兩道普通的 <strong>DP</strong>。</p>
-<p>　　<a href="https://github.com/XadillaX/xadillax-topcoder/tree/master/code/SRM589-DIV2" target="_blank">Code on GitHub</a>.</p>
-<h2 id="250pt_-_Goose_Tattarrattat">250pt - Goose Tattarrattat</h2>
-<p>題意很簡單，就是給你一個字符串，問你最少改變多少字符讓字符串所有字符都一樣。</p>
-<p>簽到題，找最多的字符跟總長度一減就OK了。</p>
-<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-</pre></td><td class="code"><pre><span class="preprocessor">#define SIZE(x) ((int)(x.size()))</span>
-<span class="preprocessor">#define LENGTH(x) ((int)(x.length()))</span>
-<span class="keyword">class</span> GooseTattarrattatDiv2 
-{
-<span class="keyword">public</span>:
-    <span class="keyword">int</span> getmin(<span class="built_in">string</span> S);
-};
-
-<span class="keyword">int</span> GooseTattarrattatDiv2::getmin(<span class="built_in">string</span> S)
-{
-    <span class="keyword">int</span> maxsame = <span class="number">0</span>;
-    <span class="stl_container"><span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="keyword">int</span>&gt;</span> mp;
-    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; LENGTH(S); i++)
-    {
-    	mp[S[i]]++;
-    	maxsame = max(maxsame, mp[S[i]]);
-    }
-    
-    <span class="keyword">return</span> LENGTH(S) - maxsame;
-}
-</pre></td></tr></table></figure>
-
-
-<h2 id="500pt_-_Gears">500pt - Gears</h2>
-<p>有 <strong><em>N</em></strong> 個齒輪圍成一圈，相鄰兩個齒輪要反方向轉才能正常運轉不卡到其它輪子。你要從中間拿掉幾個齒輪（留空了就不影響其左邊的左邊的齒輪），問最少拿掉幾個使得所有齒輪能正常轉。</p>
-<p>我們建兩個二維 <strong><em>dp</em></strong> 數組，或者一個三維 <strong><em>dp</em></strong> 數組：</p>
-<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre>dp[<span class="link_label">i</span>][<span class="link_reference">0|1</span>][<span class="link_label">0|1</span>]
-</pre></td></tr></table></figure>
-
-
-<p>第一維 <code>i</code> 代表當前是第 <code>i</code> 個齒輪。第二維若是 <code>0</code> 則表示這個齒輪拿走，若是 <code>1</code> 代表留下。第三維若是 <code>0</code> 則代表第一個齒輪拿走，<code>1</code> 代表第一個齒輪留下。整個數組的每個元素就代表該齒輪留下或者拿走且第一個齒輪是留下或者拿走的情況下的最少拿走齒輪數。</p>
-<p>所以我們能得到幾個狀態轉移方程：</p>
-<blockquote>
-<h3 id="第一個齒輪">第一個齒輪</h3>
-</blockquote>
-<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-</pre></td><td class="code"><pre>dp[<span class="link_label">i</span>][<span class="link_reference">0</span>][<span class="link_label">0</span>] = 1;
-dp[<span class="link_label">i</span>][<span class="link_reference">0</span>][<span class="link_label">1</span>] = INF;
-dp[<span class="link_label">i</span>][<span class="link_reference">1</span>][<span class="link_label">1</span>] = 0;
-dp[<span class="link_label">i</span>][<span class="link_reference">1</span>][<span class="link_label">0</span>] = INF;
-</pre></td></tr></table></figure>
-
-
-<blockquote>
-<h3 id="第二個齒輪">第二個齒輪</h3>
-<p>如果與第一個同向那麼就有了一留一走或者兩個都走的情況。否則就是四種情況都可以。</p>
-</blockquote>
-<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-</pre></td><td class="code"><pre><span class="keyword">if</span>(與第一個齒輪同向)
-<span class="cell">{
-    dp[<span class="number">1</span>][<span class="number">0</span>][<span class="number">1</span>] = <span class="number">1</span>;
-    dp[<span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>] = <span class="number">1</span>;
-    dp[<span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">2</span>;
-    dp[<span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>] = INF;
-}</span>
-<span class="keyword">else</span> 
-<span class="cell">{
-    dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">2</span>;
-    dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="number">1</span>;
-    dp[i][<span class="number">1</span>][<span class="number">0</span>] = <span class="number">1</span>;
-    dp[i][<span class="number">1</span>][<span class="number">1</span>] = <span class="number">0</span>;
-}</span>
-</pre></td></tr></table></figure>
-
-
-<blockquote>
-<h3 id="之後的所有齒輪">之後的所有齒輪</h3>
-<p>若該齒輪與前一個齒輪方向相同 ，那麼該齒輪留下的時候，前一個齒輪必須得走，那麼就是 <code>dp[i - 1][0][?]</code>;該齒輪走的時候，前一個齒輪可走可留，就是 <code>dp[i - 1][0|1][?] + 1</code> 的稍微小一點那個。</p>
-<p>若方向不相同 ，那麼就是該齒輪留下的時候，前一個齒輪也可以留下。</p>
-</blockquote>
-<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-</pre></td><td class="code"><pre><span class="keyword">if</span>(與前一個齒輪同向)
-{
-    dp[i][<span class="number">1</span>][<span class="number">0</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>];
-    dp[i][<span class="number">1</span>][<span class="number">1</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">1</span>];
-
-    dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="built_in">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>]) + <span class="number">1</span>;
-    dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="built_in">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>]) + <span class="number">1</span>;
-}
-<span class="keyword">else</span> 
-{
-    dp [i][<span class="number">1</span>][<span class="number">0</span>] = <span class="built_in">min</span>(dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>]);
-    dp [i][<span class="number">1</span>][<span class="number">1</span>] = <span class="built_in">min</span>(dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>]);
-
-    dp [i][<span class="number">0</span>][<span class="number">0</span>] = <span class="built_in">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>]) + <span class="number">1</span>;
-    dp [i][<span class="number">0</span>][<span class="number">1</span>] = <span class="built_in">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>]) + <span class="number">1</span>;
-}
-</pre></td></tr></table></figure>
-
-
-<p>最後若最後一個齒輪與第一個齒輪同向，那麼在 <code>dp[i - 1][0][0]</code>、<code>dp[i - 1][0][1]</code>、<code>dp[i - 1][1][0]</code> 中挑一個。若不同向，那麼多了個 <code>dp[i - 1][1][1]</code> 這個選擇。</p>
-<p>下面就是代碼了：</p>
-<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-</pre></td><td class="code"><pre>class GearsDiv2 
-{
-public:
-    <span class="keyword">int</span> getmin(<span class="keyword">string</span> Directions);
-};
-
-<span class="keyword">int</span> GearsDiv2::getmin(<span class="keyword">string</span> Directions)
-{
-    <span class="keyword">int</span> dp[<span class="number">100</span>][<span class="number">2</span>][<span class="number">2</span>];
-    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; LENGTH(Directions); i++)
-    {
-        <span class="keyword">if</span>(i == <span class="number">0</span>)
-        {
-            dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;
-            dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="number">10000000</span>;
-            dp[i][<span class="number">1</span>][<span class="number">1</span>] = <span class="number">0</span>;
-            dp[i][<span class="number">1</span>][<span class="number">0</span>] = <span class="number">10000000</span>;
-        }
-        <span class="keyword">else</span>
-        <span class="keyword">if</span>(i == <span class="number">1</span>)
-        {
-            <span class="keyword">if</span>(Directions[i] == Directions[i - <span class="number">1</span>])
-            {
-                dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="number">1</span>;
-                dp[i][<span class="number">1</span>][<span class="number">0</span>] = <span class="number">1</span>;
-                
-                dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">2</span>;
-                dp[i][<span class="number">1</span>][<span class="number">1</span>] = <span class="number">10000000</span>;
-            }
-            <span class="keyword">else</span>
-            {
-                dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">2</span>;
-                dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="number">1</span>;
-                dp[i][<span class="number">1</span>][<span class="number">0</span>] = <span class="number">1</span>;
-                dp[i][<span class="number">1</span>][<span class="number">1</span>] = <span class="number">0</span>;
-            }
-        }
-        <span class="keyword">else</span>
-        <span class="keyword">if</span>(Directions[i] == Directions[i - <span class="number">1</span>])
-        {
-            dp[i][<span class="number">1</span>][<span class="number">0</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>];
-            dp[i][<span class="number">1</span>][<span class="number">1</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">1</span>];
-            
-            dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>]) + <span class="number">1</span>;
-            dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="keyword">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">1</span>]) + <span class="number">1</span>;
-        }
-        <span class="keyword">else</span>
-        {
-            dp[i][<span class="number">1</span>][<span class="number">0</span>] = <span class="keyword">min</span>(dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>]);
-            dp[i][<span class="number">1</span>][<span class="number">1</span>] = <span class="keyword">min</span>(dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>]);
-            
-            dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">0</span>][<span class="number">0</span>]) + <span class="number">1</span>;
-            dp[i][<span class="number">0</span>][<span class="number">1</span>] = <span class="keyword">min</span>(dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>]) + <span class="number">1</span>;
-        }
-    }
-    
-    <span class="keyword">int</span> ans;
-    <span class="keyword">int</span> mi = LENGTH(Directions) - <span class="number">1</span>;
-    <span class="keyword">if</span>(Directions[mi] == Directions[<span class="number">0</span>])
-    {
-        ans = <span class="keyword">min</span>(dp[mi][<span class="number">0</span>][<span class="number">0</span>], <span class="keyword">min</span>(dp[mi][<span class="number">1</span>][<span class="number">0</span>], dp[mi][<span class="number">0</span>][<span class="number">1</span>]));
-    }
-    <span class="keyword">else</span>
-    {
-        ans = <span class="keyword">min</span>(<span class="keyword">min</span>(dp[mi][<span class="number">0</span>][<span class="number">0</span>], dp[mi][<span class="number">1</span>][<span class="number">1</span>]), <span class="keyword">min</span>(dp[mi][<span class="number">0</span>][<span class="number">1</span>], dp[mi][<span class="number">1</span>][<span class="number">0</span>]));
-    }
-    
-    <span class="keyword">return</span> ans;
-}
-</pre></td></tr></table></figure>
-
-
-<h2 id="1000pt_-_Flipping_Bits">1000pt - Flipping Bits</h2>
-<p>給你一個 <strong>01串</strong> 與一個正整數 <strong><em>M</em></strong>。<strong>01串</strong> 有如下三種操作:</p>
-<ul>
-<li>隨便反轉一位（0 -&gt; 1, 1 -&gt; 0）。</li>
-<li>將開頭 <code>k * M</code> 位反轉。k 可以是任何正整數。</li>
-<li>將末尾 <code>k * M</code> 位反轉。k 可以是任何正整數。</li>
-</ul>
-<p>問最少需要幾步將整個字符串變成都是 <code>1</code>。</p>
-<p>這又是一個 <strong>DP</strong> 的題目。</p>
-<p>我們先設有 <strong><em>G</em></strong> 組，一組 <strong><em>M</em></strong> 個 <code>01字符</code>。那麼就能有</p>
-<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre>dp1[<span class="link_label">i</span>][<span class="link_reference">0|1</span>]
-dp2[<span class="link_label">i</span>][<span class="link_reference">0|1</span>]
-</pre></td></tr></table></figure>
-
-
-<p>其中 <code>i</code> 代表第 <code>i</code> 組，第二維如果是 <code>0</code> 就代表這一組採用一位位反轉的操作將這組全變成 <code>1</code>，如果是 <code>1</code> 則將整組全部反轉再採用一位位反轉的操作將這組全變成 <code>1</code> 。至於 <code>dp1</code> 和 <code>dp2</code> 則代表從頭到尾和從尾到頭。</p>
-<p>由於只有 <code>0</code> 和 <code>1</code> 反轉，那麼一組反轉兩次就能還原原狀——這是一個非常重要的性質。</p>
-<p>如果某一組採用<strong>整組反轉</strong>的操作，若前一組也是<strong>整組反轉</strong>，那麼就相當於操作次數不變，只是將前一組的反轉範圍延續到這一組；若前一組是<strong>非整組反轉</strong>，那麼就相當於從頭到這一組反轉之後，前面的所有組再反轉回去——相當於是多了兩次操作。於是就有了（先只拿 <code>dp1</code> 作爲例子）：</p>
-<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-</pre></td><td class="code"><pre>dp1[<span class="link_label">i</span>][<span class="link_reference">1</span>] = min(
-<span class="code">    dp[i - 1][0] + 這一組1的數量 + 2,</span>
-<span class="code">    dp[i - 1][1] + 這一組1的數量 </span>
-);
-</pre></td></tr></table></figure>
-
-
-<p>如果某一組採用<strong>非整組反轉</strong>，那麼操作次數就是前一組的<strong>整組反轉</strong>或者<strong>非整組反轉</strong>的操作次數加上這一組 <code>0</code> 的數量：</p>
-<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-</pre></td><td class="code"><pre>dp1[<span class="link_label">i</span>][<span class="link_reference">0</span>] = min(
-<span class="code">    dp[i - 1][0] + 這一組0的數量,</span>
-<span class="code">    dp[i - 1][0] + 這一組0的數量</span>
-);
-</pre></td></tr></table></figure>
-
-
-<p>用上面的轉移方程把正反向都求了一遍之後，我們就可以求總答案了，總答案就是我們枚舉中間只有<strong>操作1</strong>的段的首尾，加上該中間段前部分的 <strong><em>dp</em></strong> 答案和其後部分的 <strong><em>dp</em></strong> 答案，取出最小值就是了。</p>
-<figure class="highlight"><figcaption><span>cpp</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-</pre></td><td class="code"><pre><span class="keyword">class</span> FlippingBitsDiv2 
-{
-<span class="keyword">public</span>:
-    <span class="keyword">int</span> getmin(<span class="stl_container"><span class="built_in">vector</span> &lt;<span class="built_in">string</span>&gt;</span> S, <span class="keyword">int</span> M);
-    
-    <span class="built_in">string</span> str;
-    <span class="keyword">int</span> group;
-    <span class="keyword">int</span> tn1[<span class="number">2600</span>], tnsum1[<span class="number">2600</span>];
-    <span class="keyword">int</span> tn2[<span class="number">2600</span>], tnsum2[<span class="number">2600</span>];
-    
-    <span class="keyword">int</span> dp1[<span class="number">2600</span>][<span class="number">2</span>];
-    <span class="keyword">int</span> dp2[<span class="number">2600</span>][<span class="number">2</span>];
-    
-    <span class="keyword">int</span> calcsum(<span class="keyword">int</span> l, <span class="keyword">int</span> r)
-    {
-        <span class="keyword">if</span>(l &gt; r) <span class="keyword">return</span> <span class="number">0</span>;
-        <span class="keyword">int</span> tot = tnsum1[r] - tnsum1[l - <span class="number">1</span>];
-        <span class="keyword">return</span> tot;
-    }
-};
-
-<span class="keyword">int</span> FlippingBitsDiv2::getmin(<span class="stl_container"><span class="built_in">vector</span> &lt;<span class="built_in">string</span>&gt;</span> S, <span class="keyword">int</span> M)
-{
-    str = <span class="string">""</span>;
-    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; SIZE(S); i++) str += S[i];
-    group = LENGTH(str) / M;
-    ZERO(tn1);
-    ZERO(tn2);
-    
-    <span class="comment">// init.</span>
-    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; group; i++)
-    {
-        <span class="keyword">int</span> op = i * M;
-        <span class="keyword">int</span> ed = op + M;
-        <span class="keyword">for</span>(<span class="keyword">int</span> j = op; j &lt; ed; j++)
-        {
-            <span class="keyword">if</span>(str[j] == <span class="string">'0'</span>) tn1[i]++, tn2[group - i - <span class="number">1</span>]++;
-        }
-        
-        dp1[i][<span class="number">0</span>] = <span class="number">100000</span>;
-        dp1[i][<span class="number">1</span>] = <span class="number">100000</span>;
-        dp2[i][<span class="number">0</span>] = <span class="number">100000</span>;
-        dp2[i][<span class="number">1</span>] = <span class="number">100000</span>;
-    }
-    
-    <span class="comment">// tnsum</span>
-    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; group; i++)
-    {
-        <span class="keyword">if</span>(i == <span class="number">0</span>) tnsum1[<span class="number">0</span>] = tn1[<span class="number">0</span>], tnsum2[<span class="number">0</span>] = tn2[<span class="number">0</span>];
-        <span class="keyword">else</span>
-        {
-            tnsum1[i] = tnsum1[i - <span class="number">1</span>] + tn1[i];
-            tnsum2[i] = tnsum2[i - <span class="number">1</span>] + tn2[i];
-        }
-    }
-    
-    <span class="comment">// dp.</span>
-    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= group; i++)
-    {
-        <span class="keyword">if</span>(i == <span class="number">0</span>)
-        {
-            dp1[i][<span class="number">0</span>] = dp1[i][<span class="number">1</span>] = dp2[i][<span class="number">0</span>] = dp2[i][<span class="number">1</span>] = <span class="number">0</span>;
-        }
-        <span class="keyword">else</span>
-        <span class="keyword">if</span>(i == <span class="number">1</span>)
-        {
-            <span class="comment">// head -&gt; tail</span>
-            dp1[i][<span class="number">0</span>] = tn1[i - <span class="number">1</span>];
-            dp1[i][<span class="number">1</span>] = <span class="number">1</span> + (M - tn1[i - <span class="number">1</span>]);
-            
-            <span class="comment">// tail -&gt; head</span>
-            dp2[i][<span class="number">0</span>] = tn2[i - <span class="number">1</span>];
-            dp2[i][<span class="number">1</span>] = <span class="number">1</span> + (M - tn2[i - <span class="number">1</span>]);
-        }
-        <span class="keyword">else</span>
-        {
-            <span class="comment">// head -&gt; tail</span>
-            dp1[i][<span class="number">0</span>] = min(
-                dp1[i - <span class="number">1</span>][<span class="number">0</span>] + tn1[i - <span class="number">1</span>],
-                dp1[i - <span class="number">1</span>][<span class="number">1</span>] + tn1[i - <span class="number">1</span>]
-            );
-            dp1[i][<span class="number">1</span>] = min(
-                dp1[i - <span class="number">1</span>][<span class="number">0</span>] + <span class="number">2</span> + (M - tn1[i - <span class="number">1</span>]),
-                dp1[i - <span class="number">1</span>][<span class="number">1</span>] + (M - tn1[i - <span class="number">1</span>])
-            );
-            
-            <span class="comment">// tail -&gt; head</span>
-            dp2[i][<span class="number">0</span>] = min(
-                dp2[i - <span class="number">1</span>][<span class="number">0</span>] + tn2[i - <span class="number">1</span>],
-                dp2[i - <span class="number">1</span>][<span class="number">1</span>] + tn2[i - <span class="number">1</span>]
-            );
-            dp2[i][<span class="number">1</span>] = min(
-                dp2[i - <span class="number">1</span>][<span class="number">0</span>] + <span class="number">2</span> + (M - tn2[i - <span class="number">1</span>]),
-                dp2[i - <span class="number">1</span>][<span class="number">1</span>] + (M - tn2[i - <span class="number">1</span>])
-            );
-        }
-    }
-    
-    <span class="keyword">int</span> minans = <span class="number">100000000</span>;
-    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= group; i++)
-    {
-        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= group - i; j++)
-        {
-            <span class="keyword">int</span> zzl = i;
-            <span class="keyword">int</span> zzr = group - j - <span class="number">1</span>;
-            
-            minans = min(minans,
-                min(dp1[i][<span class="number">0</span>], dp1[i][<span class="number">1</span>]) +
-                min(dp2[j][<span class="number">0</span>], dp2[j][<span class="number">1</span>]) +
-                calcsum(zzl, zzr)
-                );
-        }
-    }
-    
-    <span class="keyword">return</span> minans;
-}
-</pre></td></tr></table></figure>
-]]></content>
-    
-    
-      <category term="TopCoder" scheme="http://xcoder.in/tags/TopCoder/"/>
-    
-      <category term="SRM" scheme="http://xcoder.in/tags/SRM/"/>
     
       <category term="Programming" scheme="http://xcoder.in/categories/Programming/"/>
     
