@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2014-10-08T04:56:32.087Z</updated>
+  <updated>2014-10-16T04:42:17.276Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -15,11 +15,187 @@
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[如何生成一個覆蓋廣的色板]]></title>
+    <link href="http://xcoder.in/2014/10/16/generate-color-space/"/>
+    <id>http://xcoder.in/2014/10/16/generate-color-space/</id>
+    <published>2014-10-16T03:00:54.000Z</published>
+    <updated>2014-10-16T04:42:10.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="用途">用途</h2>
+<p>　　在主題色提取的過程中，要把顏色加入搜索引擎。但是如果是真彩色任意值加進去的話，對於搜索的時候來說無疑是一個複雜的操作。搜索條件要各種計算距離什麼的。</p>
+<p>　　於是一個妥協的做法就是提供一套調色板，保證所有顏色都被吸納到調色板中的某一色值當中。</p>
+<p>　　那麼這個時候調色板的覆蓋率以及距離什麼的就比較重要了。本文就講如何生成一套看起來還不錯的自用“標準色板”。</p>
+<h2 id="Windows_色板">Windows 色板</h2>
+<p>　　一開始我用了一套 256 色的色板，不知道哪裏搞來的 Windows 色板。</p>
+<p>　　由於顏色太多，不好貼代碼，我就直接把鏈接貼過來了：</p>
+<blockquote>
+<p><a href="https://github.com/XadillaX/thmclrx/blob/4a5bff429f25294af7111de800063ffd90cce1d8/src/common.cpp#L29" target="_blank">點我萌萌噠 ฅ(๑<em>д</em>๑)ฅ!!</a></p>
+</blockquote>
+<p>　　這一套色板大致的效果如下：</p>
+<style>
+#standard-256 {
+    line-height: 10px;
+    padding: 0;
+    margin: 0;
+}
+#standard-256 span {
+    width: 40px;
+    height: 20px;
+    display: inline-block;
+}
+</style>
+
+<div class="well"><div id="standard-256"></div></div>
+
+<script src="http://blog.xcoder.in/theme-color-slide/palette.js"></script>
+<script>
+$(function()
+{
+    for (var i = 0; i < palette.length; i++)
+    {
+        var block = "<span style=\"background: rgba(" +
+            palette[i][0] + ", " + palette[i][1] + ", " +
+            palette[i][2] + ", 1);\"></span>";
+        $("#standard-256").append(block);
+    }
+});
+</script>
+
+<h2 id="生成更好的色板">生成更好的色板</h2>
+<p>　　我指的更好並不一定真的比之前找到的 256 色要好，畢竟上面那個是人家智慧和勞動的結晶。我指的更好是顏色更多，但是偏差又不會太大。</p>
+<p>　　理論上我們能按照那種規則生成比真彩色少的任意種數的色板。</p>
+<h3 id="相關的色彩模式">相關的色彩模式</h3>
+<p>　　這裏有必要重新普及下 N 多種色彩模式中的其中兩種，也就是我們今天生成一個色板所用到的兩種模式。</p>
+<h4 id="RGB_色彩模式">RGB 色彩模式</h4>
+<p>　　這個大家都已經耳熟能詳了，無非是 RGB 通道中的分量結合起來生成的一種顏色。</p>
+<blockquote>
+<p>RGB 色彩模式是工業界的一種顏色標準，是通過對紅 (R)、綠 (G)、藍 (B)三個顏色通道的變化以及它們相互之間的疊加來得到各式各樣的顏色的，RGB 即是代表紅、綠、藍三個通道的顏色，這個標準幾乎包括了人類視力所能感知的所有顏色，是目前運用最廣的顏色系統之一。</p>
+<p>使用 RGB 模型爲圖像中每一個像素的 RGB 分量分配一個 0 ~ 255 範圍內的強度值。RGB 圖像只使用三種顏色，就可以使它們按照不同的比例混合，在屏幕上呈現 16777216 (<code>256 * 256 * 256</code>) 種顏色。</p>
+</blockquote>
+<h4 id="HSL_色彩模式">HSL 色彩模式</h4>
+<blockquote>
+<p>HSL 色彩模式是工業界的一種顏色標準，是通過對色相 (H)、飽和度 (S)、明度 (L) 三個顏色通道的變化以及它們相互之間的疊加來得到各式各樣的顏色的，HSL 即是代表色相，飽和度，明度三個通道的顏色，這個標準幾乎包括了人類視力所能感知的所有顏色，是目前運用最廣的顏色系統之一。</p>
+</blockquote>
+<p>　　HSL 色彩模式就是今天的主角了。我們將會用 HSL 生成一張類似下圖的色板，而色板的粒度將會與你決定色板的顏色數量相關：</p>
+<p><img src="SqfinPalette-RealColorWheel-RGB-14inwide72dpi-1024x437.png" alt="HSL Color Space"></p>
+<h3 id="代碼實現">代碼實現</h3>
+<p>　　爲了簡化代碼，我們暫時不考慮飽和度，也就是說所有顏色讓它飽和度都爲 <strong>100%</strong>。</p>
+<p>　　而且實際上色相是在一個圓裏面的 0° ~ 360°，那麼也就是說我們只需要做兩步就是了：</p>
+<ol>
+<li>色相 0° ~ 360° 循環；</li>
+<li>以及明度 0% ~ 100% 循環。</li>
+</ol>
+<p>　　在這裏我定了一個步長：色相以 10° 爲一個步長，明度以 5% 爲一個步長。並且剔除 RGB 相等的黑白灰色。</p>
+<blockquote>
+<p>當然這裏步長完全可以按照自己的喜好來。</p>
+</blockquote>
+<p>　　我們以前端的 Javascript 爲例，能想到下面的一段代碼：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="keyword">var</span> count = <span class="number">0</span>;
+$(<span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">19</span>; i &gt;= <span class="number">0</span>; i--) {
+        <span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; <span class="number">36</span>; j++) {
+            $(<span class="string">"#palette"</span>).append(<span class="string">"&lt;div class='color'&gt;&lt;/div&gt;"</span>);
+            $(<span class="string">".color"</span>).eq(count++).css(<span class="string">"background-color"</span>, <span class="string">"hsl("</span> + (j * <span class="number">10</span>) + <span class="string">", "</span> + <span class="string">"100%, "</span> + <span class="built_in">parseInt</span>(((i + <span class="number">1</span>) / <span class="number">21</span>) * <span class="number">100</span>) + <span class="string">"%)"</span>);
+        }
+        $(<span class="string">"#palette"</span>).append(<span class="string">"&lt;div style='clear: both;'&gt;&lt;/div&gt;"</span>);
+    }
+});
+</pre></td></tr></table></figure>
+
+<p>　　這裏需要注意的是，實際上我明度的步長是 <code>(100 / 22)</code>。然後 <code>0</code> 和 <code>100</code> 這兩個明度我們另外拎出來，所以只取了 1 ~ 21 的明度。</p>
+<p>　　剩下的就是跟剛纔說的一樣，各色相的各明度生成一個 HSL 顏色賦值給 <code>background-color</code>。</p>
+<p>　　接下去我們生成一個灰色條的色板，專治灰黑白。這個時候實際上我們可以直接用 RGB 搞定：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre>$(<span class="string">"#palette"</span>).append(<span class="string">"&lt;br /&gt;"</span>);
+<span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">36</span>; i++) {
+    $(<span class="string">"#palette"</span>).append(<span class="string">"&lt;div class='color'&gt;&lt;/div&gt;"</span>);
+    <span class="keyword">var</span> val = <span class="built_in">parseInt</span>(((<span class="number">19</span> - i) / <span class="number">19</span>) * <span class="number">255</span>);
+    $(<span class="string">".color"</span>).eq(count++).css(<span class="string">"background-color"</span>, <span class="string">"rgb("</span> + val + <span class="string">", "</span> + val + <span class="string">", "</span> + val + <span class="string">")"</span>);
+}
+</pre></td></tr></table></figure>
+
+<p>　　最後把顏色輸出到一個數組就好了。</p>
+<blockquote>
+<p>這裏有一點 happy 的是，就算你是用 HSL 來搞的背景色，用 <strong><em>jQuery</em></strong> 的 <code>$(foo).css(&quot;background-color&quot;)</code> 獲取到的仍然是 RGB 值。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="keyword">var</span> colors = [];
+$(<span class="string">".color"</span>).each(<span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">var</span> result = <span class="regexp">/rgb\((\d+), (\d+), (\d+)\)/</span>.exec($(<span class="keyword">this</span>).css(<span class="string">"background-color"</span>));
+    colors.push({ r: <span class="built_in">parseInt</span>(result[<span class="number">1</span>]), g: <span class="built_in">parseInt</span>(result[<span class="number">2</span>]), b: <span class="built_in">parseInt</span>(result[<span class="number">3</span>]) });
+});
+
+$(<span class="string">"textarea"</span>).val(<span class="built_in">JSON</span>.stringify(colors));
+</pre></td></tr></table></figure>
+
+<p>　　所以最後我們還需要初始的 HTML 了：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="tag">&lt;<span class="title">textarea</span>&gt;</span><span class="tag">&lt;/<span class="title">textarea</span>&gt;</span>
+<span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"palette"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+<span class="tag">&lt;<span class="title">div</span> <span class="attribute">style</span>=<span class="value">"clear: both;"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+</pre></td></tr></table></figure>
+
+<p>　　效果的話這裏能看到：</p>
+<ul>
+<li><a href="http://blog.xcoder.in/hsl-color-space/" target="_blank">http://blog.xcoder.in/hsl-color-space/</a></li>
+<li><a href="http://runjs.cn/code/spahru8w" target="_blank">http://runjs.cn/code/spahru8w</a></li>
+</ul>
+<h2 id="小結">小結</h2>
+<p>　　用 HSL 生成的色彩空間（色板）一個是表現力好，相對於 RGB 來說，好像更好知道如何去生成分部比較 OK 的一個色彩空間。</p>
+<p>　　但是也有一個缺點，當我們不去管飽和度的時候，實際上我們還是丟失了一部分的顏色。好在本身我們生成色板也只是爲了合併顏色，可以通過 k-D 樹來快速尋找某個顏色在色板中是屬於哪種色塊的。當然，目前我們就是這麼做的。</p>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li><a href="http://websafecolorcodes.com/colors-palette/color-wheel-palette/" target="_blank">Color Wheel Palette</a></li>
+<li><a href="http://www.waldronconstructionllc.com/wp-content/uploads/2012/03/SqfinPalette-RealColorWheel-RGB-14inwide72dpi-1024x437.png" target="_blank">Refer Image</a></li>
+<li><a href="http://codeforartists.com/samples/cfa-color-palette-hsl.php" target="_blank">Algorithm</a></li>
+</ul>
+]]></content>
+    
+    
+      <category term="HSL" scheme="http://xcoder.in/tags/HSL/"/>
+    
+      <category term="RGB" scheme="http://xcoder.in/tags/RGB/"/>
+    
+      <category term="色板" scheme="http://xcoder.in/tags/%E8%89%B2%E6%9D%BF/"/>
+    
+      <category term="Palette" scheme="http://xcoder.in/tags/Palette/"/>
+    
+      <category term="Color Space" scheme="http://xcoder.in/tags/Color%20Space/"/>
+    
+      <category term="色彩空間" scheme="http://xcoder.in/tags/%E8%89%B2%E5%BD%A9%E7%A9%BA%E9%96%93/"/>
+    
+      <category term="Programming" scheme="http://xcoder.in/categories/Programming/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[用 Javascript 實現一個簡易 BrainF**k 解釋器]]></title>
     <link href="http://xcoder.in/2014/10/08/brainf**k/"/>
     <id>http://xcoder.in/2014/10/08/brainf**k/</id>
     <published>2014-10-08T03:42:32.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:10.000Z</updated>
     <content type="html"><![CDATA[<p>首先祝賀自己在 <a href="http://www.codewars.com/users/XadillaX" target="_blank">CodeWars</a> 升級到 3 Kyu，以及感謝 @<a href="http://www.html-js.com/card/473" target="_blank">Bolt_白衣蒼狗</a> 童鞋讓我知道有 CodeWars 這麼個好玩的東西。</p>
 <p>　　雖然裏面水題居多，不過在上班比較空閒的檔口 #<strong>帶薪刷題</strong># 的感覺還是蠻不錯的。</p>
 <h2 id="話嘮一下">話嘮一下</h2>
@@ -452,7 +628,7 @@
     <link href="http://xcoder.in/2014/09/30/javascript-singleton/"/>
     <id>http://xcoder.in/2014/09/30/javascript-singleton/</id>
     <published>2014-09-30T07:21:13.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:10.000Z</updated>
     <content type="html"><![CDATA[<p>今天隨便玩了一道 <a href="http://www.codewars.com/kata/singleton-pattern/javascript" target="_blank">CodeWar 的題</a>。</p>
 <p>　　題意大致就是你需要實現一個 <code>Singleton</code> 也就是單件模式的類，讓其下面代碼執行成功：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
@@ -581,7 +757,7 @@ console.log(<span class="keyword">new</span> Singleton());
     <link href="http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/"/>
     <id>http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/</id>
     <published>2014-09-20T07:51:40.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:10.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2>
 <p>　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 <a href="http://kacaka.ca/" target="_blank">kacaka.ca</a>（目前暫失效）。</p>
 <p>　　爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 <a href="http://cloudflare.com/" target="_blank">CloudFlare</a>。而且它也有提供 API 讓開發者自己開發通過他的服務解析域名的服務。</p>
@@ -871,7 +1047,7 @@ spidex.post(config.baseUrl, <span class="function"><span class="keyword">functio
     <link href="http://xcoder.in/2014/09/17/theme-color-extract/"/>
     <id>http://xcoder.in/2014/09/17/theme-color-extract/</id>
     <published>2014-09-17T03:34:54.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:11.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>所謂主題色提取，就是對於一張圖片，近似地提取出一個調色板，使得調色板裏面的顏色能組成這張圖片的主色調。</p>
 </blockquote>
@@ -1339,7 +1515,7 @@ colors[r + g + b]++;
     <link href="http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/"/>
     <id>http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/</id>
     <published>2014-09-01T12:36:33.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:10.000Z</updated>
     <content type="html"><![CDATA[<h2 id="序">序</h2>
 <p>最近閒着蛋疼實現了兩個庫。</p>
 <ul>
@@ -1544,7 +1720,7 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <link href="http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/"/>
     <id>http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/</id>
     <published>2014-08-04T03:50:21.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:11.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2>
 <p>　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIST 方言中，你要做的就是把所有跟 bolt 初始化計算相關的代碼放到其 <code>prepare</code> 的代碼當中去。</p>
 <p>　　你想一下，當你在文件加載的時候初始化了一個 MongoDB 鏈接，這個鏈接總不能被序列化到遠程去吧？所以說辦法就是把 bolt 搞上去之後，bolt 自動去初始化一個鏈接——這就是 <code>prepare</code> 的作用了。</p>
@@ -1624,7 +1800,7 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <link href="http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/"/>
     <id>http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/</id>
     <published>2014-07-30T02:14:29.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:10.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起_(灬ºωº灬)">起 (灬ºωº灬)</h2>
 <p>　　說來話長，自從入了花瓣，整個人就掉進連環坑了。</p>
 <p>　　後端元數據採集是用 Storm 來走拓撲流程的，又因爲 @<a href="http://weibo.com/zolazhou" target="_blank">Zola</a> 不是很喜歡 Java，所以退而求其次選擇了 Clojure，所以正在苦逼地學習 Clojure 和 Storm 中。</p>
@@ -1699,7 +1875,7 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <link href="http://xcoder.in/2014/06/12/untrusted-solution/"/>
     <id>http://xcoder.in/2014/06/12/untrusted-solution/</id>
     <published>2014-06-12T03:08:34.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:11.000Z</updated>
     <content type="html"><![CDATA[<p><a href="http://alexnisnevich.github.io/untrusted/" target="_blank">Trusted</a> 是一個代碼解謎遊戲，用 Javascript 來過關的。</p>
 <p>　　昨天凌晨花了仨小時通關了這個遊戲，在這裏就粗粗做一下題解吧，好幾題都是 Hack 過去的。（不要臉，( ﾟДﾟ)σ</p>
 <h2 id="Ceil_Block_A">Ceil Block A</h2>
@@ -2329,7 +2505,7 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     <link href="http://xcoder.in/2014/06/07/cocos2d-311-setup/"/>
     <id>http://xcoder.in/2014/06/07/cocos2d-311-setup/</id>
     <published>2014-06-07T11:34:02.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:10.000Z</updated>
     <content type="html"><![CDATA[<p>由於偷懶，所以在此感謝 Etond 的指導（喂喂喂，明明是自己懶得看文檔，明明 <a href="README"><code>READEME.md</code></a> 裏面就有！(´≖◞౪◟≖)</p>
 <p>　　另，在搭建環境的時候，最好保證你在<span style="background: #222;">牆外</span>。以及我默認覺得大家已經有了 <code>Python</code> 環境和 <code>JDK</code>。</p>
 <h2 id="前驅工作">前驅工作</h2>
@@ -2432,7 +2608,7 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     <link href="http://xcoder.in/2014/06/07/tcp-those-things-1/"/>
     <id>http://xcoder.in/2014/06/07/tcp-those-things-1/</id>
     <published>2014-06-06T17:47:10.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:11.000Z</updated>
     <content type="html"><![CDATA[<p>TCP是一個巨複雜的協議，因爲他要解決很多問題，而這些問題又帶出了很多子問題和陰暗面。所以學習 TCP 本身是個比較痛苦的過程，但對於學習的過程卻能讓人有很多收穫。關於 TCP 這個協議的細節，我還是推薦你去看 <a href="http://www.kohala.com/start/" target="_blank">W.Richard Stevens</a> 的《<a href="http://book.douban.com/subject/1088054/" target="_blank">TCP/IP 詳解 卷1：協議</a>》（當然，你也可以去讀一下 <a href="http://tools.ietf.org/html/rfc793" target="_blank">RFC793</a> 以及後面 N 多的 RFC）。另外，本文我會使用英文術語，這樣方便你通過這些英文關鍵詞來查找相關的技術文檔。</p>
 <p>　　之所以想寫這篇文章，目的有三個，</p>
 <ul>
@@ -2608,7 +2784,7 @@ Segment      Segment     (Including SACK Blocks)
     <link href="http://xcoder.in/2014/06/03/scartlet-task/"/>
     <id>http://xcoder.in/2014/06/03/scartlet-task/</id>
     <published>2014-06-02T16:17:38.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:11.000Z</updated>
     <content type="html"><![CDATA[<p>事情很曲折，我某天在萌否收音機裏面聽到了一首歌，很好聽，叫 <code>hypnotized</code>，於是紅心了。</p>
 <p>　　過了幾天我再去聽——發現這首歌變了。</p>
 <p>　　最後經過多方面求證，我大概得出結果就是應該有人傳錯了歌，然後後來有人重新傳了一遍，導致我聽的不是原來那首歌了。那我那天聽的那首歌到底叫什麼名字呢？</p>
@@ -2638,7 +2814,7 @@ Segment      Segment     (Including SACK Blocks)
     <link href="http://xcoder.in/2014/06/02/vim-hexo-environment/"/>
     <id>http://xcoder.in/2014/06/02/vim-hexo-environment/</id>
     <published>2014-06-01T20:52:30.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:11.000Z</updated>
     <content type="html"><![CDATA[<p>本文只講兩個函數，對於 <code>markdown</code> 如何高亮之類的問題還請自行谷歌。</p>
 <p>　　然後請打開你自己的 <code>.vimrc</code> 文件。</p>
 <h2 id="預備工作">預備工作</h2>
@@ -2749,7 +2925,7 @@ endfun
     <link href="http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/"/>
     <id>http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/</id>
     <published>2014-05-05T07:08:39.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:10.000Z</updated>
     <content type="html"><![CDATA[<p>這次比賽由 <a href="http://blog.163.com/surgy_han/" target="_blank">Hungar</a>，<a href="http://www.cnblogs.com/Wine93/" target="_blank">8Mao</a> 以及我負責的。明明都讀研了，還詐屍回來出題——歸結起來大概是因爲各種面試不順吧，想來虐虐學弟妹們怒刷存在感。結果網絡賽還是被虐得死去活來。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯</p>
 <p>　　好了廢話不多說，還是直接上題解吧。</p>
 <h2 id="Minecraft_Server_Bug">Minecraft Server Bug</h2>
@@ -2915,7 +3091,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/11/hero-snake/"/>
     <id>http://xcoder.in/2014/04/11/hero-snake/</id>
     <published>2014-04-11T05:53:35.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:10.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>注：備份到這篇日誌的時候，感覺眼睛進了什麼奇怪的東西。（才……纔不是眼淚呢，那一定是沙子！(;´༎ຶД༎ຶ`)</p>
 <p>主要引起感傷的還是這首軒轅劍的 BGM 吧。因爲 Hero Snake 的BGM就是這個。</p>
@@ -2971,7 +3147,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/"/>
     <id>http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/</id>
     <published>2014-04-06T08:15:39.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:11.000Z</updated>
     <content type="html"><![CDATA[<p><a href="/2014/04/03/nodejs-cpp-addons-2/">上一章</a>我們偷偷學習瞭如何在 <code>C++</code> 中實現 <code>Node.js</code> 調用時傳參數和調用回調函數，並且我自己也心血來潮寫了個<a href="/2014/04/05/cpp-class-inline-keng/#simpleini">小 Demo</a> 供大家參考。</p>
 <p>　　今天我們就不複習了，直搗黃龍吧。</p>
 ]]></content>
@@ -2990,7 +3166,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/05/cpp-class-inline-keng/"/>
     <id>http://xcoder.in/2014/04/05/cpp-class-inline-keng/</id>
     <published>2014-04-05T08:55:57.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:10.000Z</updated>
     <content type="html"><![CDATA[<p>今天我來講一講 <code>C++</code> 中類成員函數 <code>inline</code> 修飾符的一個坑。</p>
 <p>　　這個坑是我在嘗試着寫我的第一個 <code>Node.js</code> 擴展 <code>simpleini</code> 時候遇到的。</p>
 <h2 id="坑描述">坑描述</h2>
@@ -3075,7 +3251,7 @@ console.log(simpleIni.read(<span class="string">"vals"</span>, <span class="stri
     <link href="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"/>
     <id>http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/</id>
     <published>2014-04-03T14:37:15.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:11.000Z</updated>
     <content type="html"><![CDATA[<p>好，今天讓我們更深入地搞基吧！</p>
 <h2 id="溫故而知新，可以爲溼矣">溫故而知新，可以爲溼矣</h2>
 <p>　　首先請大家記住這個 V8 的在線手冊——<a href="http://izs.me/v8-docs/main.html" target="_blank">http://izs.me/v8-docs/main.html</a>。</p>
@@ -3450,7 +3626,7 @@ NODE_MODULE(addon, Init)
     <link href="http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/"/>
     <id>http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/</id>
     <published>2014-04-01T16:53:22.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:11.000Z</updated>
     <content type="html"><![CDATA[<p>N久之前的一個坑——用 <strong>Node.js</strong> 來重構 NBUT 的 <strong>Online Judge</strong>，包括評測端也得重構一遍。（至於什麼時候完成大家就不要關心了，(／‵Д′)／~ ╧╧</p>
 <p>　　總之我們現在要做的其實簡而言之就是——用C/C++來實現 <strong>Node.js</strong> 的模塊。</p>
 <h2 id="準備工作">準備工作</h2>
@@ -3708,7 +3884,7 @@ NODE_MODULE(module_name, Initialize)
     <link href="http://xcoder.in/2014/03/27/node-public-file-house/"/>
     <id>http://xcoder.in/2014/03/27/node-public-file-house/</id>
     <published>2014-03-26T17:34:04.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
+    <updated>2014-10-16T04:42:11.000Z</updated>
     <content type="html"><![CDATA[<p>所謂“公衆檔所”，其實就是一個公共的臨時網盤了。這個東西是一個老物了，在我剛接觸 <code>Expressjs</code> 的時候寫的。當時還隨便搞了一下 <code>backbone.js</code>，但是沒有深入，勿笑。關於深入構架 <code>Expressjs</code> 方面也沒做，只是粗粗寫了下最基礎的路由，所以整個文件結構也不是很規範。但是應該能比較適合剛學 <code>Node.js</code> 以及剛接觸 <code>Expressjs</code> 的人吧。</p>
 <p>　　Repo地址在<a href="https://github.com/XadillaX/public-file-house" target="_blank">我的Github</a>上。Demo地址在 <a href="http://dang.kacaka.ca/" target="_blank">http://dang.kacaka.ca/</a>，由於個人電腦的不穩定性，所以不保證你們隨時可以訪問，保不定哪天就失效了，所以最好的辦法還是自己 <code>clone</code> 下來啪啪啪。</p>
 <p>　　它所需要的東西大致就是 <code>Expressjs</code> + <code>Redis</code> + <code>Backbone</code> 了。不過都是最最基礎的代碼。</p>
@@ -4602,258 +4778,6 @@ $(<span class="function"><span class="keyword">function</span><span class="param
       <category term="Project Parse" scheme="http://xcoder.in/tags/Project%20Parse/"/>
     
       <category term="Document" scheme="http://xcoder.in/categories/Document/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[浙江大學XPlan項目新聞爬蟲手機屏幕適配文檔]]></title>
-    <link href="http://xcoder.in/2013/12/28/xplan-spider-doc/"/>
-    <id>http://xcoder.in/2013/12/28/xplan-spider-doc/</id>
-    <published>2013-12-28T00:00:00.000Z</published>
-    <updated>2014-10-08T04:56:24.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="前言">前言</h2>
-<p><strong>XPlan</strong> 是一個“基於校園強關係的社交應用”的開發代號。其中有一個功能是從學校網站上通過網絡爬蟲（Web Crawler）形式將學校新聞抓取到XPlan自身的數據庫當中。</p>
-<p>而這裏出現的一個問題就是學校網站上面的文章是通過類似於 <a href="http://kindeditor.net/" target="_blank"><code>KindEditor</code></a>、<a href="http://ueditor.baidu.com/website/" target="_blank"><code>UEditor</code></a>這類<strong>在線富文本編輯器</strong>生成的代碼。</p>
-<p>這類代碼有幾個共性：</p>
-<ol>
-<li>代碼有大量冗餘、多重無用嵌套。</li>
-<li>非常低的代碼可讀性。</li>
-<li>在PC瀏覽器中表現力不錯，往往能以低效的代碼實現預期排版。</li>
-</ol>
-<p>所以這些富文本編輯器可以在PC各大內核瀏覽器中表現良好，但是不便人工修改代碼。</p>
-<p>而 <strong>XPlan</strong> 確是一個由智能手機主導的應用，新聞將會通過一個 <strong>WebView</strong> 體現出來。所以就需要一定的方法將這些髒亂的代碼適配成手機屏幕下表現力良好的代碼。</p>
-<h2 id="預處理">預處理</h2>
-<p>在這裏，我們將新聞的代碼鎖定在新聞內容排版，而排除了其它類似於新聞標題、新聞作者等其它信息。</p>
-<p>以我們浙江大學軟件學院爲例，我們爬取的新聞內容代碼將如下：</p>
-<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre>&lt;div class=<span class="string">"vid_wz"</span>&gt;
-    <span class="keyword">...</span>
-&lt;/div&gt;
-</pre></td></tr></table></figure>
-
-
-<p>所有內容將被包括在這個類型爲 <code>vid_wz</code> 的 <code>div</code> 當中。</p>
-<p>這時，我們將其包括在一個自己實現定義好的模板當中。該模板與新聞內容將會形成一個完整的網頁，包括完整的 <code>html</code>、<code>head</code>、<code>body</code> 等標籤。</p>
-<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-</pre></td><td class="code"><pre><span class="doctype">&lt;!DOCTYPE html&gt;</span>
-<span class="tag">&lt;<span class="title">html</span>&gt;</span>
-<span class="tag">&lt;<span class="title">head</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">title</span>&gt;</span>新聞內頁<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"</span> /&gt;</span>
-    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"Content-Type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=UTF-8"</span>/&gt;</span>
-<span class="tag">&lt;/<span class="title">head</span>&gt;</span>
-    
-<span class="tag">&lt;<span class="title">body</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">article</span> <span class="attribute">id</span>=<span class="value">"_xplan-wrapper"</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"vid_wz"</span>&gt;</span>
-            ...
-        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">article</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">body</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">html</span>&gt;</span>
-</pre></td></tr></table></figure>
-
-
-<p>這裏需要注意的一點的就是其中的一個 <code>meta</code> 標籤：</p>
-<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre><span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"</span> /&gt;</span>
-</pre></td></tr></table></figure>
-
-
-<p>它的意思是定義 <code>viewport</code> 的一些屬性，實現了初步的手機網頁適配。</p>
-<h3 id="Viewport">Viewport</h3>
-<p>手機瀏覽器是把頁面放在一個虛擬窗口（即 <code>viewport</code>）中，用戶可以通過平移和縮放來看網頁的不同部分。</p>
-<p>通過 <code>viewport</code> 我們能對頁面的一些縮放進行手機適配。</p>
-<p>我們所需要做的僅是在 <code>head</code> 中插入一個 <code>meta</code> 標籤，命名爲 <code>viewport</code>，然後定義好其 <code>content</code>。</p>
-<p><code>content</code> 的語法如下：</p>
-<h4 id="width">width</h4>
-<p>控制 <code>viewport</code> 的寬度，可以指定一個值或者特殊的值，如 <code>device-width</code> 爲設備寬度。</p>
-<h4 id="height">height</h4>
-<p>與 <code>width</code> 相對應，指定高度</p>
-<h4 id="initial-scale">initial-scale</h4>
-<p>初始縮放，即頁面初始縮放程度。這是一個浮點值，是頁面大小的一個乘數。例如，如果你設置初始縮放爲 <code>1.0</code>，那麼頁面在展現的時候就會以分辨率的1:1來展現。如果你設置爲<code>2.0</code>，那麼這個頁面就會放大爲2倍。</p>
-<h4 id="maximum-scale">maximum-scale</h4>
-<p>最大放大倍數。</p>
-<h4 id="user-scaleble">user-scaleble</h4>
-<p>用戶調整縮放，即用戶是否能改變頁面縮放程度。如果爲 <code>yes</code> 即爲可以， <code>no</code> 爲不可以。</p>
-<h2 id="Cheerio模塊*">Cheerio模塊*</h2>
-<p>由於 <strong>XPlan</strong> 的後端是基於 <code>node.js</code> 構架的，所以 <strong>cheerio</strong> 模塊是一個 <code>node.js</code> 專有的模塊。</p>
-<p>它的作用是將一段HTML代碼轉換爲一棵DOM元素樹。</p>
-<p>在其官網上是這麼詮釋的：爲服務端定製的快速、靈活、輕量級實現的 jQuery 內核。通常熟悉 jQuery 使用的開發者應該會對其使用方法比較熟悉。</p>
-<p>所以在我們做接下去適配修改的之前，我們需要將我們剛纔生成的完整HTML代碼 轉換爲一棵我們可以操作的DOM元素樹。</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre>var cheerio = <span class="keyword">require</span>(<span class="string">"cheerio"</span>);
-$ = cheerio.load(<span class="keyword">...</span>);
-</pre></td></tr></table></figure>
-
-
-<p>這時我們便能以熟悉的jQuery模式對其進行操作了，如：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre><span class="variable">$(</span><span class="string">"p"</span>).html(<span class="string">"hello foo!"</span>);
-</pre></td></tr></table></figure>
-
-
-<h2 id="Bootstrap">Bootstrap</h2>
-<p>Bootstrap是Twitter推出的一個開源的用於前端開發的工具包。它有一個非常好的響應式的頁面風格，使其在個尺寸屏幕上表現良好。</p>
-<p>爲了能更好適應屏幕，我們決定採用其自帶的柵格系統，於是剛纔的頁面模板就有了新的變化：</p>
-<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-</pre></td><td class="code"><pre><span class="doctype">&lt;!DOCTYPE html&gt;</span>
-<span class="tag">&lt;<span class="title">html</span>&gt;</span>
-<span class="tag">&lt;<span class="title">head</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">title</span>&gt;</span>新聞內頁<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"</span> /&gt;</span>
-    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"Content-Type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=UTF-8"</span>/&gt;</span>
-<span class="tag">&lt;/<span class="title">head</span>&gt;</span>
-    
-<span class="tag">&lt;<span class="title">body</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">article</span> <span class="attribute">class</span>=<span class="value">"container"</span> <span class="attribute">id</span>=<span class="value">"_xplan-wrapper"</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row"</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-md-12"</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"vid_wz"</span>&gt;</span>...<span class="tag">&lt;/<span class="title">div</span>&gt;</span>
-            <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">article</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">body</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">html</span>&gt;</span>
-</pre></td></tr></table></figure>
-
-
-<p>首先最外框的 <code>container</code>，用其包裹的元素將實現居中對齊。在不同的媒體查詢閾值範圍內都爲 <code>container</code> 設置了 <code>width</code>，用以匹配柵格系統。</p>
-<p><code>row</code> 是一行柵格系統的外包元素。一行可以有12個柵格。</p>
-<p>以 <code>.col-md-</code> 開頭的柵格的最大 <code>container</code> 寬度爲970，最大列寬爲78，並能自適應屏幕。</p>
-<h2 id="細節處理">細節處理</h2>
-<p>在完成了以上操作以後，我們將對各元素進行微調處理。</p>
-<p>好在在手機瀏覽器或者 <code>WebView</code> 中，對各種字體的設置不是非常敏感，所以我們仍然可以不處理一些關於字體變更的設置，以減輕開髮量。</p>
-<p>這裏距幾個微調的例子。</p>
-<h3 id="&lt;img_/&gt;">&lt;img /&gt;</h3>
-<p>在新聞當中，圖片充當的基本上是新聞照片的角色，在手機當中以單行出現爲佳。</p>
-<p>而 Bootstrap 當中本身就有元素類型來讓圖片元素響應屏幕寬度，並可以加上圓角邊框。</p>
-<p>所以我們需要做的就是爲所有圖片加上響應的類型：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-</pre></td><td class="code"><pre><span class="variable">$(</span><span class="string">"img"</span>).addClass(<span class="string">"img-thumbnail"</span>);
-<span class="variable">$(</span><span class="string">"img"</span>).addClass(<span class="string">"img-responsive"</span>);
-<span class="variable">$(</span><span class="string">"img"</span>).removeAttr(<span class="string">"style"</span>);
-</pre></td></tr></table></figure>
-
-
-<blockquote>
-<p><strong>注意：</strong> 最後的一個移除 <code>img</code> 元素自帶的 <code>style</code> 屬性是因爲在文章發佈的時候，有可能會被富文本編輯器自動加上一些寬高、邊框等信息。爲了統一所有圖片風格以及讓響應式生效，需要將其 <code>style</code> 屬性全部移除。</p>
-</blockquote>
-<p>下面是是適配前與適配後的對比：</p>
-<p><img src="./xplan-news-2.jpg" alt="適配前"><br><img src="./xplan-news-1.jpg" alt="適配後"></p>
-<h3 id="&lt;table&gt;&lt;/table&gt;">&lt;table&gt;&lt;/table&gt;</h3>
-<p>對於 <code>table</code> 元素也需要對它進行自適配，不然很有可能會溢出屏幕，使其多出了一個橫向的滾動條。</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-</pre></td><td class="code"><pre><span class="variable">$(</span><span class="string">"table"</span>).removeAttr(<span class="string">"style"</span>);
-<span class="variable">$(</span><span class="string">"table"</span>).removeAttr(<span class="string">"border"</span>);
-
-<span class="variable">$(</span><span class="string">"table"</span>).addClass(<span class="string">"table"</span>);
-<span class="variable">$(</span><span class="string">"table"</span>).addClass(<span class="string">"table-bordered"</span>);
-<span class="variable">$(</span><span class="string">"table"</span>).addClass(<span class="string">"table-striped"</span>);
-</pre></td></tr></table></figure>
-
-
-<p>上面兩句是移除 <code>table</code> 的原有的一些風格信息以及屬性。後面是爲其加上 Bootstrap 特有的 <code>table</code> 類型。</p>
-<p>當然，更多的 <code>table</code> 元素還需要其它更多操作。不過就目前爲止，<strong>XPlan</strong> 還沒有着手關於 <code>table</code> 的更深一層容錯處理。不過這裏可以提供一個思路。</p>
-<p>比如說 <a href="http://www.cst.zju.edu.cn/index.php?c=Index&amp;a=detail&amp;catid=72&amp;id=1885" target="_blank">這篇文章中</a>，不知道是誰給的在線富文本編輯器勇氣，使其下面幾張圖片都各自被一個 <code>table</code> 及其子元素所包含。更有甚者，有一篇文章的一個段落被一個 <code>table</code> 所包容，並且在其左側還有一個看不見的 <code>td</code> 元素。</p>
-<p>我們可以提供的思路就是如果一個 <code>table</code> 只有一行一列就直接將其內容取出並刪除該 <code>table</code> 。</p>
-<h3 id="&lt;a_/&gt;">&lt;a /&gt;</h3>
-<p>超鏈接元素是一個新聞與用戶互動的比較重要的元素之一。我們需要保持其美觀性。</p>
-<p>舉幾個例子來說，我們可以將超鏈接以一個類按鈕的形式出現：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-</pre></td><td class="code"><pre><span class="variable">$(</span><span class="string">"a"</span>).removeAttr(<span class="string">"style"</span>);
-<span class="variable">$(</span><span class="string">"a"</span>).addClass(<span class="string">"btn btn-default btn-xs btn-info"</span>);
-</pre></td></tr></table></figure>
-
-
-<p>然後我們甚至可以對其做一些細微的詞彙修改。</p>
-<p>比如當新聞發佈者上傳了一個附件然後不負責任地直接將文件名貼上的時候，我們可以貼心地將其顯示文字改爲“下載附件”。</p>
-<p>再比如發佈者直接以URL形式顯示一個超鏈接的時候，我們可以貼心地將其改變爲“打開鏈接”等等。</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-</pre></td><td class="code"><pre>$(<span class="string">"a"</span>).each(<span class="function"><span class="keyword">function</span><span class="params">(idx, elem)</span> {</span>
-    <span class="keyword">if</span>($(<span class="keyword">this</span>).html().match(<span class="regexp">/.*\.(doc|xls|ppt|docx|xlsx|pptx)/</span>)) {
-        $(<span class="keyword">this</span>).html(<span class="string">"&lt;i class='glyphicon glyphicon-paperclip'&gt;&lt;/i&gt; 下載附件"</span>);
-        $(<span class="keyword">this</span>).removeClass(<span class="string">"btn-info"</span>);
-        $(<span class="keyword">this</span>).addClass(<span class="string">"btn-warning"</span>);
-    } <span class="keyword">else</span> <span class="keyword">if</span>($(<span class="keyword">this</span>).html().match(<span class="regexp">/http.*\/\/.*/</span>)) {
-        $(<span class="keyword">this</span>).html(<span class="string">"&lt;i class='glyphicon glyphicon-flag'&gt;&lt;/i&gt; 打開鏈接"</span>);
-        $(<span class="keyword">this</span>).removeClass(<span class="string">"btn-info"</span>);
-        $(<span class="keyword">this</span>).addClass(<span class="string">"btn-warning"</span>);
-    }
-});
-</pre></td></tr></table></figure>
-
-
-<p>然後我們再處理幾個由於誤操作而增加的錯誤鏈接，如在經上面操作後，還存在着url與顯示內容相關的超鏈接可以直接取消，如這類：</p>
-<figure class="highlight"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre>1
-</pre></td><td class="code"><pre>讓我們蕩<span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"起雙槳"</span>&gt;</span>起雙槳<span class="tag">&lt;/<span class="title">a</span>&gt;</span>
-</pre></td></tr></table></figure>
-
-
-<h2 id="結束語">結束語</h2>
-<p>至此，當下版本的 <strong>XPlan</strong> 的新聞爬蟲手機屏幕適配基本完成。其中當然還存在着一些細節處理和顯示錯誤處理的不足，但是已經定下了基本的適配思路。</p>
-<p>我們還在探索更好的適配方法，而當下的適配形式暫時已經可以滿足了我們項目的需求。</p>
-]]></content>
-    
-    
-      <category term="Node.js" scheme="http://xcoder.in/tags/Node.js/"/>
-    
-      <category term="XPlan" scheme="http://xcoder.in/tags/XPlan/"/>
-    
-      <category term="Programming" scheme="http://xcoder.in/categories/Programming/"/>
     
   </entry>
   

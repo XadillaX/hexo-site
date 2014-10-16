@@ -52,4 +52,4 @@ title       : 鏈接
 + [沒想好幹嘛(http://letme.repair/)](http://letme.repair/)
 + [沒想好幹嘛(http://youare.ws/)](http://youare.ws/)
 + [沒想好幹嘛(http://2333.moe/)](http://2333.moe/)
-+ [没想好干嘛(http://flandre.me/)](http://flandre.me/)
++ [沒想好乾嘛(http://flandre.me/)](http://flandre.me/)
