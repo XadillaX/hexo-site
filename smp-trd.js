@@ -37,4 +37,3 @@ walker.on("file", function(root, fileStats, next) {
         next();
     });
 });
-
