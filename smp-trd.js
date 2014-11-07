@@ -26,7 +26,6 @@ walker.on("file", function(root, fileStats, next) {
         }
 
         console.log("Transforming [" + filename + "]...");
-        //console.log(run("opencc -i " + oldFilename + " -o " + filename));
 
         var text = fs.readFileSync(oldFilename, { encoding: "utf8" });
         text = opencc.convertSync(text);
