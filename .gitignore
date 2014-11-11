@@ -5,5 +5,5 @@ db.json
 public/images/background
 public/images/background/*
 
-*.swp
+*.swp*
 
