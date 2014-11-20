@@ -102,8 +102,3 @@ markdown:
 # Stylus
 stylus:
   compress: false
-
-# Deployment
-## Docs: http://zespia.tw/hexo/docs/deployment.html
-deploy:
-  type:
