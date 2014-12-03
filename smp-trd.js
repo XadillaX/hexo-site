@@ -32,7 +32,6 @@ walker.on("file", function(root, fileStats, next) {
         fs.writeFileSync(filename, text, { encoding: "utf8" });
 
         fs.unlinkSync(oldFilename);
-
         next();
     });
 });
