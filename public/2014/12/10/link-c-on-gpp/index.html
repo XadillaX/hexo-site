@@ -6,6 +6,11 @@
     
     <meta name="author" content="小鳥遊死月">
     
+    <meta name="description" content="原因
+由於某些原因，我寫了個很搓的內存池（C 版本的）。
+然後我想到了把之前寫的一個 Node.js 包 thmclrx 的更挫的“僞·內存池”用新寫的內存池去替換掉。(❛◡❛✿)
+然後問題就來了，我貌似不能控制 node-gyp 去用 G++ 編譯 *.c 文件，這樣的話所有文件編譯好之後鏈接 *">
+    
     
 
     
@@ -15,7 +20,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Archives: 2011/10 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>在 C++ 中鏈接 C 的 文件 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -80,53 +85,114 @@
         
     $(function() {
         // page-id...
-        var pageId = "archives/2011/10/";
+        var pageId = "2014/12/10/link-c-on-gpp/";
         pageId = pageId.substr(0, pageId.indexOf("/"));
         if(pageId === "") pageId = "index";
         
         $("#nav-" + pageId).addClass("active");
     });
     </script>
-    
-
-<div class="container archive-body">
-    <div class="row">
-        <div class="col-xs-2 well">
-            <h2 class="archive-icon">2011/10</h2>
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10">十月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08">八月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07">七月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05">五月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04">四月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12">十二月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08">八月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07">七月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03">三月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12">十二月 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/09">九月 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07">七月 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10">十月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/09">九月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/06">六月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/05">五月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/04">四月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/11">十一月 2010</a><span class="archive-list-count">2</span></li></ul>
+    <article class="post container">
+    <div class="well post-body first-post last-post">
+        <h1>在 C++ 中鏈接 C 的 文件</h1>
+        
+        <div class="time-info">
+发表于:<time datetime="2014-12-10T07:30:32.000Z" itemprop="datePublished">2014年12月10日</time>,
+更新于:<time datetime="2014-12-10T07:49:32.000Z" itemprop="dateModified">2014年12月10日</time>,
+By <a href="http://xcoder.in/" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
-        <div class="col-xs-10">
+        <div class="post-body-inner">
+            <div id="toc" class="toc-article well">
+                <strong class="toc-title">大纲</strong>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#原因"><span class="toc-number">1.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#假想方案"><span class="toc-number">2.</span> <span class="toc-text">假想方案</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#假想一"><span class="toc-number">2.1.</span> <span class="toc-text">假想一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#假想二"><span class="toc-number">2.2.</span> <span class="toc-text">假想二</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#解決方案"><span class="toc-number">3.</span> <span class="toc-text">解決方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事後煙"><span class="toc-number">4.</span> <span class="toc-text">事後煙</span></a></li></ol>
+            </div>
             
-            <article class="post">
-                <div class="jumbotron">
-                    <h1><a href="/2011/10/18/hge-hotspot-collision/" title="HGE做格鬥遊戲的熱點圖片碰撞檢測法">HGE做格鬥遊戲的熱點圖片碰撞檢測法</a></h1>
+            <h2 id="原因">原因</h2>
+<p>由於某些原因，我寫了個很搓的<a href="https://github.com/XadillaX/xmempool" target="_blank">內存池</a>（C 版本的）。</p>
+<p>然後我想到了把之前寫的一個 Node.js 包 <a href="https://github.com/XadillaX/thmclrx" target="_blank">thmclrx</a> 的更挫的“僞·內存池”用新寫的內存池去替換掉。(❛◡❛✿)</p>
+<p>然後問題就來了，我貌似不能控制 node-gyp 去用 G++ 編譯 <code>*.c</code> 文件，這樣的話所有文件編譯好之後鏈接 <code>*.o</code> 文件會出問題。雖然鏈接的時候沒報錯，但是使用的時候就會報這麼個錯 (;´༎ຶД༎ຶ`)：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre>➜ thmclrx git:(master) ✗ node test/test.js
+dyld: lazy symbol binding failed: Symbol not found: __Z16xmem_create_poolj
+  Referenced from: /Users/<span class="keyword">...</span>/code/huaban/thmclrx/build/Release/thmclrx.node
+  Expected <span class="keyword">in</span>: dynamic lookup
 
-                    
-                        <p>碰撞檢測始終是做2D遊戲中的一個熱點話題，我本人並沒有做過這類遊戲，所以一切只是理論而已，不過正打算做這麼個小遊戲練練手。
-　　前幾天在HGE的羣裏看到有人突然問到如何判斷鼠標有沒有點到人（點到紋理的透明區域不算），從而引申出了碰撞檢測問題。
-　　他的問題相對好實現，只要算出紋理</p>
-                    
+dyld: Symbol not found: __Z16xmem_create_poolj
+  Referenced from: /Users/<span class="keyword">...</span>/code/huaban/thmclrx/build/Release/thmclrx.node
+  Expected <span class="keyword">in</span>: dynamic lookup
 
-                    <p class="say-title">
-                        —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
-                        <a href="http://xcoder.in/" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-                        于2011年10月18日自豪地以 <a class="article-tag-link" href="/tags/C++/">C++</a>, <a class="article-tag-link" href="/tags/HGE/">HGE</a>, <a class="article-tag-link" href="/tags/老博客備份歸檔/">老博客備份歸檔</a> 唠嗑
-                    </p>
-                </div>
-            </article>
+[<span class="number">1</span>]    <span class="number">52501</span> trace trap  node test/test.js
+</pre></td></tr></table></figure>
+
+<p>大致意思就是說在我編譯好鏈接好的 <code>thmclrx.node</code> 中找不到 <code>__Z16xmem_create_poolj</code> 這個符號，也就是說 <code>xmempool.o</code> 這個用 C 編譯出來的文件並沒有正確被鏈接。</p>
+<h2 id="假想方案">假想方案</h2>
+<h3 id="假想一">假想一</h3>
+<p>一開始我想找的是“如何在 node-gyp 中手動選擇編譯器”，即不讓機器自動選擇 GCC 去編譯 <code>*.c</code> 文件。後來無果。ル||☛_☚|リ</p>
+<h3 id="假想二">假想二</h3>
+<p>再後來我想開了，於是決定讓編譯的時候去識別我在跟 C 說話還是跟 C++ 說話。(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</p>
+<h2 id="解決方案">解決方案</h2>
+<p>於是我找到了這麼個帖子：<a href="http://grokbase.com/t/gg/nodejs/14amregx72/linking-c-sources-files-in-cc-files" target="_blank">http://grokbase.com/t/gg/nodejs/14amregx72/linking-c-sources-files-in-cc-files</a></p>
+<p>他貌似也遇到了跟我相似的問題。下面這個提問者自己提出了這樣的回答：</p>
+<blockquote>
+<p>Nevermind, found my own answer after finally hitting the right google search terms.</p>
+<p>Added</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="preprocessor">#ifdef __cplusplus</span>
+<span class="keyword">extern</span> <span class="string">"C"</span> {
+<span class="preprocessor">#endif</span>
+
+<span class="comment">//... source code here...</span>
+
+<span class="preprocessor">#ifdef __cplusplus</span>
+}
+<span class="preprocessor">#endif</span>
+</pre></td></tr></table></figure>
+
+<p>So that the CPP compiler would know I was talking C and not CPP :)</p>
+</blockquote>
+<p>答案的大意就是在你的 C 頭文件中添加上面 blahblah 一大段宏，好讓 C++ 的編譯器知道它是在跟 C 的中間文件交流而不是 C++，這樣的話鏈接的時候就能正常接軌了。於是我在我的新版 <a href="https://github.com/XadillaX/xmempool/commit/b06351836c9b51952a3d98c438df6626dda8738c" target="_blank">xmempool</a> 的頭文件裏面就已經添加上了這兩段話了。</p>
+<h2 id="事後煙">事後煙</h2>
+<p>其實以前我也老在別的項目裏面看到這個 <code>#ifdef __cplusplus</code> 的宏定義，只不過以前不知道什麼意思。</p>
+<p>今天通過這麼一件事情終於知道了它的用途了，新技能 get √。</p>
+<p>ε(*´･∀･｀)зﾞ</p>
+
             
-            
-            
+            <section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"xcoder-ghost"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
         </div>
     </div>
-</div>
-
-<script>
-$(function() {
-    $(".archive-list-count").addClass("badge");
-});
-</script>
+</article>
 
     <footer id="footer">
     <div id="bottom-tip">
