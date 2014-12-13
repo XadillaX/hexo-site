@@ -2,7 +2,7 @@
  * XadillaX created at 2014-09-18 16:30:30
  *
  * Copyright (c) 2014 Huaban.com, all rights
- * reserved
+ * reserved 
  */
 var path = require("path");
 var walk = require("walk");
