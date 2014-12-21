@@ -25,6 +25,7 @@ title       : 鏈接
 + [卜卜口](http://i.mouto.org/#me)
 + [論野生技術 & 二次元](http://yooooo.us/)
 + [宅憶](http://www.qqntr.com/)
++ [音符の新世界](http://blog.freedom.moe/)
 
 ## 熊孩子們
 
