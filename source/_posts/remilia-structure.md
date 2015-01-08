@@ -9,7 +9,7 @@ tags: [ Remilia, 蕾米莉亞 ]
 
 ## 結構圖
 
-![Remilia](remilia-structure/pic.jpg)
+![Remilia](pic.jpg)
 
 設計得不好，純屬做歸檔。
 
