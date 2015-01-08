@@ -1,48 +1,48 @@
-title: Remilia 结构图
+title: Remilia 結構圖
 date: 2015-01-08 16:47:17
-tags: [ Remilia, 蕾米莉亚 ]
+tags: [ Remilia, 蕾米莉亞 ]
 ---
 
-## 蕾米莉亚？
+## 蕾米莉亞？
 
-其实这是花瓣的一个入库系统结构图，蕾米莉亚是这个项目的名字。
+其實這是花瓣的一個入庫系統結構圖，蕾米莉亞是這個項目的名字。
 
-## 结构图
+## 結構圖
 
 ![Remilia](remilia-structure/pic.jpg)
 
-设计得不好，纯属做归档。
+設計得不好，純屬做歸檔。
 
-其中 SanaeHDCS 是另一套系统，给 RemiliaHDPS 提供数据的。
+其中 SanaeHDCS 是另一套系統，給 RemiliaHDPS 提供數據的。
 
 ### Data Layer
 
-主要分为 Bathtub，Dryer，Vampire 三个部分。
+主要分爲 Bathtub，Dryer，Vampire 三個部分。
 
 #### Bathtub 浴缸
 
-由 SanaeHDCS 提供的数据，存储在 MongoDB 当中。
+由 SanaeHDCS 提供的數據，存儲在 MongoDB 當中。
 
-#### Dryer 吹轰鸡
+#### Dryer 吹轟雞
 
-将 Bathtub 出来的湿数据变成干货的解析器，根据不同的数据用不同的规则进行解析。
+將 Bathtub 出來的溼數據變成乾貨的解析器，根據不同的數據用不同的規則進行解析。
 
 #### Vampire 血族
 
-全名其实是 Vampire Coffin，只不过把这个写到项目里面看着貌似不是很吉利，于是取了前半部分。吹轰机处理好的干活会存储在这边，实际上也是
-MongoDB 里面。然后 Vampire 提供给外部接口，让其能够用正确的姿势获取正确的干货数据。
+全名其實是 Vampire Coffin，只不過把這個寫到項目裏面看着貌似不是很吉利，於是取了前半部分。吹轟機處理好的幹活會存儲在這邊，實際上也是
+MongoDB 裏面。然後 Vampire 提供給外部接口，讓其能夠用正確的姿勢獲取正確的乾貨數據。
 
 ### Fake Internet
 
-一个视窗。
+一個視窗。
 
 ### Fake Koumakan
 
-假的红魔馆，里面一堆假人。
+假的紅魔館，裏面一堆假人。
 
-## 最后
+## 最後
 
-好吧还是我的脑洞太大了。我知道你们看着这货不知所云。
+好吧還是我的腦洞太大了。我知道你們看着這貨不知所云。
 
-好吧忘了这个东西吧，我只是无聊发一篇而已。
+好吧忘了這個東西吧，我只是無聊發一篇而已。
 
