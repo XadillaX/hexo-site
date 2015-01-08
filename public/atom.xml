@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2015-01-08T08:56:55.252Z</updated>
+  <updated>2015-01-08T09:01:41.665Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -19,11 +19,11 @@
     <link href="http://xcoder.in/2015/01/08/remilia-structure/"/>
     <id>http://xcoder.in/2015/01/08/remilia-structure/</id>
     <published>2015-01-08T08:47:17.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<h2 id="蕾米莉亞？">蕾米莉亞？</h2>
 <p>其實這是花瓣的一個入庫系統結構圖，蕾米莉亞是這個項目的名字。</p>
 <h2 id="結構圖">結構圖</h2>
-<p><img src="remilia-structure/pic.jpg" alt="Remilia"></p>
+<p><img src="pic.jpg" alt="Remilia"></p>
 <p>設計得不好，純屬做歸檔。</p>
 <p>其中 SanaeHDCS 是另一套系統，給 RemiliaHDPS 提供數據的。</p>
 <h3 id="Data_Layer">Data Layer</h3>
@@ -55,7 +55,7 @@
     <link href="http://xcoder.in/2014/12/10/link-c-on-gpp/"/>
     <id>http://xcoder.in/2014/12/10/link-c-on-gpp/</id>
     <published>2014-12-10T07:30:32.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<h2 id="原因">原因</h2>
 <p>由於某些原因，我寫了個很搓的<a href="https://github.com/XadillaX/xmempool" target="_blank">內存池</a>（C 版本的）。</p>
 <p>然後我想到了把之前寫的一個 Node.js 包 <a href="https://github.com/XadillaX/thmclrx" target="_blank">thmclrx</a> 的更挫的“僞·內存池”用新寫的內存池去替換掉。(❛◡❛✿)</p>
@@ -133,7 +133,7 @@ dyld: Symbol not found: __Z16xmem_create_poolj
     <link href="http://xcoder.in/2014/10/16/generate-color-space/"/>
     <id>http://xcoder.in/2014/10/16/generate-color-space/</id>
     <published>2014-10-16T03:00:54.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<h2 id="用途">用途</h2>
 <p>　　在主題色提取的過程中，要把顏色加入搜索引擎。但是如果是真彩色任意值加進去的話，對於搜索的時候來說無疑是一個複雜的操作。搜索條件要各種計算距離什麼的。</p>
 <p>　　於是一個妥協的做法就是提供一套調色板，保證所有顏色都被吸納到調色板中的某一色值當中。</p>
@@ -309,7 +309,7 @@ $(<span class="string">"textarea"</span>).val(<span class="built_in">JSON</span>
     <link href="http://xcoder.in/2014/10/08/brainf**k/"/>
     <id>http://xcoder.in/2014/10/08/brainf**k/</id>
     <published>2014-10-08T03:42:32.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<p>首先祝賀自己在 <a href="http://www.codewars.com/users/XadillaX" target="_blank">CodeWars</a> 升級到 3 Kyu，以及感謝 @<a href="http://www.html-js.com/card/473" target="_blank">Bolt_白衣蒼狗</a> 童鞋讓我知道有 CodeWars 這麼個好玩的東西。</p>
 <p>　　雖然裏面水題居多，不過在上班比較空閒的檔口 #<strong>帶薪刷題</strong># 的感覺還是蠻不錯的。</p>
 <h2 id="話嘮一下">話嘮一下</h2>
@@ -742,7 +742,7 @@ $(<span class="string">"textarea"</span>).val(<span class="built_in">JSON</span>
     <link href="http://xcoder.in/2014/09/30/javascript-singleton/"/>
     <id>http://xcoder.in/2014/09/30/javascript-singleton/</id>
     <published>2014-09-30T07:21:13.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<p>今天隨便玩了一道 <a href="http://www.codewars.com/kata/singleton-pattern/javascript" target="_blank">CodeWar 的題</a>。</p>
 <p>　　題意大致就是你需要實現一個 <code>Singleton</code> 也就是單件模式的類，讓其下面代碼執行成功：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
@@ -871,7 +871,7 @@ console.log(<span class="keyword">new</span> Singleton());
     <link href="http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/"/>
     <id>http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/</id>
     <published>2014-09-20T07:51:40.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2>
 <p>　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 <a href="http://kacaka.ca/" target="_blank">kacaka.ca</a>（目前暫失效）。</p>
 <p>　　爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 <a href="http://cloudflare.com/" target="_blank">CloudFlare</a>。而且它也有提供 API 讓開發者自己開發通過他的服務解析域名的服務。</p>
@@ -1161,7 +1161,7 @@ spidex.post(config.baseUrl, <span class="function"><span class="keyword">functio
     <link href="http://xcoder.in/2014/09/17/theme-color-extract/"/>
     <id>http://xcoder.in/2014/09/17/theme-color-extract/</id>
     <published>2014-09-17T03:34:54.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>所謂主題色提取，就是對於一張圖片，近似地提取出一個調色板，使得調色板裏面的顏色能組成這張圖片的主色調。</p>
 </blockquote>
@@ -1629,7 +1629,7 @@ colors[r + g + b]++;
     <link href="http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/"/>
     <id>http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/</id>
     <published>2014-09-01T12:36:33.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<h2 id="序">序</h2>
 <p>最近閒着蛋疼實現了兩個庫。</p>
 <ul>
@@ -1834,7 +1834,7 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <link href="http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/"/>
     <id>http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/</id>
     <published>2014-08-04T03:50:21.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2>
 <p>　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIST 方言中，你要做的就是把所有跟 bolt 初始化計算相關的代碼放到其 <code>prepare</code> 的代碼當中去。</p>
 <p>　　你想一下，當你在文件加載的時候初始化了一個 MongoDB 鏈接，這個鏈接總不能被序列化到遠程去吧？所以說辦法就是把 bolt 搞上去之後，bolt 自動去初始化一個鏈接——這就是 <code>prepare</code> 的作用了。</p>
@@ -1914,7 +1914,7 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <link href="http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/"/>
     <id>http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/</id>
     <published>2014-07-30T02:14:29.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起_(灬ºωº灬)">起 (灬ºωº灬)</h2>
 <p>　　說來話長，自從入了花瓣，整個人就掉進連環坑了。</p>
 <p>　　後端元數據採集是用 Storm 來走拓撲流程的，又因爲 @<a href="http://weibo.com/zolazhou" target="_blank">Zola</a> 不是很喜歡 Java，所以退而求其次選擇了 Clojure，所以正在苦逼地學習 Clojure 和 Storm 中。</p>
@@ -1989,7 +1989,7 @@ $ npm install chinese<span class="attribute">-random</span><span class="attribut
     <link href="http://xcoder.in/2014/06/12/untrusted-solution/"/>
     <id>http://xcoder.in/2014/06/12/untrusted-solution/</id>
     <published>2014-06-12T03:08:34.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<p><a href="http://alexnisnevich.github.io/untrusted/" target="_blank">Trusted</a> 是一個代碼解謎遊戲，用 Javascript 來過關的。</p>
 <p>　　昨天凌晨花了仨小時通關了這個遊戲，在這裏就粗粗做一下題解吧，好幾題都是 Hack 過去的。（不要臉，( ﾟДﾟ)σ</p>
 <h2 id="Ceil_Block_A">Ceil Block A</h2>
@@ -2619,7 +2619,7 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     <link href="http://xcoder.in/2014/06/07/cocos2d-311-setup/"/>
     <id>http://xcoder.in/2014/06/07/cocos2d-311-setup/</id>
     <published>2014-06-07T11:34:02.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<p>由於偷懶，所以在此感謝 Etond 的指導（喂喂喂，明明是自己懶得看文檔，明明 <a href="README"><code>READEME.md</code></a> 裏面就有！(´≖◞౪◟≖)</p>
 <p>　　另，在搭建環境的時候，最好保證你在<span style="background: #222;">牆外</span>。以及我默認覺得大家已經有了 <code>Python</code> 環境和 <code>JDK</code>。</p>
 <h2 id="前驅工作">前驅工作</h2>
@@ -2722,7 +2722,7 @@ map.placeObject(<span class="number">29</span>, <span class="number">12</span>, 
     <link href="http://xcoder.in/2014/06/07/tcp-those-things-1/"/>
     <id>http://xcoder.in/2014/06/07/tcp-those-things-1/</id>
     <published>2014-06-06T17:47:10.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<p>TCP是一個巨複雜的協議，因爲他要解決很多問題，而這些問題又帶出了很多子問題和陰暗面。所以學習 TCP 本身是個比較痛苦的過程，但對於學習的過程卻能讓人有很多收穫。關於 TCP 這個協議的細節，我還是推薦你去看 <a href="http://www.kohala.com/start/" target="_blank">W.Richard Stevens</a> 的《<a href="http://book.douban.com/subject/1088054/" target="_blank">TCP/IP 詳解 卷1：協議</a>》（當然，你也可以去讀一下 <a href="http://tools.ietf.org/html/rfc793" target="_blank">RFC793</a> 以及後面 N 多的 RFC）。另外，本文我會使用英文術語，這樣方便你通過這些英文關鍵詞來查找相關的技術文檔。</p>
 <p>　　之所以想寫這篇文章，目的有三個，</p>
 <ul>
@@ -2898,7 +2898,7 @@ Segment      Segment     (Including SACK Blocks)
     <link href="http://xcoder.in/2014/06/03/scartlet-task/"/>
     <id>http://xcoder.in/2014/06/03/scartlet-task/</id>
     <published>2014-06-02T16:17:38.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<p>事情很曲折，我某天在萌否收音機裏面聽到了一首歌，很好聽，叫 <code>hypnotized</code>，於是紅心了。</p>
 <p>　　過了幾天我再去聽——發現這首歌變了。</p>
 <p>　　最後經過多方面求證，我大概得出結果就是應該有人傳錯了歌，然後後來有人重新傳了一遍，導致我聽的不是原來那首歌了。那我那天聽的那首歌到底叫什麼名字呢？</p>
@@ -2928,7 +2928,7 @@ Segment      Segment     (Including SACK Blocks)
     <link href="http://xcoder.in/2014/06/02/vim-hexo-environment/"/>
     <id>http://xcoder.in/2014/06/02/vim-hexo-environment/</id>
     <published>2014-06-01T20:52:30.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<p>本文只講兩個函數，對於 <code>markdown</code> 如何高亮之類的問題還請自行谷歌。</p>
 <p>　　然後請打開你自己的 <code>.vimrc</code> 文件。</p>
 <h2 id="預備工作">預備工作</h2>
@@ -3039,7 +3039,7 @@ endfun
     <link href="http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/"/>
     <id>http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/</id>
     <published>2014-05-05T07:08:39.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<p>這次比賽由 <a href="http://blog.163.com/surgy_han/" target="_blank">Hungar</a>，<a href="http://www.cnblogs.com/Wine93/" target="_blank">8Mao</a> 以及我負責的。明明都讀研了，還詐屍回來出題——歸結起來大概是因爲各種面試不順吧，想來虐虐學弟妹們怒刷存在感。結果網絡賽還是被虐得死去活來。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯</p>
 <p>　　好了廢話不多說，還是直接上題解吧。</p>
 <h2 id="Minecraft_Server_Bug">Minecraft Server Bug</h2>
@@ -3205,7 +3205,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/11/hero-snake/"/>
     <id>http://xcoder.in/2014/04/11/hero-snake/</id>
     <published>2014-04-11T05:53:35.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>注：備份到這篇日誌的時候，感覺眼睛進了什麼奇怪的東西。（才……纔不是眼淚呢，那一定是沙子！(;´༎ຶД༎ຶ`)</p>
 <p>主要引起感傷的還是這首軒轅劍的 BGM 吧。因爲 Hero Snake 的BGM就是這個。</p>
@@ -3261,7 +3261,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/"/>
     <id>http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/</id>
     <published>2014-04-06T08:15:39.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<p><a href="/2014/04/03/nodejs-cpp-addons-2/">上一章</a>我們偷偷學習瞭如何在 <code>C++</code> 中實現 <code>Node.js</code> 調用時傳參數和調用回調函數，並且我自己也心血來潮寫了個<a href="/2014/04/05/cpp-class-inline-keng/#simpleini">小 Demo</a> 供大家參考。</p>
 <p>　　今天我們就不複習了，直搗黃龍吧。</p>
 ]]></content>
@@ -3280,7 +3280,7 @@ lint solution(lint n)
     <link href="http://xcoder.in/2014/04/05/cpp-class-inline-keng/"/>
     <id>http://xcoder.in/2014/04/05/cpp-class-inline-keng/</id>
     <published>2014-04-05T08:55:57.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<p>今天我來講一講 <code>C++</code> 中類成員函數 <code>inline</code> 修飾符的一個坑。</p>
 <p>　　這個坑是我在嘗試着寫我的第一個 <code>Node.js</code> 擴展 <code>simpleini</code> 時候遇到的。</p>
 <h2 id="坑描述">坑描述</h2>
@@ -3365,7 +3365,7 @@ console.log(simpleIni.read(<span class="string">"vals"</span>, <span class="stri
     <link href="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"/>
     <id>http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/</id>
     <published>2014-04-03T14:37:15.000Z</published>
-    <updated>2015-01-08T08:56:47.000Z</updated>
+    <updated>2015-01-08T09:01:34.000Z</updated>
     <content type="html"><![CDATA[<p>好，今天讓我們更深入地搞基吧！</p>
 <h2 id="溫故而知新，可以爲溼矣">溫故而知新，可以爲溼矣</h2>
 <p>　　首先請大家記住這個 V8 的在線手冊——<a href="http://izs.me/v8-docs/main.html" target="_blank">http://izs.me/v8-docs/main.html</a>。</p>
