@@ -1,6 +1,6 @@
 title: 一起用 Node.js 剖析 Minecraft 的 NBT 文件——上
 date: 2015-01-22 10:05:39
-tags: [ NBT, Minecraft, Node.js ]
+tags: [ NBT, Minecraft, Node.js, MC ]
 ---
 
 ## 起因
