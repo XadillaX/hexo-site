@@ -26,6 +26,7 @@ title       : 鏈接
 + [論野生技術 & 二次元](http://yooooo.us/)
 + [宅憶](http://www.qqntr.com/)
 + [音符の新世界](http://blog.freedom.moe/)
++ [Sanaeの空想庭院](http://blog.kochiya.me/)
 
 ## 熊孩子們
 
@@ -56,3 +57,5 @@ title       : 鏈接
 + [沒想好幹嘛(http://youare.ws/)](http://youare.ws/)
 + [沒想好幹嘛(http://2333.moe/)](http://2333.moe/)
 + [沒想好乾嘛(http://flandre.me/)](http://flandre.me/)
++ [Rust CN (http://rustcn.org/)](http://rustcn.org/)
+
