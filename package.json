@@ -1,13 +1,13 @@
 {
   "name": "xadillax",
-  "version": "2.5.6",
+  "version": "2.8.3",
   "private": true,
   "dependencies": {
-    "hexo-generator-feed": "^0.1.0",
-    "walk": "~2.3.3",
-    "async": "~0.9.0",
-    "scarlet-task": "~0.1.0",
-    "sync-runner": "~0.0.5",
-    "opencc": "~1.0.2"
+    "hexo-generator-feed": "^0.2.1",
+    "walk": "^2.3.9",
+    "async": "^0.9.0",
+    "scarlet-task": "^0.1.0-comment",
+    "sync-runner": "^0.1.0",
+    "opencc": "git://github.com/XadillaX/OpenCC.git#a1945e1092d93e30ef32ed3374c6ba6cff5a4a1f"
   }
 }
