@@ -6,3 +6,5 @@ public/images/background
 public/images/background/*
 
 *.swp
+*.log
+
