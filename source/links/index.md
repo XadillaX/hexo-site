@@ -25,7 +25,7 @@ title: 鏈接
 + [卜卜口](http://i.mouto.org/#me)
 + [論野生技術 & 二次元](http://yooooo.us/)
 + [宅憶](http://ewe.moe/)
-+ [音符の新世界](http://www.freedom.moe/)
++ [音符の新世界](http://freedom.moe/)
 + [Sanaeの空想庭院](http://blog.kochiya.me/)
 + [釘子](http://im.dimpurr.com/)
 
