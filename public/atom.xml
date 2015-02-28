@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[艾克斯の編碼者]]></title>
+  <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://xcoder.in/"/>
+  <updated>2015-02-28T06:30:38.210Z</updated>
+  <id>http://xcoder.in/</id>
+  
+  <author>
+    <name><![CDATA[小鳥遊死月]]></name>
+    <email><![CDATA[admin@xcoder.in]]></email>
+  </author>
+  
+  <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+</feed>
