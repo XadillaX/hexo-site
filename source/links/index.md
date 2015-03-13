@@ -28,6 +28,7 @@ title: 鏈接
 + [音符の新世界](http://freedom.moe/)
 + [Sanaeの空想庭院](http://blog.kochiya.me/)
 + [釘子](http://im.dimpurr.com/)
++ [Sicem](http://www.sicemcolle.com/)
 
 ## 熊孩子們
 
