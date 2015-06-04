@@ -9,9 +9,7 @@
     <meta name="description" content="最近在寫 NBUT Virtual Judge 的內核框架，用的又是 Node.JS 了，把它當作一個本地運行的腳本不斷進行輪詢。
 　　衆所周知JS中的一個精髓就是異步回調。
 　　所以在我自己寫的框架中也經常會出現類似於下面的代碼：
-1foo.bar(a, b, function(){});
-
-　　">
+1foo.bar(a, b, function()&amp;#123;&amp;#">
     
     
 
@@ -28,9 +26,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -103,7 +99,7 @@
         <h1>關於JavaScript中callback函數的this指針重定義</h1>
         
         <div class="time-info">
-发表于:<time datetime="2013-07-15T06:20:29.000Z" itemprop="datePublished">2013年07月15日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2013-07-15T06:20:29.000Z" itemprop="datePublished">2013年07月15日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -115,8 +111,7 @@
             <p>　　最近在寫 <strong>NBUT Virtual Judge</strong> 的內核框架，用的又是 <strong>Node.JS</strong> 了，把它當作一個本地運行的腳本不斷進行輪詢。</p>
 <p>　　衆所周知JS中的一個精髓就是異步回調。</p>
 <p>　　所以在我自己寫的框架中也經常會出現類似於下面的代碼：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">foo.bar(a, b, <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{});</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">foo.bar(a, b, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;);</span><br></pre></td></tr></table></figure>
 <p>　　總而言之就是寫一個函數，這個函數將會調用一個回調函數。</p>
 <p>　　但是問題出現了：在那個回調函數 <code>function</code> 中，你如果使用了一個 <code>this</code> 指針的話，它將會指向根，而不是 <code>foo</code> 的本體。</p>
 <p>　　那麼如果我們想在 <code>function</code> 中也用 <code>this</code> 來指代這個 <code>foo</code> 對象該怎麼辦呢？</p>
@@ -129,26 +124,29 @@
 <p>　　總之最後得出的結論就是說：</p>
 <p>　　你只要給你的 <code>callback</code> 函數指定一個 <code>this</code> 指針即可。</p>
 <p>　　如：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> cb = callback.bind(foo);</div><div class="line">foo.bar(a, b, cb);</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cb = callback.bind(foo);</span><br><span class="line">foo.bar(a, b, cb);</span><br></pre></td></tr></table></figure>
 <p>　　這樣就能在回調函數中使用foo來作爲其this指針了。</p>
 
-            
-            <section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
+			
+            <section class="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2013/07/15/javascript-callback-this-bind/" data-title="關於JavaScript中callback函數的this指針重定義" data-url="http://xcoder.in/2013/07/15/javascript-callback-this-bind/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -158,7 +156,7 @@
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

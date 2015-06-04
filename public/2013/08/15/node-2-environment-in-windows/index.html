@@ -8,10 +8,9 @@
     
     <meta name="description" content="由於Linux中的環境搭建比較簡單，所以草草略過。
 　　其實Windows下也不算麻煩，但是這裏會講一定量的別的環境的搭建。
-
-Linux 環境
-講到這個就很簡單了，跟着下面的 bash 操作即可：
-sh1234$ cd /usr/local/bin$ wget http://nodejs.org/">
+&lt;!-- 我是小小分割符 --&gt;
+Linux 環境講到這個就很簡單了，跟着下面的 bash 操作即可：
+sh1234$ cd /usr/local/bin$ wget htt">
     
     
 
@@ -28,9 +27,7 @@ sh1234$ cd /usr/local/bin$ wget http://nodejs.org/">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -103,7 +100,7 @@ sh1234$ cd /usr/local/bin$ wget http://nodejs.org/">
         <h1>一起擼Node.JS（負貳）——環境</h1>
         
         <div class="time-info">
-发表于:<time datetime="2013-08-14T16:00:00.000Z" itemprop="datePublished">2013年08月15日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2013-08-14T16:00:00.000Z" itemprop="datePublished">2013年08月15日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -112,29 +109,23 @@ sh1234$ cd /usr/local/bin$ wget http://nodejs.org/">
                 <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux_環境"><span class="toc-number">1.</span> <span class="toc-text">Linux 環境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows_環境"><span class="toc-number">2.</span> <span class="toc-text">Windows 環境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Cygwin_安裝和配置"><span class="toc-number">2.1.</span> <span class="toc-text">Cygwin 安裝和配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cygwin_安裝"><span class="toc-number">2.1.1.</span> <span class="toc-text">Cygwin 安裝</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vim_配置"><span class="toc-number">2.2.</span> <span class="toc-text">vim 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#apt-cyg"><span class="toc-number">2.3.</span> <span class="toc-text">apt-cyg</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#apt-cyg_安裝"><span class="toc-number">2.3.1.</span> <span class="toc-text">apt-cyg 安裝</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#apt-cyg_修改"><span class="toc-number">2.3.2.</span> <span class="toc-text">apt-cyg 修改</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Node-js_安裝"><span class="toc-number">2.4.</span> <span class="toc-text">Node.js 安裝</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#真·Hello_World"><span class="toc-number">3.</span> <span class="toc-text">真·Hello World</span></a></li></ol>
             </div>
             
-            <p>　　由於<a href="#linux-環境">Linux</a>中的環境搭建比較簡單，所以草草略過。</p>
-<p>　　其實<a href="#windows-環境">Windows</a>下也不算麻煩，但是這裏會講一定量的別的環境的搭建。</p>
+            <p>　　由於<a href="!--￼11--&gt;#linux-環境">Linux</a>中的環境搭建比較簡單，所以草草略過。</p>
+<p>　　其實<a href="!--￼12--&gt;#windows-環境">Windows</a>下也不算麻煩，但是這裏會講一定量的別的環境的搭建。</p>
 <!-- 我是小小分割符 -->
-<h2 id="Linux_環境">Linux 環境</h2>
-<p>講到這個就很簡單了，跟着下面的 <strong>bash</strong> 操作即可：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>cd /usr/local/bin</div><div class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/nodejs.org/dist</span><span class="regexp">/v0.00.00/node</span>-v<span class="number">0</span>.<span class="number">00</span>.<span class="number">00</span>-linux-x0<span class="number">0</span>.tar.gz</div><div class="line"><span class="variable">$ </span>tar zxf node-v<span class="number">0</span>.<span class="number">00</span>.<span class="number">00</span>-linux-x0<span class="number">0</span>.tar.gz</div><div class="line"><span class="variable">$ </span>cd node-v<span class="number">0</span>.<span class="number">00</span>.<span class="number">00</span>-linux-x0<span class="number">0</span></div></pre></td></tr></table></figure>
-
+<h2 id="Linux_環境">Linux 環境</h2><p>講到這個就很簡單了，跟着下面的 <strong>bash</strong> 操作即可：</p>
+<figure class="highlight elixir"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd /usr/local/bin</span><br><span class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/nodejs.org/dist</span><span class="regexp">/v0.00.00/node</span>-v<span class="number">0</span>.<span class="number">00</span>.<span class="number">00</span>-linux-x0<span class="number">0</span>.tar.gz</span><br><span class="line"><span class="variable">$ </span>tar zxf node-v<span class="number">0</span>.<span class="number">00</span>.<span class="number">00</span>-linux-x0<span class="number">0</span>.tar.gz</span><br><span class="line"><span class="variable">$ </span>cd node-v<span class="number">0</span>.<span class="number">00</span>.<span class="number">00</span>-linux-x0<span class="number">0</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>其中將上方的 <strong>v0.00.00</strong> 替換成 <strong>Node.js</strong> 最新的版本號，把 <strong>x00</strong> 替換成你自己電腦的位數。</p>
 <p>也可以直接去官網 <a href="http://nodejs.org/download/" target="_blank" rel="external">http://nodejs.org/download/</a> 找到相應的地址。</p>
 </blockquote>
 <p>最後將其的連接加入到 <code>/usr/bin</code> 下即可。</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">cd</span> bin</div><div class="line">$ <span class="keyword">ln</span> node /usr/bin</div><div class="line">$ <span class="keyword">ln</span> npm /usr/bin</div></pre></td></tr></table></figure>
-
+<figure class="highlight elixir"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd bin</span><br><span class="line"><span class="variable">$ </span>ln node /usr/bin</span><br><span class="line"><span class="variable">$ </span>ln npm /usr/bin</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><strong>注意</strong>： 該用 <code>sudo</code> 的地方就用 <code>sudo</code> 或者 <code>su</code> 。</p>
 </blockquote>
 <p>至此，<strong>Linux</strong> 下的 <strong>Node.js</strong> 環境基本搭建完畢。</p>
-<h2 id="Windows_環境">Windows 環境</h2>
-<h3 id="Cygwin_安裝和配置">Cygwin 安裝和配置</h3>
-<p><strong><em>Cygwin</em></strong> 是一個在 <strong><em>Windows</em></strong> 平臺上運行的 <strong><em>Unix</em></strong> 模擬環境。對於學習 <strong><em>Unix/Linux</em></strong> 操作環境，或者從 <strong><em>Unix</em></strong> 到 <strong><em>Windows</em></strong> 的應用程序移植，或者進行某些特殊的開發工作，尤其是使用 <strong><em>GNU工具集</em></strong> 在 <strong><em>Windows</em></strong> 上進行嵌入式系統開發，非常有用。</p>
-<h4 id="Cygwin_安裝">Cygwin 安裝</h4>
-<p>我們先跑到 <strong>Cygwin</strong> 的官網上去把東西下來：</p>
+<h2 id="Windows_環境">Windows 環境</h2><h3 id="Cygwin_安裝和配置">Cygwin 安裝和配置</h3><p><strong><em>Cygwin</em></strong> 是一個在 <strong><em>Windows</em></strong> 平臺上運行的 <strong><em>Unix</em></strong> 模擬環境。對於學習 <strong><em>Unix/Linux</em></strong> 操作環境，或者從 <strong><em>Unix</em></strong> 到 <strong><em>Windows</em></strong> 的應用程序移植，或者進行某些特殊的開發工作，尤其是使用 <strong><em>GNU工具集</em></strong> 在 <strong><em>Windows</em></strong> 上進行嵌入式系統開發，非常有用。</p>
+<h4 id="Cygwin_安裝">Cygwin 安裝</h4><p>我們先跑到 <strong>Cygwin</strong> 的官網上去把東西下來：</p>
 <blockquote>
 <p><a href="http://cygwin.com/install.html" target="_blank" rel="external">http://cygwin.com/install.html</a></p>
 <blockquote>
@@ -180,11 +171,9 @@ sh1234$ cd /usr/local/bin$ wget http://nodejs.org/">
 <blockquote>
 <p><strong>提示</strong>：你可以點擊窗口左上角的小圖片，然後裏面的 <strong>Options</strong> 中，你可以調整你自己的 <strong>Cygwin</strong> 外觀。</p>
 </blockquote>
-<h3 id="vim_配置">vim 配置</h3>
-<p>上一步我們已經選中了 <strong>vim</strong> ，也就是說我們已經在 <strong>Cygwin</strong> 中裝上了 <strong>vim</strong>。但是由於這裏的 <strong>vim</strong> 默認配置非常蛋疼，所以我們得改一下。</p>
+<h3 id="vim_配置">vim 配置</h3><p>上一步我們已經選中了 <strong>vim</strong> ，也就是說我們已經在 <strong>Cygwin</strong> 中裝上了 <strong>vim</strong>。但是由於這裏的 <strong>vim</strong> 默認配置非常蛋疼，所以我們得改一下。</p>
 <p>在你的 <strong>Cygwin</strong> 中一句句輸入下面的命令：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>cd /home/&lt;你自己的用戶名&gt;</div><div class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/blog-xcoder-in.qiniudn.com/</span>.vimrc</div><div class="line"><span class="variable">$ </span>mkdir .vim</div><div class="line"><span class="variable">$ </span>cd .vim</div><div class="line"><span class="variable">$ </span>mkdir colors</div><div class="line"><span class="variable">$ </span>cd colors</div><div class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/blog-xcoder-in.qiniudn.com/molokai</span>.vim</div></pre></td></tr></table></figure>
-
+<figure class="highlight elixir"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd /home/&lt;你自己的用戶名&gt;</span><br><span class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/blog-xcoder-in.qiniudn.com/</span>.vimrc</span><br><span class="line"><span class="variable">$ </span>mkdir .vim</span><br><span class="line"><span class="variable">$ </span>cd .vim</span><br><span class="line"><span class="variable">$ </span>mkdir colors</span><br><span class="line"><span class="variable">$ </span>cd colors</span><br><span class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/blog-xcoder-in.qiniudn.com/molokai</span>.vim</span><br></pre></td></tr></table></figure>
 <p>這樣你的 <strong>vim</strong> 就用上了上面的那個地址的配置文件，當然你也可以編輯你自己的配置文件或者說從網上下別的配置文件以滿足你的個性化需求。</p>
 <p><strong>vim</strong> 配置以及使用請參照：<a href="https://wiki.archlinux.org/index.php/Vim" target="_blank" rel="external">https://wiki.archlinux.org/index.php/Vim</a></p>
 <blockquote>
@@ -192,8 +181,7 @@ sh1234$ cd /usr/local/bin$ wget http://nodejs.org/">
 <div style="text-align: right;"><em>— <a href="https://github.com/kalxd" target="_blank" rel="external">kalxd</a></em></div>
 
 </blockquote>
-<h3 id="apt-cyg">apt-cyg</h3>
-<blockquote>
+<h3 id="apt-cyg">apt-cyg</h3><blockquote>
 <p>apt-cyg is a command-line installer for Cygwin which cooperates with Cygwin Setup and uses the same repository. The syntax is similar to apt-get.</p>
 <div style="text-align: right;"><em>— From apt-cyg googlecode page</em></div>
 
@@ -208,69 +196,61 @@ sh1234$ cd /usr/local/bin$ wget http://nodejs.org/">
 <li><code>apt-cyg describe &lt;pattern(s)&gt;</code> 來描述符合條件的軟件包</li>
 <li><code>apt-cyg packageof &lt;commands or files&gt;</code> 來定位其父軟件包</li>
 </ul>
-<h4 id="apt-cyg_安裝">apt-cyg 安裝</h4>
-<p>其實也不能說是安裝，純粹是把腳本從網絡上拷到自己的 <strong>Cygwin</strong> 的環境目錄中。</p>
+<h4 id="apt-cyg_安裝">apt-cyg 安裝</h4><p>其實也不能說是安裝，純粹是把腳本從網絡上拷到自己的 <strong>Cygwin</strong> 的環境目錄中。</p>
 <p>在你的 <strong>Cygwin</strong> 中輸入以下命令：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>cd /usr/local/bin</div><div class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/apt-cyg.googlecode.com/svn</span><span class="regexp">/trunk/apt</span>-cyg</div></pre></td></tr></table></figure>
-
+<figure class="highlight elixir"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd /usr/local/bin</span><br><span class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/apt-cyg.googlecode.com/svn</span><span class="regexp">/trunk/apt</span>-cyg</span><br></pre></td></tr></table></figure>
 <p>這樣你就“安裝”好了 <strong>apt-cyg</strong> 了。不過這裏用的是默認的源，所有東西都是默認的。</p>
 <p>如果你現在已經心安理得或者不想折騰了可以跳過 <strong><a href="#apt-cyg-修改">2.1.3.2. apt-cyg 修改</a></strong>，如果你想把源換成 <code>163</code> 的話那麼稍微看一下吧。</p>
-<h4 id="apt-cyg_修改">apt-cyg 修改</h4>
-<p>接下去我們要對 <strong>apt-cyg</strong> 做一些編輯。</p>
+<h4 id="apt-cyg_修改">apt-cyg 修改</h4><p>接下去我們要對 <strong>apt-cyg</strong> 做一些編輯。</p>
 <p>你有下面兩個選擇：</p>
 <ol>
 <li>如果你想學習 <strong>vim</strong> 操作或者你已經熟悉了，那麼直接使用 <code>vim apt-cyg</code> 來進行編輯。</li>
 <li>如果你是懶人還是想要直接編輯的話，請跑到你的 <strong>Cygwin</strong> 的安裝目錄，找到 <strong>usr</strong> 文件夾，飛進 <strong>local/bin</strong> 目錄中去，用你自己喜歡的文本編輯器打開並編輯。</li>
 </ol>
 <p>大約是 <code>68</code> 行上下吧，有一句是：</p>
-<figure class="highlight"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">mirror</span>=<span class="string">ftp://mirror.mcs.anl.gov/pub/cygwin</span></div></pre></td></tr></table></figure>
-
+<figure class="highlight groovy"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mirror=<span class="string">ftp:</span><span class="comment">//mirror.mcs.anl.gov/pub/cygwin</span></span><br></pre></td></tr></table></figure>
 <p>將其改成：</p>
-<figure class="highlight"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">mirror</span>=<span class="string">http://mirrors.163.com/cygwin</span></div></pre></td></tr></table></figure>
-
+<figure class="highlight groovy"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mirror=<span class="string">http:</span><span class="comment">//mirrors.163.com/cygwin</span></span><br></pre></td></tr></table></figure>
 <p>還有就是大概在 <code>98</code> 行和 <code>105</code> 行左右：</p>
-<figure class="highlight"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">wget -N $mirror/setup.bz2</div><div class="line"><span class="keyword">...</span></div><div class="line">wget -N $mirror/setup.ini</div></pre></td></tr></table></figure>
-
+<figure class="highlight stata"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget -<span class="keyword">N</span> <span class="label">$mirror</span>/setup.bz2</span><br><span class="line">...</span><br><span class="line">wget -<span class="keyword">N</span> <span class="label">$mirror</span>/setup.ini</span><br></pre></td></tr></table></figure>
 <p>修改成：</p>
-<figure class="highlight"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">wget -N $mirror/x86/setup.bz2</div><div class="line"><span class="keyword">...</span></div><div class="line">wget -N $mirror/x86/setup.ini</div></pre></td></tr></table></figure>
-
+<figure class="highlight stata"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget -<span class="keyword">N</span> <span class="label">$mirror</span>/x86/setup.bz2</span><br><span class="line">...</span><br><span class="line">wget -<span class="keyword">N</span> <span class="label">$mirror</span>/x86/setup.ini</span><br></pre></td></tr></table></figure>
 <p>至此，你的 <strong>Cygwin</strong> 環境基本完成，以後可以再慢慢完善。</p>
-<h3 id="Node-js_安裝">Node.js 安裝</h3>
-<p>這個就很簡單了，打開 <strong><a href="http://nodejs.org/download/" target="_blank" rel="external">Node.js</a></strong> 官網下載安裝即可。</p>
+<h3 id="Node-js_安裝">Node.js 安裝</h3><p>這個就很簡單了，打開 <strong><a href="http://nodejs.org/download/" target="_blank" rel="external">Node.js</a></strong> 官網下載安裝即可。</p>
 <blockquote>
 <p>選擇 <strong>Windows Installer (.msi)</strong> 或者 <strong>Windows Binary (.exe)</strong>。</p>
 </blockquote>
 <p>安裝好後就能直接在 <strong>Cygwin</strong> 裏面使用了。</p>
-<h2 id="真·Hello_World">真·Hello World</h2>
-<p>現在，無論你是 <strong>Linux</strong> 用戶還是 <strong>Windows</strong> 用戶，都可以用一樣的步驟來完成下面的 <code>Hello World</code> 了。</p>
+<h2 id="真·Hello_World">真·Hello World</h2><p>現在，無論你是 <strong>Linux</strong> 用戶還是 <strong>Windows</strong> 用戶，都可以用一樣的步驟來完成下面的 <code>Hello World</code> 了。</p>
 <p>隨便跑一個目錄裏面新建一個文件並且用 <strong>vim</strong> 編輯：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">vim</span> hello.js</div></pre></td></tr></table></figure>
-
+<figure class="highlight elixir"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vim hello.js</span><br></pre></td></tr></table></figure>
 <p>在裏面輸入下面的東西：</p>
-<figure class="highlight"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">console.<span class="built_in">log</span>(<span class="string">"Hello world!"</span>);</div></pre></td></tr></table></figure>
-
+<figure class="highlight openscad"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.<span class="built_in">log</span><span class="params">(<span class="string">"Hello world!"</span>)</span>;</span><br></pre></td></tr></table></figure>
 <p>然後退出 <strong>vim</strong> 執行：</p>
-<figure class="highlight"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>node hello.js</div></pre></td></tr></table></figure>
-
+<figure class="highlight elixir"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>node hello.js</span><br></pre></td></tr></table></figure>
 <p>終於，<strong>真·Hello world</strong> 出現在了你的眼前，而不需要藉助 <strong><a href="http://ideone.com/" target="_blank" rel="external">IDEOne</a></strong> 了。</p>
 <p><strong><em>To be continued…</em></strong></p>
 
-            
-            <section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
+			
+            <section class="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2013/08/15/node-2-environment-in-windows/" data-title="一起擼Node.JS（負貳）——環境" data-url="http://xcoder.in/2013/08/15/node-2-environment-in-windows/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -280,7 +260,7 @@ sh1234$ cd /usr/local/bin$ wget http://nodejs.org/">
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

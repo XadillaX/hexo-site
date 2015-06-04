@@ -6,13 +6,12 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="序
-最近閒着蛋疼實現了兩個庫。
+    <meta name="description" content="序最近閒着蛋疼實現了兩個庫。
 
 隨機生成中文名字
 隨機生成中文技能名
 
-我當然不會說去用各種人工智能去實現一個強大的的解析器然後生成，也不會說用一個非常龐大如搜狗拼音的姓名庫來隨機獲取——我只是偶然間知道蘑菇街小俠節一個混戰 PK 的 Demo 編寫比賽，閒來無聊隨便寫寫，然而這其中我需要隨機給 ">
+我當然不會說去用各種人工智能去實現一個強大的的解析器然後生成，也不會說用一個非常龐大如搜狗拼音的姓名庫來隨機獲取——我只是偶然間知道蘑菇街小俠節一個混戰 PK 的 Demo 編寫比賽，閒來無聊隨便寫寫，然而這其中我需要隨機給 B">
     
     
 
@@ -29,9 +28,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -104,7 +101,7 @@
         <h1>我是如何實現簡單的隨機中文名生成器的（Node 版）</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-09-01T12:36:33.000Z" itemprop="datePublished">2014年09月01日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-09-01T12:36:33.000Z" itemprop="datePublished">2014年09月01日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -113,52 +110,38 @@
                 <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#序"><span class="toc-number">1.</span> <span class="toc-text">序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#結果示範"><span class="toc-number">2.</span> <span class="toc-text">結果示範</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Chinese_Random_Name"><span class="toc-number">2.1.</span> <span class="toc-text">Chinese Random Name</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Chinese_Random_SKill"><span class="toc-number">2.2.</span> <span class="toc-text">Chinese Random SKill</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解析"><span class="toc-number">3.</span> <span class="toc-text">解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#起姓"><span class="toc-number">3.1.</span> <span class="toc-text">起姓</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#技能後綴"><span class="toc-number">3.2.</span> <span class="toc-text">技能後綴</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#共用部分"><span class="toc-number">3.3.</span> <span class="toc-text">共用部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#綜合說明"><span class="toc-number">3.4.</span> <span class="toc-text">綜合說明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#無節操小廣告"><span class="toc-number">4.</span> <span class="toc-text">無節操小廣告</span></a></li></ol>
             </div>
             
-            <h2 id="序">序</h2>
-<p>最近閒着蛋疼實現了兩個庫。</p>
+            <h2 id="序">序</h2><p>最近閒着蛋疼實現了兩個庫。</p>
 <ul>
 <li>隨機生成中文名字</li>
 <li>隨機生成中文技能名</li>
 </ul>
 <p>我當然不會說去用各種人工智能去實現一個強大的的解析器然後生成，也不會說用一個非常龐大如搜狗拼音的姓名庫來隨機獲取——我只是偶然間知道蘑菇街小俠節一個混戰 PK 的 Demo 編寫比賽，閒來無聊隨便寫寫，然而這其中我需要隨機給 Bot 起名以及技能起名而用到的庫。</p>
 <p>不需要有多少正確性——這兩個庫的結果經常出現非常奇葩的名字，讓人哭笑不得，但是我要的就是這種效果。</p>
-<h2 id="結果示範">結果示範</h2>
-<p>就兩個庫，我各生成一批名字以示效果。</p>
-<h3 id="Chinese_Random_Name">Chinese Random Name</h3>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">闕造</div><div class="line">廣錫一</div><div class="line">席寺</div><div class="line">扶駕</div><div class="line">鄭萱黃</div><div class="line">林樊牽</div><div class="line">孟登元</div><div class="line">魚彰</div><div class="line">皮憂暑</div><div class="line">左稗</div><div class="line">宦醇</div><div class="line">糜弋招</div><div class="line">席準</div><div class="line">方抑</div><div class="line">烏泔</div><div class="line">苗魯</div><div class="line">孟候依</div><div class="line">龍珠餞</div><div class="line">洪打鷹</div><div class="line">繆負鐸</div></pre></td></tr></table></figure>
-
-<h3 id="Chinese_Random_SKill">Chinese Random SKill</h3>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">地永心法</div><div class="line">纓槍訣</div><div class="line">冉腿</div><div class="line">尼邏心法</div><div class="line">奠拳譜</div><div class="line">曲掌法</div><div class="line">始刺</div><div class="line">娘桶擷刀</div><div class="line">璋瑾單養刀</div><div class="line">銎刀</div><div class="line">勵儉驛媛心訣</div><div class="line">瞻馳刀訣</div><div class="line">晏協驊腿</div><div class="line">示嫩帳羽刀訣</div><div class="line">賽勘神體刀訣</div><div class="line">鑄愛指</div><div class="line">施淨琮萍棍</div><div class="line">泊臨惇槍訣</div><div class="line">我道六分槍</div><div class="line">殘亭求拳譜</div></pre></td></tr></table></figure>
-
-<h2 id="解析">解析</h2>
-<p>實際上無論是起名還是技能名，都用了一個相同的起名字庫和一段差不多的複用代碼（雖然沒有真正意義上的複用，只是複製粘貼而已，誰讓他們是兩個庫呢，已經很簡單了，我總不能再給他們搞一個依賴出來吧？）</p>
-<h3 id="起姓">起姓</h3>
-<p>關於 <code>chinese-random-name</code> 中的姓氏，我找了一箇中國百家姓（包括複姓）比較全的詞庫。</p>
+<h2 id="結果示範">結果示範</h2><p>就兩個庫，我各生成一批名字以示效果。</p>
+<h3 id="Chinese_Random_Name">Chinese Random Name</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">闕造</span><br><span class="line">廣錫一</span><br><span class="line">席寺</span><br><span class="line">扶駕</span><br><span class="line">鄭萱黃</span><br><span class="line">林樊牽</span><br><span class="line">孟登元</span><br><span class="line">魚彰</span><br><span class="line">皮憂暑</span><br><span class="line">左稗</span><br><span class="line">宦醇</span><br><span class="line">糜弋招</span><br><span class="line">席準</span><br><span class="line">方抑</span><br><span class="line">烏泔</span><br><span class="line">苗魯</span><br><span class="line">孟候依</span><br><span class="line">龍珠餞</span><br><span class="line">洪打鷹</span><br><span class="line">繆負鐸</span><br></pre></td></tr></table></figure>
+<h3 id="Chinese_Random_SKill">Chinese Random SKill</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">地永心法</span><br><span class="line">纓槍訣</span><br><span class="line">冉腿</span><br><span class="line">尼邏心法</span><br><span class="line">奠拳譜</span><br><span class="line">曲掌法</span><br><span class="line">始刺</span><br><span class="line">娘桶擷刀</span><br><span class="line">璋瑾單養刀</span><br><span class="line">銎刀</span><br><span class="line">勵儉驛媛心訣</span><br><span class="line">瞻馳刀訣</span><br><span class="line">晏協驊腿</span><br><span class="line">示嫩帳羽刀訣</span><br><span class="line">賽勘神體刀訣</span><br><span class="line">鑄愛指</span><br><span class="line">施淨琮萍棍</span><br><span class="line">泊臨惇槍訣</span><br><span class="line">我道六分槍</span><br><span class="line">殘亭求拳譜</span><br></pre></td></tr></table></figure>
+<h2 id="解析">解析</h2><p>實際上無論是起名還是技能名，都用了一個相同的起名字庫和一段差不多的複用代碼（雖然沒有真正意義上的複用，只是複製粘貼而已，誰讓他們是兩個庫呢，已經很簡單了，我總不能再給他們搞一個依賴出來吧？）</p>
+<h3 id="起姓">起姓</h3><p>關於 <code>chinese-random-name</code> 中的姓氏，我找了一箇中國百家姓（包括複姓）比較全的詞庫。</p>
 <blockquote>
 <p><a href="https://github.com/XadillaX/chinese-random-name/blob/master/dict/f.dict" target="_blank" rel="external">詞庫鏈接</a></p>
 </blockquote>
 <p>比較幸運，我找到的時候已經是這麼分段分好了。我也沒有詳細做研究，隨便給了不同的段不同的權值，當然越前面的段權值越高，被隨機到的可能性越大。</p>
 <p>首先用 <code>split</code> 來分割不同段：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dict = dict.split(<span class="string">"\n\n"</span>);</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dict = dict.split(<span class="string">"\n\n"</span>);</span><br></pre></td></tr></table></figure>
 <p>對於每一段來說通過 <code>Array.reduce</code> (詳見 <a href="https://github.com/andrewplummer/Sugar/blob/master/lib/es5.js#L287" target="_blank" rel="external">SugarJs</a>) 來分割成行再成字。</p>
 <p>看字典一共有 6 大段，每段的權值分別爲：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> weights = [ <span class="number">100</span>, <span class="number">70</span>, <span class="number">10</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">1</span> ];</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> weights = [ <span class="number">100</span>, <span class="number">70</span>, <span class="number">10</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">1</span> ];</span><br></pre></td></tr></table></figure>
 <p>然後每個字都有一個其權值區間，是累加上去的。</p>
 <p>最後獲取姓的時候隨機生成一個在總區間內的數字，然後看看數字在哪個姓的區間內，就返回這個姓。</p>
-<h3 id="技能後綴">技能後綴</h3>
-<p>關於 <code>chinese-random-skill</code> 中的技能後綴，我偷懶了。因爲那個時候 Demo 就快 Deadline 了，所以隨便糊弄了一下——直接把印象裏面比較熟的後綴寫上去了事，也不給權值了。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> suffix = [</div><div class="line">    <span class="string">"劍"</span>, <span class="string">"劍法"</span>, <span class="string">"劍譜"</span>, <span class="string">"劍訣"</span>,</div><div class="line">    <span class="string">"槍"</span>, <span class="string">"槍法"</span>, <span class="string">"槍訣"</span>,</div><div class="line">    <span class="string">"拳"</span>, <span class="string">"拳法"</span>, <span class="string">"拳譜"</span>,</div><div class="line">    <span class="string">"刀"</span>, <span class="string">"刀法"</span>, <span class="string">"刀譜"</span>, <span class="string">"刀訣"</span>,</div><div class="line">    <span class="string">"斬"</span>, <span class="string">"刺"</span>, <span class="string">"大法"</span>, <span class="string">"心訣"</span>, <span class="string">"心法"</span>, <span class="string">"訣"</span>, <span class="string">"寶典"</span>,</div><div class="line">    <span class="string">"棍"</span>, <span class="string">"棍法"</span>, <span class="string">"棍譜"</span>, <span class="string">"棍訣"</span>,</div><div class="line">    <span class="string">"指"</span>, <span class="string">"掌"</span>, <span class="string">"掌法"</span>, <span class="string">"腿"</span>, <span class="string">"攻"</span>, <span class="string">"鉤"</span></div><div class="line">];</div></pre></td></tr></table></figure>
-
-<h3 id="共用部分">共用部分</h3>
-<p>名字主體爲兩個包的共用部分。</p>
+<h3 id="技能後綴">技能後綴</h3><p>關於 <code>chinese-random-skill</code> 中的技能後綴，我偷懶了。因爲那個時候 Demo 就快 Deadline 了，所以隨便糊弄了一下——直接把印象裏面比較熟的後綴寫上去了事，也不給權值了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> suffix = [</span><br><span class="line">    <span class="string">"劍"</span>, <span class="string">"劍法"</span>, <span class="string">"劍譜"</span>, <span class="string">"劍訣"</span>,</span><br><span class="line">    <span class="string">"槍"</span>, <span class="string">"槍法"</span>, <span class="string">"槍訣"</span>,</span><br><span class="line">    <span class="string">"拳"</span>, <span class="string">"拳法"</span>, <span class="string">"拳譜"</span>,</span><br><span class="line">    <span class="string">"刀"</span>, <span class="string">"刀法"</span>, <span class="string">"刀譜"</span>, <span class="string">"刀訣"</span>,</span><br><span class="line">    <span class="string">"斬"</span>, <span class="string">"刺"</span>, <span class="string">"大法"</span>, <span class="string">"心訣"</span>, <span class="string">"心法"</span>, <span class="string">"訣"</span>, <span class="string">"寶典"</span>,</span><br><span class="line">    <span class="string">"棍"</span>, <span class="string">"棍法"</span>, <span class="string">"棍譜"</span>, <span class="string">"棍訣"</span>,</span><br><span class="line">    <span class="string">"指"</span>, <span class="string">"掌"</span>, <span class="string">"掌法"</span>, <span class="string">"腿"</span>, <span class="string">"攻"</span>, <span class="string">"鉤"</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<h3 id="共用部分">共用部分</h3><p>名字主體爲兩個包的共用部分。</p>
 <p>實際上他們依賴於一個特定款式的字庫——我也就網上隨便那麼一搜。</p>
 <blockquote>
 <p><a href="https://github.com/XadillaX/chinese-random-name/blob/master/dict/n.dict" target="_blank" rel="external">字庫鏈接</a></p>
 </blockquote>
 <p>它每一行的結構一樣：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Number</span> UniChar UniChar：<span class="built_in">String</span></div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Number</span> UniChar UniChar：<span class="built_in">String</span></span><br></pre></td></tr></table></figure>
 <p>其中第一個數字我目測是繁體的筆畫數，比如 899 行的 <code>書</code> 繁體就是 <code>書</code>，數一下的確是 10 劃。</p>
 <p>第二個就是字本體，第三個是該字的五行屬性，最後是這個字在什麼什麼命數（請不要迷信）描述。</p>
 <p>爲了讓名字看起來稍微正常點（只是稍微而已），我儘可能讓同屬性的字在一塊兒，於是有了以下組合：</p>
@@ -175,12 +158,10 @@
 <p>對於三個字的起名來說，也是用了類似的方法給權值，具體可以參考代碼。</p>
 <p>總之就是根據其兩兩之間的五行關係來起名的，聽起來還是有那麼點道理的。</p>
 <p>哈哈，權當玩的，認真你就輸了。</p>
-<h3 id="綜合說明">綜合說明</h3>
-<p>上面的分步做完了，然後真·生成名字的步驟是：</p>
+<h3 id="綜合說明">綜合說明</h3><p>上面的分步做完了，然後真·生成名字的步驟是：</p>
 <p>隨機生成一個姓（或者技能後綴），然後按照某個權值隨機生成一個數字代表剩下的名字的長度，然後隨機生成一串該長度的名字即可。</p>
 <p>最後拼接上去就 OK 了。</p>
-<h2 id="無節操小廣告">無節操小廣告</h2>
-<p>最後還是貼一下兩個包的 repo 地址吧：</p>
+<h2 id="無節操小廣告">無節操小廣告</h2><p>最後還是貼一下兩個包的 repo 地址吧：</p>
 <blockquote>
 <ul>
 <li><a href="https://github.com/XadillaX/chinese-random-name" target="_blank" rel="external">Chinese Random Name</a></li>
@@ -188,26 +169,29 @@
 </ul>
 </blockquote>
 <p>以及安裝的話照下去弄就好了</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ npm install chinese-random-name</div><div class="line">$ npm install chinese-random-skill</div></pre></td></tr></table></figure>
-
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install chinese-random-name</span><br><span class="line">$ npm install chinese-random-skill</span><br></pre></td></tr></table></figure>
 <p><code>README</code> 文件兩個包都有。</p>
 
-            
-            <section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
+			
+            <section class="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2014/09/01/how-i-made-chinese-random-x/" data-title="我是如何實現簡單的隨機中文名生成器的（Node 版）" data-url="http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -217,7 +201,7 @@
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

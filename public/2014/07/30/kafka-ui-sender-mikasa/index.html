@@ -6,10 +6,9 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="起 (灬ºωº灬)
-　　說來話長，自從入了花瓣，整個人就掉進連環坑了。
+    <meta name="description" content="起 (灬ºωº灬)　　說來話長，自從入了花瓣，整個人就掉進連環坑了。
 　　後端元數據採集是用 Storm 來走拓撲流程的，又因爲 @Zola 不是很喜歡 Java，所以退而求其次選擇了 Clojure，所以正在苦逼地學習 Clojure 和 Storm 中。
-　　目前來說外面的 Storm 拓撲的">
+　　目前來說外面的 Storm 拓撲的 ">
     
     
 
@@ -26,9 +25,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -101,7 +98,7 @@
         <h1>開發測試時給 Kafka 發消息的 UI 發送器——Mikasa</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-07-30T02:14:29.000Z" itemprop="datePublished">2014年07月30日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-07-30T02:14:29.000Z" itemprop="datePublished">2014年07月30日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -110,67 +107,58 @@
                 <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#起_(灬ºωº灬)"><span class="toc-number">1.</span> <span class="toc-text">起 (灬ºωº灬)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#承_(ﾟ3ﾟ)～♪"><span class="toc-number">2.</span> <span class="toc-text">承 (ﾟ3ﾟ)～♪</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#轉_(ㄏ￣▽￣)ㄏ_ㄟ(￣▽￣ㄟ)"><span class="toc-number">3.</span> <span class="toc-text">轉 (ㄏ￣▽￣)ㄏ   ㄟ(￣▽￣ㄟ)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Download_||_Clone"><span class="toc-number">3.1.</span> <span class="toc-text">Download || Clone</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Setup"><span class="toc-number">3.2.</span> <span class="toc-text">Setup</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Configuration"><span class="toc-number">3.3.</span> <span class="toc-text">Configuration</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#config/server-js"><span class="toc-number">3.3.1.</span> <span class="toc-text">config/server.js</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#config/kafka-js"><span class="toc-number">3.3.2.</span> <span class="toc-text">config/kafka.js</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Start_up"><span class="toc-number">3.4.</span> <span class="toc-text">Start up</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合_(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧"><span class="toc-number">4.</span> <span class="toc-text">合 (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</span></a></li></ol>
             </div>
             
-            <h2 id="起_(灬ºωº灬)">起 (灬ºωº灬)</h2>
-<p>　　說來話長，自從入了花瓣，整個人就掉進連環坑了。</p>
+            <h2 id="起_(灬ºωº灬)">起 (灬ºωº灬)</h2><p>　　說來話長，自從入了花瓣，整個人就掉進連環坑了。</p>
 <p>　　後端元數據採集是用 Storm 來走拓撲流程的，又因爲 @<a href="http://weibo.com/zolazhou" target="_blank" rel="external">Zola</a> 不是很喜歡 Java，所以退而求其次選擇了 Clojure，所以正在苦逼地學習 Clojure 和 Storm 中。</p>
 <p>　　目前來說外面的 Storm 拓撲的 Spout 是從 Kafka 中流入數據的。但是我們要給 Kafka 發送測試數據的時候，就需要跑到 Kafka 的測試服務器打開它的一個發送腳本進去發送，非常蛋疼；要麼就是直接通過特定的發送業務邏輯代碼測試，沒有一個稍微泛一點的測試用發數據工具，於是 Mikasa 誕生了。</p>
-<h2 id="承_(ﾟ3ﾟ)～♪">承 (ﾟ3ﾟ)～♪</h2>
-<p>　　講到 Mikasa 名字的來源，實際上看過『巨人』都知道，八塊腹肌的三爺。</p>
+<h2 id="承_(ﾟ3ﾟ)～♪">承 (ﾟ3ﾟ)～♪</h2><p>　　講到 Mikasa 名字的來源，實際上看過『巨人』都知道，八塊腹肌的三爺。</p>
 <p>　　這裏小爆料一下，又拍雲和花瓣（都是同宗）的項目名很大部分都是以海賊王的角色命名的——尤其是又拍雲更是喪心病狂。不過這讓我這個僞·二次元的小夥伴異常欣喜，因爲我也能用各種啪啪啪來命名我的角色了。比如我的第一個 Storm 相關的項目就叫 Suwako，即諏訪子大人，因爲腦子需要各種跳，於是就對諏訪子大人這位青蛙之神各種膜拜。</p>
 <p>　　至於這個發射器爲什麼要用三爺呢？因爲三爺相當於先鋒軍哇！</p>
 <p><img src="mikasa.jpeg" alt="Mikasa"></p>
 <p>　　這裏的 Kafka 依賴用了搜狐小夥伴 @<a href="http://weibo.com/crzidea" target="_blank" rel="external">Crzidea</a> 他們團隊寫的模塊。</p>
-<h2 id="轉_(ㄏ￣▽￣)ㄏ_ㄟ(￣▽￣ㄟ)">轉 (ㄏ￣▽￣)ㄏ   ㄟ(￣▽￣ㄟ)</h2>
-<p>　　於是，話也不多說，直接上 repo 吧。在公司內網的 gitlab 裏面有一份，還有一個 repo 在 <a href="https://github.com/" target="_blank" rel="external">GitHub</a> 上。</p>
+<h2 id="轉_(ㄏ￣▽￣)ㄏ_ㄟ(￣▽￣ㄟ)">轉 (ㄏ￣▽￣)ㄏ   ㄟ(￣▽￣ㄟ)</h2><p>　　於是，話也不多說，直接上 repo 吧。在公司內網的 gitlab 裏面有一份，還有一個 repo 在 <a href="https://github.com/" target="_blank" rel="external">GitHub</a> 上。</p>
 <blockquote>
 <p><a href="https://github.com/XadillaX/mikasa" target="_blank" rel="external">點我</a></p>
 </blockquote>
-<h3 id="Download_||_Clone">Download || Clone</h3>
-<p>　　如果要直接下載的話就用這個鏈接：</p>
+<h3 id="Download_||_Clone">Download || Clone</h3><p>　　如果要直接下載的話就用這個鏈接：</p>
 <blockquote>
 <p><a href="https://github.com/XadillaX/mikasa/archive/master.zip" target="_blank" rel="external">https://github.com/XadillaX/mikasa/archive/master.zip</a></p>
 </blockquote>
 <p>　　如果要克隆的話就：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git clone http<span class="variable">s:</span>//github.<span class="keyword">com</span>/XadillaX/mikasa.git</div></pre></td></tr></table></figure>
-
-<h3 id="Setup">Setup</h3>
-<p>　　直接安裝一下依賴：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>npm install</div></pre></td></tr></table></figure>
-
-<h3 id="Configuration">Configuration</h3>
-<p>　　接下去就是簡單的配置一下了，其實就是配置下配置文件。由於是快速開發，直接用了自己之前的 <a href="https://github.com/XadillaX/exframess" target="_blank" rel="external">Exframess</a> 框架，所以很多無用代碼也懶得刪了。</p>
-<h4 id="config/server-js">config/server.js</h4>
-<p>　　這裏其實別的也不用動，主要是修改下端口即可。</p>
-<h4 id="config/kafka-js">config/kafka.js</h4>
-<p>　　這裏修改一下 Kafka 的 <code>Connection String</code> 就好了。</p>
-<h3 id="Start_up">Start up</h3>
-<p>　　最後啓動服務即可。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>node app.js</div><div class="line"><span class="comment"># or</span></div><div class="line"><span class="variable">$ </span>pm2 app.js</div><div class="line"><span class="comment"># or some other's</span></div></pre></td></tr></table></figure>
-
-<h2 id="合_(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧">合 (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</h2>
-<p>　　最後的效果是這樣的：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/XadillaX/mikasa.git</span><br></pre></td></tr></table></figure>
+<h3 id="Setup">Setup</h3><p>　　直接安裝一下依賴：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+<h3 id="Configuration">Configuration</h3><p>　　接下去就是簡單的配置一下了，其實就是配置下配置文件。由於是快速開發，直接用了自己之前的 <a href="https://github.com/XadillaX/exframess" target="_blank" rel="external">Exframess</a> 框架，所以很多無用代碼也懶得刪了。</p>
+<h4 id="config/server-js">config/server.js</h4><p>　　這裏其實別的也不用動，主要是修改下端口即可。</p>
+<h4 id="config/kafka-js">config/kafka.js</h4><p>　　這裏修改一下 Kafka 的 <code>Connection String</code> 就好了。</p>
+<h3 id="Start_up">Start up</h3><p>　　最後啓動服務即可。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ node app.js&#10;# or&#10;$ pm2 app.js&#10;# or some other&#39;s</span><br></pre></td></tr></table></figure>
+<h2 id="合_(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧">合 (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</h2><p>　　最後的效果是這樣的：</p>
 <p><img src="mikasa-preview.png" alt="Preview"></p>
 <p>　　只要在 Topics 欄裏面輸入你要發送的 Topic，然後再下面的消息欄裏面輸入你要傳的消息（字符串），最後點擊 <code>Send</code> 即可將你的測試消息發進 Kafka 中去了。</p>
 <blockquote>
 <p>託大家的福，今天我的 Suwako 整個邏輯終於跑通了，撒花！ε٩(๑&gt; ₃ &lt;)۶з</p>
 </blockquote>
 
-            
-            <section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
+			
+            <section class="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2014/07/30/kafka-ui-sender-mikasa/" data-title="開發測試時給 Kafka 發消息的 UI 發送器——Mikasa" data-url="http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -180,7 +168,7 @@
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

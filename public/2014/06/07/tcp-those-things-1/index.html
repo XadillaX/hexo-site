@@ -23,9 +23,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -98,7 +96,7 @@
         <h1>【轉】TCP 的那些事兒（上）</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-06-06T17:47:10.000Z" itemprop="datePublished">2014年06月07日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-06-06T17:47:10.000Z" itemprop="datePublished">2014年06月07日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -122,8 +120,7 @@
 </ul>
 <p>　　廢話少說，首先，我們需要知道 TCP 在網絡 OSI 的七層模型中的第四層 —— 傳輸層(Transport)，IP 在第三層 —— 網絡層(Network)，ARP 在第二層 —— 數據鏈路層(Data Link)，在第二層上的數據，我們叫 Frame，在第三層上的數據叫 Packet，第四層的數據叫 Segment。</p>
 <p>　　首先，我們需要知道，我們程序的數據首先會打到 TCP 的 Segment 中，然後 TCP 的 Segment 會打到 IP 的 Packet 中，然後再打到以太網 Ethernet 的 Frame 中，傳到對端後，各個層解析自己的協議，然後把數據交給更高層的協議處理。</p>
-<h2 id="TCP頭格式">TCP頭格式</h2>
-<p>　　接下來，我們來看一下 TCP 頭的格式</p>
+<h2 id="TCP頭格式">TCP頭格式</h2><p>　　接下來，我們來看一下 TCP 頭的格式</p>
 <p><img src="TCP-Header-01.jpg" alt="TCP 頭格式 1"></p>
 <center>TCP 頭格式 1（<a href="http://nmap.org/book/tcpip-ref.html" target="_blank" rel="external">圖片來源</a>）</center>
 
@@ -143,8 +140,7 @@
 <p><img src="TCP-Header-02.jpg" alt="TCP 頭格式 2"></p>
 <center>TCP 頭格式 2（<a href="http://nmap.org/book/tcpip-ref.html" target="_blank" rel="external">圖片來源</a>）</center>
 
-<h2 id="TCP的狀態機">TCP的狀態機</h2>
-<p>　　其實，<strong>網絡上的傳輸是沒有連接的，包括 TCP 也是一樣的</strong>。而 TCP 所謂的“連接”，其實只不過是在通訊的雙方維護一個“連接狀態”，讓它看上去好像有連接一樣。所以，TCP 的狀態變換是非常重要的。</p>
+<h2 id="TCP的狀態機">TCP的狀態機</h2><p>　　其實，<strong>網絡上的傳輸是沒有連接的，包括 TCP 也是一樣的</strong>。而 TCP 所謂的“連接”，其實只不過是在通訊的雙方維護一個“連接狀態”，讓它看上去好像有連接一樣。所以，TCP 的狀態變換是非常重要的。</p>
 <p>　　下面是：“<strong>TCP 協議的狀態機</strong>”（<a href="http://www.tcpipguide.com/free/t_TCPOperationalOverviewandtheTCPFiniteStateMachineF-2.htm" target="_blank" rel="external">圖片來源</a>） 和 “<strong>TCP 建鏈接</strong>”、“<strong>TCP 斷鏈接</strong>”、“<strong>傳數據</strong>” 的對照圖，我把兩個圖並排放在一起，這樣方便在你對照着看。另外，下面這兩個圖非常非常的重要，你一定要記牢。（吐個槽：看到這樣複雜的狀態機，就知道這個協議有多複雜，複雜的東西總是有很多坑爹的事情，所以 TCP 協議其實也挺坑爹的）</p>
 <p><img src="tcpfsm.png" alt="TCP 協議的狀態機"> <img src="tcp_open_close.jpg" alt="握手次數"></p>
 <p>　　很多人會問，爲什麼建鏈接要 3 次握手，斷鏈接需要 4 次揮手？</p>
@@ -175,18 +171,15 @@
 <blockquote>
 <p>Again，使用 <code>tcp_tw_reuse</code> 和 <code>tcp_tw_recycle</code> 來解決 TIME_WAIT 的問題是非常非常危險的，因爲這兩個參數違反了TCP協議（<a href="http://tools.ietf.org/html/rfc1122" target="_blank" rel="external">RFC 1122</a>） 。</p>
 </blockquote>
-<h2 id="數據傳輸中的_Sequence_Number">數據傳輸中的 Sequence Number</h2>
-<p>　　下圖是我從 Wireshark 中截了個我在訪問 coolshell.cn 時的有數據傳輸的圖給你看一下，SeqNum 是怎麼變的。（使用 Wireshark 菜單中的 <code>Statistics -&gt; Flow Graph…</code>）</p>
+<h2 id="數據傳輸中的_Sequence_Number">數據傳輸中的 Sequence Number</h2><p>　　下圖是我從 Wireshark 中截了個我在訪問 coolshell.cn 時的有數據傳輸的圖給你看一下，SeqNum 是怎麼變的。（使用 Wireshark 菜單中的 <code>Statistics -&gt; Flow Graph…</code>）</p>
 <p><img src="tcp_data_seq_num.jpg" alt="數據傳輸圖"></p>
 <p>　　你可以看到，SeqNum 的增加是和傳輸的字節數相關的。上圖中，三次握手後，來了兩個 Len:1440 的包，而第二個包的 SeqNum 就成了 1441。然後第一個 ACK 回的是 1441，表示第一個 1440 收到了。</p>
 <blockquote>
 <p><strong>注意</strong>：如果你用 Wireshark 抓包程序看 3 次握手，你會發現 SeqNum 總是爲0，不是這樣的，Wireshark 爲了顯示更友好，使用了 Relative SeqNum —— 相對序號，你只要在右鍵菜單中的 protocol preference 中取消掉就可以看到“Absolute SeqNum”了。</p>
 </blockquote>
-<h2 id="TCP重傳機制">TCP重傳機制</h2>
-<p>　　TCP 要保證所有的數據包都可以到達，所以，必需要有重傳機制。</p>
+<h2 id="TCP重傳機制">TCP重傳機制</h2><p>　　TCP 要保證所有的數據包都可以到達，所以，必需要有重傳機制。</p>
 <p>　　注意，接收端給發送端的 Ack 確認只會確認最後一個連續的包，比如，發送端發了 1,2,3,4,5 一共五份數據，接收端收到了 1，2，於是回 ack 3，然後收到了 4（注意此時 3 沒收到），此時的 TCP 會怎麼辦？我們要知道，因爲正如前面所說的，SeqNum 和 Ack 是以字節數爲單位，所以 ack 的時候，不能跳着確認，只能確認最大的連續收到的包，不然，發送端就以爲之前的都收到了。</p>
-<h3 id="超時重傳機制">超時重傳機制</h3>
-<p>　　一種是不回 ack，死等 3，當發送方發現收不到 3 的 ack 超時後，會重傳 3。一旦接收方收到 3 後，會 ack 回 4 —— 意味着 3 和 4 都收到了。</p>
+<h3 id="超時重傳機制">超時重傳機制</h3><p>　　一種是不回 ack，死等 3，當發送方發現收不到 3 的 ack 超時後，會重傳 3。一旦接收方收到 3 後，會 ack 回 4 —— 意味着 3 和 4 都收到了。</p>
 <p>　　但是，這種方式會有比較嚴重的問題，那就是因爲要死等 3，所以會導致 4 和 5 即便已經收到了，而發送方也完全不知道發生了什麼事，因爲沒有收到 Ack，所以，發送方可能會悲觀地認爲也丟了，所以有可能也會導致 4 和 5 的重傳。</p>
 <p>　　對此有兩種選擇：</p>
 <ul>
@@ -194,35 +187,28 @@
 <li>另一種是重傳 timeout 後所有的數據，也就是第 3，4，5 這三份數據。</li>
 </ul>
 <p>　　這兩種方式有好也有不好。第一種會節省帶寬，但是慢，第二種會快一點，但是會浪費帶寬，也可能會有無用功。但總體來說都不好。因爲都在等 timeout，timeout 可能會很長（在下篇會說 TCP 是怎麼動態地計算出 timeout 的）</p>
-<h3 id="快速重傳機制">快速重傳機制</h3>
-<p>　　於是，TCP 引入了一種叫 <strong><em>Fast Retransmit</em></strong> 的算法，不以時間驅動，而以數據驅動重傳。也就是說，如果，包沒有連續到達，就 ack 最後那個可能被丟了的包，如果發送方連續收到 3 次相同的 ack，就重傳。<strong><em>Fast Retransmit</em></strong> 的好處是不用等 timeout 了再重傳。</p>
+<h3 id="快速重傳機制">快速重傳機制</h3><p>　　於是，TCP 引入了一種叫 <strong><em>Fast Retransmit</em></strong> 的算法，不以時間驅動，而以數據驅動重傳。也就是說，如果，包沒有連續到達，就 ack 最後那個可能被丟了的包，如果發送方連續收到 3 次相同的 ack，就重傳。<strong><em>Fast Retransmit</em></strong> 的好處是不用等 timeout 了再重傳。</p>
 <p>　　比如：如果發送方發出了 1，2，3，4，5 份數據，第一份先到送了，於是就 ack 回 2，結果 2 因爲某些原因沒收到，3 到達了，於是還是 ack 回 2，後面的 4 和 5 都到了，但是還是 ack 回 2，因爲 2 還是沒有收到，於是發送端收到了三個 ack = 2 的確認，知道了 2 還沒有到，於是就馬上重轉 2。然後，接收端收到了 2，此時因爲 3，4，5 都收到了，於是 ack 回 6。示意圖如下：</p>
 <p><img src="FASTIncast021.png" alt="快速重傳"></p>
 <p>　　Fast Retransmit 只解決了一個問題，就是 timeout 的問題，它依然面臨一個艱難的選擇，就是重轉之前的一個還是重裝所有的問題。對於上面的示例來說，是重傳 #2 呢還是重傳 #2，#3，#4，#5 呢？因爲發送端並不清楚這連續的 3 個 ack(2) 是誰傳回來的？也許發送端發了 20 份數據，是 #6，#10，#20 傳來的呢。這樣，發送端很有可能要重傳從 2 到 20 的這堆數據（這就是某些 TCP 的實際的實現）。可見，這是一把雙刃劍。</p>
-<h3 id="SACK_方法">SACK 方法</h3>
-<p>　　另外一種更好的方式叫：<strong>Selective Acknowledgment (SACK)</strong>（參看 <a href="http://tools.ietf.org/html/rfc2018" target="_blank" rel="external">RFC 2018</a>），這種方式需要在 TCP 頭里加一個 SACK 的東西，ACK 還是 Fast Retransmit 的 ACK，SACK 則是彙報收到的數據碎版。參看下圖：</p>
+<h3 id="SACK_方法">SACK 方法</h3><p>　　另外一種更好的方式叫：<strong>Selective Acknowledgment (SACK)</strong>（參看 <a href="http://tools.ietf.org/html/rfc2018" target="_blank" rel="external">RFC 2018</a>），這種方式需要在 TCP 頭里加一個 SACK 的東西，ACK 還是 Fast Retransmit 的 ACK，SACK 則是彙報收到的數據碎版。參看下圖：</p>
 <p><img src="tcp_sack_example-1024x577.jpg" alt="SACK方法"></p>
 <p>　　這樣，在發送端就可以根據回傳的 SACK 來知道哪些數據到了，哪些沒有到。於是就優化了 Fast Retransmit 的算法。當然，這個協議需要兩邊都支持。在 Linux 下，可以通過 <code>tcp_sack</code> 參數打開這個功能（Linux 2.4 後默認打開）。</p>
 <p>　　這裏還需要注意一個問題 —— 接收方 Reneging，所謂 Reneging 的意思就是接收方有權把已經報給發送端 SACK 裏的數據給丟了。這樣幹是不被鼓勵的，因爲這個事會把問題複雜化了，但是，接收方這麼做可能會有些極端情況，比如要把內存給別的更重要的東西。所以，發送方也不能完全依賴 SACK，還是要依賴 ACK，並維護 Time-Out，如果後續的 ACK 沒有增長，那麼還是要把 SACK 的東西重傳，另外，接收端這邊永遠不能把 SACK 的包標記爲 Ack。</p>
 <blockquote>
 <p><strong>注意</strong>：SACK 會消費發送方的資源，試想，如果一個攻擊者給數據發送方發一堆 SACK 的選項，這會導致發送方開始要重傳甚至遍歷已經發出的數據，這會消耗很多發送端的資源。詳細的東西請參看《<a href="http://www.ibm.com/developerworks/cn/linux/l-tcp-sack/" target="_blank" rel="external">TCP SACK的性能權衡</a>》</p>
 </blockquote>
-<h3 id="Duplicate_SACK_–_重複收到數據的問題">Duplicate SACK – 重複收到數據的問題</h3>
-<p>　　Duplicate SACK 又稱 D-SACK，其主要使用了 SACK 來告訴發送方有哪些數據被重複接收了。<a href="http://www.ietf.org/rfc/rfc2883.txt" target="_blank" rel="external">RFC-2833</a> 裏有詳細描述和示例。下面舉幾個例子（來源於 <a href="http://www.ietf.org/rfc/rfc2883.txt" target="_blank" rel="external">RFC-2833</a>）</p>
+<h3 id="Duplicate_SACK_–_重複收到數據的問題">Duplicate SACK – 重複收到數據的問題</h3><p>　　Duplicate SACK 又稱 D-SACK，其主要使用了 SACK 來告訴發送方有哪些數據被重複接收了。<a href="http://www.ietf.org/rfc/rfc2883.txt" target="_blank" rel="external">RFC-2833</a> 裏有詳細描述和示例。下面舉幾個例子（來源於 <a href="http://www.ietf.org/rfc/rfc2883.txt" target="_blank" rel="external">RFC-2833</a>）</p>
 <p>　　D-SACK使用了SACK的第一個段來做標誌，</p>
 <ul>
 <li>如果 SACK 的第一個段的範圍被 ACK 所覆蓋，那麼就是 D-SACK</li>
 <li>如果 SACK 的第一個段的範圍被 SACK 的第二個段覆蓋，那麼就是 D-SACK</li>
 </ul>
-<h4 id="示例一：ACK_丟包">示例一：ACK 丟包</h4>
-<p>　　下面的示例中，丟了兩個 ACK，所以，發送端重傳了第一個數據包（3000 - 3499），於是接收端發現重複收到，於是回了一個 SACK = 3000 - 3500，因爲 ACK 都到了 4000 意味着收到了 4000 之前的所有數據，所以這個 SACK 就是 D-SACK —— 旨在告訴發送端我收到了重複的數據，而且我們的發送端還知道，數據包沒有丟，丟的是 ACK 包。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Transmitted  Received    ACK Sent</div><div class="line"><span class="built_in">Segment</span>      <span class="built_in">Segment</span>     (Including SACK Blocks)</div><div class="line"></div><div class="line"><span class="number">3000</span>-<span class="number">3499</span>    <span class="number">3000</span>-<span class="number">3499</span>   <span class="number">3500</span> (ACK dropped)</div><div class="line"><span class="number">3500</span>-<span class="number">3999</span>    <span class="number">3500</span>-<span class="number">3999</span>   <span class="number">4000</span> (ACK dropped)</div><div class="line"><span class="number">3000</span>-<span class="number">3499</span>    <span class="number">3000</span>-<span class="number">3499</span>   <span class="number">4000</span>, SACK=<span class="number">3000</span>-<span class="number">3500</span></div><div class="line">                                    ---------</div></pre></td></tr></table></figure>
-
-<h4 id="示例二：網絡延誤">示例二：網絡延誤</h4>
-<p>　　下面的示例中，網絡包（1000 - 1499）被網絡給延誤了，導致發送方沒有收到 ACK，而後面到達的三個包觸發了“Fast Retransmit 算法”，所以重傳，但重傳時，被延誤的包又到了，所以，回了一個 SACK = 1000 - 1500，因爲 ACK 已到了 3000，所以，這個 SACK 是 D-SACK —— 標識收到了重複的包。</p>
+<h4 id="示例一：ACK_丟包">示例一：ACK 丟包</h4><p>　　下面的示例中，丟了兩個 ACK，所以，發送端重傳了第一個數據包（3000 - 3499），於是接收端發現重複收到，於是回了一個 SACK = 3000 - 3500，因爲 ACK 都到了 4000 意味着收到了 4000 之前的所有數據，所以這個 SACK 就是 D-SACK —— 旨在告訴發送端我收到了重複的數據，而且我們的發送端還知道，數據包沒有丟，丟的是 ACK 包。</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Transmitted  Received    ACK Sent</span><br><span class="line">Segment      Segment     (Including SACK Blocks)</span><br><span class="line"></span><br><span class="line"><span class="number">3000-3499</span>    <span class="number">3000-3499</span>   3500 (ACK dropped)</span><br><span class="line"><span class="number">3500-3999</span>    <span class="number">3500-3999</span>   4000 (ACK dropped)</span><br><span class="line"><span class="number">3000-3499</span>    <span class="number">3000-3499</span>   4000, SACK=<span class="number">3000-3500</span></span><br><span class="line">                                    ---------</span><br></pre></td></tr></table></figure>
+<h4 id="示例二：網絡延誤">示例二：網絡延誤</h4><p>　　下面的示例中，網絡包（1000 - 1499）被網絡給延誤了，導致發送方沒有收到 ACK，而後面到達的三個包觸發了“Fast Retransmit 算法”，所以重傳，但重傳時，被延誤的包又到了，所以，回了一個 SACK = 1000 - 1500，因爲 ACK 已到了 3000，所以，這個 SACK 是 D-SACK —— 標識收到了重複的包。</p>
 <p>　　這個案例下，發送端知道之前因爲“Fast Retransmit 算法”觸發的重傳不是因爲發出去的包丟了，也不是因爲迴應的 ACK 包丟了，而是因爲網絡延時了。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">Transmitted    Received    ACK Sent</div><div class="line">Segment        Segment     (Including SACK Blocks)</div><div class="line"> </div><div class="line"><span class="number">500</span>-<span class="number">999</span>        <span class="number">500</span>-<span class="number">999</span>     <span class="number">1000</span></div><div class="line"><span class="number">1000</span>-<span class="number">1499</span>      (delayed)</div><div class="line"><span class="number">1500</span>-<span class="number">1999</span>      <span class="number">1500</span>-<span class="number">1999</span>   <span class="number">1000</span>, <span class="variable">SACK=</span><span class="number">1500</span>-<span class="number">2000</span></div><div class="line"><span class="number">2000</span>-<span class="number">2499</span>      <span class="number">2000</span>-<span class="number">2499</span>   <span class="number">1000</span>, <span class="variable">SACK=</span><span class="number">1500</span>-<span class="number">2500</span></div><div class="line"><span class="number">2500</span>-<span class="number">2999</span>      <span class="number">2500</span>-<span class="number">2999</span>   <span class="number">1000</span>, <span class="variable">SACK=</span><span class="number">1500</span>-<span class="number">3000</span></div><div class="line"><span class="number">1000</span>-<span class="number">1499</span>      <span class="number">1000</span>-<span class="number">1499</span>   <span class="number">3000</span></div><div class="line">               <span class="number">1000</span>-<span class="number">1499</span>   <span class="number">3000</span>, <span class="variable">SACK=</span><span class="number">1000</span>-<span class="number">1500</span></div><div class="line">                                      ---------</div></pre></td></tr></table></figure>
-
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Transmitted    Received    ACK Sent</span><br><span class="line">Segment        Segment     (Including SACK Blocks)</span><br><span class="line"> </span><br><span class="line"><span class="number">500-999</span>        <span class="number">500-999</span>     1000</span><br><span class="line"><span class="number">1000-1499</span>      (delayed)</span><br><span class="line"><span class="number">1500-1999</span>      <span class="number">1500-1999</span>   1000, SACK=<span class="number">1500-2000</span></span><br><span class="line"><span class="number">2000-2499</span>      <span class="number">2000-2499</span>   1000, SACK=<span class="number">1500-2500</span></span><br><span class="line"><span class="number">2500-2999</span>      <span class="number">2500-2999</span>   1000, SACK=<span class="number">1500-3000</span></span><br><span class="line"><span class="number">1000-1499</span>      <span class="number">1000-1499</span>   3000</span><br><span class="line">               <span class="number">1000-1499</span>   3000, SACK=<span class="number">1000-1500</span></span><br><span class="line">                                      ---------</span><br></pre></td></tr></table></figure>
 <p>　　可見，引入了 D-SACK，有這麼幾個好處：</p>
 <ol>
 <li>可以讓發送方知道，是發出去的包丟了，還是回來的 ACK 包丟了。</li>
@@ -235,22 +221,26 @@
 <p>　　好了，上篇就到這裏結束了。如果你覺得我寫得還比較淺顯易懂，那麼，歡迎移步看下篇《<a href="http://coolshell.cn/articles/11609.html" target="_blank" rel="external">TCP的那些事（下）</a>》</p>
 <p>　　[原文鏈接：<a href="http://coolshell.cn/articles/11564.html" target="_blank" rel="external">http://coolshell.cn/articles/11564.html</a>]</p>
 
-            
-            <section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
+			
+            <section class="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2014/06/07/tcp-those-things-1/" data-title="【轉】TCP 的那些事兒（上）" data-url="http://xcoder.in/2014/06/07/tcp-those-things-1/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -260,7 +250,7 @@
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

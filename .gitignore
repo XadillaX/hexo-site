@@ -1,10 +1,7 @@
 .DS_Store
-node_modules
+Thumbs.db
 db.json
-
-public/images/background
-public/images/background/*
-
-*.swp
 *.log
-
+node_modules/
+public/
+.deploy*/

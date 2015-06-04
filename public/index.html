@@ -21,9 +21,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -84,7 +82,7 @@
         
     $(function() {
         // page-id...
-        var pageId = "";
+        var pageId = "index.html";
         pageId = pageId.substr(0, pageId.indexOf("/"));
         if(pageId === "") pageId = "index";
         
@@ -97,15 +95,12 @@
         <h1><a href="/2015/01/08/remilia-structure/" title="Remilia 結構圖">Remilia 結構圖</a></h1>
 
         
-            <p>蕾米莉亞？
-其實這是花瓣的一個入庫系統結構圖，蕾米莉亞是這個項目的名字。
+            <p>蕾米莉亞？其實這是花瓣的一個入庫系統結構圖，蕾米莉亞是這個項目的名字。
 結構圖
-
 設計得不好，純屬做歸檔。
 其中 SanaeHDCS 是另一套系統，給 RemiliaHDPS 提供數據的。
-Data Layer
-主要分爲 Bathtub，Dryer，Vampire 三個部分。
-</p>
+Data Layer主要分爲 Bathtub，Dryer，Vampire 三個部分。
+Bat</p>
         
 
         <p class="say-title">
@@ -121,10 +116,9 @@ Data Layer
         <h1><a href="/2014/12/10/link-c-on-gpp/" title="在 C++ 中鏈接 C 的 文件">在 C++ 中鏈接 C 的 文件</a></h1>
 
         
-            <p>原因
-由於某些原因，我寫了個很搓的內存池（C 版本的）。
+            <p>原因由於某些原因，我寫了個很搓的內存池（C 版本的）。
 然後我想到了把之前寫的一個 Node.js 包 thmclrx 的更挫的“僞·內存池”用新寫的內存池去替換掉。(❛◡❛✿)
-然後問題就來了，我貌似不能控制 node-gyp 去用 G++ 編譯 *.c 文件，這樣的話所有文</p>
+然後問題就來了，我貌似不能控制 node-gyp 去用 G++ 編譯 *.c 文件，這樣的話所有文件</p>
         
 
         <p class="say-title">
@@ -140,10 +134,9 @@ Data Layer
         <h1><a href="/2014/10/16/generate-color-space/" title="如何生成一個覆蓋廣的色板">如何生成一個覆蓋廣的色板</a></h1>
 
         
-            <p>用途
-　　在主題色提取的過程中，要把顏色加入搜索引擎。但是如果是真彩色任意值加進去的話，對於搜索的時候來說無疑是一個複雜的操作。搜索條件要各種計算距離什麼的。
+            <p>用途　　在主題色提取的過程中，要把顏色加入搜索引擎。但是如果是真彩色任意值加進去的話，對於搜索的時候來說無疑是一個複雜的操作。搜索條件要各種計算距離什麼的。
 　　於是一個妥協的做法就是提供一套調色板，保證所有顏色都被吸納到調色板中的某一色值當中。
-　　那麼這個時候調色板的覆蓋率</p>
+　　那麼這個時候調色板的覆蓋率以</p>
         
 
         <p class="say-title">
@@ -161,8 +154,7 @@ Data Layer
         
             <p>首先祝賀自己在 CodeWars 升級到 3 Kyu，以及感謝 @Bolt_白衣蒼狗 童鞋讓我知道有 CodeWars 這麼個好玩的東西。
 　　雖然裏面水題居多，不過在上班比較空閒的檔口 #帶薪刷題# 的感覺還是蠻不錯的。
-話嘮一下
-　　高中的時候就跟 @MatRush 發現了一</p>
+話嘮一下　　高中的時候就跟 @MatRush 發現了一個</p>
         
 
         <p class="say-title">
@@ -196,9 +188,8 @@ Data Layer
         <h1><a href="/2014/09/20/lets-build-ourselves-ddns/" title="讓我們用 Node.js 寫自己的 DDNS 動態域名程序">讓我們用 Node.js 寫自己的 DDNS 動態域名程序</a></h1>
 
         
-            <p>起因
-　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 kacaka.ca（目前暫失效）。
-　　爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 CloudF</p>
+            <p>起因　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 kacaka.ca（目前暫失效）。
+　　爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 CloudFl</p>
         
 
         <p class="say-title">
@@ -234,13 +225,12 @@ Data Layer
         <h1><a href="/2014/09/01/how-i-made-chinese-random-x/" title="我是如何實現簡單的隨機中文名生成器的（Node 版）">我是如何實現簡單的隨機中文名生成器的（Node 版）</a></h1>
 
         
-            <p>序
-最近閒着蛋疼實現了兩個庫。
+            <p>序最近閒着蛋疼實現了兩個庫。
 
 隨機生成中文名字
 隨機生成中文技能名
 
-我當然不會說去用各種人工智能去實現一個強大的的解析器然後生成，也不會說用一個非常龐大如搜狗拼音的姓名庫來隨機獲取——我只是偶然間知道蘑菇街小俠節一個混戰 PK 的 Demo 編寫比賽，閒來無聊隨便寫寫，然而</p>
+我當然不會說去用各種人工智能去實現一個強大的的解析器然後生成，也不會說用一個非常龐大如搜狗拼音的姓名庫來隨機獲取——我只是偶然間知道蘑菇街小俠節一個混戰 PK 的 Demo 編寫比賽，閒來無聊隨便寫寫，然而這</p>
         
 
         <p class="say-title">
@@ -256,8 +246,7 @@ Data Layer
         <h1><a href="/2014/08/04/storm-clojure-prepare-bolt/" title="Storm 中 Clojure 的 Prepare Bolt 實現">Storm 中 Clojure 的 Prepare Bolt 實現</a></h1>
 
         
-            <p>起因
-　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的</p>
+            <p>起因　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概</p>
         
 
         <p class="say-title">
@@ -273,10 +262,9 @@ Data Layer
         <h1><a href="/2014/07/30/kafka-ui-sender-mikasa/" title="開發測試時給 Kafka 發消息的 UI 發送器——Mikasa">開發測試時給 Kafka 發消息的 UI 發送器——Mikasa</a></h1>
 
         
-            <p>起 (灬ºωº灬)
-　　說來話長，自從入了花瓣，整個人就掉進連環坑了。
+            <p>起 (灬ºωº灬)　　說來話長，自從入了花瓣，整個人就掉進連環坑了。
 　　後端元數據採集是用 Storm 來走拓撲流程的，又因爲 @Zola 不是很喜歡 Java，所以退而求其次選擇了 Clojure，所以正在苦逼地學習 Clojure 和 Storm 中。
-　　目前來說外面的</p>
+　　目前來說外面的 </p>
         
 
         <p class="say-title">
@@ -306,7 +294,7 @@ $(function() {
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

@@ -7,10 +7,9 @@
     <meta name="author" content="小鳥遊死月">
     
     <meta name="description" content="好，今天讓我們更深入地搞基吧！
-溫故而知新，可以爲溼矣
-　　首先請大家記住這個 V8 的在線手冊——http://izs.me/v8-docs/main.html。
+溫故而知新，可以爲溼矣　　首先請大家記住這個 V8 的在線手冊——http://izs.me/v8-docs/main.html。
 　　還記得上次的 building.gyp 文件嗎？
-12345678{  &quot;targets&quot;: [    {      &quot;targe">
+12345678&amp;#123;  &quot;targets&quot;: [    &amp;#123;   ">
     
     
 
@@ -27,9 +26,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -102,7 +99,7 @@
         <h1>讓Node.js和C++一起搞基 —— 2</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-04-03T14:37:15.000Z" itemprop="datePublished">2014年04月03日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-04-03T14:37:15.000Z" itemprop="datePublished">2014年04月03日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -112,28 +109,20 @@
             </div>
             
             <p>　　好，今天讓我們更深入地搞基吧！</p>
-<h2 id="溫故而知新，可以爲溼矣">溫故而知新，可以爲溼矣</h2>
-<p>　　首先請大家記住這個 V8 的在線手冊——<a href="http://izs.me/v8-docs/main.html" target="_blank" rel="external">http://izs.me/v8-docs/main.html</a>。</p>
+<h2 id="溫故而知新，可以爲溼矣">溫故而知新，可以爲溼矣</h2><p>　　首先請大家記住這個 V8 的在線手冊——<a href="http://izs.me/v8-docs/main.html" target="_blank" rel="external">http://izs.me/v8-docs/main.html</a>。</p>
 <p>　　還記得上次的 <code>building.gyp</code> 文件嗎？</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">targets</span>": <span class="value">[</span></div><div class="line">    {</div><div class="line">      "<span class="attribute">target_name</span>": <span class="value"><span class="string">"addon"</span></span>,</div><div class="line">      "<span class="attribute">sources</span>": <span class="value">[ <span class="string">"addon.cc"</span> ]</span></div><div class="line">    }</div><div class="line">  ]</div><div class="line">}</div></pre></td></tr></table></figure>
-
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">targets</span>": <span class="value">[</span><br><span class="line">    &#123;</span><br><span class="line">      "<span class="attribute">target_name</span>": <span class="value"><span class="string">"addon"</span></span>,</span><br><span class="line">      "<span class="attribute">sources</span>": <span class="value">[ <span class="string">"addon.cc"</span> ]</span><br><span class="line">    </span>&#125;</span><br><span class="line">  ]</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
 <p>　　就像這樣，舉一反三，如果多幾個 <code>*.cc</code> 文件的話就是這樣的：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">"sources": [ "addon.cc", "myexample.cc" ]</div></pre></td></tr></table></figure>
-
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"sources": [ "addon.cc", "myexample.cc" ]</span><br></pre></td></tr></table></figure>
 <p>　　上次我們把倆步驟分開了，實際上配置和編譯可以放在一起的：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ node-gyp configure build</div></pre></td></tr></table></figure>
-
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ node-gyp configure build</span><br></pre></td></tr></table></figure>
 <p>　　複習完了嗎？沒？！</p>
 <p><img src="mama.jpg" alt="啪"></p>
 <p>　　好的，那我們繼續吧。</p>
-<h2 id="表番">表番</h2>
-<h3 id="函數參數">函數參數</h3>
-<p>　　現在我們終於要講參數了呢。</p>
+<h2 id="表番">表番</h2><h3 id="函數參數">函數參數</h3><p>　　現在我們終於要講參數了呢。</p>
 <p>　　讓我們設想有這樣一個函數 <code>add(a, b)</code> 代表把 <code>a</code> 和 <code>b</code> 相加返回結果，所以先把函數外框寫好：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;node.h&gt;</span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> v8;</div><div class="line"></div><div class="line">Handle&lt;Value&gt; Add(<span class="keyword">const</span> Arguments& args)</div><div class="line">{</div><div class="line">    HandleScope scope;</div><div class="line"></div><div class="line">    <span class="comment">//... 又來！</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<h4 id="Arguments">Arguments</h4>
-<p>　　這個就是函數的參數了。我們不妨先看看 v8 的<a href="http://izs.me/v8-docs/classv8_1_1Arguments.html" target="_blank" rel="external">官方手冊參考</a>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;node.h&gt;</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> v8;</span><br><span class="line"></span><br><span class="line">Handle&lt;Value&gt; Add(<span class="keyword">const</span> Arguments&amp; args)</span><br><span class="line">&#123;</span><br><span class="line">    HandleScope scope;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//... 又來！</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Arguments">Arguments</h4><p>　　這個就是函數的參數了。我們不妨先看看 v8 的<a href="http://izs.me/v8-docs/classv8_1_1Arguments.html" target="_blank" rel="external">官方手冊參考</a>。</p>
 <ul>
 <li><code>int Length() const</code></li>
 <li><code>Local&lt;Value&gt; operator[](int i) const</code></li>
@@ -155,43 +144,30 @@
 <li>…</li>
 </ul>
 <p>　　我就不一一列舉了，剩下的自己看文檔。｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡</p>
-<h4 id="ThrowException">ThrowException</h4>
-<p>　　這個是我們等下要用到的一個函數。具體在 <a href="http://izs.me/v8-docs/namespacev8.html#a2469af0ac719d39f77f20cf68dd9200e" target="_blank" rel="external">v8 文檔</a>中可以找到。</p>
+<h4 id="ThrowException">ThrowException</h4><p>　　這個是我們等下要用到的一個函數。具體在 <a href="http://izs.me/v8-docs/namespacev8.html#a2469af0ac719d39f77f20cf68dd9200e" target="_blank" rel="external">v8 文檔</a>中可以找到。</p>
 <p>　　顧名思義，就是拋出錯誤啦。執行這個語句之後，相當於在 <code>Node.js</code> 本地文件中執行了一條 <code>throw()</code> 語句一樣。比如說：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ThrowException(Exception::TypeError(String::New(<span class="string">"Wrong number of arguments"</span>)));</div></pre></td></tr></table></figure>
-
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ThrowException(Exception::TypeError(String::New(<span class="string">"Wrong number of arguments"</span>)));</span><br></pre></td></tr></table></figure>
 <p>　　就相當於執行了一條 <code>Node.js</code> 的：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">"Wrong number of arguments"</span>);</div></pre></td></tr></table></figure>
-
-<h4 id="Undefined()">Undefined()</h4>
-<p>　　這個函數呢也在<a href="http://izs.me/v8-docs/namespacev8.html#ad39cfade81e77137fc11ff3a24284340" target="_blank" rel="external">文檔</a>裏面。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">"Wrong number of arguments"</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="Undefined()">Undefined()</h4><p>　　這個函數呢也在<a href="http://izs.me/v8-docs/namespacev8.html#ad39cfade81e77137fc11ff3a24284340" target="_blank" rel="external">文檔</a>裏面。</p>
 <p>　　具體就是一個空值，因爲有些函數並不需要返回什麼具體的值，或者說沒有返回值，這個時候就需要用 <code>Undefined()</code> 來代替了。</p>
-<h4 id="動手吧騷年！">動手吧騷年！</h4>
-<p>　　在理解了以上的幾個要點之後，我相信你們很快就能寫出 <code>a + b</code> 的邏輯了，我就把 <code>Node.js</code> 官方手冊的代碼抄過來給你們過一遍就算完事了：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;node.h&gt;</span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> v8;</div><div class="line"></div><div class="line">Handle&lt;Value&gt; Add(<span class="keyword">const</span> Arguments& args)</div><div class="line">{</div><div class="line">    HandleScope scope;</div><div class="line">    </div><div class="line">    <span class="comment">// 代表了可以傳入 2 個以上的參數，但實際上我們只用前兩個</span></div><div class="line">    <span class="keyword">if</span>(args.Length() &lt; <span class="number">2</span>)</div><div class="line">    {</div><div class="line">        <span class="comment">// 拋出錯誤</span></div><div class="line">        ThrowException(Exception::TypeError(String::New(<span class="string">"Wrong number of arguments"</span>)));</div><div class="line">        </div><div class="line">        <span class="comment">// 返回空值</span></div><div class="line">        <span class="keyword">return</span> scope.Close(Undefined());</div><div class="line">    }</div><div class="line">    </div><div class="line">    <span class="comment">// 若前兩個參數其中一個不是數字的話</span></div><div class="line">    <span class="keyword">if</span>(!args[<span class="number">0</span>]-&gt;IsNumber() || !args[<span class="number">1</span>]-&gt;IsNumber())</div><div class="line">    {</div><div class="line">        <span class="comment">// 拋出錯誤並返回空值</span></div><div class="line">        ThrowException(Exception::TypeError(String::New(<span class="string">"Wrong arguments"</span>)));</div><div class="line">        <span class="keyword">return</span> scope.Close(Undefined());</div><div class="line">    }</div><div class="line">    </div><div class="line">    <span class="comment">// 具體參考 v8 文檔</span></div><div class="line">    <span class="comment">//     http://izs.me/v8-docs/classv8_1_1Value.html#a6eac2b07dced58f1761bbfd53bf0e366)</span></div><div class="line">    <span class="comment">// 的 `NumberValue` 函數</span></div><div class="line">    Local&lt;Number&gt; num = Number::New(args[<span class="number">0</span>]-&gt;NumberValue() + args[<span class="number">1</span>]-&gt;NumberValue());</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> scope.Close(num);</div><div class="line">}</div></pre></td></tr></table></figure>
-
+<h4 id="動手吧騷年！">動手吧騷年！</h4><p>　　在理解了以上的幾個要點之後，我相信你們很快就能寫出 <code>a + b</code> 的邏輯了，我就把 <code>Node.js</code> 官方手冊的代碼抄過來給你們過一遍就算完事了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;node.h&gt;</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> v8;</span><br><span class="line"></span><br><span class="line">Handle&lt;Value&gt; Add(<span class="keyword">const</span> Arguments&amp; args)</span><br><span class="line">&#123;</span><br><span class="line">    HandleScope scope;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 代表了可以傳入 2 個以上的參數，但實際上我們只用前兩個</span></span><br><span class="line">    <span class="keyword">if</span>(args.Length() &lt; <span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 拋出錯誤</span></span><br><span class="line">        ThrowException(Exception::TypeError(String::New(<span class="string">"Wrong number of arguments"</span>)));</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 返回空值</span></span><br><span class="line">        <span class="keyword">return</span> scope.Close(Undefined());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 若前兩個參數其中一個不是數字的話</span></span><br><span class="line">    <span class="keyword">if</span>(!args[<span class="number">0</span>]-&gt;IsNumber() || !args[<span class="number">1</span>]-&gt;IsNumber())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 拋出錯誤並返回空值</span></span><br><span class="line">        ThrowException(Exception::TypeError(String::New(<span class="string">"Wrong arguments"</span>)));</span><br><span class="line">        <span class="keyword">return</span> scope.Close(Undefined());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 具體參考 v8 文檔</span></span><br><span class="line">    <span class="comment">//     http://izs.me/v8-docs/classv8_1_1Value.html#a6eac2b07dced58f1761bbfd53bf0e366)</span></span><br><span class="line">    <span class="comment">// 的 `NumberValue` 函數</span></span><br><span class="line">    Local&lt;Number&gt; num = Number::New(args[<span class="number">0</span>]-&gt;NumberValue() + args[<span class="number">1</span>]-&gt;NumberValue());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> scope.Close(num);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>　　函數大功告成！</p>
 <p>　　最後把尾部的導出函數給寫好就 OK 了。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> Init(Handle&lt;Object&gt; exports)</div><div class="line">{</div><div class="line">    exports-&gt;Set(String::NewSymbol(<span class="string">"add"</span>),</div><div class="line">        FunctionTemplate::New(Add)-&gt;GetFunction());</div><div class="line">}</div><div class="line"></div><div class="line">NODE_MODULE(addon, Init)</div></pre></td></tr></table></figure>
-
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init</span><span class="params">(Handle&lt;Object&gt; exports)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    exports-&gt;Set(String::NewSymbol(<span class="string">"add"</span>),</span><br><span class="line">        FunctionTemplate::New(Add)-&gt;GetFunction());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">NODE_MODULE(addon, Init)</span><br></pre></td></tr></table></figure>
 <p>　　等你編譯好之後，我們就能這樣用了：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> addon = <span class="built_in">require</span>(<span class="string">'./build/Release/addon'</span>);</div><div class="line"><span class="built_in">console</span>.log(addon.add(<span class="number">1</span>, <span class="number">1</span>) + <span class="string">"b"</span>);</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> addon = <span class="built_in">require</span>(<span class="string">'./build/Release/addon'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(addon.add(<span class="number">1</span>, <span class="number">1</span>) + <span class="string">"b"</span>);</span><br></pre></td></tr></table></figure>
 <p>　　你會看到一個 <code>2b</code> ！✧<em>｡٩(ˊᗜˋ</em>)و✧*｡</p>
-<h3 id="回調函數">回調函數</h3>
-<p>　　上一章我們只講了個 <code>Hello world</code>，這一章阿婆主就良心發現一下，再來個回調函數的寫法。</p>
+<h3 id="回調函數">回調函數</h3><p>　　上一章我們只講了個 <code>Hello world</code>，這一章阿婆主就良心發現一下，再來個回調函數的寫法。</p>
 <p>　　慣例我們先寫好框架：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;node.h&gt;</span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> v8;</div><div class="line"></div><div class="line">Handle&lt;Value&gt; RunCallback(<span class="keyword">const</span> Arguments& args)</div><div class="line">{</div><div class="line">  HandleScope scope;</div><div class="line"></div><div class="line">  <span class="comment">// ... 噼裏啪啦噼裏啪啦</span></div><div class="line"></div><div class="line">  <span class="keyword">return</span> scope.Close(Undefined());</div><div class="line">}</div></pre></td></tr></table></figure>
-
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;node.h&gt;</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> v8;</span><br><span class="line"></span><br><span class="line">Handle&lt;Value&gt; RunCallback(<span class="keyword">const</span> Arguments&amp; args)</span><br><span class="line">&#123;</span><br><span class="line">  HandleScope scope;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ... 噼裏啪啦噼裏啪啦</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> scope.Close(Undefined());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>　　然後我們決定它的用法是這樣的：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">func(<span class="function"><span class="keyword">function</span><span class="params">(msg)</span> </span>{</div><div class="line">    <span class="built_in">console</span>.log(msg);</div><div class="line">});</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func(<span class="function"><span class="keyword">function</span>(<span class="params">msg</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(msg);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <p>　　即它會給回調函數傳入一個參數，我們設想它是一個字符串，然後我們可以 <code>console.log()</code> 出來看。</p>
-<h4 id="首先你要有一個字符串系列">首先你要有一個字符串系列</h4>
-<p>　　廢話不多說，先給它一個字符串餵飽了再說吧。<em>(√ ζ ε:)</em></p>
+<h4 id="首先你要有一個字符串系列">首先你要有一個字符串系列</h4><p>　　廢話不多說，先給它一個字符串餵飽了再說吧。<em>(√ ζ ε:)</em></p>
 <p>　　不過我們得讓這個字符串是通用類型的，因爲 <code>Node.js</code> 代碼是弱類型的。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Local&lt;Value&gt;::New(String::New(<span class="string">"hello world"</span>));</div></pre></td></tr></table></figure>
-
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Local&lt;Value&gt;::New(String::New(<span class="string">"hello world"</span>));</span><br></pre></td></tr></table></figure>
 <p>　　什麼？你問我什麼是 <code>Local&lt;Value&gt;</code>？</p>
 <p>　　那我稍稍講一下吧，參考自<a href="http://cnodejs.org/topic/4f16442ccae1f4aa270010c5" target="_blank" rel="external">這裏</a>和<a href="http://izs.me/v8-docs/classv8_1_1Local.html" target="_blank" rel="external">V8參考文檔</a>。</p>
 <p>　　如文檔所示，<code>Local&lt;T&gt;</code> 實際上繼承自 <code>Handle&lt;T&gt;</code>，我記得<a href="/2014/04/02/nodejs-cpp-addons-1/#Handle&lt;Value">上一章</a>已經講過 <code>Handle&lt;T&gt;</code> 這個東西了。</p>
@@ -199,13 +175,10 @@
 <blockquote>
 <p>Handle 有兩種類型， Local Handle 和 Persistent Handle ，類型分別是 <code>Local&lt;T&gt; : Handle&lt;T&gt;</code> 和 <code>Persistent&lt;T&gt; : Handle&lt;T&gt;</code> ，前者和 <code>Handle&lt;T&gt;</code> 沒有區別生存週期都在 scope 內。而後者的生命週期脫離 scope ，你需要手動調用 <code>Persistent::Dispose</code> 結束其生命週期。也就是說 Local Handle 相當於在 C++`在棧上分配對象而 Persistent Handle 相當於 C++ 在堆上分配對象。</p>
 </blockquote>
-<h4 id="然後你要有個參數表系列">然後你要有個參數表系列</h4>
-<p>　　終端命令行調用 C/C++ 之後怎麼取命令行參數？</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">void</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</div><div class="line">{</div><div class="line">    <span class="comment">// ...</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
+<h4 id="然後你要有個參數表系列">然後你要有個參數表系列</h4><p>　　終端命令行調用 C/C++ 之後怎麼取命令行參數？</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>　　對了，這裏的 <code>argc</code> 就是命令行參數個數，<code>argv[]</code> 就是各個參數了。那麼調用 <code>Node.js</code> 的回調函數，<code>v8</code> 也採用了類似的<a href="http://izs.me/v8-docs/classv8_1_1Function.html#ac61877494d2d8bb81fcef96003ec4059" target="_blank" rel="external">方法</a>：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">V8EXPORT Local&lt;Value&gt; v8::Function::Call(Handle&lt;Object&gt;recv,</div><div class="line">    <span class="keyword">int</span> argc,</div><div class="line">    Handle&lt;Value&gt; argv[]</div><div class="line">);</div></pre></td></tr></table></figure>
-
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">V8EXPORT Local&lt;Value&gt; v8::Function::Call(Handle&lt;Object&gt;recv,</span><br><span class="line">    <span class="keyword">int</span> argc,</span><br><span class="line">    Handle&lt;Value&gt; argv[]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><del>QAQ 卡在了 <code>Handle&lt;Object&gt; recv</code> 了！！！明天繼續寫。</del></p>
 </blockquote>
@@ -214,10 +187,7 @@
 <p>　　後面兩個參數就不多說了，一個是參數個數，另一個就是一個參數的數組了。至於第一個參數 <code>Handle&lt;Object&gt; recv</code>，StackOverflow 仁兄的解釋是這樣的：</p>
 <blockquote>
 <p>It is the same as apply in JS. In JS, you do</p>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> context = ...;</div><div class="line">cb.apply(context, [ ...args...]);</div></pre></td></tr></table></figure>
-
-<blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> context = ...;</span><br><span class="line">cb.apply(context, [ ...args...]);</span><br></pre></td></tr></table></figure>
 <p>The object passed as the first argument becomes this within the function scope. More documentation on <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply" target="_blank" rel="external">MDN</a>. If you don’t know JS well, you can read more about JS’s this here: <a href="http://unschooled.org/2012/03/understanding-javascript-this/" target="_blank" rel="external">http://unschooled.org/2012/03/understanding-javascript-this/</a></p>
 <p style="text-align: right;">—— 摘自 <a href="http://stackoverflow.com/questions/22842908/what-does-the-first-argument-of-functioncall-in-v8-engine-mean/22848601?noredirect=1#22848601" target="_blank" rel="external">StackOverflow</a></p>
 
@@ -225,43 +195,40 @@
 <p>　　總之其作用就是指定了被調用函數的 <code>this</code> 指針。這個 <code>Call</code> 的用法就跟 JavaScript 中的 <code>bind()</code>、<code>call()</code>、<code>apply()</code> 類似。</p>
 <p>　　所以我們要做的事情就是先把參數表建好，然後傳入這個 <code>Call</code> 函數供其執行。</p>
 <p>　　第一步，顯示轉換函數，因爲本來是 <code>Object</code> 類型：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Local&lt;Function&gt; cb = Local&lt;Function&gt;::Cast(args[<span class="number">0</span>]);</div></pre></td></tr></table></figure>
-
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Local&lt;Function&gt; cb = Local&lt;Function&gt;::Cast(args[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure>
 <p>　　第二步，建立參數表（數組）：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Local&lt;Value&gt; argv[argc] = { Local&lt;Value&gt;::New(String::New(<span class="string">"hello world"</span>)) };</div></pre></td></tr></table></figure>
-
-<h4 id="最後調用函數系列">最後調用函數系列</h4>
-<p>　　調用 <code>cb</code> ，把參數傳進去：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cb-&gt;Call(Context::GetCurrent()-&gt;Global(), <span class="number">1</span>, argv);</div></pre></td></tr></table></figure>
-
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Local&lt;Value&gt; argv[argc] = &#123; Local&lt;Value&gt;::New(String::New(<span class="string">"hello world"</span>)) &#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="最後調用函數系列">最後調用函數系列</h4><p>　　調用 <code>cb</code> ，把參數傳進去：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cb-&gt;Call(Context::GetCurrent()-&gt;Global(), <span class="number">1</span>, argv);</span><br></pre></td></tr></table></figure>
 <p>　　這裏第一個參數 <code>Context::GetCurrent()-&gt;Global()</code> 所代表的意思就是獲取全局上下文作爲函數的 <code>this</code>；第二個參數就是參數表中的個數（畢竟雖然 <code>Node.js</code> 的數組是有長度屬性的，但是 <code>C++</code> 裏面數組的長度實際上系統是不知道的，還得你自己傳進一個數來說明數組長度）；最後一個參數就是剛纔我們建立好的參數表了。</p>
-<h4 id="終章之結束文件系列">終章之結束文件系列</h4>
-<p>　　相信這一步大家已經輕車熟路了吧，就是把函數寫好，然後放進導出函數裏面，最後申明一下。</p>
+<h4 id="終章之結束文件系列">終章之結束文件系列</h4><p>　　相信這一步大家已經輕車熟路了吧，就是把函數寫好，然後放進導出函數裏面，最後申明一下。</p>
 <p>　　我就直接放出代碼吧，或者直接跑去 <code>Node.js</code> 的<a href="http://nodejs.org/api/addons.html#addons_callbacks" target="_blank" rel="external">文檔</a>看也行。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;node.h&gt;</span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> v8;</div><div class="line"></div><div class="line">Handle&lt;Value&gt; RunCallback(<span class="keyword">const</span> Arguments& args)</div><div class="line">{</div><div class="line">    HandleScope scope;</div><div class="line">    Local&lt;Function&gt; cb = Local&lt;Function&gt;::Cast(args[<span class="number">0</span>]);</div><div class="line">    <span class="keyword">const</span> <span class="keyword">unsigned</span> argc = <span class="number">1</span>;</div><div class="line">    Local&lt;Value&gt; argv[argc] = { Local&lt;Value&gt;::New(String::New(<span class="string">"hello world"</span>)) };</div><div class="line">    cb-&gt;Call(Context::GetCurrent()-&gt;Global(), argc, argv);</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> scope.Close(Undefined());</div><div class="line">}</div><div class="line"></div><div class="line"><span class="keyword">void</span> Init(Handle&lt;Object&gt; exports, Handle&lt;Object&gt; module)</div><div class="line">{</div><div class="line">    module-&gt;Set(String::NewSymbol(<span class="string">"exports"</span>),</div><div class="line">        FunctionTemplate::New(RunCallback)-&gt;GetFunction());</div><div class="line">}</div><div class="line"></div><div class="line">NODE_MODULE(addon, Init)</div></pre></td></tr></table></figure>
-
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;node.h&gt;</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> v8;</span><br><span class="line"></span><br><span class="line">Handle&lt;Value&gt; RunCallback(<span class="keyword">const</span> Arguments&amp; args)</span><br><span class="line">&#123;</span><br><span class="line">    HandleScope scope;</span><br><span class="line">    Local&lt;Function&gt; cb = Local&lt;Function&gt;::Cast(args[<span class="number">0</span>]);</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">unsigned</span> argc = <span class="number">1</span>;</span><br><span class="line">    Local&lt;Value&gt; argv[argc] = &#123; Local&lt;Value&gt;::New(String::New(<span class="string">"hello world"</span>)) &#125;;</span><br><span class="line">    cb-&gt;Call(Context::GetCurrent()-&gt;Global(), argc, argv);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> scope.Close(Undefined());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init</span><span class="params">(Handle&lt;Object&gt; exports, Handle&lt;Object&gt; module)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    module-&gt;Set(String::NewSymbol(<span class="string">"exports"</span>),</span><br><span class="line">        FunctionTemplate::New(RunCallback)-&gt;GetFunction());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">NODE_MODULE(addon, Init)</span><br></pre></td></tr></table></figure>
 <p>　　Well done! 最後剩下的步驟就自己去吧。至於 <code>Js</code> 裏面這麼調用這個函數，我在<a href="#回調函數">之前</a>已經提到過了。</p>
-<h2 id="番外">番外</h2>
-<p>　　嘛嘛，我感覺我的學習筆記寫得越來越奔放了求破～</p>
+<h2 id="番外">番外</h2><p>　　嘛嘛，我感覺我的學習筆記寫得越來越奔放了求破～</p>
 <p>　　今天就先寫到這裏吧，寫學習筆記的過程中我又漲姿勢了，比如說那個 <code>Call</code> 函數的參數意義。</p>
 <p>　　如果你們覺得本系列學習筆記對你們還有幫助的話，就來和我一起搞基吧麼麼噠～Σ&gt;―(〃°ω°〃)♡→</p>
 
-            
-            <section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
+			
+            <section class="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2014/04/03/nodejs-cpp-addons-2/" data-title="讓Node.js和C++一起搞基 —— 2" data-url="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -271,7 +238,7 @@
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

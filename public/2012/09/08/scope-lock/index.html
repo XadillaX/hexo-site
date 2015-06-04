@@ -24,9 +24,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -99,7 +97,7 @@
         <h1>線程安全——Scope Lock模式</h1>
         
         <div class="time-info">
-发表于:<time datetime="2012-09-07T17:31:59.000Z" itemprop="datePublished">2012年09月08日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2012-09-07T17:31:59.000Z" itemprop="datePublished">2012年09月08日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -116,29 +114,32 @@
 <p>　　我們試想一下如果有這麼一個類——在構造的時候，你傳進去一個 <code>CRITICAL_SECTION</code> 的引用並且將其 <code>EnterCriticalSection</code> 進入到臨界區。當它析構的時候，我們直接 <code>LeaveCriticalSection</code> 就好了。</p>
 <p>　　也許你會問，這樣的一個類會有什麼用呢？</p>
 <p>　　那麼我下面演示一段簡單的 ScopeLock 代碼先吧：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> ScopeLock</div><div class="line">{</div><div class="line">    CRITICAL_SECTION& m_cs;</div><div class="line"></div><div class="line">    ScopeLock(CRITICAL_SECTION cs) : m_cs(cs)</div><div class="line">    {</div><div class="line">        EnterCriticalSection(&m_cs);</div><div class="line">    }</div><div class="line"></div><div class="line">    ~ScopeLock()</div><div class="line">    {</div><div class="line">        LeaveCriticalSection(&m_cs);</div><div class="line">    }</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">int</span> i;</div><div class="line">CRITICAL_SECTION cs;</div><div class="line"></div><div class="line"><span class="comment">// ...假設我們已經初始化好了這個臨界區</span></div><div class="line"></div><div class="line"><span class="keyword">void</span> ScopeLockTest()</div><div class="line">{</div><div class="line">    ScopeLock oLock(cs);</div><div class="line">    i = <span class="number">0</span>;</div><div class="line">}</div></pre></td></tr></table></figure>
-
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> ScopeLock</span><br><span class="line">&#123;</span><br><span class="line">    CRITICAL_SECTION&amp; m_cs;</span><br><span class="line"></span><br><span class="line">    ScopeLock(CRITICAL_SECTION cs) : m_cs(cs)</span><br><span class="line">    &#123;</span><br><span class="line">        EnterCriticalSection(&amp;m_cs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~ScopeLock()</span><br><span class="line">    &#123;</span><br><span class="line">        LeaveCriticalSection(&amp;m_cs);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> i;</span><br><span class="line">CRITICAL_SECTION cs;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...假設我們已經初始化好了這個臨界區</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ScopeLockTest</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="function">ScopeLock <span class="title">oLock</span><span class="params">(cs)</span></span>;</span><br><span class="line">    i = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>　　我們可以發現，當我們剛進入 <code>ScopeLockTest</code> 函數的時候，聲明瞭一個 <code>oLock</code> 對象，這個時候運行 <code>oLock</code> 的構造函數，也就是進入了 <code>cs</code> 這個臨界區。而當 <code>ScopeLockTest</code> 函數運行完畢要退出這個函數的時候，<code>oLock</code> 對象的生命週期也就走到了盡頭，對應的，它將會執行析構函數，那麼就自然而然地退出了 <code>cs</code> 臨界區。</p>
 <p>　　其實無論 <code>ScopeLockTest</code> 這個函數怎麼寫，哪怕是中間有一些 <code>if</code> 判斷直接 <code>return</code> 掉，只要是 <code>ScopeLockTest</code> 這個函數執行完畢，<code>oLock</code> 就會自動析構，從而達到瞭解鎖過程。那麼不管粗心還是細心的童鞋們都不用爲忘記退出臨界區而煩惱了。</p>
 <p>　　而且 <code>ScopeLock</code> 模式只是一種思想，並不是對於 <strong>M$</strong> 的臨界區的一種專用性物品。例如在QT裏，我們一樣可以用 <code>ScopeLock</code> 來對線程的一些 <code>MutexLock</code> 之類的東西進行操作。</p>
 <p>　　上面所寫的例子只是思路的一種形成，並不是一個完整的ScopeLock類（結構體），雖然說它現在已經可以用了。你可以在上面完善，加上自己的東西，使其能確確實實在項目中使用。由於代碼的關聯性，我單單發出我的 <code>ScopeLock</code> 的話會缺少很多關聯的東西，所以咱就不發了，思路在這裏，相信誰都能寫出自己的一個 <code>ScopeLock</code> 吧。</p>
 
-            
-            <section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
+			
+            <section class="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2012/09/08/scope-lock/" data-title="線程安全——Scope Lock模式" data-url="http://xcoder.in/2012/09/08/scope-lock/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -148,7 +149,7 @@
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

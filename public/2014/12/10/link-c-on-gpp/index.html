@@ -6,10 +6,9 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="原因
-由於某些原因，我寫了個很搓的內存池（C 版本的）。
+    <meta name="description" content="原因由於某些原因，我寫了個很搓的內存池（C 版本的）。
 然後我想到了把之前寫的一個 Node.js 包 thmclrx 的更挫的“僞·內存池”用新寫的內存池去替換掉。(❛◡❛✿)
-然後問題就來了，我貌似不能控制 node-gyp 去用 G++ 編譯 *.c 文件，這樣的話所有文件編譯好之後鏈接 *">
+然後問題就來了，我貌似不能控制 node-gyp 去用 G++ 編譯 *.c 文件，這樣的話所有文件編譯好之後鏈接 *.">
     
     
 
@@ -26,9 +25,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -101,7 +98,7 @@
         <h1>在 C++ 中鏈接 C 的 文件</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-12-10T07:30:32.000Z" itemprop="datePublished">2014年12月10日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-12-10T07:30:32.000Z" itemprop="datePublished">2014年12月10日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -110,52 +107,46 @@
                 <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#原因"><span class="toc-number">1.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#假想方案"><span class="toc-number">2.</span> <span class="toc-text">假想方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#假想一"><span class="toc-number">2.1.</span> <span class="toc-text">假想一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#假想二"><span class="toc-number">2.2.</span> <span class="toc-text">假想二</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解決方案"><span class="toc-number">3.</span> <span class="toc-text">解決方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事後煙"><span class="toc-number">4.</span> <span class="toc-text">事後煙</span></a></li></ol>
             </div>
             
-            <h2 id="原因">原因</h2>
-<p>由於某些原因，我寫了個很搓的<a href="https://github.com/XadillaX/xmempool" target="_blank" rel="external">內存池</a>（C 版本的）。</p>
+            <h2 id="原因">原因</h2><p>由於某些原因，我寫了個很搓的<a href="https://github.com/XadillaX/xmempool" target="_blank" rel="external">內存池</a>（C 版本的）。</p>
 <p>然後我想到了把之前寫的一個 Node.js 包 <a href="https://github.com/XadillaX/thmclrx" target="_blank" rel="external">thmclrx</a> 的更挫的“僞·內存池”用新寫的內存池去替換掉。(❛◡❛✿)</p>
 <p>然後問題就來了，我貌似不能控制 node-gyp 去用 G++ 編譯 <code>*.c</code> 文件，這樣的話所有文件編譯好之後鏈接 <code>*.o</code> 文件會出問題。雖然鏈接的時候沒報錯，但是使用的時候就會報這麼個錯 (;´༎ຶД༎ຶ`)：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">➜ thmclrx git:(master) ✗ node test/test.js</div><div class="line">dyld: lazy symbol binding failed: Symbol not found: __Z16xmem_create_poolj</div><div class="line">  Referenced from: /Users/.../code/huaban/thmclrx/build/Release/thmclrx.node</div><div class="line">  Expected <span class="keyword">in</span>: dynamic lookup</div><div class="line"></div><div class="line">dyld: Symbol not found: __Z16xmem_create_poolj</div><div class="line">  Referenced from: /Users/.../code/huaban/thmclrx/build/Release/thmclrx.node</div><div class="line">  Expected <span class="keyword">in</span>: dynamic lookup</div><div class="line"></div><div class="line">[<span class="number">1</span>]    <span class="number">52501</span> trace trap  node test/test.js</div></pre></td></tr></table></figure>
-
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">➜ thmclrx git:(master) ✗ node <span class="built_in">test</span>/test.js</span><br><span class="line">dyld: lazy symbol binding failed: Symbol not found: __Z16xmem_create_poolj</span><br><span class="line">  Referenced from: /Users/.../code/huaban/thmclrx/build/Release/thmclrx.node</span><br><span class="line">  Expected <span class="keyword">in</span>: dynamic lookup</span><br><span class="line"></span><br><span class="line">dyld: Symbol not found: __Z16xmem_create_poolj</span><br><span class="line">  Referenced from: /Users/.../code/huaban/thmclrx/build/Release/thmclrx.node</span><br><span class="line">  Expected <span class="keyword">in</span>: dynamic lookup</span><br><span class="line"></span><br><span class="line">[<span class="number">1</span>]    <span class="number">52501</span> trace <span class="built_in">trap</span>  node <span class="built_in">test</span>/test.js</span><br></pre></td></tr></table></figure>
 <p>大致意思就是說在我編譯好鏈接好的 <code>thmclrx.node</code> 中找不到 <code>__Z16xmem_create_poolj</code> 這個符號，也就是說 <code>xmempool.o</code> 這個用 C 編譯出來的文件並沒有正確被鏈接。</p>
-<h2 id="假想方案">假想方案</h2>
-<h3 id="假想一">假想一</h3>
-<p>一開始我想找的是“如何在 node-gyp 中手動選擇編譯器”，即不讓機器自動選擇 GCC 去編譯 <code>*.c</code> 文件。後來無果。ル||☛_☚|リ</p>
-<h3 id="假想二">假想二</h3>
-<p>再後來我想開了，於是決定讓編譯的時候去識別我在跟 C 說話還是跟 C++ 說話。(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</p>
-<h2 id="解決方案">解決方案</h2>
-<p>於是我找到了這麼個帖子：<a href="http://grokbase.com/t/gg/nodejs/14amregx72/linking-c-sources-files-in-cc-files" target="_blank" rel="external">http://grokbase.com/t/gg/nodejs/14amregx72/linking-c-sources-files-in-cc-files</a></p>
+<h2 id="假想方案">假想方案</h2><h3 id="假想一">假想一</h3><p>一開始我想找的是“如何在 node-gyp 中手動選擇編譯器”，即不讓機器自動選擇 GCC 去編譯 <code>*.c</code> 文件。後來無果。ル||☛_☚|リ</p>
+<h3 id="假想二">假想二</h3><p>再後來我想開了，於是決定讓編譯的時候去識別我在跟 C 說話還是跟 C++ 說話。(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</p>
+<h2 id="解決方案">解決方案</h2><p>於是我找到了這麼個帖子：<a href="http://grokbase.com/t/gg/nodejs/14amregx72/linking-c-sources-files-in-cc-files" target="_blank" rel="external">http://grokbase.com/t/gg/nodejs/14amregx72/linking-c-sources-files-in-cc-files</a></p>
 <p>他貌似也遇到了跟我相似的問題。下面這個提問者自己提出了這樣的回答：</p>
 <blockquote>
 <p>Nevermind, found my own answer after finally hitting the right google search terms.</p>
 <p>Added</p>
-</blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="preprocessor">#ifdef __cplusplus</span></div><div class="line"><span class="keyword">extern</span> <span class="string">"C"</span> {</div><div class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></div><div class="line"></div><div class="line"><span class="comment">//... source code here...</span></div><div class="line"></div><div class="line"><span class="preprocessor">#ifdef __cplusplus</span></div><div class="line">}</div><div class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></div></pre></td></tr></table></figure>
-
-<blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#ifdef __cplusplus</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> &#123;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//... source code here...</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#ifdef __cplusplus</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
 <p>So that the CPP compiler would know I was talking C and not CPP :)</p>
 </blockquote>
 <p>答案的大意就是在你的 C 頭文件中添加上面 blahblah 一大段宏，好讓 C++ 的編譯器知道它是在跟 C 的中間文件交流而不是 C++，這樣的話鏈接的時候就能正常接軌了。於是我在我的新版 <a href="https://github.com/XadillaX/xmempool/commit/b06351836c9b51952a3d98c438df6626dda8738c" target="_blank" rel="external">xmempool</a> 的頭文件裏面就已經添加上了這兩段話了。</p>
-<h2 id="事後煙">事後煙</h2>
-<p>其實以前我也老在別的項目裏面看到這個 <code>#ifdef __cplusplus</code> 的宏定義，只不過以前不知道什麼意思。</p>
+<h2 id="事後煙">事後煙</h2><p>其實以前我也老在別的項目裏面看到這個 <code>#ifdef __cplusplus</code> 的宏定義，只不過以前不知道什麼意思。</p>
 <p>今天通過這麼一件事情終於知道了它的用途了，新技能 get √。</p>
 <p>ε(*´･∀･｀)зﾞ</p>
 
-            
-            <section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
+			
+            <section class="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2014/12/10/link-c-on-gpp/" data-title="在 C++ 中鏈接 C 的 文件" data-url="http://xcoder.in/2014/12/10/link-c-on-gpp/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -165,7 +156,7 @@
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

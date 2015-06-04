@@ -8,9 +8,8 @@
     
     <meta name="description" content="本文只講兩個函數，對於 markdown 如何高亮之類的問題還請自行谷歌。
 　　然後請打開你自己的 .vimrc 文件。
-預備工作
-　　首先定義一個變量——你自己的 hexo 目錄，如果要跨平臺可以做個判斷之類的，如下：
-12345if has(&quot;win32&quot;)    let g:hexoProje">
+預備工作　　首先定義一個變量——你自己的 hexo 目錄，如果要跨平臺可以做個判斷之類的，如下：
+1if has(&amp;#34;win32&amp;#34;)&amp;#10;    let g:h">
     
     
 
@@ -27,9 +26,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -102,7 +99,7 @@
         <h1>搭建 VIM 下的 Hexo 編輯環境</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-06-01T20:52:30.000Z" itemprop="datePublished">2014年06月02日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-06-01T20:52:30.000Z" itemprop="datePublished">2014年06月02日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -113,63 +110,48 @@
             
             <p>　　本文只講兩個函數，對於 <code>markdown</code> 如何高亮之類的問題還請自行谷歌。</p>
 <p>　　然後請打開你自己的 <code>.vimrc</code> 文件。</p>
-<h2 id="預備工作">預備工作</h2>
-<p>　　首先定義一個變量——你自己的 <code>hexo</code> 目錄，如果要跨平臺可以做個判斷之類的，如下：</p>
-<figure class="highlight vimrc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> <span class="built_in">has</span>(<span class="string">"win32"</span>)</div><div class="line">    <span class="keyword">let</span> <span class="variable">g:hexoProjectPath</span>=<span class="string">"E:\\cygwin\\home\\XadillaX\\hexo"</span></div><div class="line"><span class="keyword">else</span></div><div class="line">    <span class="keyword">let</span> <span class="variable">g:hexoProjectPath</span>=<span class="string">"~/hexo/"</span></div><div class="line"><span class="keyword">endif</span></div></pre></td></tr></table></figure>
-
-<h2 id="幾個函數">幾個函數</h2>
-<h3 id="進入_Hexo_目錄">進入 Hexo 目錄</h3>
-<p>　　這個函數大致就是讓你進入你自己的 <code>Hexo</code> 路徑：</p>
-<figure class="highlight vimrc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fun! OpenHexoProjPath()</div><div class="line">    <span class="keyword">execute</span> <span class="string">"cd "</span> . <span class="variable">g:hexoProjectPath</span></div><div class="line">endfun</div></pre></td></tr></table></figure>
-
-<h3 id="打開一篇_Post">打開一篇 Post</h3>
-<p>　　接下去就是一個打開 <code>Post</code> 的函數了：</p>
-<figure class="highlight vimrc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span>! <span class="title">OpenHexoPost</span><span class="params">(...)</span></span></div><div class="line">    call OpenHexoProjPath()</div><div class="line"></div><div class="line">    let filename = <span class="string">"source/_posts/"</span> . a:<span class="number">1</span> . <span class="string">".md"</span></div><div class="line">    execute <span class="string">"e "</span> . filename</div><div class="line"><span class="function"><span class="keyword">endfunction</span></span></div></pre></td></tr></table></figure>
-
+<h2 id="預備工作">預備工作</h2><p>　　首先定義一個變量——你自己的 <code>hexo</code> 目錄，如果要跨平臺可以做個判斷之類的，如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if has(&#34;win32&#34;)&#10;    let g:hexoProjectPath=&#34;E:\\cygwin\\home\\XadillaX\\hexo&#34;&#10;else&#10;    let g:hexoProjectPath=&#34;~/hexo/&#34;&#10;endif</span><br></pre></td></tr></table></figure>
+<h2 id="幾個函數">幾個函數</h2><h3 id="進入_Hexo_目錄">進入 Hexo 目錄</h3><p>　　這個函數大致就是讓你進入你自己的 <code>Hexo</code> 路徑：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fun! OpenHexoProjPath()&#10;    execute &#34;cd &#34; . g:hexoProjectPath&#10;endfun</span><br></pre></td></tr></table></figure>
+<h3 id="打開一篇_Post">打開一篇 Post</h3><p>　　接下去就是一個打開 <code>Post</code> 的函數了：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function! OpenHexoPost(...)&#10;    call OpenHexoProjPath()&#10;&#10;    let filename = &#34;source/_posts/&#34; . a:1 . &#34;.md&#34;&#10;    execute &#34;e &#34; . filename&#10;endfunction</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>解析：上面的代碼大意就是進入 Hexo 路徑，然後設定好文件名，最後執行 <code>:e filename</code> 即可打開文件了。</p>
 </blockquote>
-<h3 id="新建一篇_Post">新建一篇 Post</h3>
-<p>　　新建的流程跟打開相似，只不過首先要在 <code>Hexo</code> 目錄下執行一遍 <code>hexo new FOO</code> 的命令而已，命令執行完畢之後再打開即可。</p>
-<figure class="highlight vimrc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span>! <span class="title">NewHexoPost</span><span class="params">(...)</span></span></div><div class="line">    call OpenHexoProjPath()</div><div class="line"></div><div class="line">    let filename = a:<span class="number">1</span></div><div class="line">    execute <span class="string">"!hexo new "</span> . filename</div><div class="line"></div><div class="line">    call OpenHexoPost(a:<span class="number">1</span>)</div><div class="line"><span class="function"><span class="keyword">endfunction</span></span></div></pre></td></tr></table></figure>
-
-<h2 id="指令映射">指令映射</h2>
-<p>　　函數寫好後我們最後把函數映射成類似於 <code>:e</code>, <code>:w</code> 之類的後面能跟着參數的指令即可。</p>
+<h3 id="新建一篇_Post">新建一篇 Post</h3><p>　　新建的流程跟打開相似，只不過首先要在 <code>Hexo</code> 目錄下執行一遍 <code>hexo new FOO</code> 的命令而已，命令執行完畢之後再打開即可。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function! NewHexoPost(...)&#10;    call OpenHexoProjPath()&#10;&#10;    let filename = a:1&#10;    execute &#34;!hexo new &#34; . filename&#10;&#10;    call OpenHexoPost(a:1)&#10;endfunction</span><br></pre></td></tr></table></figure>
+<h2 id="指令映射">指令映射</h2><p>　　函數寫好後我們最後把函數映射成類似於 <code>:e</code>, <code>:w</code> 之類的後面能跟着參數的指令即可。</p>
 <p>　　以前木有接觸過的同學可以參考一下<a href="http://vimdoc.sourceforge.net/htmldoc/usr_40.html#40.2" target="_blank" rel="external">這裏</a>的文檔。</p>
-<h3 id="打開指令">打開指令</h3>
-<figure class="highlight vimrc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="command"><span class="keyword">command</span> -<span class="title">nargs</span>=+ <span class="title">HexoOpen</span> :<span class="title">call</span> <span class="title">OpenHexoPost</span>(<span class="string">"&lt;args&gt;"</span>)</span></div></pre></td></tr></table></figure>
-
-<h3 id="新建指令">新建指令</h3>
-<figure class="highlight vimrc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="command"><span class="keyword">command</span> -<span class="title">nargs</span>=+ <span class="title">HexoNew</span> :<span class="title">call</span> <span class="title">NewHexoPost</span>(<span class="string">"&lt;args&gt;"</span>)</span></div></pre></td></tr></table></figure>
-
-<h2 id="使用方法">使用方法</h2>
-<p>　　當你做完以上步驟的時候，你就可以無論在什麼目錄下在 VIM 裏面通過下面的指令進行新建一篇日誌了：</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:HexoNew artical-name</div></pre></td></tr></table></figure>
-
+<h3 id="打開指令">打開指令</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command -nargs=+ HexoOpen :call OpenHexoPost(&#34;&#60;args&#62;&#34;)</span><br></pre></td></tr></table></figure>
+<h3 id="新建指令">新建指令</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command -nargs=+ HexoNew :call NewHexoPost(&#34;&#60;args&#62;&#34;)</span><br></pre></td></tr></table></figure>
+<h2 id="使用方法">使用方法</h2><p>　　當你做完以上步驟的時候，你就可以無論在什麼目錄下在 VIM 裏面通過下面的指令進行新建一篇日誌了：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:HexoNew artical-name</span><br></pre></td></tr></table></figure>
 <p>　　以及下面的指令來打開一篇已存在的日誌：</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:HexoOpen artical-name</div></pre></td></tr></table></figure>
-
-<h2 id="遺留問題">遺留問題</h2>
-<p>　　相信看到這裏之後，大家也能自己寫出一個生成的指令了，這裏就不累述了，無非就是：</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:!hexo generate</div></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:HexoOpen artical-name</span><br></pre></td></tr></table></figure>
+<h2 id="遺留問題">遺留問題</h2><p>　　相信看到這裏之後，大家也能自己寫出一個生成的指令了，這裏就不累述了，無非就是：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:!hexo generate</span><br></pre></td></tr></table></figure>
 
 
-            
+			
             <section class="comment">
-	<div class="ds-thread"></div>
-</section>
-
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2014/06/02/vim-hexo-environment/" data-title="搭建 VIM 下的 Hexo 編輯環境" data-url="http://xcoder.in/2014/06/02/vim-hexo-environment/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -179,7 +161,7 @@
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

@@ -8,9 +8,8 @@
     
     <meta name="description" content="今天我來講一講 C++ 中類成員函數 inline 修飾符的一個坑。
 　　這個坑是我在嘗試着寫我的第一個 Node.js 擴展 simpleini 時候遇到的。
-坑描述
-　　因爲只是嘗試着寫，所以懶得自己實現，於是網上找了個開源的 C++ 閱讀 ini 文件的項目，名不見經傳，叫 miniini。
-">
+坑描述　　因爲只是嘗試着寫，所以懶得自己實現，於是網上找了個開源的 C++ 閱讀 ini 文件的項目，名不見經傳，叫 miniini。
+　">
     
     
 
@@ -27,9 +26,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -102,7 +99,7 @@
         <h1>C++中類成員函數 inline 的坑</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-04-05T08:55:57.000Z" itemprop="datePublished">2014年04月05日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-04-05T08:55:57.000Z" itemprop="datePublished">2014年04月05日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -113,57 +110,46 @@
             
             <p>　　今天我來講一講 <code>C++</code> 中類成員函數 <code>inline</code> 修飾符的一個坑。</p>
 <p>　　這個坑是我在嘗試着寫我的第一個 <code>Node.js</code> 擴展 <code>simpleini</code> 時候遇到的。</p>
-<h2 id="坑描述">坑描述</h2>
-<p>　　因爲只是嘗試着寫，所以懶得自己實現，於是網上找了個開源的 <code>C++</code> 閱讀 ini 文件的項目，名不見經傳，叫 <a href="http://miniini.tuxfamily.org/" target="_blank" rel="external">miniini</a>。</p>
+<h2 id="坑描述">坑描述</h2><p>　　因爲只是嘗試着寫，所以懶得自己實現，於是網上找了個開源的 <code>C++</code> 閱讀 ini 文件的項目，名不見經傳，叫 <a href="http://miniini.tuxfamily.org/" target="_blank" rel="external">miniini</a>。</p>
 <p>　　好了，問題來了，當我寫好我的源文件的時候，然後寫好了我的 <code>binding.gyp</code> ，總之一切大功告成開始編譯的時候—— <code>Windows</code> 下沒問題，<code>MacOS</code> 下也可以正常運行，但是在 <code>Linux</code> 下就出問題了：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node: symbol lookup err: .../simpleIni.node: undefined symbol: _ZNK10INISection10ReadStringEPKcRS1_</div></pre></td></tr></table></figure>
-
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node: symbol lookup err: .../simpleIni.node: undefined symbol: _ZNK10INISection10ReadStringEPKcRS1_</span><br></pre></td></tr></table></figure>
 <p>　　大致的意思呢就是說找不到 <code>INISection</code> 的 <code>ReadString</code> 函數符號。</p>
-<h2 id="問題分析">問題分析</h2>
-<p>　　又是懷着崇敬的心情去 <a href="http://stackoverflow.com/questions/22868307/undefined-symbol-in-node-js-c-addon-under-linux-why" target="_blank" rel="external">SO</a> 求解了。</p>
+<h2 id="問題分析">問題分析</h2><p>　　又是懷着崇敬的心情去 <a href="http://stackoverflow.com/questions/22868307/undefined-symbol-in-node-js-c-addon-under-linux-why" target="_blank" rel="external">SO</a> 求解了。</p>
 <p>　　最後的解答大概<a href="http://isocpp.org/wiki/faq/inline-functions#inline-member-fns" target="_blank" rel="external">如下</a>：</p>
 <blockquote>
-<p>內聯成員函數的聲明看起來像一個非內聯函數的聲明：</p>
-</blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Fred {</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">void</span> f(<span class="keyword">int</span> i, <span class="keyword">char</span> c);</div><div class="line">};</div></pre></td></tr></table></figure>
-
-<blockquote>
-<p>但是你的內斂成員函數定義前面又加了 <code>inline</code> 這個關鍵字時，你必須把這個定義放到頭文件中：</p>
-</blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">inline</span></div><div class="line"><span class="keyword">void</span> Fred::f(<span class="keyword">int</span> i, <span class="keyword">char</span> c)</div><div class="line">{</div><div class="line">    <span class="comment">// ...</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<blockquote>
+<p>內聯成員函數的聲明看起來像一個非內聯函數的聲明：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Fred &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">char</span> c)</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>但是你的內斂成員函數定義前面又加了 <code>inline</code> 這個關鍵字時，你必須把這個定義放到頭文件中：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span></span><br><span class="line"><span class="keyword">void</span> Fred::f(<span class="keyword">int</span> i, <span class="keyword">char</span> c)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>這麼做的原因就是爲了避免鏈接器 <code>unresolved external</code> 的發生。如果你不這麼做，這個錯誤就將會在你從另外一個 <code>.cpp</code> 文件中調用它時出現。</p>
 </blockquote>
 <p>　　好嘛，原來是原作者自己寫的代碼有問題啊。但是不得不說一下又漲姿勢了。C++還真是有千奇百怪的坑和錯誤啊。</p>
-<h2 id="解決方案">解決方案</h2>
-<p>　　最後的解決方案大致就是把函數定義放到頭文件中去，或者在函數聲明前面也加上 <code>inline</code> 關鍵字。</p>
-<h2 id="simpleini">simpleini</h2>
-<p>　　我的第一個 <code>C++</code> 模塊，叫 <code>simpleini</code> ，其實只是抱着試試看 <code>Node.j</code> 的 <code>C++</code> 模塊是不是這麼寫的而已，並沒有多大實際用處。Repo 在 <a href="https://github.com/XadillaX/node-simple-ini" target="_blank" rel="external">Github</a> 上。</p>
+<h2 id="解決方案">解決方案</h2><p>　　最後的解決方案大致就是把函數定義放到頭文件中去，或者在函數聲明前面也加上 <code>inline</code> 關鍵字。</p>
+<h2 id="simpleini">simpleini</h2><p>　　我的第一個 <code>C++</code> 模塊，叫 <code>simpleini</code> ，其實只是抱着試試看 <code>Node.j</code> 的 <code>C++</code> 模塊是不是這麼寫的而已，並沒有多大實際用處。Repo 在 <a href="https://github.com/XadillaX/node-simple-ini" target="_blank" rel="external">Github</a> 上。</p>
 <p>　　然後用法很簡單，先安裝：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install simpleini</div></pre></td></tr></table></figure>
-
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install simpleini</span><br></pre></td></tr></table></figure>
 <p>　　然後下面的代碼就是例子了：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> simpleIni = <span class="built_in">require</span>(<span class="string">"simpleini"</span>);</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(simpleIni.open(<span class="string">"./node_modules/simpleini/src/miniini-0.9/test/test.ini"</span>));</div><div class="line"><span class="built_in">console</span>.log(simpleIni.read(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>));</div><div class="line"><span class="built_in">console</span>.log(simpleIni.read(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"d"</span>));</div><div class="line"><span class="built_in">console</span>.log(simpleIni.read(<span class="string">"SETTINGS"</span>, <span class="string">"sections"</span>));</div><div class="line"><span class="built_in">console</span>.log(simpleIni.read(<span class="string">"vals"</span>, <span class="string">"float"</span>));</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> simpleIni = <span class="built_in">require</span>(<span class="string">"simpleini"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(simpleIni.open(<span class="string">"./node_modules/simpleini/src/miniini-0.9/test/test.ini"</span>));</span><br><span class="line"><span class="built_in">console</span>.log(simpleIni.read(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>));</span><br><span class="line"><span class="built_in">console</span>.log(simpleIni.read(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"d"</span>));</span><br><span class="line"><span class="built_in">console</span>.log(simpleIni.read(<span class="string">"SETTINGS"</span>, <span class="string">"sections"</span>));</span><br><span class="line"><span class="built_in">console</span>.log(simpleIni.read(<span class="string">"vals"</span>, <span class="string">"float"</span>));</span><br></pre></td></tr></table></figure>
 <p>　　讀取配置的時候第一個參數是 <code>Section</code>，第二個參數是 <code>Key</code>，第三個參數是取不到該值時的默認值。</p>
 
-            
-            <section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
+			
+            <section class="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2014/04/05/cpp-class-inline-keng/" data-title="C++中類成員函數 inline 的坑" data-url="http://xcoder.in/2014/04/05/cpp-class-inline-keng/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -173,7 +159,7 @@
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

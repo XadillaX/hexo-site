@@ -9,7 +9,7 @@
     <meta name="description" content="最近在做一個汽車團購網的項目，由於老大力求簡潔，所以界面做得有些小清新。不過得說一下頁面不是我設計的，是一位美工同志。
 　　廢話不多說，直接切入正題吧——
 　　我要做得就是讓下面一段代碼生效：
-1$(&quot;#yourid&quot;).stop().animate({ &quot;backgroundColor&quot; : &quot;#">
+1$(&quot;#yourid&quot;).stop().animate(&amp;#123; &quot;backgroundColor&quot;">
     
     
 
@@ -26,9 +26,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -101,7 +99,7 @@
         <h1>關於jQuery中“animate()”函數對顏色變化的支持</h1>
         
         <div class="time-info">
-发表于:<time datetime="2012-12-24T01:20:16.000Z" itemprop="datePublished">2012年12月24日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2012-12-24T01:20:16.000Z" itemprop="datePublished">2012年12月24日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -113,8 +111,7 @@
             <p>　　最近在做一個汽車團購網的項目，由於老大力求簡潔，所以界面做得有些小清新。不過得說一下頁面不是我設計的，是一位美工同志。</p>
 <p>　　廢話不多說，直接切入正題吧——</p>
 <p>　　我要做得就是讓下面一段代碼生效：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$(<span class="string">"#yourid"</span>).stop().animate({ <span class="string">"backgroundColor"</span> : <span class="string">"#rrggbb"</span>, <span class="string">"color"</span> : <span class="string">"#rrggbb"</span> }, <span class="string">"fast"</span>);</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#yourid"</span>).stop().animate(&#123; <span class="string">"backgroundColor"</span> : <span class="string">"#rrggbb"</span>, <span class="string">"color"</span> : <span class="string">"#rrggbb"</span> &#125;, <span class="string">"fast"</span>);</span><br></pre></td></tr></table></figure>
 <p>　　但是，很遺憾，一點也沒有動。本來效果應該跟這個版本的xcoder博客的天頭導航條一樣有個動態效果（只不過xcoder的導航條是透明度變化，而項目中我想讓它背景色變化）。</p>
 <p>　　原因是什麼呢？死月上網查了很久，找到的東西都很簡單地說明瞭一下，貌似都可以。嘛，也許是jQuery新版本不支持這個特性了吧。</p>
 <p>　　最後，死月在jQuery的官方文檔中找到了下面這段話——</p>
@@ -126,25 +123,27 @@
 <p>　　大致的意思就是說所有動畫屬性都必須是一個單數字值，所以說大多數非數字的屬性是不能被動畫化的。例如高度、寬度等可以被動畫化，但是背景色就不信了。<span style="color: red;"><strong><em>除非你用了jQuery.Color()插件</em></strong></span>。</p>
 <p>　　所以說問題找到了，我們必須得用一個jQuery.Color()插件來對一些顏色進行動畫操作。</p>
 <p>　　話不多說，我們去下一個jQuery.Color()插件。把它加在我們的頁面中，然後就可以用如下方式來進行動畫操作了：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$(<span class="keyword">this</span>).stop().animate({</div><div class="line">    <span class="string">"backgroundColor"</span> : jQuery.Color(<span class="string">"rrggbb"</span>),</div><div class="line">    <span class="string">"color"</span> : jQuery.Color(<span class="string">"rrggbb"</span>)</div><div class="line">}, <span class="string">"fast"</span>);</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="keyword">this</span>).stop().animate(&#123;</span><br><span class="line">    <span class="string">"backgroundColor"</span> : jQuery.Color(<span class="string">"rrggbb"</span>),</span><br><span class="line">    <span class="string">"color"</span> : jQuery.Color(<span class="string">"rrggbb"</span>)</span><br><span class="line">&#125;, <span class="string">"fast"</span>);</span><br></pre></td></tr></table></figure>
 
-
-            
+			
             <section class="comment">
-	<div class="ds-thread"></div>
-</section>
-
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2012/12/24/jquery-animate-color-support/" data-title="關於jQuery中“animate()”函數對顏色變化的支持" data-url="http://xcoder.in/2012/12/24/jquery-animate-color-support/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -154,7 +153,7 @@
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

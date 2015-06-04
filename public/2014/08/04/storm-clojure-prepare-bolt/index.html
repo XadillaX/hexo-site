@@ -6,8 +6,7 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="起因
-　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIS">
+    <meta name="description" content="起因　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIST">
     
     
 
@@ -24,9 +23,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -99,7 +96,7 @@
         <h1>Storm 中 Clojure 的 Prepare Bolt 實現</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-08-04T03:50:21.000Z" itemprop="datePublished">2014年08月04日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-08-04T03:50:21.000Z" itemprop="datePublished">2014年08月04日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -108,48 +105,46 @@
                 <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#起因"><span class="toc-number">1.</span> <span class="toc-text">起因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#做法"><span class="toc-number">2.</span> <span class="toc-text">做法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-number">3.</span> <span class="toc-text">思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小結"><span class="toc-number">4.</span> <span class="toc-text">小結</span></a></li></ol>
             </div>
             
-            <h2 id="起因">起因</h2>
-<p>　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIST 方言中，你要做的就是把所有跟 bolt 初始化計算相關的代碼放到其 <code>prepare</code> 的代碼當中去。</p>
+            <h2 id="起因">起因</h2><p>　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIST 方言中，你要做的就是把所有跟 bolt 初始化計算相關的代碼放到其 <code>prepare</code> 的代碼當中去。</p>
 <p>　　你想一下，當你在文件加載的時候初始化了一個 MongoDB 鏈接，這個鏈接總不能被序列化到遠程去吧？所以說辦法就是把 bolt 搞上去之後，bolt 自動去初始化一個鏈接——這就是 <code>prepare</code> 的作用了。</p>
 <p>　　說白了，這個還是我們在 <strong><em>Suwako</em></strong> 當中踩到的坑。</p>
-<h2 id="做法">做法</h2>
-<p>　　大致的骨架如下：</p>
-<figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="list">(<span class="title">defbolt</span> bolt <span class="collection">[...]</span> <span class="collection">{<span class="attribute">:prepare</span> true}</span></span></div><div class="line"> <span class="collection">[...]</span></div><div class="line"> <span class="list">(<span class="title"><span class="built_in">let</span></span> <span class="collection">[...]</span></span></div><div class="line">  <span class="list">(<span class="title">bolt</span></span></div><div class="line">   <span class="list">(<span class="title">prepare</span> <span class="collection">[...]</span></span></div><div class="line">    <span class="list">(<span class="title">...</span>)</span>)</div><div class="line">   <span class="list">(<span class="title">execute</span> <span class="collection">[tuple]</span></span></div><div class="line">    <span class="list">(<span class="title">...</span>)</span>)))</div></pre></td></tr></table></figure>
-
+<h2 id="做法">做法</h2><p>　　大致的骨架如下：</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="list">(<span class="keyword">defbolt</span> bolt <span class="collection">[...]</span> <span class="collection">&#123;<span class="attribute">:prepare</span> <span class="literal">true</span>&#125;</span></span><br><span class="line"> <span class="collection">[...]</span></span><br><span class="line"> <span class="list">(<span class="keyword"><span class="built_in">let</span></span> <span class="collection">[...]</span></span><br><span class="line">  <span class="list">(<span class="keyword">bolt</span></span><br><span class="line">   <span class="list">(<span class="keyword">prepare</span> <span class="collection">[...]</span></span><br><span class="line">    <span class="list">(<span class="keyword">...</span>)</span>)</span></span><br><span class="line">   <span class="list">(<span class="keyword">execute</span> <span class="collection">[tuple]</span></span><br><span class="line">    <span class="list">(<span class="keyword">...</span>)</span>)</span>)</span>)</span></span></span><br></pre></td></tr></table></figure>
 <p>　　首先就是 <code>{:prepare true}</code> 代表了它是一個需要初始化的 Bolt。</p>
 <p>　　然後在 <code>(bolt)</code> 的作用域之內有兩個 form——<code>prepare</code> 和 <code>execute</code>。</p>
 <p>　　其中 <code>prepare</code> 就是你要初始化的語句了。舉個例子，我們讓這裏面初始化一個 <a href="http://clojuremongodb.info/" target="_blank" rel="external">Monger</a>，於是我們要在 <code>let</code> 裏面定義一個用於鏈接的 <code>atom {}</code>。</p>
-<figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="list">(<span class="title">defbolt</span> bolt <span class="collection">[<span class="string">"..."</span>]</span> <span class="collection">{<span class="attribute">:prepare</span> true}</span></span></div><div class="line"> <span class="collection">[conf context collector]</span></div><div class="line"> <span class="list">(<span class="title"><span class="built_in">let</span></span> <span class="collection">[conn <span class="list">(<span class="title"><span class="built_in">atom</span></span> <span class="collection">{}</span>)</span></span></span></div><div class="line">       db <span class="list">(<span class="title"><span class="built_in">atom</span></span> <span class="collection">{}</span>)</span>]</div><div class="line">   <span class="list">(<span class="title">bolt</span></span></div><div class="line">    <span class="list">(<span class="title">prepare</span> <span class="collection">[conf context collector]</span></span></div><div class="line">     <span class="list">(<span class="title"><span class="built_in">reset!</span></span> conn <span class="list">(<span class="title">mg/connect</span> ...)</span>)</span></div><div class="line">     <span class="list">(<span class="title"><span class="built_in">reset!</span></span> db <span class="list">(<span class="title">mg/get-db</span> @conn ...)</span>)</span>)</div><div class="line">    <span class="list">(<span class="title">execute</span> <span class="collection">[tuple]</span></span></div><div class="line">     <span class="list">(<span class="title">...</span>)</span>))))</div></pre></td></tr></table></figure>
-
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="list">(<span class="keyword">defbolt</span> bolt <span class="collection">[<span class="string">"..."</span>]</span> <span class="collection">&#123;<span class="attribute">:prepare</span> <span class="literal">true</span>&#125;</span></span><br><span class="line"> <span class="collection">[conf context collector]</span></span><br><span class="line"> <span class="list">(<span class="keyword"><span class="built_in">let</span></span> <span class="collection">[conn <span class="list">(<span class="keyword"><span class="built_in">atom</span></span> <span class="collection">&#123;&#125;</span>)</span></span><br><span class="line">       db <span class="list">(<span class="keyword"><span class="built_in">atom</span></span> <span class="collection">&#123;&#125;</span>)</span>]</span></span><br><span class="line">   <span class="list">(<span class="keyword">bolt</span></span><br><span class="line">    <span class="list">(<span class="keyword">prepare</span> <span class="collection">[conf context collector]</span></span><br><span class="line">     <span class="list">(<span class="keyword"><span class="built_in">reset!</span></span> conn <span class="list">(<span class="keyword">mg/connect</span> ...)</span>)</span></span><br><span class="line">     <span class="list">(<span class="keyword"><span class="built_in">reset!</span></span> db <span class="list">(<span class="keyword">mg/get-db</span> @conn ...)</span>)</span>)</span></span><br><span class="line">    <span class="list">(<span class="keyword">execute</span> <span class="collection">[tuple]</span></span><br><span class="line">     <span class="list">(<span class="keyword">...</span>)</span>)</span>)</span>)</span>)</span></span><br></pre></td></tr></table></figure>
 <p>　　這樣一來，當 Bolt 被 Nimbus 打包傳到各個 worker 之後，Bolt 執行起來的時候會自動執行 <code>prepare</code> 當中的代碼，即初始化 MongoDB 的鏈接，並且將其賦值給 <code>conn</code> 和 <code>db</code> 兩個 atom。</p>
 <p>　　那麼，我們就能在本體 <code>execute</code> 當中使用 <code>@conn</code> 和 <code>@db</code> 來使喚 MongoDB 了。</p>
-<h2 id="思考">思考</h2>
-<p>　　可能很多人不解，不是說儘量保持 LISP 語系當中值的不變性的麼？</p>
+<h2 id="思考">思考</h2><p>　　可能很多人不解，不是說儘量保持 LISP 語系當中值的不變性的麼？</p>
 <p>　　其實不變性只是爲了提高程序在運行時的效率——而事實上是，上面那段代碼並沒有在運行時去做變量。</p>
 <p>　　雖然說這麼說有點牽強，但是的確就是這個意思——因爲我們是在程序執行真正有用的好邏輯的時候沒有去改變一些值，相反只是在 Bolt 啓動的時候做一些變量的操作。</p>
 <p>　　換句話說，雖然嚴謹的講那個時候是算運行時，但是在運行時裏面我們卻可以把它歸類爲預處理——這一類東西反正程序還沒真正開始跑有用的東西，效率慢一點無所謂，而且就初始化這麼屁大點事兒能有多少影響？</p>
 <p>　　效率和效果之間權衡上面的還是要仁者見仁智者見智了。</p>
-<h2 id="小結">小結</h2>
-<p>　　本以爲 <code>Suwako</code> 終於可以暫時告一段落了，緊要關頭居然還是阻塞了。</p>
+<h2 id="小結">小結</h2><p>　　本以爲 <code>Suwako</code> 終於可以暫時告一段落了，緊要關頭居然還是阻塞了。</p>
 <p>　　說多都是淚，不說了，找 Bug 去了。</p>
 <p><img src="suwako.jpg" alt="泄矢諏訪子"></p>
 
-            
-            <section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
+			
+            <section class="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2014/08/04/storm-clojure-prepare-bolt/" data-title="Storm 中 Clojure 的 Prepare Bolt 實現" data-url="http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -159,7 +154,7 @@
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

@@ -6,15 +6,12 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="蕾米莉亞？
-其實這是花瓣的一個入庫系統結構圖，蕾米莉亞是這個項目的名字。
+    <meta name="description" content="蕾米莉亞？其實這是花瓣的一個入庫系統結構圖，蕾米莉亞是這個項目的名字。
 結構圖
-
 設計得不好，純屬做歸檔。
 其中 SanaeHDCS 是另一套系統，給 RemiliaHDPS 提供數據的。
-Data Layer
-主要分爲 Bathtub，Dryer，Vampire 三個部分。
-Bathtub 浴缸">
+Data Layer主要分爲 Bathtub，Dryer，Vampire 三個部分。
+Bathtub 浴缸由 S">
     
     
 
@@ -31,9 +28,7 @@ Bathtub 浴缸">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -106,7 +101,7 @@ Bathtub 浴缸">
         <h1>Remilia 結構圖</h1>
         
         <div class="time-info">
-发表于:<time datetime="2015-01-08T08:47:17.000Z" itemprop="datePublished">2015年01月08日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2015-01-08T08:47:17.000Z" itemprop="datePublished">2015年01月08日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -115,50 +110,44 @@ Bathtub 浴缸">
                 <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#蕾米莉亞？"><span class="toc-number">1.</span> <span class="toc-text">蕾米莉亞？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#結構圖"><span class="toc-number">2.</span> <span class="toc-text">結構圖</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Data_Layer"><span class="toc-number">2.1.</span> <span class="toc-text">Data Layer</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Bathtub_浴缸"><span class="toc-number">2.1.1.</span> <span class="toc-text">Bathtub 浴缸</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Dryer_吹轟雞"><span class="toc-number">2.1.2.</span> <span class="toc-text">Dryer 吹轟雞</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Vampire_血族"><span class="toc-number">2.1.3.</span> <span class="toc-text">Vampire 血族</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fake_Internet"><span class="toc-number">2.2.</span> <span class="toc-text">Fake Internet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fake_Koumakan"><span class="toc-number">2.3.</span> <span class="toc-text">Fake Koumakan</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#01_/_12_/_2015"><span class="toc-number">3.</span> <span class="toc-text">01 / 12 / 2015</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最後"><span class="toc-number">4.</span> <span class="toc-text">最後</span></a></li></ol>
             </div>
             
-            <h2 id="蕾米莉亞？">蕾米莉亞？</h2>
-<p>其實這是花瓣的一個入庫系統結構圖，蕾米莉亞是這個項目的名字。</p>
-<h2 id="結構圖">結構圖</h2>
-<p><img src="pic.jpg" alt="Remilia"></p>
+            <h2 id="蕾米莉亞？">蕾米莉亞？</h2><p>其實這是花瓣的一個入庫系統結構圖，蕾米莉亞是這個項目的名字。</p>
+<h2 id="結構圖">結構圖</h2><p><img src="pic.jpg" alt="Remilia"></p>
 <p>設計得不好，純屬做歸檔。</p>
 <p>其中 SanaeHDCS 是另一套系統，給 RemiliaHDPS 提供數據的。</p>
-<h3 id="Data_Layer">Data Layer</h3>
-<p>主要分爲 Bathtub，Dryer，Vampire 三個部分。</p>
-<h4 id="Bathtub_浴缸">Bathtub 浴缸</h4>
-<p>由 SanaeHDCS 提供的數據，存儲在 MongoDB 當中。</p>
-<h4 id="Dryer_吹轟雞">Dryer 吹轟雞</h4>
-<p>將 Bathtub 出來的溼數據變成乾貨的解析器，根據不同的數據用不同的規則進行解析。</p>
-<h4 id="Vampire_血族">Vampire 血族</h4>
-<p>全名其實是 Vampire Coffin，只不過把這個寫到項目裏面看着貌似不是很吉利，於是取了前半部分。吹轟機處理好的幹活會存儲在這邊，實際上也是<br>MongoDB 裏面。然後 Vampire 提供給外部接口，讓其能夠用正確的姿勢獲取正確的乾貨數據。</p>
-<h3 id="Fake_Internet">Fake Internet</h3>
-<p>一個視窗。</p>
-<h3 id="Fake_Koumakan">Fake Koumakan</h3>
-<p>假的紅魔館，裏面一堆 Puppet。</p>
+<h3 id="Data_Layer">Data Layer</h3><p>主要分爲 Bathtub，Dryer，Vampire 三個部分。</p>
+<h4 id="Bathtub_浴缸">Bathtub 浴缸</h4><p>由 SanaeHDCS 提供的數據，存儲在 MongoDB 當中。</p>
+<h4 id="Dryer_吹轟雞">Dryer 吹轟雞</h4><p>將 Bathtub 出來的溼數據變成乾貨的解析器，根據不同的數據用不同的規則進行解析。</p>
+<h4 id="Vampire_血族">Vampire 血族</h4><p>全名其實是 Vampire Coffin，只不過把這個寫到項目裏面看着貌似不是很吉利，於是取了前半部分。吹轟機處理好的幹活會存儲在這邊，實際上也是<br>MongoDB 裏面。然後 Vampire 提供給外部接口，讓其能夠用正確的姿勢獲取正確的乾貨數據。</p>
+<h3 id="Fake_Internet">Fake Internet</h3><p>一個視窗。</p>
+<h3 id="Fake_Koumakan">Fake Koumakan</h3><p>假的紅魔館，裏面一堆 Puppet。</p>
 <blockquote>
 <p>每個 Puppet 都有自己的屬性、人格、作息時間和生活。</p>
 </blockquote>
-<h2 id="01_/_12_/_2015">01 / 12 / 2015</h2>
-<p>重新設計了 Remilia 結構圖。</p>
+<h2 id="01_/_12_/_2015">01 / 12 / 2015</h2><p>重新設計了 Remilia 結構圖。</p>
 <p><img src="new.jpg" alt="Remilia"></p>
-<h2 id="最後">最後</h2>
-<p>好吧還是我的腦洞太大了。我知道你們看着這貨不知所云。</p>
+<h2 id="最後">最後</h2><p>好吧還是我的腦洞太大了。我知道你們看着這貨不知所云。</p>
 <p>好吧忘了這個東西吧，我只是無聊發一篇而已。</p>
 
-            
-            <section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
+			
+            <section class="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2015/01/08/remilia-structure/" data-title="Remilia 結構圖" data-url="http://xcoder.in/2015/01/08/remilia-structure/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -168,7 +157,7 @@ Bathtub 浴缸">
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>

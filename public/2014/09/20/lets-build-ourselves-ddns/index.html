@@ -6,9 +6,8 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="起因
-　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 kacaka.ca（目前暫失效）。
-　　爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 CloudFlare。而且它也有">
+    <meta name="description" content="起因　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 kacaka.ca（目前暫失效）。
+　　爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 CloudFlare。而且它也有提">
     
     
 
@@ -25,9 +24,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-
 
     <!-- Javascript -->
     <script src="/js/jquery-2.1.0.min.js"></script>
@@ -100,7 +97,7 @@
         <h1>讓我們用 Node.js 寫自己的 DDNS 動態域名程序</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-09-20T07:51:40.000Z" itemprop="datePublished">2014年09月20日</time>，更新于:<time datetime="2015-03-13T08:20:37.000Z" itemprop="dateModified">2015年03月13日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-09-20T07:51:40.000Z" itemprop="datePublished">2014年09月20日</time>，更新于:<time datetime="2015-06-03T07:10:54.000Z" itemprop="dateModified">2015年06月03日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -109,57 +106,44 @@
                 <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#起因"><span class="toc-number">1.</span> <span class="toc-text">起因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用_dlouc-flare_構建"><span class="toc-number">2.</span> <span class="toc-text">使用 dlouc-flare 構建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何自己寫？"><span class="toc-number">3.</span> <span class="toc-text">如何自己寫？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#API_解析"><span class="toc-number">3.1.</span> <span class="toc-text">API 解析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#驗證信息"><span class="toc-number">3.1.1.</span> <span class="toc-text">驗證信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#獲取域名下的子域名記錄"><span class="toc-number">3.1.2.</span> <span class="toc-text">獲取域名下的子域名記錄</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改某記錄"><span class="toc-number">3.1.3.</span> <span class="toc-text">修改某記錄</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#探測_IP"><span class="toc-number">3.1.4.</span> <span class="toc-text">探測 IP</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#流程"><span class="toc-number">3.2.</span> <span class="toc-text">流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小結"><span class="toc-number">4.</span> <span class="toc-text">小結</span></a></li></ol>
             </div>
             
-            <h2 id="起因">起因</h2>
-<p>　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 <a href="http://kacaka.ca/" target="_blank" rel="external">kacaka.ca</a>（目前暫失效）。</p>
+            <h2 id="起因">起因</h2><p>　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 <a href="http://kacaka.ca/" target="_blank" rel="external">kacaka.ca</a>（目前暫失效）。</p>
 <p>　　爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 <a href="http://cloudflare.com/" target="_blank" rel="external">CloudFlare</a>。而且它也有提供 API 讓開發者自己開發通過他的服務解析域名的服務。</p>
 <p>　　再然後，去年的九月份，我的早期 Node.js 作品 <strong><a href="https://github.com/XadillaX/dloucflare/tree/0.0.2" target="_blank" rel="external">dloucflare</a></strong> 發佈了。所以就有了<a href="http://cnodejs.org/topic/522b64c3101e574521332451" target="_blank" rel="external">這個帖子</a>。</p>
 <p>　　現在，我已經搬到電信了，然後舊版的貌似不能用了，因爲 <strong>CloudFlare</strong> 貌似 API 都遷移到了 <code>https</code> 上面。然後我爲了我的小夥伴們能訪問我出租屋裏的舊電腦，又重構了一遍<a href="https://github.com/XadillaX/dloucflare" target="_blank" rel="external">這個項目</a>。</p>
-<h2 id="使用_dlouc-flare_構建">使用 dlouc-flare 構建</h2>
-<p>　　首先安裝最新的 <code>dlouc-flare</code> 包：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install dlouc-flare</div></pre></td></tr></table></figure>
-
+<h2 id="使用_dlouc-flare_構建">使用 dlouc-flare 構建</h2><p>　　首先安裝最新的 <code>dlouc-flare</code> 包：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install dlouc-flare</span><br></pre></td></tr></table></figure>
 <p>　　然後去創建一個 <strong>DF</strong> 對象：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> DloucFlare = <span class="built_in">require</span>(<span class="string">"dlouc-flare"</span>);</div><div class="line"><span class="keyword">var</span> df = DloucFlare.create(<span class="string">"你的郵箱"</span>, <span class="string">"API KEY"</span>, <span class="string">"域名（不需要 www）"</span>);</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> DloucFlare = <span class="built_in">require</span>(<span class="string">"dlouc-flare"</span>);</span><br><span class="line"><span class="keyword">var</span> df = DloucFlare.create(<span class="string">"你的郵箱"</span>, <span class="string">"API KEY"</span>, <span class="string">"域名（不需要 www）"</span>);</span><br></pre></td></tr></table></figure>
 <p>　　<strong>CloudFlare</strong> 如何使用的話這裏就不多做解釋了，至於 <strong>API KEY</strong> 的話，可以在<a href="https://www.cloudflare.com/my-account" target="_blank" rel="external">這裏</a>獲取到。</p>
 <p>　　然後調用 <code>df.dynamicDomains</code> 函數去把你這個域名下面的一些子域名加入你這個腳本的動態域名範疇當中：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">df.dynamicDomains([ <span class="string">"@"</span>, <span class="string">"www"</span>, <span class="string">"子域名3"</span>, <span class="string">"子域名4"</span>, ... ], 檢測時間間隔);</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.dynamicDomains([ <span class="string">"@"</span>, <span class="string">"www"</span>, <span class="string">"子域名3"</span>, <span class="string">"子域名4"</span>, ... ], 檢測時間間隔);</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>其中 <code>&quot;@&quot;</code> 代表的是域名沒有 <code>www</code> 前綴的本身。檢測時間間隔以毫秒爲單位。</p>
 </blockquote>
 <p>　　事實上，你也可以自定義一個檢測你當前主機的 IP 地址的函數（如果你不喜歡用包內的默認檢測 IP 函數）。</p>
 <p>　　只要你寫一個函數：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkIp</span><span class="params">(callback)</span> </span>{</div><div class="line">    <span class="comment">// blahblah...</span></div><div class="line">    callback(<span class="literal">undefined</span>, IP地址);</div><div class="line">}</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkIp</span>(<span class="params">callback</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// blahblah...</span></span><br><span class="line">    callback(<span class="literal">undefined</span>, IP地址);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>　　然後覆蓋掉默認的 IP 檢測函數即可：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">df.getIpFunction = checkIp;</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.getIpFunction = checkIp;</span><br></pre></td></tr></table></figure>
 <p>　　最後保存退出並用 <code>node</code> 執行你的程序就好了，程序就會開始歡快地跑了。</p>
 <p><img src="preview.png" alt="Preview"></p>
-<h2 id="如何自己寫？">如何自己寫？</h2>
-<p>　　其實要完全自己寫也是很簡單的——無非就是調用一下 <strong>CloudFlare</strong> 的 API 而已。</p>
+<h2 id="如何自己寫？">如何自己寫？</h2><p>　　其實要完全自己寫也是很簡單的——無非就是調用一下 <strong>CloudFlare</strong> 的 API 而已。</p>
 <p>　　我們定位明確就是要做 DDNS，所以沒必要關係其它很多不相關的 API，只需要最基礎的幾個就夠了。</p>
-<h3 id="API_解析">API 解析</h3>
-<p>　　所有 API 的基礎 URI 都爲：<a href="https://www.cloudflare.com/api_json.html" target="_blank" rel="external">https://www.cloudflare.com/api_json.html</a>。</p>
-<h4 id="驗證信息">驗證信息</h4>
-<p>　　根據 <strong>CloudFlare</strong> 文檔所說，所有的提交都要黏上<a href="https://www.cloudflare.com/docs/client-api.html#s2.1" target="_blank" rel="external">驗證信息</a>給 POST 過去。而驗證的字段如下：</p>
+<h3 id="API_解析">API 解析</h3><p>　　所有 API 的基礎 URI 都爲：<a href="https://www.cloudflare.com/api_json.html" target="_blank" rel="external">https://www.cloudflare.com/api_json.html</a>。</p>
+<h4 id="驗證信息">驗證信息</h4><p>　　根據 <strong>CloudFlare</strong> 文檔所說，所有的提交都要黏上<a href="https://www.cloudflare.com/docs/client-api.html#s2.1" target="_blank" rel="external">驗證信息</a>給 POST 過去。而驗證的字段如下：</p>
 <ul>
 <li><strong>tkn:</strong> 從你的個人頁面當中複製出來的 API KEY。</li>
 <li><strong>email:</strong> 你的登錄郵箱。</li>
 <li><strong>a:</strong> 操作名，每種操作都有其特有的操作名。</li>
 </ul>
-<h4 id="獲取域名下的子域名記錄">獲取域名下的子域名記錄</h4>
-<p>　　其操作名爲 <code>rec_load_all</code>，我們不關心其它不重要的參數，只需要再傳一個 <code>z</code> 字段代表其域名就好了，舉個例子：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> self = <span class="keyword">this</span>;</div><div class="line"><span class="keyword">var</span> param = {</div><div class="line">    a       : <span class="string">"rec_load_all"</span>,</div><div class="line">    tkn     : <span class="keyword">this</span>.apiKey,</div><div class="line">    email   : <span class="keyword">this</span>.email,</div><div class="line">    z       : <span class="keyword">this</span>.domain</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">var</span> url = <span class="string">"https://www.cloudflare.com/api_json.html"</span>;</div><div class="line">spidex.post(url, <span class="function"><span class="keyword">function</span><span class="params">(html, status)</span> </span>{</div><div class="line">    <span class="keyword">if</span>(status !== <span class="number">200</span>) {</div><div class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Error status while fetching DNS records."</span>));</div><div class="line">    }</div><div class="line"></div><div class="line">    <span class="keyword">var</span> json;</div><div class="line">    <span class="keyword">try</span> {</div><div class="line">        json = <span class="built_in">JSON</span>.parse(html);</div><div class="line">    } <span class="keyword">catch</span>(e) {</div><div class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Error while parsing DNS records: "</span> + e.message));</div><div class="line">    }</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(json.result === <span class="string">"error"</span>) {</div><div class="line">        <span class="keyword">var</span> msg = json.msg;</div><div class="line">        <span class="keyword">if</span>(<span class="literal">undefined</span> === msg) msg = <span class="string">"Unknown error."</span>;</div><div class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(msg));</div><div class="line">    } <span class="keyword">else</span> <span class="keyword">if</span>(json.result === <span class="string">"success"</span>) {</div><div class="line">        <span class="keyword">var</span> count = json.response.recs.count;</div><div class="line">        <span class="keyword">var</span> objects = json.response.recs.objs;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; count; i++) {</div><div class="line">            self.records.push(<span class="keyword">new</span> DNSRecordObject(self, objects[i]));</div><div class="line">        }</div><div class="line"></div><div class="line">        callback(<span class="literal">undefined</span>, self.records);</div><div class="line">    } <span class="keyword">else</span> {</div><div class="line">        callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Unknown error."</span>));</div><div class="line">    }</div><div class="line">}, param, <span class="string">"utf8"</span>).on(<span class="string">"error"</span>, callback);</div></pre></td></tr></table></figure>
-
+<h4 id="獲取域名下的子域名記錄">獲取域名下的子域名記錄</h4><p>　　其操作名爲 <code>rec_load_all</code>，我們不關心其它不重要的參數，只需要再傳一個 <code>z</code> 字段代表其域名就好了，舉個例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> self = <span class="keyword">this</span>;</span><br><span class="line"><span class="keyword">var</span> param = &#123;</span><br><span class="line">    a       : <span class="string">"rec_load_all"</span>,</span><br><span class="line">    tkn     : <span class="keyword">this</span>.apiKey,</span><br><span class="line">    email   : <span class="keyword">this</span>.email,</span><br><span class="line">    z       : <span class="keyword">this</span>.domain</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> url = <span class="string">"https://www.cloudflare.com/api_json.html"</span>;</span><br><span class="line">spidex.post(url, <span class="function"><span class="keyword">function</span>(<span class="params">html, status</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(status !== <span class="number">200</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Error status while fetching DNS records."</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> json;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        json = <span class="built_in">JSON</span>.parse(html);</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Error while parsing DNS records: "</span> + e.message));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(json.result === <span class="string">"error"</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> msg = json.msg;</span><br><span class="line">        <span class="keyword">if</span>(<span class="literal">undefined</span> === msg) msg = <span class="string">"Unknown error."</span>;</span><br><span class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(msg));</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(json.result === <span class="string">"success"</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> count = json.response.recs.count;</span><br><span class="line">        <span class="keyword">var</span> objects = json.response.recs.objs;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">            self.records.push(<span class="keyword">new</span> DNSRecordObject(self, objects[i]));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        callback(<span class="literal">undefined</span>, self.records);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Unknown error."</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;, param, <span class="string">"utf8"</span>).on(<span class="string">"error"</span>, callback);</span><br></pre></td></tr></table></figure>
 <p>　　上述代碼就是把 <code>param</code> 數據給 POST 到 API 的 RESTful 裏面去。然後根據返回值進行解析。</p>
 <blockquote>
 <p>關於 <code>DNSRecordObject</code> 的代碼可以自行翻閱<a href="https://github.com/XadillaX/dloucflare/blob/master/lib/dnsrecordobject.js" target="_blank" rel="external">這裏</a>。</p>
 <p>以及 <strong>spidex</strong> 的文檔在<a href="https://www.npmjs.org/package/spidex#readme" target="_blank" rel="external">這裏</a>。</p>
 </blockquote>
-<h4 id="修改某記錄">修改某記錄</h4>
-<p>　　其操作名爲 <code>rec_edit</code>，如<a href="https://www.cloudflare.com/docs/client-api.html#s5.2" target="_blank" rel="external">文檔</a>所說，除了固有的幾個參數之外，我們還需要有如下參數：</p>
+<h4 id="修改某記錄">修改某記錄</h4><p>　　其操作名爲 <code>rec_edit</code>，如<a href="https://www.cloudflare.com/docs/client-api.html#s5.2" target="_blank" rel="external">文檔</a>所說，除了固有的幾個參數之外，我們還需要有如下參數：</p>
 <ul>
 <li><code>z:</code> 域名。</li>
 <li><code>id:</code> 域名記錄編號，從 <code>rec_load_all</code> 中獲取。</li>
@@ -173,13 +157,11 @@
 <p>上面參數的解說只是對於我們要做 DDNS 腳本而言的解釋。</p>
 </blockquote>
 <p>　　所以說在 <strong><a href="https://github.com/XadillaX/dloucflare/blob/master/lib/dnsrecordobject.js" target="_blank" rel="external">dnsrecordobject.js</a></strong> 中我是這麼做的：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> param = {</div><div class="line">    a       : <span class="string">"rec_edit"</span>,</div><div class="line">    tkn     : <span class="keyword">this</span>.dloucflare.apiKey,</div><div class="line">    email   : <span class="keyword">this</span>.dloucflare.email,</div><div class="line">    id      : <span class="keyword">this</span>.recordId(),</div><div class="line"></div><div class="line">    z       : <span class="keyword">this</span>.domain,</div><div class="line">    type    : <span class="keyword">this</span>.recordType(),</div><div class="line">    name    : <span class="keyword">this</span>.name,</div><div class="line">    content : ip,</div><div class="line"></div><div class="line">    service_mode    : <span class="keyword">this</span>.object.service_mode,</div><div class="line">    ttl     : <span class="keyword">this</span>.object.ttl</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">var</span> self = <span class="keyword">this</span>;</div><div class="line">spidex.post(config.baseUrl, <span class="function"><span class="keyword">function</span><span class="params">(html, status, respHeader)</span> </span>{</div><div class="line">    <span class="keyword">if</span>(status !== <span class="number">200</span>) {</div><div class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Error status while editing "</span> + self.name + <span class="string">"."</span>));</div><div class="line">    }</div><div class="line"></div><div class="line">    <span class="keyword">var</span> json;</div><div class="line">    <span class="keyword">try</span> {</div><div class="line">        json = <span class="built_in">JSON</span>.parse(html);</div><div class="line">    } <span class="keyword">catch</span>(e) {</div><div class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Error while parsing editing result: "</span> + e.message));</div><div class="line">    }</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(json.result === <span class="string">"success"</span>) {</div><div class="line">        self.object.content = ip;</div><div class="line">        <span class="keyword">return</span> callback();</div><div class="line">    } <span class="keyword">else</span> {</div><div class="line">        <span class="keyword">var</span> msg = json.msg || <span class="string">"Unknown error."</span>;</div><div class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(msg));</div><div class="line">    }</div><div class="line">}, param, <span class="string">"utf8"</span>).on(<span class="string">"error"</span>, callback);</div></pre></td></tr></table></figure>
-
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> param = &#123;</span><br><span class="line">    a       : <span class="string">"rec_edit"</span>,</span><br><span class="line">    tkn     : <span class="keyword">this</span>.dloucflare.apiKey,</span><br><span class="line">    email   : <span class="keyword">this</span>.dloucflare.email,</span><br><span class="line">    id      : <span class="keyword">this</span>.recordId(),</span><br><span class="line"></span><br><span class="line">    z       : <span class="keyword">this</span>.domain,</span><br><span class="line">    type    : <span class="keyword">this</span>.recordType(),</span><br><span class="line">    name    : <span class="keyword">this</span>.name,</span><br><span class="line">    content : ip,</span><br><span class="line"></span><br><span class="line">    service_mode    : <span class="keyword">this</span>.object.service_mode,</span><br><span class="line">    ttl     : <span class="keyword">this</span>.object.ttl</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> self = <span class="keyword">this</span>;</span><br><span class="line">spidex.post(config.baseUrl, <span class="function"><span class="keyword">function</span>(<span class="params">html, status, respHeader</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(status !== <span class="number">200</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Error status while editing "</span> + self.name + <span class="string">"."</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> json;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        json = <span class="built_in">JSON</span>.parse(html);</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Error while parsing editing result: "</span> + e.message));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(json.result === <span class="string">"success"</span>) &#123;</span><br><span class="line">        self.object.content = ip;</span><br><span class="line">        <span class="keyword">return</span> callback();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> msg = json.msg || <span class="string">"Unknown error."</span>;</span><br><span class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(msg));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;, param, <span class="string">"utf8"</span>).on(<span class="string">"error"</span>, callback);</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>上面的代碼就能將你某個域名（<code>this.domain</code>）下的子域名 <code>this.name</code> 的 IP 給修改成 <code>ip</code> 了。</p>
 </blockquote>
-<h4 id="探測_IP">探測 IP</h4>
-<p>　　這種 API 網上就多了去了。</p>
+<h4 id="探測_IP">探測 IP</h4><p>　　這種 API 網上就多了去了。</p>
 <p>　　舉個簡單的例子，我的 <code>dlouc-flare</code> 的獲取 IP 的 API 就是從</p>
 <blockquote>
 <p><a href="http://www.telize.com/ip" target="_blank" rel="external">http://www.telize.com/ip</a></p>
@@ -192,8 +174,7 @@
 <li><strong><a href="http://ip.taobao.com/service/getIpInfo2.php?ip=myip" target="_blank" rel="external">http://ip.taobao.com/service/getIpInfo2.php?ip=myip</a></strong>: 這個是淘寶提供的 RESTful 獲取 IP 的 API。</li>
 <li>…（其它的可以自己去發現）</li>
 </ul>
-<h3 id="流程">流程</h3>
-<p>　　有了上面的仨 API，一切都好說了，流程很簡單：</p>
+<h3 id="流程">流程</h3><p>　　有了上面的仨 API，一切都好說了，流程很簡單：</p>
 <ul>
 <li>獲取自己某個使用 <code>CloudFlare</code> 解析的域名下的<a href="#獲取域名下的子域名記錄">子域名</a>。</li>
 <li>自己設置幾個子域名名拿來做 DDNS。</li>
@@ -213,28 +194,31 @@
 <blockquote>
 <p>這裏的定時器時間自己按需而定，就我自己而言，我是給設置了 <code>1000 * 60</code> 毫秒的間隔。</p>
 </blockquote>
-<h2 id="小結">小結</h2>
-<p>　　最早與動態域名結緣的時候是初中的時候，大概七八年前了吧，那個時候花生殼什麼的，但是最終用的是 <code>3322.org</code>。</p>
+<h2 id="小結">小結</h2><p>　　最早與動態域名結緣的時候是初中的時候，大概七八年前了吧，那個時候花生殼什麼的，但是最終用的是 <code>3322.org</code>。</p>
 <p>　　其實基本的動態域名的原理很簡單，無非就是本地開一個腳本，不停去探測本機 IP，一旦有變化就去解析服務器修改。</p>
 <p>　　本人在這裏拋磚引玉。如果哪裏有別的解析商的 API，大家自己也可以舉一反三，寫什麼 DNSPod 的動態域名，寫什麼 jiasule 的動態域名等等等等。</p>
 <p>　　喵~<em>ଘ(੭</em>ˊᵕˋ)੭* ੈ✩‧₊˚</p>
 
-            
-            <section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
+			
+            <section class="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/2014/09/20/lets-build-ourselves-ddns/" data-title="讓我們用 Node.js 寫自己的 DDNS 動態域名程序" data-url="http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"xcoder-ghost"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+var duoshuoQuery = {short_name:"xcoder-ghost"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
         </div>
     </div>
 </article>
@@ -244,7 +228,7 @@
         艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
     </div>
         <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 XadillaX</small>
+        <small>&copy; 2014 小鳥遊死月</small>
     </footer>
 </body>
 </html>
