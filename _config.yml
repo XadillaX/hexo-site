@@ -84,3 +84,8 @@ stylus:
 
 baidu_analytics: d4417d158ec17db3ca549b508c2e5e07
 mathjax: true
+
+feed:
+  type: atom
+  path: atom.xml
+  limit: 0
