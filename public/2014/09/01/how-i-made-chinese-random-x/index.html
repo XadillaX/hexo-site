@@ -101,7 +101,7 @@
         <h1>我是如何實現簡單的隨機中文名生成器的（Node 版）</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-09-01T12:36:33.000Z" itemprop="datePublished">2014年09月01日</time>，更新于:<time datetime="2015-06-10T03:29:48.000Z" itemprop="dateModified">2015年06月10日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-09-01T12:36:33.000Z" itemprop="datePublished">2014年09月01日</time>，更新于:<time datetime="2015-06-11T04:16:42.000Z" itemprop="dateModified">2015年06月11日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -141,7 +141,7 @@
 <p><a href="https://github.com/XadillaX/chinese-random-name/blob/master/dict/n.dict" target="_blank" rel="external">字庫鏈接</a></p>
 </blockquote>
 <p>它每一行的結構一樣：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Number</span> UniChar UniChar：<span class="built_in">String</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Number</span> UniChar UniChar：<span class="built_in">String</span></span><br></pre></td></tr></table></figure>
 <p>其中第一個數字我目測是繁體的筆畫數，比如 899 行的 <code>書</code> 繁體就是 <code>書</code>，數一下的確是 10 劃。</p>
 <p>第二個就是字本體，第三個是該字的五行屬性，最後是這個字在什麼什麼命數（請不要迷信）描述。</p>
 <p>爲了讓名字看起來稍微正常點（只是稍微而已），我儘可能讓同屬性的字在一塊兒，於是有了以下組合：</p>

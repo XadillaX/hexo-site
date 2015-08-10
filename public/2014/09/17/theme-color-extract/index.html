@@ -101,7 +101,7 @@
         <h1>圖片主題色提取算法小結</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-09-17T03:34:54.000Z" itemprop="datePublished">2014年09月17日</time>，更新于:<time datetime="2015-06-10T03:29:48.000Z" itemprop="dateModified">2015年06月10日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-09-17T03:34:54.000Z" itemprop="datePublished">2014年09月17日</time>，更新于:<time datetime="2015-06-11T04:16:42.000Z" itemprop="dateModified">2015年06月11日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -133,7 +133,7 @@
 <p>　　大致的思路就是對於某一個像素點的顏色 <strong>R / G / B</strong> 分開來之後，用二進制逐行寫下。</p>
 <p>　　如 <code>#FF7800</code>，其中 <strong>R</strong> 通道爲 <code>0xFF</code>，也就是 <code>255</code>，<strong>G</strong> 爲 <code>0x78</code> 也就是 <code>120</code>，<strong>B</strong> 爲 <code>0x00</code> 也就是 <code>0</code>。</p>
 <p>　　接下去我們把它們寫成二進制逐行放下，那麼就是：</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">R</span>: <span class="string">1111 1111</span></span><br><span class="line"><span class="attribute">G</span>: <span class="string">0111 1000</span></span><br><span class="line"><span class="attribute">B</span>: <span class="string">0000 0000</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">R: <span class="number">1111</span> <span class="number">1111</span></span><br><span class="line">G: <span class="number">0111</span> <span class="number">1000</span></span><br><span class="line">B: <span class="number">0000</span> <span class="number">0000</span></span><br></pre></td></tr></table></figure>
 <p>　　<strong>RGB</strong> 通道逐列黏合之後的值就是其在某一層節點的子節點編號了。每一列一共是三位，那麼取值範圍就是 <code>0 ~ 7</code> 也就是一共有八種情況。這就是爲什麼這種算法要開八叉樹來計算的原因了。</p>
 <p>　　舉個例子，上述顏色的第一位黏合起來是 <code>100(2)</code>，轉化爲十進制就是 4，所以這個顏色在第一層是放在根節點的第五個子節點當中；第二位是 <code>110(2)</code> 也就是 6，那麼它就是根節點的第五個兒子的第七個兒子。</p>
 <p>　　於是我們有了這樣的一個節點結構：</p>
@@ -172,7 +172,7 @@
 <p>　　舉個例子，我們有一個節點有八個子節點，並且都是葉子節點，那麼我們把八個葉子節點的通道分量全累加到該節點中，顏色總數也累加到該節點中，然後刪除八個葉子節點並把該節點設置爲葉子節點。那麼一下子我們就合併了八個節點有木有！</p>
 <p>　　爲什麼這些節點可以被合併呢？</p>
 <p>　　我們來看看某個節點下的子節點顏色都有神馬相似點吧——它們的三個分量前七位（或者說如果已經不是最底層的節點的話那就是前幾位）是相同的，那麼比如說剛纔的 <code>FF7800</code>，跟它同級並且擁有相同父節點（也就是它的兄弟節點）的顏色都是什麼呢：</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">R</span>: <span class="string">1111 111(0,1)</span></span><br><span class="line"><span class="attribute">G</span>: <span class="string">0111 100(0,1)</span></span><br><span class="line"><span class="attribute">B</span>: <span class="string">0000 000(0,1)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">R: <span class="number">1111</span> <span class="number">111</span>(<span class="number">0</span>,<span class="number">1</span>)</span><br><span class="line">G: <span class="number">0111</span> <span class="number">100</span>(<span class="number">0</span>,<span class="number">1</span>)</span><br><span class="line">B: <span class="number">0000</span> <span class="number">000</span>(<span class="number">0</span>,<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 <p>　　整合出來一看：</p>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">FE7800</span></span><br><span class="line">FE7801</span><br><span class="line">FE7900</span><br><span class="line">FE7901</span><br><span class="line">FF7800</span><br><span class="line">FF7801</span><br><span class="line">FF7900</span><br><span class="line">FF7901</span><br></pre></td></tr></table></figure>
 <p>　　怎麼樣？是不是確實很相近？這就是八叉樹的精髓了，所有的兄弟節點肯定是在一個相近的顏色範圍內。</p>

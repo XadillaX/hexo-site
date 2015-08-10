@@ -98,7 +98,7 @@
         <h1>在 C++ 中鏈接 C 的 文件</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-12-10T07:30:32.000Z" itemprop="datePublished">2014年12月10日</time>，更新于:<time datetime="2015-06-10T03:29:48.000Z" itemprop="dateModified">2015年06月10日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-12-10T07:30:32.000Z" itemprop="datePublished">2014年12月10日</time>，更新于:<time datetime="2015-06-11T04:16:42.000Z" itemprop="dateModified">2015年06月11日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -119,7 +119,7 @@
 <blockquote>
 <p>Nevermind, found my own answer after finally hitting the right google search terms.</p>
 <p>Added</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#ifdef __cplusplus</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> &#123;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//... source code here...</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#ifdef __cplusplus</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">ifdef</span> __cplusplus</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> &#123;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//... source code here...</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">ifdef</span> __cplusplus</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
 <p>So that the CPP compiler would know I was talking C and not CPP :)</p>
 </blockquote>
 <p>答案的大意就是在你的 C 頭文件中添加上面 blahblah 一大段宏，好讓 C++ 的編譯器知道它是在跟 C 的中間文件交流而不是 C++，這樣的話鏈接的時候就能正常接軌了。於是我在我的新版 <a href="https://github.com/XadillaX/xmempool/commit/b06351836c9b51952a3d98c438df6626dda8738c" target="_blank" rel="external">xmempool</a> 的頭文件裏面就已經添加上了這兩段話了。</p>

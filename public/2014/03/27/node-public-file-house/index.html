@@ -96,7 +96,7 @@
         <h1>～公衆檔所～項目解析</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-03-26T17:34:04.000Z" itemprop="datePublished">2014年03月27日</time>，更新于:<time datetime="2015-06-10T03:29:48.000Z" itemprop="dateModified">2015年06月10日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-03-26T17:34:04.000Z" itemprop="datePublished">2014年03月27日</time>，更新于:<time datetime="2015-06-11T04:16:42.000Z" itemprop="dateModified">2015年06月11日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -181,7 +181,7 @@
 <figure class="highlight nimrod"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">result</span>.status = <span class="literal">true</span>;</span><br><span class="line"><span class="literal">result</span>.code = filename;</span><br><span class="line">resp.send(<span class="number">200</span>, <span class="literal">result</span>);</span><br></pre></td></tr></table></figure>
 <h3 id="視圖">視圖</h3><p>　　這裏視圖就一個 <code>index.ejs</code> 。然後通過 <code>backbone.js</code> 來調用不同的頁內模板和邏輯來實現的類似於 <strong>SPA <del>(Solus Par Agula)</del> (Single Page Application)</strong> 的效果。</p>
 <h4 id="views/index/index-ejs">views/index/index.ejs</h4><p>　　像類似於下面的這種就是 <code>backbone.js</code> 的模板概唸了：</p>
-<figure class="highlight xml"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/template"</span> <span class="attribute">id</span>=<span class="value">"faq-template"</span>&gt;</span><span class="asciidoc"></span><br><span class="line"><span class="bullet">...</span><br><span class="line"></span></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/template"</span> <span class="attribute">id</span>=<span class="value">"faq-template"</span>&gt;</span><span class="undefined"></span><br><span class="line">...</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>　　到時候就可以通過 <code>backbone.js</code> 中的函數來填充到頁面實體當中去。</p>
 <h4 id="public/js/index-js">public/js/index.js</h4><p>　　在擁有了所有的前端js依賴之後，這個文件就是這個 <code>SPA</code> 的入口了。</p>
 <p>　　邏輯很簡單：</p>

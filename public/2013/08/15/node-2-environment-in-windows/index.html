@@ -100,7 +100,7 @@ sh1234$ cd /usr/local/bin$ wget htt">
         <h1>一起擼Node.JS（負貳）——環境</h1>
         
         <div class="time-info">
-发表于:<time datetime="2013-08-14T16:00:00.000Z" itemprop="datePublished">2013年08月15日</time>，更新于:<time datetime="2015-06-10T03:29:48.000Z" itemprop="dateModified">2015年06月10日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2013-08-14T16:00:00.000Z" itemprop="datePublished">2013年08月15日</time>，更新于:<time datetime="2015-06-11T04:16:42.000Z" itemprop="dateModified">2015年06月11日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -178,12 +178,12 @@ sh1234$ cd /usr/local/bin$ wget htt">
 <p><strong>vim</strong> 配置以及使用請參照：<a href="https://wiki.archlinux.org/index.php/Vim" target="_blank" rel="external">https://wiki.archlinux.org/index.php/Vim</a></p>
 <blockquote>
 <p>事無鉅細問 <strong>ArchWiki</strong>。</p>
-<div style="text-align: right;"><em>— <a href="https://github.com/kalxd" target="_blank" rel="external">kalxd</a></em></div>
+<div style="text-align: right;"><em>– <a href="https://github.com/kalxd" target="_blank" rel="external">kalxd</a></em></div>
 
 </blockquote>
 <h3 id="apt-cyg">apt-cyg</h3><blockquote>
 <p>apt-cyg is a command-line installer for Cygwin which cooperates with Cygwin Setup and uses the same repository. The syntax is similar to apt-get.</p>
-<div style="text-align: right;"><em>— From apt-cyg googlecode page</em></div>
+<div style="text-align: right;"><em>– From apt-cyg googlecode page</em></div>
 
 </blockquote>
 <p>總之意思就是說 <code>apt-cyg</code> 是類似於 <strong>Linux</strong> 中的 <code>apt-get</code>， <code>yum</code>, <code>zypper</code> 等命令行軟件包安裝器一樣，可以通過</p>
@@ -212,9 +212,9 @@ sh1234$ cd /usr/local/bin$ wget htt">
 <p>將其改成：</p>
 <figure class="highlight groovy"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mirror=<span class="string">http:</span><span class="comment">//mirrors.163.com/cygwin</span></span><br></pre></td></tr></table></figure>
 <p>還有就是大概在 <code>98</code> 行和 <code>105</code> 行左右：</p>
-<figure class="highlight stata"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget -<span class="keyword">N</span> <span class="label">$mirror</span>/setup.bz2</span><br><span class="line">...</span><br><span class="line">wget -<span class="keyword">N</span> <span class="label">$mirror</span>/setup.ini</span><br></pre></td></tr></table></figure>
+<figure class="highlight xquery"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget -N <span class="variable">$mirror</span>/setup.bz2</span><br><span class="line">...</span><br><span class="line">wget -N <span class="variable">$mirror</span>/setup.ini</span><br></pre></td></tr></table></figure>
 <p>修改成：</p>
-<figure class="highlight stata"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget -<span class="keyword">N</span> <span class="label">$mirror</span>/x86/setup.bz2</span><br><span class="line">...</span><br><span class="line">wget -<span class="keyword">N</span> <span class="label">$mirror</span>/x86/setup.ini</span><br></pre></td></tr></table></figure>
+<figure class="highlight xquery"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget -N <span class="variable">$mirror</span>/x86/setup.bz2</span><br><span class="line">...</span><br><span class="line">wget -N <span class="variable">$mirror</span>/x86/setup.ini</span><br></pre></td></tr></table></figure>
 <p>至此，你的 <strong>Cygwin</strong> 環境基本完成，以後可以再慢慢完善。</p>
 <h3 id="Node-js_安裝">Node.js 安裝</h3><p>這個就很簡單了，打開 <strong><a href="http://nodejs.org/download/" target="_blank" rel="external">Node.js</a></strong> 官網下載安裝即可。</p>
 <blockquote>
