@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in//"/>
-  <updated>2015-08-10T12:09:10.000Z</updated>
+  <updated>2015-08-10T12:14:25.000Z</updated>
   <id>http://xcoder.in//</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://xcoder.in/2015/08/10/mysql-binlog-try/"/>
     <id>http://xcoder.in/2015/08/10/mysql-binlog-try/</id>
     <published>2015-08-10T03:39:53.000Z</published>
-    <updated>2015-08-10T12:09:10.000Z</updated>
+    <updated>2015-08-10T12:14:25.000Z</updated>
     <content type="html"><![CDATA[<p>　　花瓣網的搜索架構需要重構，尤其是在索引建立或者更新層面。</p>
 <p>　　目前的一個架構導致的結果就是時間越久，數據本體與搜索引擎索引中的數據越不同步，相差甚大。</p>
 <p>　　新的一個架構打算從 MySQL 的 Binlog 中讀取數據更新、刪除、新增等歷史記錄，並把相應信息提取出來丟到隊列中慢慢去同步。</p>
@@ -114,7 +114,7 @@
 <p>　　它的 <code>post-header</code> 是 8 字節的一個東西，內容通常就是一個整數 <code>4</code>，用於表示下一個 Binlog 文件中的第一個事件起始偏移量。我們從上文就能得出在一般情況下這個數字只可能是四，就偏移了一個魔法數字。當然我們講的是在 v4 這個 Binlog 版本下的情況。</p>
 <p>　　然後在 <code>payload</code> 位置是一個字符串，即下一個 Binlog 文件的文件名。</p>
 <h5 id="各種不同的事件體">各種不同的事件體</h5><p>　　由於篇幅原因這裏就不詳細舉例其它普通的不同事件體了，具體的詳解在 <a href="http://dev.mysql.com/doc/internals/en/event-data-for-specific-event-types.html" target="_blank" rel="external">MySQL 文檔</a>中一樣有介紹，用到什麼類型的事件體就可以自己去查詢。</p>
-<h2 id="小節">小節</h2><p>　　本文大概介紹了 Binlog 的一些情況，以及 Binlog 的內部二進制解析結構。方便大家造輪子用——不然老用別人的輪子，只知其然而不知其所以然多沒勁。</p>
+<h2 id="小結">小結</h2><p>　　本文大概介紹了 Binlog 的一些情況，以及 Binlog 的內部二進制解析結構。方便大家造輪子用——不然老用別人的輪子，只知其然而不知其所以然多沒勁。</p>
 <p>　　好了要下班了，就寫到這裏過吧。</p>
 <h2 id="參考">參考</h2><ol>
 <li><a href="http://my.oschina.net/leejun2005/blog/75273" target="_blank" rel="external">MySQL’s binary log 結構簡介</a>，目測原文在 <a href="http://www.taobaodba.com/html/474_mysqls-binary-log_details.html" target="_blank" rel="external">TaobaoDBA</a>（已無法訪問）</li>

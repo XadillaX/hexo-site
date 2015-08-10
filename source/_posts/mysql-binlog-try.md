@@ -347,7 +347,7 @@ header_length: 19
 
 　　由於篇幅原因這裏就不詳細舉例其它普通的不同事件體了，具體的詳解在 [MySQL 文檔](http://dev.mysql.com/doc/internals/en/event-data-for-specific-event-types.html)中一樣有介紹，用到什麼類型的事件體就可以自己去查詢。
 
-## 小節
+## 小結
 
 　　本文大概介紹了 Binlog 的一些情況，以及 Binlog 的內部二進制解析結構。方便大家造輪子用——不然老用別人的輪子，只知其然而不知其所以然多沒勁。
 
