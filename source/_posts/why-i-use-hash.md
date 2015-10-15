@@ -1,4 +1,4 @@
-title: why-i-use-hash
+title: 我为什么要使用哈希
 date: 2015-10-16 14:52:06
-tags:
+tags: [ Node.js, 数据结构, 哈希 ]
 ---
