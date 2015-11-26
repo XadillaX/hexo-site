@@ -98,7 +98,7 @@
         <h1>Node.js 中使用 Redis 來實現定時任務</h1>
         
         <div class="time-info">
-发表于:<time datetime="2015-06-05T07:23:51.000Z" itemprop="datePublished">2015年06月05日</time>，更新于:<time datetime="2015-08-10T12:14:26.000Z" itemprop="dateModified">2015年08月10日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2015-06-05T07:23:51.000Z" itemprop="datePublished">2015年06月05日</time>，更新于:<time datetime="2015-10-16T06:59:51.000Z" itemprop="dateModified">2015年10月16日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -140,7 +140,7 @@
 <p>　　大致的流程就是我們給 Redis 的某一個 db 設置過期事件，使其鍵一旦過期就會往特定頻道推消息，我在自己的客戶端這邊就一直消費這個頻道就好了。</p>
 <p>　　以後一來一條定時任務，我們就把這個任務狀態壓縮成一個鍵，並且過期時間爲距這個任務執行的時間差。那麼當鍵一旦到期，就到了任務該執行的時間，Redis 自然會把過期消息推去，我們的客戶端就能接收到了。這樣一來就起到了定時任務的作用。</p>
 <h4 id="消息類型">消息類型</h4><p>　　當達到一定條件後，有兩種類型的這種消息會被觸發，用哪個需要自己選了。舉個例子，我們刪除了在 db 0 中一個叫 <code>foo</code> 的鍵，那麼系統會往兩個頻道推消息，一個是 <code>del</code> 事件頻道推 <code>foo</code> 消息，另一個是 <code>foo</code> 頻道推 <code>del</code> 消息，它們小倆口被系統推送的指令分別等價於：</p>
-<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">PUBLISH</span> __keyspace<span class="variable">@0__</span><span class="symbol">:foo</span> del</span><br><span class="line"><span class="constant">PUBLISH</span> __keyevent<span class="variable">@0__</span><span class="symbol">:del</span> foo</span><br></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">PUBLISH</span> __keyspace<span class="variable">@0__</span><span class="symbol">:foo</span> del</span><br><span class="line"><span class="constant">PUBLISH</span> __keyevent<span class="variable">@0__</span><span class="symbol">:del</span> foo</span><br></pre></td></tr></table></figure>
 <p>　　其中往 <code>foo</code> 推送 <code>del</code> 的頻道名爲 <code>__keyspace@0__:foo</code>，即是 <code>&quot;__keyspace@&quot; + DB_NUMBER + &quot;__:&quot; + KEY_NAME</code>；而 <code>del</code> 的頻道名爲 <code>&quot;__keyevent@&quot; + DB_NUMBER + &quot;__:&quot; + EVENT_NAME</code>。</p>
 <h4 id="配置">配置</h4><p>　　即使你的 Redis 版本達標了，但是 Redis 默認是關閉這個功能的，你需要修改配置文件來打開它，或者直接在 CLI 裏面通過指令修改。這裏就說說配置文件的修改吧。</p>
 <p>　　如果不想看我在這裏羅裏吧嗦的，也可以直接去看 Redis 的<a href="http://redis.io/topics/notifications#configuration" target="_blank" rel="external">相關文檔</a>。</p>

@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in/"/>
-  <updated>2015-10-16T06:59:51.000Z</updated>
+  <updated>2015-11-26T14:12:04.000Z</updated>
   <id>http://xcoder.in/</id>
   
   <author>
@@ -15,11 +15,140 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[一道關於 Node.js 全局變量的題目]]></title>
+    <link href="http://xcoder.in/2015/11/26/a-js-problem-about-global/"/>
+    <id>http://xcoder.in/2015/11/26/a-js-problem-about-global/</id>
+    <published>2015-11-26T13:51:37.000Z</published>
+    <updated>2015-11-26T14:12:04.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="原題">原題</h2><p>　　題目是這樣的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo();</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上題由我們親愛的<a href="http://f2e.souche.com/blog/author/wang-xing-long/" target="_blank" rel="external">小龍</a>童鞋發現並在我們的 901 羣裏提問的。</p>
+</blockquote>
+<h2 id="經過">經過</h2><p>　　然後有下面的小對話。</p>
+<blockquote>
+<p><strong>小龍：</strong>你們猜這個輸出什麼？</p>
+<p><strong>弍紓：</strong>2</p>
+<p><strong>力叔：</strong>2 啊</p>
+<p><strong>死月·絲卡蕾特：</strong>2</p>
+<p><strong>力叔：</strong>有什麼問題麼？</p>
+<p><strong>小龍：</strong>輸出 undefind。</p>
+<p><strong>死月·絲卡蕾特：</strong>你確定？</p>
+<p><strong>小龍：</strong>是不是我電腦壞了</p>
+<p><strong>力叔：</strong>你確定？</p>
+<p><strong>弍紓：</strong>你確定？</p>
+<p><strong>小龍：</strong>爲什麼我 node 文件名跑出來的是 undefined？</p>
+<p><strong>鄭昱：</strong>-.- 一樣阿。undefined</p>
+</blockquote>
+<p>　　以上就是剛見到這個題目的時候羣裏的一個小討論。</p>
+<h2 id="分析">分析</h2><p>　　後來我就覺得奇怪，既然小龍驗證過了，說明他也不是隨地大小便，無的放矢什麼的。</p>
+<p>　　於是我也驗證了一下，不過由於偷懶，沒有跟他們一樣寫在文件裏面，而是直接 node 開了個 REPL 來輸入上述代碼。</p>
+<blockquote>
+<p><strong>結果是 2！</strong></p>
+<p><strong>結果是 2！</strong></p>
+<p><strong>結果是 2！</strong></p>
+</blockquote>
+<p>　　於是這就出現了一個很奇怪的問題。</p>
+<p>　　尼瑪爲毛我是 <code>2</code> 他們倆是 <code>undefined</code> 啊！</p>
+<p>　　不過馬上我就反應過來了——我們幾個的環境不同，他們是 <code>$ node foo.js</code> 而我是直接 node 開了個 REPL，所以有一定的區別。</p>
+<p>　　而力叔本身就是前端大神，我估計是以 Chrome 的調試工具下爲基礎出的答案。</p>
+<h2 id="REPL_vs_文件執行">REPL vs 文件執行</h2><p>　　其實上述的問題，需要解釋的問題大概就是 <code>a</code> 到底掛在哪了。</p>
+<p>　　因爲細細一想，在 <code>function</code> 當中，<code>this</code> 指向的目標是 <code>global</code> 或者 <code>window</code>。</p>
+<blockquote>
+<p>還無法理解上面這句話的童鞋需要先補一下基礎。</p>
+</blockquote>
+<p>　　那麼最終需要解釋的就是 <code>a</code> 到底有沒有掛在全局變量上面。</p>
+<p>　　這麼一想就有點細思恐極的味道了——如果在 node 線上運行環境裏面的源代碼文件裏面隨便 <code>var</code> 一個變量就掛到了全局變量裏面那是有多恐怖！</p>
+<p>　　於是就有些釋然了。</p>
+<p>　　但究竟是什麼原因導致 REPL 和文件執行方式不一樣的呢？</p>
+<h3 id="全局對象的屬性">全局對象的屬性</h3><p>　　首先是弍紓找出了阮老師 ES6 系列文章中的<a href="http://es6.ruanyifeng.com/#docs/let" target="_blank" rel="external">全局對象屬性</a>一節。</p>
+<blockquote>
+<p>全局對象是最頂層的對象，在瀏覽器環境指的是 window 象，在 Node.js 指的是 global 對象。ES5 之中，全局對象的屬性與全局變量是等價的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.a = <span class="number">1</span>;</span><br><span class="line">a <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">a = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">window</span>.a <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>上面代碼中，全局對象的屬性賦值與全局變量的賦值，是同一件事。（對於Node來說，這一條只對REPL環境適用，模塊環境之中，全局變量必須顯式聲明成global對象的屬性。）</p>
+</blockquote>
+<p>有了阮老師的文章驗證了這個猜想，我可以放心大膽繼續看下去了。</p>
+<h3 id="repl-js">repl.js</h3><p>　　知道了上文的內容之後，感覺首要查看的就是 Node.js 源碼中的 <a href="https://github.com/nodejs/node/blob/master/lib/repl.js#L513" target="_blank" rel="external">repl.js</a> 了。</p>
+<p>　　先是結合了一下自己以前用自定義 REPL 的情況，一般的步驟先是獲取 REPL 的上下文，然後在上下文裏面貼上各種自己需要的東西。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> r = relp.start(<span class="string">" ➜ "</span>);</span><br><span class="line"><span class="keyword">var</span> c = r.context;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在 c 裏面貼上各種上下文</span></span><br><span class="line">c.foo = bar;</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>關於自定義 REPL 的一些使用方式可以參考下老雷寫的《<a href="https://cnodejs.org/topic/563735ed677332084c319d95" target="_blank" rel="external">Node.js 定製 REPL 的妙用</a>》。</p>
+</blockquote>
+<p>　　有了之前寫 REPL 的經驗，大致明白了 REPL 裏面有個上下文的東西，那麼在 repl.js 裏面我們也找到了類似的代碼。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">REPLServer.prototype.createContext = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> context;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.useGlobal) &#123;</span><br><span class="line">    context = global;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    context = vm.createContext();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> global) context[i] = global[i];</span><br><span class="line">    context.console = <span class="keyword">new</span> Console(<span class="keyword">this</span>.outputStream);</span><br><span class="line">    context.global = context;</span><br><span class="line">    context.global.global = context;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  context.module = <span class="built_in">module</span>;</span><br><span class="line">  context.require = <span class="built_in">require</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.lines = [];</span><br><span class="line">  <span class="keyword">this</span>.lines.level = [];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// make built-in modules available directly</span></span><br><span class="line">  <span class="comment">// (loaded lazily)</span></span><br><span class="line">  exports._builtinLibs.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">Object</span>.defineProperty(context, name, &#123;</span><br><span class="line">      get: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> lib = <span class="built_in">require</span>(name);</span><br><span class="line">        context._ = context[name] = lib;</span><br><span class="line">        <span class="keyword">return</span> lib;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="comment">// allow the creation of other globals with this name</span></span><br><span class="line">      set: <span class="function"><span class="keyword">function</span>(<span class="params">val</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">delete</span> context[name];</span><br><span class="line">        context[name] = val;</span><br><span class="line">      &#125;,</span><br><span class="line">      configurable: <span class="literal">true</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> context;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>　　看到了關鍵字 <code>vm</code>。我們暫時先不管 <code>vm</code>，光從上面的代碼可以看出，<code>context</code> 要麼等於 <code>global</code>，要麼就是把 <code>global</code> 上面的所有東西都粘過來。</p>
+<p>　　然後順帶着把必須的兩個不在 <code>global</code> 裏的兩個東西 <code>require</code> 和 <code>module</code> 給弄過來。</p>
+<p>　　下面的東西就不需要那麼關心了。</p>
+<h3 id="VM">VM</h3><p>　　接下去我們來講講 <code>vm</code>。</p>
+<p>　　VM 是 node 中的一個內置模塊，可以在<a href="https://nodejs.org/dist/v4.2.2/docs/api/vm.html" target="_blank" rel="external">文檔</a>中看到說明和使用方法。</p>
+<p>　　大致就是將代碼運行在一個沙箱之內，並且事先賦予其一些 <code>global</code> 變量。</p>
+<p>　　而真正起到上述 <code>var</code> 和 <code>global</code> 區別的就是這個 <code>vm</code> 了。</p>
+<p>　　<code>vm</code> 之中在根作用域（也就是最外層作用域）中使用 <code>var</code> 應該是跟在瀏覽器中一樣，會把變量粘到 <code>global</code>（瀏覽器中是 <code>window</code>）中去。</p>
+<p>　　我們可以試試這樣的代碼：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> vm = <span class="built_in">require</span>(<span class="string">'vm'</span>);</span><br><span class="line"><span class="keyword">var</span> localVar = <span class="string">'initial value'</span>;</span><br><span class="line"></span><br><span class="line">vm.runInThisContext(<span class="string">'var localVar = "vm";'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'localVar: '</span>, localVar);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'global.localVar: '</span>, global.localVar);</span><br></pre></td></tr></table></figure>
+<p>　　其輸出結果是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">localVar: initial value</span><br><span class="line">global.localVar: vm</span><br></pre></td></tr></table></figure>
+<p>　　如文檔中所說，<code>vm</code> 的一系列函數中跑腳本都無法對當前的局部變量進行訪問。各函數能訪問自己的 <code>global</code>，而 <code>runInThisContext</code> 的 <code>global</code> 與當前上下文的 <code>global</code> 是一樣的，所以能訪問當前的全局變量。</p>
+<p>　　所以出現上述結果也是理所當然的了。</p>
+<p>　　所以在 <code>vm</code> 中跑我們一開始拋出的問題，答案自然就是 <code>2</code> 了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> vm = <span class="built_in">require</span>(<span class="string">"vm"</span>);</span><br><span class="line"><span class="keyword">var</span> sandbox = &#123;</span><br><span class="line">    <span class="built_in">console</span>: <span class="built_in">console</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">vm.createContext(sandbox);</span><br><span class="line">vm.runInContext(<span class="string">"var a = 2;function foo()&#123;console.log(this.a);&#125;foo();"</span>, sandbox);</span><br></pre></td></tr></table></figure>
+<h3 id="Node_REPL_啓動的沙箱">Node REPL 啓動的沙箱</h3><p>　　最後我們再只需要驗證一件事就能真相大白了。</p>
+<p>　　平時我們自定義一個 <code>repl.js</code> 然後執行 <code>$ node repl.js</code> 的話是會啓動一個 REPL，而這個 REPL 會去調 <code>vm</code>，所以會出現 <code>2</code> 的答案；或者我們自己在代碼裏面寫一個 <code>vm</code> 然後跑之前的代碼，也是理所當然出現 <code>2</code>。</p>
+<p>　　那麼我們就輸入 <code>$ node</code> 來進入的 REPL 跟我們之前講的 REPL 是不是同一個東西呢？</p>
+<p>　　如果是的話，一切就釋然了。</p>
+<p>　　首先我們進入到 Node 的入口文件——C++ 的 <code>int main()</code>。</p>
+<p>　　它在 Node.js 源碼 <a href="https://github.com/nodejs/node/blob/0966ab99966b7d3fbe4d7b93797fb299595fca72/src/node_main.cc#L45" target="_blank" rel="external">src/node_main.cc</a> 之中。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">  setvbuf(<span class="built_in">stderr</span>, <span class="literal">NULL</span>, _IOLBF, <span class="number">1024</span>);</span><br><span class="line">  <span class="keyword">return</span> node::Start(argc, argv);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>　　就在主函數中執行了 <code>node::Start</code>。而這個 <code>node::Start</code> 又存在 <a href="https://github.com/nodejs/node/blob/0966ab99966b7d3fbe4d7b93797fb299595fca72/src/node.cc#L4109" target="_blank" rel="external">src/node.cc</a> 裏面。</p>
+<p>　　然後在 <code>node::Start</code> 裏面又調用 <code>StartNodeInstance</code>，在這裏面是 <code>LoadEnvironment</code> 函數。</p>
+<p>　　最後在 <code>LoadEnvironment</code> 中看到了幾句關鍵的語句：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Local&lt;String&gt; script_name = FIXED_ONE_BYTE_STRING(env-&gt;isolate(), <span class="string">"node.js"</span>);</span><br><span class="line">Local&lt;Value&gt; f_value = ExecuteString(env, MainSource(env), script_name);</span><br><span class="line"></span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"></span><br><span class="line">Local&lt;Function&gt; f = Local&lt;Function&gt;::Cast(f_value);</span><br><span class="line"></span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">Local&lt;Object&gt; global = env-&gt;context()-&gt;Global();</span><br><span class="line"></span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">Local&lt;Value&gt; arg = env-&gt;process_object();</span><br><span class="line">f-&gt;Call(global, <span class="number">1</span>, &amp;arg);</span><br></pre></td></tr></table></figure>
+<p>　　還有這麼一段關鍵的註釋。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Now we call 'f' with the 'process' variable that we've built up with</span></span><br><span class="line"><span class="comment">// all our bindings. Inside node.js we'll take care of assigning things to</span></span><br><span class="line"><span class="comment">// their places.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// We start the process this way in order to be more modular. Developers</span></span><br><span class="line"><span class="comment">// who do not like how 'src/node.js' setups the module system but do like</span></span><br><span class="line"><span class="comment">// Node's I/O bindings may want to replace 'f' with their own function.</span></span><br></pre></td></tr></table></figure>
+<p>　　也就是說，啓動 <code>node</code> 的時候，在做了一些準備之後是開始載入執行 src 文件夾下面的 <a href="https://github.com/nodejs/node/blob/0966ab99966b7d3fbe4d7b93797fb299595fca72/src/node.js" target="_blank" rel="external">node.js</a> 文件。</p>
+<p>　　在 <a href="https://github.com/nodejs/node/blob/0966ab99966b7d3fbe4d7b93797fb299595fca72/src/node.js#L92" target="_blank" rel="external">92 行</a>附近有針對 <code>$ node foo.js</code> 和 <code>$ node</code> 的判斷啓動不同的邏輯。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (process.argv[<span class="number">1</span>]) &#123;</span><br><span class="line">  <span class="comment">// make process.argv[1] into a full path</span></span><br><span class="line">  <span class="keyword">var</span> path = NativeModule.require(<span class="string">'path'</span>);</span><br><span class="line">  process.argv[<span class="number">1</span>] = path.resolve(process.argv[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> Module = NativeModule.require(<span class="string">'module'</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  startup.preloadModules();</span><br><span class="line">  <span class="keyword">if</span> (global.v8debug &amp;&amp;</span><br><span class="line">      process.execArgv.some(<span class="function"><span class="keyword">function</span>(<span class="params">arg</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> arg.match(<span class="regexp">/^--debug-brk(=[0-9]*)?$/</span>);</span><br><span class="line">      &#125;)) &#123;</span><br><span class="line">    <span class="keyword">var</span> debugTimeout = +process.env.NODE_DEBUG_TIMEOUT || <span class="number">50</span>;</span><br><span class="line">    setTimeout(Module.runMain, debugTimeout);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// Main entry point into most programs:</span></span><br><span class="line">    Module.runMain();</span><br><span class="line">  &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> Module = NativeModule.require(<span class="string">'module'</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (process._forceRepl || NativeModule.require(<span class="string">'tty'</span>).isatty(<span class="number">0</span>)) &#123;</span><br><span class="line">    <span class="comment">// REPL</span></span><br><span class="line">    <span class="keyword">var</span> cliRepl = Module.requireRepl();</span><br><span class="line">    cliRepl.createInternalRepl(process.env, <span class="function"><span class="keyword">function</span>(<span class="params">err, repl</span>) </span>&#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>　　在上述節選代碼的第一個 <code>else if</code> 中，就是對 <code>$ node foo.js</code> 這種情況進行處理了，再做完各種初始化之後，使用 <code>Module.runMain();</code> 來運行入口代碼。</p>
+<p>　　第二個 <code>else if</code> 裏面就是 <code>$ node</code> 這種情況了。</p>
+<p>　　我們在終端中打開 <code>$ node</code> 的時候，TTY 通常是關連着的，所以 <code>require(&#39;tty&#39;).isatty(0)</code> 爲 <code>true</code>，也就是說會進到條件分支並且執行裏面的 <code>cliRepl</code> 相關代碼。</p>
+<p>　　我們進入到 <a href="https://github.com/nodejs/node/blob/0966ab99966b7d3fbe4d7b93797fb299595fca72/lib/module.js#L490" target="_blank" rel="external">lib/module.js</a> 看看這個 <code>Module.requireRepl</code> 是什麼東西。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Module.requireRepl = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> Module._load(<span class="string">'internal/repl'</span>, <span class="string">'.'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>　　所以我們還是得轉入 <a href="https://github.com/nodejs/node/blob/0966ab99966b7d3fbe4d7b93797fb299595fca72/lib/internal/repl.js#L23" target="_blank" rel="external">lib/internal/repl.js</a> 來一探究竟。</p>
+<p>　　上面在 <code>node.js</code> 裏面我們看到它執行了這個 <code>cliRepl</code> 的 <code>createInternalRepl</code> 函數，它的實現大概是這樣的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createRepl</span>(<span class="params">env, opts, cb</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  opts = opts || &#123;</span><br><span class="line">    ignoreUndefined: <span class="literal">false</span>,</span><br><span class="line">    terminal: process.stdout.isTTY,</span><br><span class="line">    useGlobal: <span class="literal">true</span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  opts.replMode = &#123;</span><br><span class="line">    <span class="string">'strict'</span>: REPL.REPL_MODE_STRICT,</span><br><span class="line">    <span class="string">'sloppy'</span>: REPL.REPL_MODE_SLOPPY,</span><br><span class="line">    <span class="string">'magic'</span>: REPL.REPL_MODE_MAGIC</span><br><span class="line">  &#125;[<span class="built_in">String</span>(env.NODE_REPL_MODE).toLowerCase().trim()];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> repl = REPL.start(opts);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>　　轉頭一看這個 lib/internal/repl.js 頂端的模塊引入，赫然看到一句話：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> REPL = <span class="built_in">require</span>(<span class="string">'repl'</span>);</span><br></pre></td></tr></table></figure>
+<p>　　真相大白。</p>
+<h2 id="小結">小結</h2><p>　　最後再梳理一遍。</p>
+<p>　　在於 Node.js 的 <code>vm</code> 裏面，頂級作用域下的 <code>var</code> 會把變量貼到 <code>global</code> 下面。而 REPL 使用了 <code>vm</code>。然後 <code>$ node</code> 進入的一個模式就是一個特定參數下面啓動的一個 <code>REPL</code>。</p>
+<p>　　所以我們一開始提出的問題裏面在 <code>$ node foo.js</code> 模式下執行是 <code>undefined</code>，因爲不在全局變量上，但是啓用 <code>$ node</code> 這種 REPL 模式的時候得到的結果是 <code>2</code>。</p>
+<h2 id="番外">番外</h2><blockquote>
+<p><strong>小龍：</strong>我用 node test.js 跑出來是 <code>a: undefined</code>；那我應該怎麼修改“環境”，來讓他跑出：<code>a: 2</code> 呢？</p>
+</blockquote>
+<p>　　於是有了上面寫的那段代碼。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> vm = <span class="built_in">require</span>(<span class="string">"vm"</span>);</span><br><span class="line"><span class="keyword">var</span> sandbox = &#123;</span><br><span class="line">    <span class="built_in">console</span>: <span class="built_in">console</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">vm.createContext(sandbox);</span><br><span class="line">vm.runInContext(<span class="string">"var a = 2;function foo()&#123;console.log(this.a);&#125;foo();"</span>, sandbox);</span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="原題">原題</h2><p>　　題目是這樣的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><]]>
+    </summary>
+    
+      <category term="Node.js" scheme="http://xcoder.in/tags/Node-js/"/>
+    
+      <category term="REPL" scheme="http://xcoder.in/tags/REPL/"/>
+    
+      <category term="vm" scheme="http://xcoder.in/tags/vm/"/>
+    
+      <category term="源碼分析" scheme="http://xcoder.in/tags/%E6%BA%90%E7%A2%BC%E5%88%86%E6%9E%90/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[我爲什麼要使用哈希]]></title>
     <link href="http://xcoder.in/2015/10/16/why-i-use-hash/"/>
     <id>http://xcoder.in/2015/10/16/why-i-use-hash/</id>
     <published>2015-10-16T06:52:06.000Z</published>
-    <updated>2015-10-16T06:59:51.000Z</updated>
+    <updated>2015-11-26T14:12:04.000Z</updated>
     <content type="html"><![CDATA[<h2 id="什麼是哈希（Hash）">什麼是哈希（Hash）</h2><p>本來這裏不應該出現這一節的，因爲實際上大家應該都知道什麼是哈希。不過有時候爲了文章的完整性，我這裏就稍微教條性地說明一下吧。ヽ(́◕◞౪◟◕‵)ﾉ</p>
 <blockquote>
 <p>散列（英語：Hashing），通常音譯作哈希，是電腦科學中一種對資料的處理方法，通過某種特定的函數、算法將要檢索的項與用來檢索的索引關聯起來，生成一種便於搜索的數據結構。也譯爲散列。</p>
@@ -104,7 +233,7 @@
 </ul>
 </li>
 </ol>
-<p>如果大家想知道“按某種算法重新生成哈希”裏面“某種算法”的話可以看看下面的瞎狗眼的說明了。(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</p>
+<p>如果大家想知道“按某種算法重新生成哈希”裏面“某種算法”的話可以看看下面的瞎狗眼的說明瞭。(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</p>
 <blockquote>
 <p>其實很簡單，把圖層數據的這個字符串加某個固定字符當小尾巴，如果哈希還是衝突則繼續加這個小尾巴，直到計算出來的哈希不衝突爲止。</p>
 <p>比如我就用了這字符當小尾巴——<strong>🀣</strong>（麻將牌中的蘭）。(♛‿♛)</p>
@@ -155,7 +284,7 @@
     <link href="http://xcoder.in/2015/08/10/mysql-binlog-try/"/>
     <id>http://xcoder.in/2015/08/10/mysql-binlog-try/</id>
     <published>2015-08-10T03:39:53.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　花瓣網的搜索架構需要重構，尤其是在索引建立或者更新層面。</p>
 <p>　　目前的一個架構導致的結果就是時間越久，數據本體與搜索引擎索引中的數據越不同步，相差甚大。</p>
 <p>　　新的一個架構打算從 MySQL 的 Binlog 中讀取數據更新、刪除、新增等歷史記錄，並把相應信息提取出來丟到隊列中慢慢去同步。</p>
@@ -278,7 +407,7 @@
     <link href="http://xcoder.in/2015/06/05/scheduled-task-using-redis/"/>
     <id>http://xcoder.in/2015/06/05/scheduled-task-using-redis/</id>
     <published>2015-06-05T07:23:51.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:51.000Z</updated>
     <content type="html"><![CDATA[<p>　　好久沒寫博文了，最近在跟隨着公司大牛們的腳步祕密研發新產品中。</p>
 <p>　　不過前幾天有一個小需求的東西可以提出來寫一點點小乾貨兒跟大家分享分享。米娜桑會的就可以忽略了，反正我也是隨便寫的；如果覺得本文對你有用的話還請多多支持喵。(●´ω｀●)ゞ</p>
 <h2 id="序">序</h2><p>　　本文所說的定時任務或者說計劃任務並不是很多人想象中的那樣，比如說每天凌晨三點自動運行起來跑一個腳本。這種都已經爛大街了，隨便一個 <strong><a href="https://wiki.archlinux.org/index.php/Cron" target="_blank" rel="external">Crontab</a></strong> 就能搞定了。</p>
@@ -312,7 +441,7 @@
 <p>　　大致的流程就是我們給 Redis 的某一個 db 設置過期事件，使其鍵一旦過期就會往特定頻道推消息，我在自己的客戶端這邊就一直消費這個頻道就好了。</p>
 <p>　　以後一來一條定時任務，我們就把這個任務狀態壓縮成一個鍵，並且過期時間爲距這個任務執行的時間差。那麼當鍵一旦到期，就到了任務該執行的時間，Redis 自然會把過期消息推去，我們的客戶端就能接收到了。這樣一來就起到了定時任務的作用。</p>
 <h4 id="消息類型">消息類型</h4><p>　　當達到一定條件後，有兩種類型的這種消息會被觸發，用哪個需要自己選了。舉個例子，我們刪除了在 db 0 中一個叫 <code>foo</code> 的鍵，那麼系統會往兩個頻道推消息，一個是 <code>del</code> 事件頻道推 <code>foo</code> 消息，另一個是 <code>foo</code> 頻道推 <code>del</code> 消息，它們小倆口被系統推送的指令分別等價於：</p>
-<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">PUBLISH</span> __keyspace<span class="variable">@0__</span><span class="symbol">:foo</span> del</span><br><span class="line"><span class="constant">PUBLISH</span> __keyevent<span class="variable">@0__</span><span class="symbol">:del</span> foo</span><br></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">PUBLISH</span> __keyspace<span class="variable">@0__</span><span class="symbol">:foo</span> del</span><br><span class="line"><span class="constant">PUBLISH</span> __keyevent<span class="variable">@0__</span><span class="symbol">:del</span> foo</span><br></pre></td></tr></table></figure>
 <p>　　其中往 <code>foo</code> 推送 <code>del</code> 的頻道名爲 <code>__keyspace@0__:foo</code>，即是 <code>&quot;__keyspace@&quot; + DB_NUMBER + &quot;__:&quot; + KEY_NAME</code>；而 <code>del</code> 的頻道名爲 <code>&quot;__keyevent@&quot; + DB_NUMBER + &quot;__:&quot; + EVENT_NAME</code>。</p>
 <h4 id="配置">配置</h4><p>　　即使你的 Redis 版本達標了，但是 Redis 默認是關閉這個功能的，你需要修改配置文件來打開它，或者直接在 CLI 裏面通過指令修改。這裏就說說配置文件的修改吧。</p>
 <p>　　如果不想看我在這裏羅裏吧嗦的，也可以直接去看 Redis 的<a href="http://redis.io/topics/notifications#configuration" target="_blank" rel="external">相關文檔</a>。</p>
@@ -372,7 +501,7 @@
     <link href="http://xcoder.in/2015/01/08/remilia-structure/"/>
     <id>http://xcoder.in/2015/01/08/remilia-structure/</id>
     <published>2015-01-08T08:47:17.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<h2 id="蕾米莉亞？">蕾米莉亞？</h2><p>其實這是花瓣的一個入庫系統結構圖，蕾米莉亞是這個項目的名字。</p>
 <h2 id="結構圖">結構圖</h2><p><img src="pic.jpg" alt="Remilia"></p>
 <p>設計得不好，純屬做歸檔。</p>
@@ -408,7 +537,7 @@
     <link href="http://xcoder.in/2014/12/10/link-c-on-gpp/"/>
     <id>http://xcoder.in/2014/12/10/link-c-on-gpp/</id>
     <published>2014-12-10T07:30:32.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<h2 id="原因">原因</h2><p>由於某些原因，我寫了個很搓的<a href="https://github.com/XadillaX/xmempool" target="_blank" rel="external">內存池</a>（C 版本的）。</p>
 <p>然後我想到了把之前寫的一個 Node.js 包 <a href="https://github.com/XadillaX/thmclrx" target="_blank" rel="external">thmclrx</a> 的更挫的“僞·內存池”用新寫的內存池去替換掉。(❛◡❛✿)</p>
 <p>然後問題就來了，我貌似不能控制 node-gyp 去用 G++ 編譯 <code>*.c</code> 文件，這樣的話所有文件編譯好之後鏈接 <code>*.o</code> 文件會出問題。雖然鏈接的時候沒報錯，但是使用的時候就會報這麼個錯 (;´༎ຶД༎ຶ`)：</p>
@@ -443,7 +572,7 @@
     <link href="http://xcoder.in/2014/10/16/generate-color-space/"/>
     <id>http://xcoder.in/2014/10/16/generate-color-space/</id>
     <published>2014-10-16T03:00:54.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<h2 id="用途">用途</h2><p>　　在主題色提取的過程中，要把顏色加入搜索引擎。但是如果是真彩色任意值加進去的話，對於搜索的時候來說無疑是一個複雜的操作。搜索條件要各種計算距離什麼的。</p>
 <p>　　於是一個妥協的做法就是提供一套調色板，保證所有顏色都被吸納到調色板中的某一色值當中。</p>
 <p>　　那麼這個時候調色板的覆蓋率以及距離什麼的就比較重要了。本文就講如何生成一套看起來還不錯的自用“標準色板”。</p>
@@ -557,7 +686,7 @@ $(function()
     <link href="http://xcoder.in/2014/10/08/brainf**k/"/>
     <id>http://xcoder.in/2014/10/08/brainf**k/</id>
     <published>2014-10-08T03:42:32.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　首先祝賀自己在 <a href="http://www.codewars.com/users/XadillaX" target="_blank" rel="external">CodeWars</a> 升級到 3 Kyu，以及感謝 @<a href="http://www.html-js.com/card/473" target="_blank" rel="external">Bolt_白衣蒼狗</a> 童鞋讓我知道有 CodeWars 這麼個好玩的東西。</p>
 <p>　　雖然裏面水題居多，不過在上班比較空閒的檔口 #<strong>帶薪刷題</strong># 的感覺還是蠻不錯的。</p>
 <h2 id="話嘮一下">話嘮一下</h2><p>　　高中的時候就跟 @<a href="http://www.lvchaoshuai.com/" target="_blank" rel="external">MatRush</a> 發現了一個名字超級好玩的編程語言叫 <a href="http://en.wikipedia.org/wiki/Brainfuck" target="_blank" rel="external">BrainF**k</a>，它比較搞腦筋，因爲所有的編程操作都是集合在操作符裏面，然後控制指針偏移和內存值的修改來進行一系列操作。</p>
@@ -650,7 +779,7 @@ $(function()
     <link href="http://xcoder.in/2014/09/30/javascript-singleton/"/>
     <id>http://xcoder.in/2014/09/30/javascript-singleton/</id>
     <published>2014-09-30T07:21:13.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　今天隨便玩了一道 <a href="http://www.codewars.com/kata/singleton-pattern/javascript" target="_blank" rel="external">CodeWar 的題</a>。</p>
 <p>　　題意大致就是你需要實現一個 <code>Singleton</code> 也就是單件模式的類，讓其下面代碼執行成功：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj1 = <span class="keyword">new</span> Singleton();</span><br><span class="line"><span class="keyword">var</span> obj2 = <span class="keyword">new</span> Singleton();</span><br><span class="line">obj1 === obj2; <span class="comment">// =&gt; true</span></span><br><span class="line">obj1.test = <span class="number">1</span>;</span><br><span class="line">obj2.test; <span class="comment">// =&gt; 1</span></span><br></pre></td></tr></table></figure>
@@ -690,7 +819,7 @@ $(function()
     <link href="http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/"/>
     <id>http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/</id>
     <published>2014-09-20T07:51:40.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2><p>　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 <a href="http://kacaka.ca/" target="_blank" rel="external">kacaka.ca</a>（目前暫失效）。</p>
 <p>　　爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 <a href="http://cloudflare.com/" target="_blank" rel="external">CloudFlare</a>。而且它也有提供 API 讓開發者自己開發通過他的服務解析域名的服務。</p>
 <p>　　再然後，去年的九月份，我的早期 Node.js 作品 <strong><a href="https://github.com/XadillaX/dloucflare/tree/0.0.2" target="_blank" rel="external">dloucflare</a></strong> 發佈了。所以就有了<a href="http://cnodejs.org/topic/522b64c3101e574521332451" target="_blank" rel="external">這個帖子</a>。</p>
@@ -801,7 +930,7 @@ $(function()
     <link href="http://xcoder.in/2014/09/17/theme-color-extract/"/>
     <id>http://xcoder.in/2014/09/17/theme-color-extract/</id>
     <published>2014-09-17T03:34:54.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:51.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>所謂主題色提取，就是對於一張圖片，近似地提取出一個調色板，使得調色板裏面的顏色能組成這張圖片的主色調。</p>
 </blockquote>
@@ -923,7 +1052,7 @@ $(function()
     <link href="http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/"/>
     <id>http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/</id>
     <published>2014-09-01T12:36:33.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<h2 id="序">序</h2><p>最近閒着蛋疼實現了兩個庫。</p>
 <ul>
 <li>隨機生成中文名字</li>
@@ -1010,7 +1139,7 @@ $(function()
     <link href="http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/"/>
     <id>http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/</id>
     <published>2014-08-04T03:50:21.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:51.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2><p>　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIST 方言中，你要做的就是把所有跟 bolt 初始化計算相關的代碼放到其 <code>prepare</code> 的代碼當中去。</p>
 <p>　　你想一下，當你在文件加載的時候初始化了一個 MongoDB 鏈接，這個鏈接總不能被序列化到遠程去吧？所以說辦法就是把 bolt 搞上去之後，bolt 自動去初始化一個鏈接——這就是 <code>prepare</code> 的作用了。</p>
 <p>　　說白了，這個還是我們在 <strong><em>Suwako</em></strong> 當中踩到的坑。</p>
@@ -1050,7 +1179,7 @@ $(function()
     <link href="http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/"/>
     <id>http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/</id>
     <published>2014-07-30T02:14:29.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起_(灬ºωº灬)">起 (灬ºωº灬)</h2><p>　　說來話長，自從入了花瓣，整個人就掉進連環坑了。</p>
 <p>　　後端元數據採集是用 Storm 來走拓撲流程的，又因爲 @<a href="http://weibo.com/zolazhou" target="_blank" rel="external">Zola</a> 不是很喜歡 Java，所以退而求其次選擇了 Clojure，所以正在苦逼地學習 Clojure 和 Storm 中。</p>
 <p>　　目前來說外面的 Storm 拓撲的 Spout 是從 Kafka 中流入數據的。但是我們要給 Kafka 發送測試數據的時候，就需要跑到 Kafka 的測試服務器打開它的一個發送腳本進去發送，非常蛋疼；要麼就是直接通過特定的發送業務邏輯代碼測試，沒有一個稍微泛一點的測試用發數據工具，於是 Mikasa 誕生了。</p>
@@ -1103,7 +1232,7 @@ $(function()
     <link href="http://xcoder.in/2014/06/12/untrusted-solution/"/>
     <id>http://xcoder.in/2014/06/12/untrusted-solution/</id>
     <published>2014-06-12T03:08:34.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:51.000Z</updated>
     <content type="html"><![CDATA[<p>　　<a href="http://alexnisnevich.github.io/untrusted/" target="_blank" rel="external">Trusted</a> 是一個代碼解謎遊戲，用 Javascript 來過關的。</p>
 <p>　　昨天凌晨花了仨小時通關了這個遊戲，在這裏就粗粗做一下題解吧，好幾題都是 Hack 過去的。（不要臉，( ﾟДﾟ)σ</p>
 <h2 id="Ceil_Block_A">Ceil Block A</h2><p>　　這有點像教學關吧，總之先拿到那臺電腦你就能操作了。拿到電腦後你就能修改地圖內部黑色底色的代碼了。</p>
@@ -1263,7 +1392,7 @@ $(function()
     <link href="http://xcoder.in/2014/06/07/cocos2d-311-setup/"/>
     <id>http://xcoder.in/2014/06/07/cocos2d-311-setup/</id>
     <published>2014-06-07T11:34:02.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　由於偷懶，所以在此感謝 Etond 的指導（喂喂喂，明明是自己懶得看文檔，明明 <a href="README"><code>READEME.md</code></a> 裏面就有！(´≖◞౪◟≖)</p>
 <p>　　另，在搭建環境的時候，最好保證你在<span style="background: #222;">牆外</span>。以及我默認覺得大家已經有了 <code>Python</code> 環境和 <code>JDK</code>。</p>
 <h2 id="前驅工作">前驅工作</h2><p>　　先去 <a href="http://www.cocos2d-x.org/download" target="_blank" rel="external">cocos2d-x 官網</a>下壓縮包，放到一個只有神知道的世界裏面。</p>
@@ -1328,7 +1457,7 @@ $(function()
     <link href="http://xcoder.in/2014/06/07/tcp-those-things-1/"/>
     <id>http://xcoder.in/2014/06/07/tcp-those-things-1/</id>
     <published>2014-06-06T17:47:10.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:51.000Z</updated>
     <content type="html"><![CDATA[<p>　　TCP是一個巨複雜的協議，因爲他要解決很多問題，而這些問題又帶出了很多子問題和陰暗面。所以學習 TCP 本身是個比較痛苦的過程，但對於學習的過程卻能讓人有很多收穫。關於 TCP 這個協議的細節，我還是推薦你去看 <a href="http://www.kohala.com/start/" target="_blank" rel="external">W.Richard Stevens</a> 的《<a href="http://book.douban.com/subject/1088054/" target="_blank" rel="external">TCP/IP 詳解 卷1：協議</a>》（當然，你也可以去讀一下 <a href="http://tools.ietf.org/html/rfc793" target="_blank" rel="external">RFC793</a> 以及後面 N 多的 RFC）。另外，本文我會使用英文術語，這樣方便你通過這些英文關鍵詞來查找相關的技術文檔。</p>
 <p>　　之所以想寫這篇文章，目的有三個，</p>
 <ul>
@@ -1458,7 +1587,7 @@ $(function()
     <link href="http://xcoder.in/2014/06/03/scartlet-task/"/>
     <id>http://xcoder.in/2014/06/03/scartlet-task/</id>
     <published>2014-06-02T16:17:38.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　事情很曲折，我某天在萌否收音機裏面聽到了一首歌，很好聽，叫 <code>hypnotized</code>，於是紅心了。</p>
 <p>　　過了幾天我再去聽——發現這首歌變了。</p>
 <p>　　最後經過多方面求證，我大概得出結果就是應該有人傳錯了歌，然後後來有人重新傳了一遍，導致我聽的不是原來那首歌了。那我那天聽的那首歌到底叫什麼名字呢？</p>
@@ -1489,7 +1618,7 @@ $(function()
     <link href="http://xcoder.in/2014/06/02/vim-hexo-environment/"/>
     <id>http://xcoder.in/2014/06/02/vim-hexo-environment/</id>
     <published>2014-06-01T20:52:30.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:51.000Z</updated>
     <content type="html"><![CDATA[<p>　　本文只講兩個函數，對於 <code>markdown</code> 如何高亮之類的問題還請自行谷歌。</p>
 <p>　　然後請打開你自己的 <code>.vimrc</code> 文件。</p>
 <h2 id="預備工作">預備工作</h2><p>　　首先定義一個變量——你自己的 <code>hexo</code> 目錄，如果要跨平臺可以做個判斷之類的，如下：</p>
@@ -1531,7 +1660,7 @@ $(function()
     <link href="http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/"/>
     <id>http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/</id>
     <published>2014-05-05T07:08:39.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　這次比賽由 <a href="http://blog.163.com/surgy_han/" target="_blank" rel="external">Hungar</a>，<a href="http://www.cnblogs.com/Wine93/" target="_blank" rel="external">8Mao</a> 以及我負責的。明明都讀研了，還詐屍回來出題——歸結起來大概是因爲各種面試不順吧，想來虐虐學弟妹們怒刷存在感。結果網絡賽還是被虐得死去活來。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯</p>
 <p>　　好了廢話不多說，還是直接上題解吧。</p>
 <h2 id="Minecraft_Server_Bug">Minecraft Server Bug</h2><p>　　題意大概就是說一排巖漿和水，你要拿一桶水和巖漿，並且水的下標小於巖漿。</p>
@@ -1560,7 +1689,7 @@ $(function()
     <link href="http://xcoder.in/2014/04/11/hero-snake/"/>
     <id>http://xcoder.in/2014/04/11/hero-snake/</id>
     <published>2014-04-11T05:53:35.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>注：備份到這篇日誌的時候，感覺眼睛進了什麼奇怪的東西。（才……纔不是眼淚呢，那一定是沙子！(;´༎ຶД༎ຶ`)</p>
 <p>主要引起感傷的還是這首軒轅劍的 BGM 吧。因爲 Hero Snake 的BGM就是這個。</p>
@@ -1621,7 +1750,7 @@ $(function()
     <link href="http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/"/>
     <id>http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/</id>
     <published>2014-04-06T08:15:39.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　<a href="/2014/04/03/nodejs-cpp-addons-2/">上一章</a>我們偷偷學習瞭如何在 <code>C++</code> 中實現 <code>Node.js</code> 調用時傳參數和調用回調函數，並且我自己也心血來潮寫了個<a href="/2014/04/05/cpp-class-inline-keng/#simpleini">小 Demo</a> 供大家參考。</p>
 <p>　　今天我們就不複習了，直搗黃龍吧。</p>
 ]]></content>
@@ -1642,7 +1771,7 @@ $(function()
     <link href="http://xcoder.in/2014/04/05/cpp-class-inline-keng/"/>
     <id>http://xcoder.in/2014/04/05/cpp-class-inline-keng/</id>
     <published>2014-04-05T08:55:57.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　今天我來講一講 <code>C++</code> 中類成員函數 <code>inline</code> 修飾符的一個坑。</p>
 <p>　　這個坑是我在嘗試着寫我的第一個 <code>Node.js</code> 擴展 <code>simpleini</code> 時候遇到的。</p>
 <h2 id="坑描述">坑描述</h2><p>　　因爲只是嘗試着寫，所以懶得自己實現，於是網上找了個開源的 <code>C++</code> 閱讀 ini 文件的項目，名不見經傳，叫 <a href="http://miniini.tuxfamily.org/" target="_blank" rel="external">miniini</a>。</p>
@@ -1683,7 +1812,7 @@ $(function()
     <link href="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"/>
     <id>http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/</id>
     <published>2014-04-03T14:37:15.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　好，今天讓我們更深入地搞基吧！</p>
 <h2 id="溫故而知新，可以爲溼矣">溫故而知新，可以爲溼矣</h2><p>　　首先請大家記住這個 V8 的在線手冊——<a href="http://izs.me/v8-docs/main.html" target="_blank" rel="external">http://izs.me/v8-docs/main.html</a>。</p>
 <p>　　還記得上次的 <code>building.gyp</code> 文件嗎？</p>
@@ -1803,13 +1932,13 @@ $(function()
     <link href="http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/"/>
     <id>http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/</id>
     <published>2014-04-01T16:53:22.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　N久之前的一個坑——用 <strong>Node.js</strong> 來重構 NBUT 的 <strong>Online Judge</strong>，包括評測端也得重構一遍。（至於什麼時候完成大家就不要關心了，(／‵Д′)／~ ╧╧</p>
 <p>　　總之我們現在要做的其實簡而言之就是——用C/C++來實現 <strong>Node.js</strong> 的模塊。</p>
 <h2 id="準備工作">準備工作</h2><p>　　工欲善其事，必先<del>耍流氓</del>利其器。</p>
 <h3 id="node-gyp">node-gyp</h3><p>　　首先你需要一個 <code>node-gyp</code> 模塊。</p>
 <p>　　在任意角落，執行：</p>
-<figure class="highlight sql"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm <span class="operator"><span class="keyword">install</span> node-gyp -<span class="keyword">g</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install <span class="keyword">node</span><span class="identifier"></span><span class="title">-gyp</span> -g</span><br></pre></td></tr></table></figure>
 <p>　　在進行一系列的 <code>blahblah</code> 之後，你就安裝好了。</p>
 <h3 id="Python">Python</h3><p>　　然後你需要有個 <code>python</code> 環境。</p>
 <p>　　自己去<a href="http://python.org/" target="_blank" rel="external">官網</a>搞一個來。</p>
@@ -1893,10 +2022,10 @@ $(function()
 <figure class="highlight json"><figcaption><span>json</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">targets</span>": <span class="value">[</span><br><span class="line">    &#123;</span><br><span class="line">      "<span class="attribute">target_name</span>": <span class="value"><span class="string">"hello"</span></span>,</span><br><span class="line">      "<span class="attribute">sources</span>": <span class="value">[ <span class="string">"hello.cc"</span> ]</span><br><span class="line">    </span>&#125;</span><br><span class="line">  ]</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
 <p>　　爲什麼這麼寫呢？可以參考 <code>node-gyp</code> 的<a href="http://code.google.com/p/gyp/wiki/GypUserDocumentation#Skeleton_of_a_typical_Chromium_.gyp_file" target="_blank" rel="external">官方文檔</a>。</p>
 <h4 id="configure">configure</h4><p>　　在文件搞好之後，我們要在這個目錄下面執行這個命令了：</p>
-<figure class="highlight crystal"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>node-gyp configure</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">node</span><span class="identifier"></span><span class="title">-gyp</span> configure</span><br></pre></td></tr></table></figure>
 <p>　　如果一切正常的話，應該會生成一個 <code>build</code> 的目錄，然後裏面有相關文件，也許是 <strong>M$ Visual Studio</strong> 的 <code>vcxproj</code> 文件等，也許是 <code>Makefile</code> ，視平臺而定。</p>
 <h4 id="build">build</h4><p>　　<code>Makefile</code> 也生成好之後，我們就開始構造編譯了：</p>
-<figure class="highlight crystal"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>node-gyp build</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">node</span><span class="identifier"></span><span class="title">-gyp</span> build</span><br></pre></td></tr></table></figure>
 <p>　　等到一切編譯完成，纔算是真正的大功告成了！不信你去看看 <code>build/Release</code> 目錄，下面是不是有一個 <code>hello.node</code> 文件了？沒錯，這個就是 C++ 等下要給 Node.js 撿的肥皂！</p>
 <h3 id="搞基吧！Node_ヽ(✿ﾟ▽ﾟ)ノ_C++">搞基吧！Node ヽ(✿ﾟ▽ﾟ)ノ C++</h3><p>　　我們在剛纔那個目錄下新建一個文件 <code>jianfeizao.js</code>：</p>
 <figure class="highlight javascript"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> addon = <span class="built_in">require</span>(<span class="string">"./build/Release/hello"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(addon.hello());</span><br></pre></td></tr></table></figure>
@@ -1921,7 +2050,7 @@ $(function()
     <link href="http://xcoder.in/2014/03/27/node-public-file-house/"/>
     <id>http://xcoder.in/2014/03/27/node-public-file-house/</id>
     <published>2014-03-26T17:34:04.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　所謂“公衆檔所”，其實就是一個公共的臨時網盤了。這個東西是一個老物了，在我剛接觸 <code>Expressjs</code> 的時候寫的。當時還隨便搞了一下 <code>backbone.js</code>，但是沒有深入，勿笑。關於深入構架 <code>Expressjs</code> 方面也沒做，只是粗粗寫了下最基礎的路由，所以整個文件結構也不是很規範。但是應該能比較適合剛學 <code>Node.js</code> 以及剛接觸 <code>Expressjs</code> 的人吧。</p>
 <p>　　Repo地址在<a href="https://github.com/XadillaX/public-file-house" target="_blank" rel="external">我的Github</a>上。Demo地址在 <a href="http://dang.kacaka.ca/" target="_blank" rel="external">http://dang.kacaka.ca/</a>，由於個人電腦的不穩定性，所以不保證你們隨時可以訪問，保不定哪天就失效了，所以最好的辦法還是自己 <code>clone</code> 下來啪啪啪。</p>
 <p>　　它所需要的東西大致就是 <code>Expressjs</code> + <code>Redis</code> + <code>Backbone</code> 了。不過都是最最基礎的代碼。</p>
@@ -1933,7 +2062,7 @@ $(function()
 </ul>
 <p>　　<strong>如果你們裝一臺機子上，那麼就是：</strong></p>
 <p>　　將 <code>repo</code> 給 clone 到自己的機子上。</p>
-<figure class="highlight vim"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git clone http<span class="variable">s:</span>//github.<span class="keyword">com</span>/XadillaX/public-<span class="keyword">file</span>-house</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="keyword">clone</span> <span class="title">https</span>://github.com/XadillaX/public-file-house</span><br></pre></td></tr></table></figure>
 <p>　　裝好 <strong>redis</strong>，並根據需要修改 <code>redis.conf</code> 文件。</p>
 <p>　　執行 <code>redis.sh</code> 文件開啓數據庫。如果你自己本身已經開啓數據庫或者用其它方法開啓了，請忽略上面數據庫相關步驟。</p>
 <p>　　然後打開 <code>commonConst.js</code> 文件進行編輯，把相關的一些信息改成自己所需要的。</p>
@@ -1943,7 +2072,7 @@ $(function()
 <figure class="highlight cmake"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm <span class="keyword">install</span></span><br></pre></td></tr></table></figure>
 <p>　　把三方模塊重新裝好之後，把剛纔拷出去的倆文件放回這個目錄下。（<strong>但是以後你們自己寫別的項目的話千萬別學我這個壞樣子啊，以前年輕不懂事 QAQ</strong>）</p>
 <p>　　最後跑起來就行啦：</p>
-<figure class="highlight crystal"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>node pfh.js</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">node</span><span class="identifier"> </span><span class="title">pfh</span>.js</span><br></pre></td></tr></table></figure>
 <h2 id="解析">解析</h2><p>接下去就是要剖析這小破東西了。</p>
 <h3 id="基礎文件">基礎文件</h3><h4 id="pfh-js">pfh.js</h4><p>　　這個文件其實是 <code>Expressjs</code> 自動生成的，以前不是很懂他，所以也沒怎麼動，基本上是保持原封不動的。</p>
 <h4 id="router-js">router.js</h4><p>　　這個是路由定義的文件。比較醜陋的一種方法，把需要定義的所有路由都寫進兩個 <code>json</code> 對象中，一個 <code>POST</code> 和一個 <code>GET</code>。</p>
@@ -2017,13 +2146,13 @@ $(function()
 <p>　　就是用頁內模板來渲染：</p>
 <figure class="highlight cpp"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="keyword">this</span>.el).html(Mustache.to_html(</span><br><span class="line">    <span class="keyword">this</span>.<span class="keyword">template</span></span><br><span class="line">));</span><br></pre></td></tr></table></figure>
 <p>　　而這個 <code>this.el</code> 是在 <code>Workspace</code> 中定義的：</p>
-<figure class="highlight css"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...,</span><br><span class="line"></span><br><span class="line"><span class="rule"><span class="attribute">upload      </span>:<span class="value"> <span class="function">function</span>() &#123;</span><br><span class="line">    var uploadView = new <span class="function">UploadView</span>(&#123; el: <span class="string">"#main-template-container"</span> &#125;)</span></span>;</span><br><span class="line">    <span class="tag">uploadView</span><span class="class">.render</span>();</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<figure class="highlight actionscript"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...,</span><br><span class="line"></span><br><span class="line">upload      : <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> uploadView = <span class="keyword">new</span> UploadView(&#123; el: <span class="string">"#main-template-container"</span> &#125;);</span><br><span class="line">    uploadView.render();</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>　　如你所見，就是這個 <code>#main-template-container</code> 了。</p>
 <p>　　這個渲染完畢之後，然後把 <code>#uploadfile</code> 給變成上傳按鈕（用了 <strong>jquery.fileupload.js</strong>）。再然後把渲染好的頁面給 <code>show</code> 出來。</p>
 <p>　　然後這個　<code>uploadView.js</code> 中還定義了兩個<a href="http://backbonejs.org/#View-delegateEvents" target="_blank" rel="external">響應事件</a>：</p>
 <figure class="highlight lasso"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">...</span>,</span><br><span class="line"></span><br><span class="line">events      : &#123;</span><br><span class="line">    <span class="string">"click .upbutton"</span>   : <span class="string">"upload"</span>,</span><br><span class="line">    <span class="string">"click #uploadpage-to-download"</span> : <span class="string">"goDownload"</span></span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line"><span class="attribute">...</span></span><br></pre></td></tr></table></figure>
 <p>　　即在按下 <code>.upbutton</code> 的時候會執行 <code>upload</code> 函數，在按下“去下載”的按鈕時會執行 <code>goDownload</code> 函數。</p>
-<figure class="highlight css"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...,</span><br><span class="line"></span><br><span class="line"><span class="rule"><span class="attribute">upload      </span>:<span class="value"> <span class="function">function</span>() &#123;</span><br><span class="line">    $(<span class="string">"#uploadfile"</span>).<span class="function">click</span>()</span></span>;</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...,</span><br><span class="line"></span><br><span class="line">upload      : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    $(<span class="string">"#uploadfile"</span>).click();</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>　　執行上傳函數的時候，實際上是自動觸動了 <code>#uploadfile</code> 按鈕的 <code>click</code> 事件。這個時候就會按照之前定義好的 <code>$(&quot;#uploadfile&quot;).fileupload(...)</code> 去處理了。</p>
 <h5 id="getView-js">getView.js</h5><p>　　這個是獲取文件的視圖。</p>
 <p>　　渲染時會獲取 <code>code</code> 。這個 <code>code</code> 同樣是 <code>Workspace</code> 傳入的：</p>
@@ -2072,7 +2201,7 @@ $(function()
     <link href="http://xcoder.in/2013/12/28/xplan-spider-doc/"/>
     <id>http://xcoder.in/2013/12/28/xplan-spider-doc/</id>
     <published>2013-12-27T16:00:00.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:51.000Z</updated>
     <content type="html"><![CDATA[<h2 id="前言">前言</h2><p><strong>XPlan</strong> 是一個“基於校園強關係的社交應用”的開發代號。其中有一個功能是從學校網站上通過網絡爬蟲（Web Crawler）形式將學校新聞抓取到XPlan自身的數據庫當中。</p>
 <p>而這裏出現的一個問題就是學校網站上面的文章是通過類似於 <a href="http://kindeditor.net/" target="_blank" rel="external"><code>KindEditor</code></a>、<a href="http://ueditor.baidu.com/website/" target="_blank" rel="external"><code>UEditor</code></a>這類<strong>在線富文本編輯器</strong>生成的代碼。</p>
 <p>這類代碼有幾個共性：</p>
@@ -2162,7 +2291,7 @@ $(function()
     <link href="http://xcoder.in/2013/08/31/srm-589-div2/"/>
     <id>http://xcoder.in/2013/08/31/srm-589-div2/</id>
     <published>2013-08-30T16:00:00.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:51.000Z</updated>
     <content type="html"><![CDATA[<p>　　好久沒擼 <strong>TC</strong> 了，手都生了。前兩天剛折騰好 <strong>LinuxMint</strong> + <strong>Cinnamon</strong>，順便手賤把 <strong>TC</strong> 環境配好了。</p>
 <p>　　隨便進去扯了一套最新的 <strong>SRM</strong> 來搞，全跑完之後才發現原來這場比賽還處於 <strong>System Running</strong> 階段。於是知道了比賽一結束還在 <strong>Running</strong> 的時候你就已經可以自己拉出來做了。小綠名大家不要笑。</p>
 <!-- 我是小小分割符 -->
@@ -2227,7 +2356,7 @@ $(function()
     <link href="http://xcoder.in/2013/08/16/node-4-base/"/>
     <id>http://xcoder.in/2013/08/16/node-4-base/</id>
     <published>2013-08-15T16:00:00.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p><strong>Node.js</strong> 的基礎是 <strong>JavaScript</strong> 這門 <strong><em>腳本語言</em></strong>。而大多數的腳本語言一個共同的特點就是“<a href="http://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1#.E5.BC.B7.E5.9E.8B.E5.88.A5.E5.92.8C.E5.BC.B1.E5.9E.8B.E5.88.A5" target="_blank" rel="external">弱類型</a>”。</p>
 <p>　　不同於 <strong>PHP</strong> 的是，<strong>PHP</strong> 就是是有了新變量也無需申明，而 <strong>JavaScript</strong> 則還是需要 <code>var</code> 來申明一下的。而這個 <code>var</code> 涵蓋了 <strong>C++</strong> 中的<code>int</code>、<code>string</code>、<code>char</code>等一切類型的含義，甚至是 <code>function</code>。</p>
 <p>　　本篇以及後篇的所有內容都是在 <strong>Linux</strong> 或者 <strong>Cygwin</strong> 下用 <strong>vim</strong> 進行編輯（若不是則請自行轉變成你自己的方法），然後在命令行下進行查看結果的。</p>
@@ -2247,7 +2376,7 @@ $(function()
 <p>這個時候我們就可以用 <code>for...in</code> 來循環遍歷了：</p>
 <figure class="highlight processing"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(var <span class="variable">key</span> in foo) &#123;</span><br><span class="line">    console.<span class="built_in">log</span>(<span class="variable">key</span> + <span class="string">": "</span> + foo[<span class="variable">key</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我們如果在命令行中打入下面的命令：</p>
-<figure class="highlight crystal"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>node foo.js</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">node</span><span class="identifier"> </span><span class="title">foo</span>.js</span><br></pre></td></tr></table></figure>
 <p>屏幕上就會顯示下面的內容了：</p>
 <figure class="highlight http"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">hello</span>: <span class="string">world</span></span><br><span class="line"><span class="attribute">node</span>: <span class="string">js</span></span><br><span class="line"><span class="attribute">blahblah</span>: <span class="string">bar</span></span><br></pre></td></tr></table></figure>
 <blockquote>
@@ -2427,18 +2556,18 @@ $(function()
     <link href="http://xcoder.in/2013/08/15/node-2-environment-in-windows/"/>
     <id>http://xcoder.in/2013/08/15/node-2-environment-in-windows/</id>
     <published>2013-08-14T16:00:00.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　由於<a href="!--￼11--&gt;#linux-環境">Linux</a>中的環境搭建比較簡單，所以草草略過。</p>
 <p>　　其實<a href="!--￼12--&gt;#windows-環境">Windows</a>下也不算麻煩，但是這裏會講一定量的別的環境的搭建。</p>
 <!-- 我是小小分割符 -->
 <h2 id="Linux_環境">Linux 環境</h2><p>講到這個就很簡單了，跟着下面的 <strong>bash</strong> 操作即可：</p>
-<figure class="highlight crystal"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd /usr/local/bin</span><br><span class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/nodejs.org/dist</span><span class="regexp">/v0.00.00/node</span>-v0.<span class="number">00.00</span>-linux-x00.tar.gz</span><br><span class="line"><span class="variable">$ </span>tar zxf node-v0.<span class="number">00.00</span>-linux-x00.tar.gz</span><br><span class="line"><span class="variable">$ </span>cd node-v0.<span class="number">00.00</span>-linux-x00</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cd /usr/local/bin</span><br><span class="line">$ wget http://nodejs.org/dist/v0.<span class="number">00.00</span>/<span class="keyword">node</span><span class="identifier"></span><span class="title">-v0</span>.<span class="number">00.00</span>-linux-x00.tar.gz</span><br><span class="line">$ tar zxf <span class="keyword">node</span><span class="identifier"></span><span class="title">-v0</span>.<span class="number">00.00</span>-linux-x00.tar.gz</span><br><span class="line">$ cd <span class="keyword">node</span><span class="identifier"></span><span class="title">-v0</span>.<span class="number">00.00</span>-linux-x00</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>其中將上方的 <strong>v0.00.00</strong> 替換成 <strong>Node.js</strong> 最新的版本號，把 <strong>x00</strong> 替換成你自己電腦的位數。</p>
 <p>也可以直接去官網 <a href="http://nodejs.org/download/" target="_blank" rel="external">http://nodejs.org/download/</a> 找到相應的地址。</p>
 </blockquote>
 <p>最後將其的連接加入到 <code>/usr/bin</code> 下即可。</p>
-<figure class="highlight crystal"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd bin</span><br><span class="line"><span class="variable">$ </span>ln node /usr/bin</span><br><span class="line"><span class="variable">$ </span>ln npm /usr/bin</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cd bin</span><br><span class="line">$ ln <span class="keyword">node</span><span class="identifier"> </span><span class="title">/usr</span>/bin</span><br><span class="line">$ ln npm /usr/bin</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><strong>注意</strong>： 該用 <code>sudo</code> 的地方就用 <code>sudo</code> 或者 <code>su</code> 。</p>
 </blockquote>
@@ -2546,7 +2675,7 @@ $(function()
 <p>在裏面輸入下面的東西：</p>
 <figure class="highlight applescript"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.<span class="command">log</span>(<span class="string">"Hello world!"</span>);</span><br></pre></td></tr></table></figure>
 <p>然後退出 <strong>vim</strong> 執行：</p>
-<figure class="highlight crystal"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>node hello.js</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">node</span><span class="identifier"> </span><span class="title">hello</span>.js</span><br></pre></td></tr></table></figure>
 <p>終於，<strong>真·Hello world</strong> 出現在了你的眼前，而不需要藉助 <strong><a href="http://ideone.com/" target="_blank" rel="external">IDEOne</a></strong> 了。</p>
 <p><strong><em>To be continued…</em></strong></p>
 ]]></content>
@@ -2570,7 +2699,7 @@ $(function()
     <link href="http://xcoder.in/2013/08/13/node-1-summary/"/>
     <id>http://xcoder.in/2013/08/13/node-1-summary/</id>
     <published>2013-08-12T16:00:00.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　本系列教程主要是寫給我帶的那幫熊孩子們看的。我自己的 <strong>Node.js</strong> 水平半斤八兩，措辭之中也免不了有自己錯誤的理解，會誤人子弟。但是對於初學者來說，某些自己助記的理解還是可取的。有些概念性的錯誤可以等他們進一步深入研究之後再自行更正。</p>
 <p>　　由於那幫人大多還處於使用 <strong>M$ Windows</strong> 的令人不愉快的階段，所以本教程將會退而求其次，使其在 <strong>Cygwin</strong> 中模擬 <strong>linux</strong> 的命令（Windows的bat腳本實在是讓人不敢恭維）。以及在這裏會講述一些 <strong>Git</strong> 操作的初步。當然，如果你已經在使用 <strong>linux</strong> 進行開發的話，可以跳過前面一堆令人感到厭煩的環境配置章節。或者你在使用 <strong>M$ Windows</strong> 但卻不想改變自己的腳本習慣的話，也可以選擇性地跳過一些章節和步驟。</p>
 <!-- 我是小小分割符 -->
@@ -2648,7 +2777,7 @@ $(function()
     <link href="http://xcoder.in/2013/07/15/javascript-callback-this-bind/"/>
     <id>http://xcoder.in/2013/07/15/javascript-callback-this-bind/</id>
     <published>2013-07-15T06:20:29.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　最近在寫 <strong>NBUT Virtual Judge</strong> 的內核框架，用的又是 <strong>Node.JS</strong> 了，把它當作一個本地運行的腳本不斷進行輪詢。</p>
 <p>　　衆所周知JS中的一個精髓就是異步回調。</p>
 <p>　　所以在我自己寫的框架中也經常會出現類似於下面的代碼：</p>
@@ -2687,7 +2816,7 @@ $(function()
     <link href="http://xcoder.in/2013/03/29/nodejs-mongodb-sync/"/>
     <id>http://xcoder.in/2013/03/29/nodejs-mongodb-sync/</id>
     <published>2013-03-29T01:31:38.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　<strong><em>注：本文僅爲我初學 Node.JS 的時候的稚嫩筆記。是從 <a href="http://web.archive.org/" target="_blank" rel="external">http://web.archive.org/</a> 扒回來的。現在看來已無多大參考價值，各位可以略過。我只是把它扒回來紀念一下而已，以記錄我的歷程。而那個相對應的 <code>SevenzJS</code> 也已經被遺棄</em></strong></p>
 <h2 id="背景">背景</h2><p>　　最近在做公司項目的一個模塊，主要用於 <strong>JSON Api</strong> 的傳輸，所以開發環境的目標就鎖定在了 <strong>Node.js</strong>。而這一塊的登陸用戶又是存在 <strong>MongoDB</strong> 裏面的，所以就有瞭如下的問題。</p>
 <ul>
@@ -2735,7 +2864,7 @@ $(function()
     <link href="http://xcoder.in/2012/12/24/jquery-animate-color-support/"/>
     <id>http://xcoder.in/2012/12/24/jquery-animate-color-support/</id>
     <published>2012-12-24T01:20:16.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　最近在做一個汽車團購網的項目，由於老大力求簡潔，所以界面做得有些小清新。不過得說一下頁面不是我設計的，是一位美工同志。</p>
 <p>　　廢話不多說，直接切入正題吧——</p>
 <p>　　我要做得就是讓下面一段代碼生效：</p>
@@ -2774,7 +2903,7 @@ $(function()
     <link href="http://xcoder.in/2012/09/08/scope-lock/"/>
     <id>http://xcoder.in/2012/09/08/scope-lock/</id>
     <published>2012-09-07T17:31:59.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:51.000Z</updated>
     <content type="html"><![CDATA[<p>　　<strong><em>嘛，本文是建立在M$的Visual Studio基礎上的，linux☭勿噴。</em></strong></p>
 <p>　　我最先用到 ScopeLock 模式是在自己開發 <strong>XAE引擎</strong> 的時候。在裏面用到挺多的線程函數，那麼如何解決臨界區就成了一個重要的課題。可能大家想，不就一個線程鎖臨界區什麼的麼，一個 <code>EnterCriticalSection</code> 和一個 <code>LeaveCriticalSection</code> 不就解決了麼？</p>
 <p>　　其實不然。在 <strong>M$</strong> 中，最常用的當然就是 <code>CRITICAL_SECTION</code> 了，但是如果臨界區上鎖卻木有解鎖呢？這就會發生死鎖現象。對於一個粗心的程序猿來說這樣的錯誤還是有機率發生的。就算你足夠細心，還是有時候會一失足成千古恨。</p>
@@ -2813,7 +2942,7 @@ $(function()
     <link href="http://xcoder.in/2012/07/04/codeforces-128-div2/"/>
     <id>http://xcoder.in/2012/07/04/codeforces-128-div2/</id>
     <published>2012-07-04T03:38:59.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　這次玩脫了。好不容易四題都做出來，卻因爲小細節掛了兩題。</p>
 <h2 id="Description">Description</h2><h3 id="Two_Problems">Two Problems</h3><p>　　題意就是說，CF有兩題，每題初始分A和B，然後每題在每分鐘會扣DA和DB分。給你比賽總時間T，問你某個人可不可能拿到X分。（注意可能做出一題、兩題或者一題也沒做出）</p>
 <p>　　(0 ≤ x ≤ 600; 1 ≤ t, a, b, da, db ≤ 300且保證及時比賽時間到了各題的分數也不會小於0)</p>
@@ -2852,7 +2981,7 @@ $(function()
     <link href="http://xcoder.in/2011/10/18/hge-hotspot-collision/"/>
     <id>http://xcoder.in/2011/10/18/hge-hotspot-collision/</id>
     <published>2011-10-18T07:22:21.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　碰撞檢測始終是做2D遊戲中的一個熱點話題，我本人並沒有做過這類遊戲，所以一切只是理論而已，不過正打算做這麼個小遊戲練練手。</p>
 <p>　　前幾天在HGE的羣裏看到有人突然問到如何判斷鼠標有沒有點到人（點到紋理的透明區域不算），從而引申出了碰撞檢測問題。</p>
 <p>　　他的問題相對好實現，只要算出紋理所按的點是不是透明即可。</p>
@@ -2894,7 +3023,7 @@ $(function()
     <link href="http://xcoder.in/2011/09/13/hge-transparent-color/"/>
     <id>http://xcoder.in/2011/09/13/hge-transparent-color/</id>
     <published>2011-09-13T04:12:32.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　嘛 = = 在做那個項目的動畫預覽器的時候，因爲那引擎封裝得太麻煩了，於是自己基於HGE再移植一遍，發現其中有一個SetTransparentColor函數，即設置透明色。</p>
 <p>　　拿出來分享一下吧。</p>
 <p>　　其實方法很簡單，<code>HTEXTURE</code> 是紋理句柄，當你用 <code>Texture_Lock</code> 這個函數鎖定這個紋理的時候，它的返回值就是這個紋理在內存中的首地址。也就是說接下來的 width * height 個地址中就是這個紋理的每一個像素了。既然要設置透明色，只要對於每個像素判斷一下與運算一下就好了。</p>
@@ -2922,7 +3051,7 @@ $(function()
     <link href="http://xcoder.in/2011/06/16/resource-pack/"/>
     <id>http://xcoder.in/2011/06/16/resource-pack/</id>
     <published>2011-06-15T17:20:31.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　最近除了忙各種各樣的期末考試、去西班牙的簽證，就是公司的那個韓國項目了。</p>
 <p>　　我的任務基本完成——將原本單屏的遊戲改成三屏，完善整個 GUI系統 以及“劫持”了原遊戲中的一些邏輯，比如滾軸的排列可以任意控制等。由於原代碼中的GUI系統沒有文本編輯框，我還得自己寫一個。然而我對於IME的操作、GDI和DX的結合不是非常熟悉，所以還是參照了一下 <strong>ShowLong</strong> 所修改的微妙的平衡給HGE寫的中文解決方案。</p>
 <p>　　完成了以上的任務之後，由於我的考試以及簽證問題以及我本身的任務差不多了，就把這個攤子就扔回公司去了。在交接的時候，老大給我派了一個任務，讓我來寫這個遊戲資源包的代碼。</p>
@@ -2965,7 +3094,7 @@ $(function()
     <link href="http://xcoder.in/2011/05/16/lianlinakan-algorighm-i/"/>
     <id>http://xcoder.in/2011/05/16/lianlinakan-algorighm-i/</id>
     <published>2011-05-16T04:30:12.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　<strong>注：這篇文章我到現在也沒有填第二篇的坑。數據沒了重新從 Capture 裏面取出來，看看捨不得，於是把這篇文章也拿回來了。權當紀唸吧，以及當時和 <code>Kalxd</code> 的對話。</strong></p>
 <h2 id="正文">正文</h2><p>　　剛忙完邀請賽，蹭了塊銅。剛纔在逛別人博客的時候看別人的文章，突然心血來潮想記一些東西。</p>
 <p>　　連連看是我學HGE做的第一個小遊戲，素材用的是QQ的。時間大概是去年國慶吧。好吧，廢話不多說，就講講連連看怎麼找到能消的兩塊吧。</p>
@@ -3018,7 +3147,7 @@ $(function()
     <link href="http://xcoder.in/2011/04/25/my-first-game/"/>
     <id>http://xcoder.in/2011/04/25/my-first-game/</id>
     <published>2011-04-25T04:30:53.000Z</published>
-    <updated>2015-08-10T12:14:25.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　最近網之遊在和棒子一起開發一個類似賭博的網遊（別牆我，做好是給棒子自己玩的），然後機緣巧合，他們的引擎是結合了MFC以及從我用過的幾個引擎之一移植過來的。就引擎本身而言很強大，然後我又有一點小經驗，所以網之遊的柯總便也讓我加入了開發行列。之前也是託網之遊的福讓我研究了一番網狐的平臺。</p>
 <p>　　開發過程中學到了不少底層的東西。我的任務是先將遊戲的單屏給弄成三份，以三個邏輯來實現。由於工程耦合性太高，原程序員是C語言出生的，造成了我修改工程一定程度上的麻煩。先自己寫了個Wrapper類來包含三個SceneGAME，然後一次性將三個SceneGAME渲染到目標上。這樣改了一下之後，有兩百多個錯誤。不知道其它遊戲是不是也有這樣的特點，因爲這是我開發的第一款遊戲，所以也沒經驗。</p>
 <p>　　不過幸好最後還是讓我給完成了這第一個quest。接着是添加GUI，就是現在正在做的。還有就是完全分離三塊分屏的邏輯代碼。讓我這個大二學生興奮的是，這個遊戲完成之後，是會有獎金的。這個可是讓我這個窮孩子兩眼放光莫。YY一下到底會有多少呢，我本身也只是過去見識一下真正的工程而已，壓根沒想過money這事。</p>
@@ -3046,7 +3175,7 @@ $(function()
     <link href="http://xcoder.in/2010/11/17/objectfactory-learning/"/>
     <id>http://xcoder.in/2010/11/17/objectfactory-learning/</id>
     <published>2010-11-17T07:49:45.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:50.000Z</updated>
     <content type="html"><![CDATA[<p>　　對象工廠，顧名思義，就是產生對象的一個“工廠”。根據傳入的一個參數而產生相應的不同種類的對象。</p>
 <p>　　用於批量生成同一個父類的不同子類的對象時用到。</p>
 <p>　　本學習筆記基於Singleton（單件模式）基礎上進行擴展。</p>
@@ -3084,7 +3213,7 @@ $(function()
     <link href="http://xcoder.in/2010/11/13/singleton-learning/"/>
     <id>http://xcoder.in/2010/11/13/singleton-learning/</id>
     <published>2010-11-13T07:44:15.000Z</published>
-    <updated>2015-08-10T12:14:26.000Z</updated>
+    <updated>2015-10-16T06:59:51.000Z</updated>
     <content type="html"><![CDATA[<p>　　單件模式（Singleton）是一種用於確保整個應用程序中只有一個類實例且這個實例所佔資源在整個應用程序中是共享時的程序設計方法（根據實際情況，可能需要幾個類實例）。在某些情況下，這種程序設計方法是很有用處的。</p>
 <p>　　在小小地學習了一下C++的單件模式之後，突然聯想到PHP的ThinkPHP的MVC框架，覺得這就是一個單件模式的很好實例吧？</p>
 <p>　　我上次在PUDN上載了一個HGE的RPG Demo，裏面就用了Singleton模式還有ObjectFactory模式寫的。沒看懂，於是問了谷歌。</p>

@@ -100,7 +100,7 @@ sh1234$ cd /usr/local/bin$ wget htt">
         <h1>一起擼Node.JS（負貳）——環境</h1>
         
         <div class="time-info">
-发表于:<time datetime="2013-08-14T16:00:00.000Z" itemprop="datePublished">2013年08月15日</time>，更新于:<time datetime="2015-08-10T12:14:25.000Z" itemprop="dateModified">2015年08月10日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2013-08-14T16:00:00.000Z" itemprop="datePublished">2013年08月15日</time>，更新于:<time datetime="2015-10-16T06:59:50.000Z" itemprop="dateModified">2015年10月16日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -113,13 +113,13 @@ sh1234$ cd /usr/local/bin$ wget htt">
 <p>　　其實<a href="!--￼12--&gt;#windows-環境">Windows</a>下也不算麻煩，但是這裏會講一定量的別的環境的搭建。</p>
 <!-- 我是小小分割符 -->
 <h2 id="Linux_環境">Linux 環境</h2><p>講到這個就很簡單了，跟着下面的 <strong>bash</strong> 操作即可：</p>
-<figure class="highlight crystal"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd /usr/local/bin</span><br><span class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/nodejs.org/dist</span><span class="regexp">/v0.00.00/node</span>-v0.<span class="number">00.00</span>-linux-x00.tar.gz</span><br><span class="line"><span class="variable">$ </span>tar zxf node-v0.<span class="number">00.00</span>-linux-x00.tar.gz</span><br><span class="line"><span class="variable">$ </span>cd node-v0.<span class="number">00.00</span>-linux-x00</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cd /usr/local/bin</span><br><span class="line">$ wget http://nodejs.org/dist/v0.<span class="number">00.00</span>/<span class="keyword">node</span><span class="identifier"></span><span class="title">-v0</span>.<span class="number">00.00</span>-linux-x00.tar.gz</span><br><span class="line">$ tar zxf <span class="keyword">node</span><span class="identifier"></span><span class="title">-v0</span>.<span class="number">00.00</span>-linux-x00.tar.gz</span><br><span class="line">$ cd <span class="keyword">node</span><span class="identifier"></span><span class="title">-v0</span>.<span class="number">00.00</span>-linux-x00</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>其中將上方的 <strong>v0.00.00</strong> 替換成 <strong>Node.js</strong> 最新的版本號，把 <strong>x00</strong> 替換成你自己電腦的位數。</p>
 <p>也可以直接去官網 <a href="http://nodejs.org/download/" target="_blank" rel="external">http://nodejs.org/download/</a> 找到相應的地址。</p>
 </blockquote>
 <p>最後將其的連接加入到 <code>/usr/bin</code> 下即可。</p>
-<figure class="highlight crystal"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd bin</span><br><span class="line"><span class="variable">$ </span>ln node /usr/bin</span><br><span class="line"><span class="variable">$ </span>ln npm /usr/bin</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cd bin</span><br><span class="line">$ ln <span class="keyword">node</span><span class="identifier"> </span><span class="title">/usr</span>/bin</span><br><span class="line">$ ln npm /usr/bin</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><strong>注意</strong>： 該用 <code>sudo</code> 的地方就用 <code>sudo</code> 或者 <code>su</code> 。</p>
 </blockquote>
@@ -227,7 +227,7 @@ sh1234$ cd /usr/local/bin$ wget htt">
 <p>在裏面輸入下面的東西：</p>
 <figure class="highlight applescript"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.<span class="command">log</span>(<span class="string">"Hello world!"</span>);</span><br></pre></td></tr></table></figure>
 <p>然後退出 <strong>vim</strong> 執行：</p>
-<figure class="highlight crystal"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>node hello.js</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">node</span><span class="identifier"> </span><span class="title">hello</span>.js</span><br></pre></td></tr></table></figure>
 <p>終於，<strong>真·Hello world</strong> 出現在了你的眼前，而不需要藉助 <strong><a href="http://ideone.com/" target="_blank" rel="external">IDEOne</a></strong> 了。</p>
 <p><strong><em>To be continued…</em></strong></p>
 

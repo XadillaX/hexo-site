@@ -98,7 +98,7 @@
         <h1>讓Node.js和C++一起搞基 —— 1</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-04-01T16:53:22.000Z" itemprop="datePublished">2014年04月02日</time>，更新于:<time datetime="2015-08-10T12:14:26.000Z" itemprop="dateModified">2015年08月10日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2014-04-01T16:53:22.000Z" itemprop="datePublished">2014年04月02日</time>，更新于:<time datetime="2015-10-16T06:59:50.000Z" itemprop="dateModified">2015年10月16日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -112,7 +112,7 @@
 <h2 id="準備工作">準備工作</h2><p>　　工欲善其事，必先<del>耍流氓</del>利其器。</p>
 <h3 id="node-gyp">node-gyp</h3><p>　　首先你需要一個 <code>node-gyp</code> 模塊。</p>
 <p>　　在任意角落，執行：</p>
-<figure class="highlight sql"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm <span class="operator"><span class="keyword">install</span> node-gyp -<span class="keyword">g</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install <span class="keyword">node</span><span class="identifier"></span><span class="title">-gyp</span> -g</span><br></pre></td></tr></table></figure>
 <p>　　在進行一系列的 <code>blahblah</code> 之後，你就安裝好了。</p>
 <h3 id="Python">Python</h3><p>　　然後你需要有個 <code>python</code> 環境。</p>
 <p>　　自己去<a href="http://python.org/" target="_blank" rel="external">官網</a>搞一個來。</p>
@@ -196,10 +196,10 @@
 <figure class="highlight json"><figcaption><span>json</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">targets</span>": <span class="value">[</span><br><span class="line">    &#123;</span><br><span class="line">      "<span class="attribute">target_name</span>": <span class="value"><span class="string">"hello"</span></span>,</span><br><span class="line">      "<span class="attribute">sources</span>": <span class="value">[ <span class="string">"hello.cc"</span> ]</span><br><span class="line">    </span>&#125;</span><br><span class="line">  ]</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
 <p>　　爲什麼這麼寫呢？可以參考 <code>node-gyp</code> 的<a href="http://code.google.com/p/gyp/wiki/GypUserDocumentation#Skeleton_of_a_typical_Chromium_.gyp_file" target="_blank" rel="external">官方文檔</a>。</p>
 <h4 id="configure">configure</h4><p>　　在文件搞好之後，我們要在這個目錄下面執行這個命令了：</p>
-<figure class="highlight crystal"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>node-gyp configure</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">node</span><span class="identifier"></span><span class="title">-gyp</span> configure</span><br></pre></td></tr></table></figure>
 <p>　　如果一切正常的話，應該會生成一個 <code>build</code> 的目錄，然後裏面有相關文件，也許是 <strong>M$ Visual Studio</strong> 的 <code>vcxproj</code> 文件等，也許是 <code>Makefile</code> ，視平臺而定。</p>
 <h4 id="build">build</h4><p>　　<code>Makefile</code> 也生成好之後，我們就開始構造編譯了：</p>
-<figure class="highlight crystal"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>node-gyp build</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><figcaption><span>shell</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">node</span><span class="identifier"></span><span class="title">-gyp</span> build</span><br></pre></td></tr></table></figure>
 <p>　　等到一切編譯完成，纔算是真正的大功告成了！不信你去看看 <code>build/Release</code> 目錄，下面是不是有一個 <code>hello.node</code> 文件了？沒錯，這個就是 C++ 等下要給 Node.js 撿的肥皂！</p>
 <h3 id="搞基吧！Node_ヽ(✿ﾟ▽ﾟ)ノ_C++">搞基吧！Node ヽ(✿ﾟ▽ﾟ)ノ C++</h3><p>　　我們在剛纔那個目錄下新建一個文件 <code>jianfeizao.js</code>：</p>
 <figure class="highlight javascript"><figcaption><span>javascript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> addon = <span class="built_in">require</span>(<span class="string">"./build/Release/hello"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(addon.hello());</span><br></pre></td></tr></table></figure>
