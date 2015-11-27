@@ -1,4 +1,4 @@
-title: 一道關於 Node.js 全局變量的題目
+title: Node.js 啓動方式：一道關於全局變量的題目引發的思考
 date: 2015-11-26 21:51:37
 tags: [ Node.js, 源碼分析, REPL, vm ]
 ---
