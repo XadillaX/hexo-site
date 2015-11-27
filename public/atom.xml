@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in/"/>
-  <updated>2015-11-27T06:44:28.000Z</updated>
+  <updated>2015-11-27T06:48:24.000Z</updated>
   <id>http://xcoder.in/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="http://xcoder.in/2015/11/27/a-js-problem-about-global-continued/"/>
     <id>http://xcoder.in/2015/11/27/a-js-problem-about-global-continued/</id>
     <published>2015-11-27T06:36:27.000Z</published>
-    <updated>2015-11-27T06:44:28.000Z</updated>
-    <content type="html"><![CDATA[<p>本文是上文《<a href="http://f2e.souche.com/blog/a-js-problem-about-global/" target="_blank" rel="external">一道關於 Node.js 全局變量的題目</a>》的續章。</p>
+    <updated>2015-11-27T06:48:24.000Z</updated>
+    <content type="html"><![CDATA[<p>本文是上文《<a href="https://xcoder.in/2015/11/26/a-js-problem-about-global/">一道關於 Node.js 全局變量的題目</a>》的續章。</p>
 <h2 id="原題回顧">原題回顧</h2><p>我們還是先回顧下原題吧。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">2</span>;  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;  </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo();</span><br></pre></td></tr></table></figure>
 <blockquote>
@@ -148,8 +148,8 @@
 </blockquote>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>本文是上文《<a href="http://f2e.souche.com/blog/a-js-problem-about-global/" target="_blank" rel="external">一道關於 Node.js 全局變量的題目</a>》的續章。</p>
-<h]]>
+    <![CDATA[<p>本文是上文《<a href="https://xcoder.in/2015/11/26/a-js-problem-about-global/">一道關於 Node.js 全局變量的題目</a>》的續章。</p>
+<h2 id="原題回顧">原題回顧</h2><p>我們還是先]]>
     </summary>
     
       <category term="Node.js" scheme="http://xcoder.in/tags/Node-js/"/>

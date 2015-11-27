@@ -3,7 +3,7 @@ date: 2015-11-27 14:36:27
 tags: [ Node.js, 源碼分析, REPL, vm ]
 ---
 
-本文是上文《[一道關於 Node.js 全局變量的題目](http://f2e.souche.com/blog/a-js-problem-about-global/)》的續章。
+本文是上文《[一道關於 Node.js 全局變量的題目](https://xcoder.in/2015/11/26/a-js-problem-about-global/)》的續章。
 
 ## 原題回顧
 
