@@ -1,25 +1,25 @@
-title: 跟我一起部署和定制 CNPM——索引
+title: 跟我一起部署和定製 CNPM——索引
 date: 2016-07-08 19:14:58
 tags: [ "CNPM", "Node.js" ]
 ---
 
-本系列文章将会基于 [cnpm](https://github.com/cnpm/cnpmjs.org) 部署搭建一套属于自己（或者公司）的内部私有 NPM 系统。
+本系列文章將會基於 [cnpm](https://github.com/cnpm/cnpmjs.org) 部署搭建一套屬於自己（或者公司）的內部私有 NPM 系統。
 
-## 什么是 CNPM
+## 什麼是 CNPM
 
-[cnpm](https://github.com/cnpm/cnpmjs.org) 是 Node.js 中国社区成员主导的一个私有 NPM 开源项目，可以用于部署私有 NPM、公共 NPM 镜像等。
+[cnpm](https://github.com/cnpm/cnpmjs.org) 是 Node.js 中國社區成員主導的一個私有 NPM 開源項目，可以用於部署私有 NPM、公共 NPM 鏡像等。
 
-## 阅读对象
+## 閱讀對象
 
-+ 有一定 Node.js 后端基础
++ 有一定 Node.js 後端基礎
 + 需要有一套私有 NPM
-+ 想要研究 CNPM 实现
++ 想要研究 CNPM 實現
 
-## 目录
+## 目錄
 
-1. [基础部署](lets-cnpm-base-deploy)
+1. [基礎部署](lets-cnpm-base-deploy)
 2. To be continued
 
-## 贡献
+## 貢獻
 
-你可以对本系列文章进行勘误或者更新，直接提交 PR 或者在博客文章后方留言。
+你可以對本系列文章進行勘誤或者更新，直接提交 PR 或者在博客文章後方留言。

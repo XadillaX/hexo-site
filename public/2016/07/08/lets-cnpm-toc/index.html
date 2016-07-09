@@ -6,9 +6,12 @@
     
     <meta name="author" content="小鳥遊死月">
     
-    <meta name="description" content="原因由於某些原因，我寫了個很搓的內存池（C 版本的）。
-然後我想到了把之前寫的一個 Node.js 包 thmclrx 的更挫的“僞·內存池”用新寫的內存池去替換掉。(❛◡❛✿)
-然後問題就來了，我貌似不能控制 node-gyp 去用 G++ 編譯 *.c 文件，這樣的話所有文件編譯好之後鏈接 *.">
+    <meta name="description" content="本系列文章將會基於 cnpm 部署搭建一套屬於自己（或者公司）的內部私有 NPM 系統。
+什麼是 CNPMcnpm 是 Node.js 中國社區成員主導的一個私有 NPM 開源項目，可以用於部署私有 NPM、公共 NPM 鏡像等。
+閱讀對象
+有一定 Node.js 後端基礎
+需要有一套私有 NPM
+">
     
     
 
@@ -21,7 +24,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>在 C++ 中鏈接 C 的 文件 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
+    <title>跟我一起部署和定製 CNPM——索引 | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
@@ -85,7 +88,7 @@
         
     $(function() {
         // page-id...
-        var pageId = "2014/12/10/link-c-on-gpp/";
+        var pageId = "2016/07/08/lets-cnpm-toc/";
         pageId = pageId.substr(0, pageId.indexOf("/"));
         if(pageId === "") pageId = "index";
         
@@ -95,43 +98,36 @@
 
     <article class="post container">
     <div class="well post-body first-post last-post">
-        <h1>在 C++ 中鏈接 C 的 文件</h1>
+        <h1>跟我一起部署和定製 CNPM——索引</h1>
         
         <div class="time-info">
-发表于:<time datetime="2014-12-10T07:30:32.000Z" itemprop="datePublished">2014年12月10日</time>，更新于:<time datetime="2016-07-09T11:17:54.000Z" itemprop="dateModified">2016年07月09日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2016-07-08T11:14:58.000Z" itemprop="datePublished">2016年07月08日</time>，更新于:<time datetime="2016-07-09T11:17:54.000Z" itemprop="dateModified">2016年07月09日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
             <div id="toc" class="toc-article well">
                 <strong class="toc-title">大纲</strong>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#原因"><span class="toc-number">1.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#假想方案"><span class="toc-number">2.</span> <span class="toc-text">假想方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#假想一"><span class="toc-number">2.1.</span> <span class="toc-text">假想一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#假想二"><span class="toc-number">2.2.</span> <span class="toc-text">假想二</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解決方案"><span class="toc-number">3.</span> <span class="toc-text">解決方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事後煙"><span class="toc-number">4.</span> <span class="toc-text">事後煙</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什麼是_CNPM"><span class="toc-number">1.</span> <span class="toc-text">什麼是 CNPM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#閱讀對象"><span class="toc-number">2.</span> <span class="toc-text">閱讀對象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#目錄"><span class="toc-number">3.</span> <span class="toc-text">目錄</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#貢獻"><span class="toc-number">4.</span> <span class="toc-text">貢獻</span></a></li></ol>
             </div>
             
-            <h2 id="原因">原因</h2><p>由於某些原因，我寫了個很搓的<a href="https://github.com/XadillaX/xmempool" target="_blank" rel="external">內存池</a>（C 版本的）。</p>
-<p>然後我想到了把之前寫的一個 Node.js 包 <a href="https://github.com/XadillaX/thmclrx" target="_blank" rel="external">thmclrx</a> 的更挫的“僞·內存池”用新寫的內存池去替換掉。(❛◡❛✿)</p>
-<p>然後問題就來了，我貌似不能控制 node-gyp 去用 G++ 編譯 <code>*.c</code> 文件，這樣的話所有文件編譯好之後鏈接 <code>*.o</code> 文件會出問題。雖然鏈接的時候沒報錯，但是使用的時候就會報這麼個錯 (;´༎ຶД༎ຶ`)：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">➜ thmclrx git:(master) ✗ node <span class="built_in">test</span>/test.js</span><br><span class="line">dyld: lazy symbol binding failed: Symbol not found: __Z16xmem_create_poolj</span><br><span class="line">  Referenced from: /Users/.../code/huaban/thmclrx/build/Release/thmclrx.node</span><br><span class="line">  Expected <span class="keyword">in</span>: dynamic lookup</span><br><span class="line"></span><br><span class="line">dyld: Symbol not found: __Z16xmem_create_poolj</span><br><span class="line">  Referenced from: /Users/.../code/huaban/thmclrx/build/Release/thmclrx.node</span><br><span class="line">  Expected <span class="keyword">in</span>: dynamic lookup</span><br><span class="line"></span><br><span class="line">[<span class="number">1</span>]    <span class="number">52501</span> trace <span class="built_in">trap</span>  node <span class="built_in">test</span>/test.js</span><br></pre></td></tr></table></figure>
-<p>大致意思就是說在我編譯好鏈接好的 <code>thmclrx.node</code> 中找不到 <code>__Z16xmem_create_poolj</code> 這個符號，也就是說 <code>xmempool.o</code> 這個用 C 編譯出來的文件並沒有正確被鏈接。</p>
-<h2 id="假想方案">假想方案</h2><h3 id="假想一">假想一</h3><p>一開始我想找的是“如何在 node-gyp 中手動選擇編譯器”，即不讓機器自動選擇 GCC 去編譯 <code>*.c</code> 文件。後來無果。ル||☛_☚|リ</p>
-<h3 id="假想二">假想二</h3><p>再後來我想開了，於是決定讓編譯的時候去識別我在跟 C 說話還是跟 C++ 說話。(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</p>
-<h2 id="解決方案">解決方案</h2><p>於是我找到了這麼個帖子：<a href="http://grokbase.com/t/gg/nodejs/14amregx72/linking-c-sources-files-in-cc-files" target="_blank" rel="external">http://grokbase.com/t/gg/nodejs/14amregx72/linking-c-sources-files-in-cc-files</a></p>
-<p>他貌似也遇到了跟我相似的問題。下面這個提問者自己提出了這樣的回答：</p>
-<blockquote>
-<p>Nevermind, found my own answer after finally hitting the right google search terms.</p>
-<p>Added</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">ifdef</span> __cplusplus</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> &#123;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//... source code here...</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">ifdef</span> __cplusplus</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-<p>So that the CPP compiler would know I was talking C and not CPP :)</p>
-</blockquote>
-<p>答案的大意就是在你的 C 頭文件中添加上面 blahblah 一大段宏，好讓 C++ 的編譯器知道它是在跟 C 的中間文件交流而不是 C++，這樣的話鏈接的時候就能正常接軌了。於是我在我的新版 <a href="https://github.com/XadillaX/xmempool/commit/b06351836c9b51952a3d98c438df6626dda8738c" target="_blank" rel="external">xmempool</a> 的頭文件裏面就已經添加上了這兩段話了。</p>
-<h2 id="事後煙">事後煙</h2><p>其實以前我也老在別的項目裏面看到這個 <code>#ifdef __cplusplus</code> 的宏定義，只不過以前不知道什麼意思。</p>
-<p>今天通過這麼一件事情終於知道了它的用途了，新技能 get √。</p>
-<p>ε(*´･∀･｀)зﾞ</p>
+            <p>本系列文章將會基於 <a href="https://github.com/cnpm/cnpmjs.org" target="_blank" rel="external">cnpm</a> 部署搭建一套屬於自己（或者公司）的內部私有 NPM 系統。</p>
+<h2 id="什麼是_CNPM">什麼是 CNPM</h2><p><a href="https://github.com/cnpm/cnpmjs.org" target="_blank" rel="external">cnpm</a> 是 Node.js 中國社區成員主導的一個私有 NPM 開源項目，可以用於部署私有 NPM、公共 NPM 鏡像等。</p>
+<h2 id="閱讀對象">閱讀對象</h2><ul>
+<li>有一定 Node.js 後端基礎</li>
+<li>需要有一套私有 NPM</li>
+<li>想要研究 CNPM 實現</li>
+</ul>
+<h2 id="目錄">目錄</h2><ol>
+<li><a href="lets-cnpm-base-deploy">基礎部署</a></li>
+<li>To be continued</li>
+</ol>
+<h2 id="貢獻">貢獻</h2><p>你可以對本系列文章進行勘誤或者更新，直接提交 PR 或者在博客文章後方留言。</p>
 
 
 			
             <section class="comment">
 <!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="/2014/12/10/link-c-on-gpp/" data-title="在 C++ 中鏈接 C 的 文件" data-url="http://xcoder.in/2014/12/10/link-c-on-gpp/"></div>
+	<div class="ds-thread" data-thread-key="/2016/07/08/lets-cnpm-toc/" data-title="跟我一起部署和定製 CNPM——索引" data-url="http://xcoder.in/2016/07/08/lets-cnpm-toc/"></div>
 <!-- 多说评论框 end -->
 <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
