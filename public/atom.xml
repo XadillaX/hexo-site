@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in/"/>
-  <updated>2016-07-09T11:17:54.000Z</updated>
+  <updated>2016-07-12T11:26:19.000Z</updated>
   <id>http://xcoder.in/</id>
   
   <author>
@@ -15,11 +15,154 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[跟我一起部署和定製 CNPM——基礎部署]]></title>
+    <link href="http://xcoder.in/2016/07/09/lets-cnpm-base-deploy/"/>
+    <id>http://xcoder.in/2016/07/09/lets-cnpm-base-deploy/</id>
+    <published>2016-07-09T11:19:22.000Z</published>
+    <updated>2016-07-12T11:26:19.000Z</updated>
+    <content type="html"><![CDATA[<p>本章會介紹 CNPM 的基礎部署方法。</p>
+<blockquote>
+<p>該文章所對應的 cnpm 目標版本爲 <a href="https://github.com/cnpm/cnpmjs.org/tree/2.12.2" target="_blank" rel="external">v2.12.2</a>，上下浮動一些兼容的版本問題也都不是特別大。</p>
+</blockquote>
+<h2 id="準備">準備</h2><p>想要部署 CNPM，你需要做以下的一些準備。</p>
+<ol>
+<li>部署的宿體，如服務器、雲主機、自己的電腦等；</li>
+<li>數據庫，支持 MySQL、PostgreSQL、MariaDB，如果使用 SQLite 則無需準備；</li>
+<li>Git 客戶端（推薦）。</li>
+</ol>
+<h2 id="開始部署">開始部署</h2><h3 id="克隆_CNPM">克隆 CNPM</h3><p>首先在本地選擇一個目錄，比如我將它選擇在 <code>/usr/app</code>，然後預想 CNPM 的目錄爲 <code>/usr/app/cnpm</code>，那麼需要在終端 <code>$ cd /usr/app</code>。</p>
+<p>接下去執行 Git 指令將 CNPM 克隆到相應目錄。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/cnpm/cnpmjs.org.git</span><br></pre></td></tr></table></figure>
+<h4 id="Windows_用戶">Windows 用戶</h4><p>Windows 用戶也可以用類似 <a href="https://www.cygwin.com/" target="_blank" rel="external">Cygwin</a>、<a href="http://www.mingw.org/" target="_blank" rel="external">MinGW</a>、<a href="https://msdn.microsoft.com/en-us/powershell" target="_blank" rel="external">Powershell</a> 甚至直接是 Command 等來運行 <a href="https://git-scm.com/download/win" target="_blank" rel="external">Git</a>。</p>
+<p>當然也可以直接下載一些 GUI 工具來克隆，如 <a href="https://www.sourcetreeapp.com/" target="_blank" rel="external">SourceTree</a>。</p>
+<h4 id="非_Git_用戶">非 Git 用戶</h4><p>跑到 CNPM 的 Release 頁面，選擇相應的版本下載，比如這裏會選擇 <a href="https://github.com/cnpm/cnpmjs.org/releases/tag/2.12.2" target="_blank" rel="external">v2.12.2</a> 版。</p>
+<p>下載完畢後將文件夾解壓到相應目錄即可。</p>
+<h3 id="安裝依賴">安裝依賴</h3><p>安裝依賴其實就是一個 <code>npm install</code>，不過 CNPM 把該指令已經寫到 Makefile 裏面了，所以直接執行下面的命令就好了。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ make install</span><br></pre></td></tr></table></figure>
+<p>當然萬一你是 Windows 用戶或者不會 <code>make</code>，那麼還是要用 <code>npm install</code>。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install --build-from-source --registry=https://registry.npm.taobao.org --disturl=https://npm.taobao.org/mirrors/node</span><br></pre></td></tr></table></figure>
+<h3 id="修改配置文件">修改配置文件</h3><p>新建一份 <code>config/config.js</code> 文件，並且寫入如下的骨架：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在這裏面輸入你需要的鍵值對。</p>
+<p>這裏將會列舉一些常用的配置項，其餘的一些配置項請自行參考 <a href="https://github.com/cnpm/cnpmjs.org/blob/2.12.2/config/index.js" target="_blank" rel="external">config/index.js</a> 文件。</p>
+<h4 id="配置字段參考">配置字段參考</h4><ul>
+<li><code>enableCluster</code>：是否啓用 <strong>cluster-worker</strong> 模式啓動服務，默認 <code>false</code>，生產環節推薦爲 <code>true</code>;</li>
+<li><code>registryPort</code>：API 專用的 registry 服務端口，默認 <code>7001</code>；</li>
+<li><code>webPort</code>：Web 服務端口，默認 <code>7002</code>；</li>
+<li><code>bindingHost</code>：監聽綁定的 Host，默認爲 <code>127.0.0.1</code>，如果外面架了一層本地的 <strong>Nginx</strong> 反向代理或者 <strong>Apache</strong> 反向代理的話推薦不用改；</li>
+<li><code>sessionSecret</code>：<strong>session</strong> 用的鹽；</li>
+<li><code>logdir</code>：日誌目錄；</li>
+<li><code>uploadDir</code>：臨時上傳文件目錄；</li>
+<li><code>viewCache</code>：視圖模板緩存是否開啓，默認爲 <code>false</code>；</li>
+<li><code>enableCompress</code>：是否開啓 <strong>gzip</strong> 壓縮，默認爲 <code>false</code>；</li>
+<li><code>admins</code>：管理員們，這是一個 <code>JSON Object</code>，對應各鍵名爲各管理員的用戶名，鍵值爲其郵箱，默認爲 <code>{ fengmk2: &#39;fengmk2@gmail.com&#39;, admin: &#39;admin@cnpmjs.org&#39;, dead_horse: &#39;dead_horse@qq.com&#39; }</code>；</li>
+<li><code>logoURL</code>：<strong>Logo</strong> 地址，不過對於我這個已經把 CNPM 前端改得面目全非的人來說已經忽略了這個配置了；</li>
+<li><code>adBanner</code>：廣告 Banner 的地址；</li>
+<li><code>customReadmeFile</code>：實際上我們看到的 <a href="http://cnpmjs.org" target="_blank" rel="external">cnpmjs.org</a> 首頁中間一大堆冗長的介紹是一個 Markdown 文件轉化而成的，你可以設置該項來自行替換這個文件；</li>
+<li><code>customFooter</code>：自定義頁腳模板；</li>
+<li><code>npmClientName</code>：默認爲 <code>cnpm</code>，如果你有自己開發或者 fork 的 npm 客戶端的話請改成自己的 CLI 命令，這個應該會在一些頁面的說明處替換成你所寫的；</li>
+<li><code>backupFilePrefix</code>：備份目錄；</li>
+<li><code>database</code>：數據庫相關配置，爲一個對象，默認如果不配置將會是一個 <code>~/.cnpmjs.org/data.sqlite</code> 的 SQLite；<ul>
+<li><code>db</code>：數據的庫名；</li>
+<li><code>username</code>：數據庫用戶名；</li>
+<li><code>password</code>：數據庫密碼；</li>
+<li><code>dialect</code>：數據庫適配器，可選 <code>&quot;mysql&quot;</code>、<code>&quot;sqlite&quot;</code>、<code>&quot;postgres&quot;</code>、<code>&quot;mariadb&quot;</code>，默認爲 <code>&quot;sqlite&quot;</code>；</li>
+<li><code>hsot</code>：數據庫地址；</li>
+<li><code>port</code>：數據庫端口；</li>
+<li><code>pool</code>：數據庫連接池相關配置，爲一個對象；<ul>
+<li><code>maxConnections</code>：最大連接數，默認爲 <code>10</code>；</li>
+<li><code>minConnections</code>：最小連接數，默認爲 <code>0</code>；</li>
+<li><code>maxIdleTime</code>：單條鏈接最大空閒時間，默認爲 <code>30000</code> 毫秒；</li>
+</ul>
+</li>
+<li><code>storege</code>：僅對 SQLite 配置有效，數據庫地址，默認爲 <code>~/.cnpmjs/data.sqlite</code>；</li>
+</ul>
+</li>
+<li><code>nfs</code>：包文件系統處理對象，爲一個 Node.js 對象，默認是 <a href="">fs-cnpm</a> 這個包，並且配置在 <code>~/.cnpmjs/nfs</code> 目錄下，也就是說默認所有同步的包都會被放在這個目錄下；開發者可以使用別的一些文件系統插件（如上傳到又拍雲等）,又或者自己去按接口開發一個邏輯層，這些都是後話了；</li>
+<li><code>registryHost</code>：暫時還未試過，我猜是用於 Web 頁面顯示用的，默認爲 <code>r.cnpmjs.org</code>；</li>
+<li><code>enablePrivate</code>：是否開啓私有模式，默認爲 <code>false</code>；<ul>
+<li>如果是私有模式則只有管理員能發佈包，其它人只能從源站同步包；</li>
+<li>如果是非私有模式則所有登錄用戶都能發佈包；</li>
+</ul>
+</li>
+<li><code>scopes</code>：非管理員發佈包的時候只能用以 <code>scopes</code> 裏面列舉的命名空間爲前綴來發布，如果沒設置則無法發佈，也就是說這是一個必填項，默認爲 <code>[ &#39;@cnpm&#39;, &#39;@cnpmtest&#39;, &#39;@cnpm-test&#39; ]</code>，據蘇千大大解釋是爲了便於管理以及讓公司的員工自覺按需發佈；更多關於 NPM scope 的說明請參見 <a href="https://docs.npmjs.com/misc/scope" target="_blank" rel="external">npm-scope</a>；</li>
+<li><code>privatePackages</code>：就如該配置項的註釋所述，出於歷史包袱的原因，有些已經存在的私有包（可能之前是用 Git 的方式安裝的）並沒有以命名空間的形式來命名，而這種包本來是無法上傳到 CNPM 的，這個配置項數組就是用來加這些例外白名單的，默認爲一個空數組；</li>
+<li><code>sourceNpmRegistry</code>：更新源 NPM 的 registry 地址，默認爲 <code>https://registry.npm.taobao.org</code>；</li>
+<li><code>sourceNpmRegistryIsCNpm</code>：源 registry 是否爲 CNPM，默認爲 <code>true</code>，如果你使用的源是官方 NPM 源，請將其設爲 <code>false</code>；</li>
+<li><code>syncByInstall</code>：如果安裝包的時候發現包不存在，則嘗試從更新源同步，默認爲 <code>true</code>；</li>
+<li><code>syncModel</code>：更新模式（不過我覺得是個 <code>typo</code>），有下面幾種模式可以選擇，默認爲 <code>&quot;none&quot;</code>;<ul>
+<li><code>&quot;none&quot;</code>：永不同步，只管理私有用戶上傳的包，其它源包會直接從源站獲取；</li>
+<li><code>&quot;exist&quot;</code>：定時同步已經存在於數據庫的包；</li>
+<li><code>&quot;all&quot;</code>：定時同步所有源站的包；</li>
+</ul>
+</li>
+<li><code>syncInterval</code>：同步間隔，默認爲 <code>&quot;10m&quot;</code> 即十分鐘；</li>
+<li><code>syncDevDependencies</code>：是否同步每個包裏面的 <code>devDependencies</code> 包們，默認爲 <code>false</code>；</li>
+<li><code>badgeSubject</code>：包的 <strong>badge</strong> 顯示的名字，默認爲 <code>cnpm</code>；</li>
+<li><code>userService</code>：用戶驗證接口，默認爲 <code>null</code>，即無用戶相關功能也就是無法有用戶去上傳包，該部分需要自己實現接口功能並配置，如與公司的 <strong>Gitlab</strong> 相對接，這也是後話了；</li>
+<li><code>alwaysAuth</code>：是否始終需要用戶驗證，即便是 <code>$ cnpm install</code> 等命令；</li>
+<li><code>httpProxy</code>：代理地址設置，用於你在牆內源站在牆外的情況。</li>
+</ul>
+<h4 id="一個可能的配置">一個可能的配置</h4><p>下面給出一個樣例配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    enableCluster: <span class="literal">true</span>,</span><br><span class="line">    database: &#123;</span><br><span class="line">        db: <span class="string">"snpm"</span>,</span><br><span class="line">        username: <span class="string">"username"</span>,</span><br><span class="line">        password: <span class="string">"password"</span>,</span><br><span class="line"></span><br><span class="line">        dialect: <span class="string">"mysql"</span>,</span><br><span class="line">        host: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">        port: <span class="number">3306</span></span><br><span class="line">    &#125;,</span><br><span class="line">    enablePrivate: <span class="literal">false</span>,</span><br><span class="line">    admins: &#123;</span><br><span class="line">        xadillax: <span class="string">"i@2333.moe"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    syncModel: <span class="string">"exist"</span>,</span><br><span class="line">    nfs: <span class="built_in">require</span>(<span class="string">'upyun-cnpm'</span>).create(&#123;</span><br><span class="line">        bucket: <span class="string">"your bucket"</span>,</span><br><span class="line">        oprator: <span class="string">"your id"</span>,</span><br><span class="line">        password: <span class="string">"your secret"</span></span><br><span class="line">    &#125;),</span><br><span class="line">    scopes: [ <span class="string">'@cheniu'</span>, <span class="string">'@souche'</span>, <span class="string">'@souche-f2e'</span> ],</span><br><span class="line">    badgeSubject: <span class="string">'snpm'</span>,</span><br><span class="line">    privatePackages: [ <span class="string">'snpm'</span> ]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面的配置包文件系統層用的是 <a href="https://github.com/cnpm/upyun-cnpm" target="_blank" rel="external">upyun-cnpm</a> 插件，需要在 CNPM 源碼根目錄執行<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install --save <span class="operator">-d</span> upyun-cnpm</span><br></pre></td></tr></table></figure></p>
+<p>這個時候你的 <code>package.json</code> 就有更改與源 Repo 不一致了，如果是 Git 克隆的用戶在以後升級更新系統的時候稍稍注意一下可能的衝突即可。</p>
+</blockquote>
+<h4 id="官方_NFS_插件">官方 NFS 插件</h4><p>下面給出幾個官方的 NFS 插件：</p>
+<ul>
+<li><a href="https://github.com/cnpm/upyun-cnpm" target="_blank" rel="external">upyun-cnpm</a>：包本體存在又拍雲的插件；</li>
+<li><a href="https://github.com/cnpm/fs-cnpm" target="_blank" rel="external">fs-cnpm</a>：包本體存在本地的插件；</li>
+<li><a href="https://github.com/cnpm/sfs-client" target="_blank" rel="external">sfs-client</a>：包本體存在 <a href="https://github.com/cnpm/sfs" target="_blank" rel="external">SFS</a>（Simple FIle Store）插件；</li>
+<li><a href="https://github.com/cnpm/qn-cnpm" target="_blank" rel="external">qn-cnpm</a>：包本體存在七牛的插件；</li>
+<li><a href="https://github.com/cnpm/oss-cnpm" target="_blank" rel="external">oss-cnpm</a>：包本體存在阿里雲 OSS 的插件。</li>
+</ul>
+<p>以後官方如果有一些新的插件進來，這裏可能不會更新了，請自行去 <a href="https://github.com/cnpm/cnpmjs.org/wiki/NFS-Guide#present-storage-wrappers" target="_blank" rel="external">NFS Storage Wrappers</a> 獲取最新的 NFS 插件們。</p>
+<h3 id="初始化數據庫">初始化數據庫</h3><p>如果你使用的是 SQLite 的話，數據庫是自動就好了的，可以忽略該步。</p>
+<p>其它數據庫需要自行導入初始數據庫結構。</p>
+<p>初始數據庫腳本在 <strong>docs/db.sql</strong> 裏面，你可以用一些 GUI 工具將數據導入，也可以直接進入命令行導入。</p>
+<p>比如你用的是 MySQL，就可以在本機操作 MySQL。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ mysql -u yourname -p</span><br><span class="line">mysql&gt; use cnpmjs;</span><br><span class="line">mysql&gt; <span class="built_in">source</span> docs/db.sql</span><br></pre></td></tr></table></figure>
+<h3 id="啓動服務">啓動服務</h3><p>搞好配置之後就可以直接啓動服務了。</p>
+<h4 id="簡單啓動">簡單啓動</h4><p>最簡單的辦法也是我現在正在用的方法就是直接用 <code>node</code> 執行一下入口文件就好了。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ node dispatch.js</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>其實我是在 <a href="https://tmux.github.io/" target="_blank" rel="external">tmux</a> 裏面執行上面的指令的。</p>
+</blockquote>
+<h4 id="官方腳本啓動">官方腳本啓動</h4><p>官方的其它一些指令，比如你可以用 NPM 的 script 來運行。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm run start</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在 CNPM 裏面，npm script 還有下面幾種指令</p>
+<ul>
+<li><code>npm run dev</code>：調試模式啓動；</li>
+<li><code>npm run test</code>：跑測試；</li>
+<li><code>npm run start</code>：啓動 CNPM；</li>
+<li><code>npm run status</code>：查看 CNPM 啓動狀態；</li>
+<li><code>npm run stop</code>：停止 CNPM。</li>
+</ul>
+</blockquote>
+<h3 id="小結">小結</h3><p>本文介紹了一些 CNPM 基礎的部署方法，基本上能達到最小可用狀態。</p>
+<p>如果想要進階定製一些 CNPM 的功能，請期待後續吧。ξ( ✿＞◡❛)</p>
+<p>以及一些寫得不好和不對的地方，請多多指正哦。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>本章會介紹 CNPM 的基礎部署方法。</p>
+<blockquote>
+<p>該文章所對應的 cnpm 目標版本爲 <a href="https://github.com/cnpm/cnpmjs.org/tree/2.12.2" target="_blank" rel="]]>
+    </summary>
+    
+      <category term="CNPM" scheme="http://xcoder.in/tags/CNPM/"/>
+    
+      <category term="Node.js" scheme="http://xcoder.in/tags/Node-js/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[跟我一起部署和定製 CNPM——索引]]></title>
     <link href="http://xcoder.in/2016/07/08/lets-cnpm-toc/"/>
     <id>http://xcoder.in/2016/07/08/lets-cnpm-toc/</id>
     <published>2016-07-08T11:14:58.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>本系列文章將會基於 <a href="https://github.com/cnpm/cnpmjs.org" target="_blank" rel="external">cnpm</a> 部署搭建一套屬於自己（或者公司）的內部私有 NPM 系統。</p>
 <h2 id="什麼是_CNPM">什麼是 CNPM</h2><p><a href="https://github.com/cnpm/cnpmjs.org" target="_blank" rel="external">cnpm</a> 是 Node.js 中國社區成員主導的一個私有 NPM 開源項目，可以用於部署私有 NPM、公共 NPM 鏡像等。</p>
 <h2 id="閱讀對象">閱讀對象</h2><ul>
@@ -49,7 +192,7 @@
     <link href="http://xcoder.in/2016/02/24/lets-hua/"/>
     <id>http://xcoder.in/2016/02/24/lets-hua/</id>
     <published>2016-02-24T05:40:36.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2><p>起因是我一個叫『小龍』的好基友由於某些原因離職去了一家跟阿里一樣有着『花名文化』的公司，於是開始爲花名犯愁。</p>
 <p>結合之前妹紙『弍紓』在起花名的時候也遇到了同樣的困擾，於是決定用 Node.js 寫個『一本正經亂起花名』的程序。</p>
 <h2 id="準備">準備</h2><h3 id="Chinese_Random_Name">Chinese Random Name</h3><p>首先起花名的原理就是胡亂隨機一串字出來胡亂拼。</p>
@@ -175,7 +318,7 @@
     <link href="http://xcoder.in/2015/11/27/a-js-problem-about-global-continued/"/>
     <id>http://xcoder.in/2015/11/27/a-js-problem-about-global-continued/</id>
     <published>2015-11-27T06:36:27.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>本文是上文《<a href="https://xcoder.in/2015/11/26/a-js-problem-about-global/">Node.js 啓動方式：一道關於全局變量的題目引發的思考</a>》的續章。</p>
 <h2 id="原題回顧">原題回顧</h2><p>我們還是先回顧下原題吧。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">2</span>;  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;  </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo();</span><br></pre></td></tr></table></figure>
@@ -323,7 +466,7 @@
     <link href="http://xcoder.in/2015/11/26/a-js-problem-about-global/"/>
     <id>http://xcoder.in/2015/11/26/a-js-problem-about-global/</id>
     <published>2015-11-26T13:51:37.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<h2 id="原題">原題</h2><p>　　題目是這樣的。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo();</span><br></pre></td></tr></table></figure>
 <blockquote>
@@ -452,7 +595,7 @@
     <link href="http://xcoder.in/2015/10/16/why-i-use-hash/"/>
     <id>http://xcoder.in/2015/10/16/why-i-use-hash/</id>
     <published>2015-10-16T06:52:06.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:20.000Z</updated>
     <content type="html"><![CDATA[<h2 id="什麼是哈希（Hash）">什麼是哈希（Hash）</h2><p>本來這裏不應該出現這一節的，因爲實際上大家應該都知道什麼是哈希。不過有時候爲了文章的完整性，我這裏就稍微教條性地說明一下吧。ヽ(́◕◞౪◟◕‵)ﾉ</p>
 <blockquote>
 <p>散列（英語：Hashing），通常音譯作哈希，是電腦科學中一種對資料的處理方法，通過某種特定的函數、算法將要檢索的項與用來檢索的索引關聯起來，生成一種便於搜索的數據結構。也譯爲散列。</p>
@@ -588,7 +731,7 @@
     <link href="http://xcoder.in/2015/08/10/mysql-binlog-try/"/>
     <id>http://xcoder.in/2015/08/10/mysql-binlog-try/</id>
     <published>2015-08-10T03:39:53.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　花瓣網的搜索架構需要重構，尤其是在索引建立或者更新層面。</p>
 <p>　　目前的一個架構導致的結果就是時間越久，數據本體與搜索引擎索引中的數據越不同步，相差甚大。</p>
 <p>　　新的一個架構打算從 MySQL 的 Binlog 中讀取數據更新、刪除、新增等歷史記錄，並把相應信息提取出來丟到隊列中慢慢去同步。</p>
@@ -711,7 +854,7 @@
     <link href="http://xcoder.in/2015/06/05/scheduled-task-using-redis/"/>
     <id>http://xcoder.in/2015/06/05/scheduled-task-using-redis/</id>
     <published>2015-06-05T07:23:51.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　好久沒寫博文了，最近在跟隨着公司大牛們的腳步祕密研發新產品中。</p>
 <p>　　不過前幾天有一個小需求的東西可以提出來寫一點點小乾貨兒跟大家分享分享。米娜桑會的就可以忽略了，反正我也是隨便寫的；如果覺得本文對你有用的話還請多多支持喵。(●´ω｀●)ゞ</p>
 <h2 id="序">序</h2><p>　　本文所說的定時任務或者說計劃任務並不是很多人想象中的那樣，比如說每天凌晨三點自動運行起來跑一個腳本。這種都已經爛大街了，隨便一個 <strong><a href="https://wiki.archlinux.org/index.php/Cron" target="_blank" rel="external">Crontab</a></strong> 就能搞定了。</p>
@@ -805,7 +948,7 @@
     <link href="http://xcoder.in/2015/01/08/remilia-structure/"/>
     <id>http://xcoder.in/2015/01/08/remilia-structure/</id>
     <published>2015-01-08T08:47:17.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<h2 id="蕾米莉亞？">蕾米莉亞？</h2><p>其實這是花瓣的一個入庫系統結構圖，蕾米莉亞是這個項目的名字。</p>
 <h2 id="結構圖">結構圖</h2><p><img src="pic.jpg" alt="Remilia"></p>
 <p>設計得不好，純屬做歸檔。</p>
@@ -841,7 +984,7 @@
     <link href="http://xcoder.in/2014/12/10/link-c-on-gpp/"/>
     <id>http://xcoder.in/2014/12/10/link-c-on-gpp/</id>
     <published>2014-12-10T07:30:32.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<h2 id="原因">原因</h2><p>由於某些原因，我寫了個很搓的<a href="https://github.com/XadillaX/xmempool" target="_blank" rel="external">內存池</a>（C 版本的）。</p>
 <p>然後我想到了把之前寫的一個 Node.js 包 <a href="https://github.com/XadillaX/thmclrx" target="_blank" rel="external">thmclrx</a> 的更挫的“僞·內存池”用新寫的內存池去替換掉。(❛◡❛✿)</p>
 <p>然後問題就來了，我貌似不能控制 node-gyp 去用 G++ 編譯 <code>*.c</code> 文件，這樣的話所有文件編譯好之後鏈接 <code>*.o</code> 文件會出問題。雖然鏈接的時候沒報錯，但是使用的時候就會報這麼個錯 (;´༎ຶД༎ຶ`)：</p>
@@ -876,7 +1019,7 @@
     <link href="http://xcoder.in/2014/10/16/generate-color-space/"/>
     <id>http://xcoder.in/2014/10/16/generate-color-space/</id>
     <published>2014-10-16T03:00:54.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<h2 id="用途">用途</h2><p>　　在主題色提取的過程中，要把顏色加入搜索引擎。但是如果是真彩色任意值加進去的話，對於搜索的時候來說無疑是一個複雜的操作。搜索條件要各種計算距離什麼的。</p>
 <p>　　於是一個妥協的做法就是提供一套調色板，保證所有顏色都被吸納到調色板中的某一色值當中。</p>
 <p>　　那麼這個時候調色板的覆蓋率以及距離什麼的就比較重要了。本文就講如何生成一套看起來還不錯的自用“標準色板”。</p>
@@ -990,7 +1133,7 @@ $(function()
     <link href="http://xcoder.in/2014/10/08/brainf**k/"/>
     <id>http://xcoder.in/2014/10/08/brainf**k/</id>
     <published>2014-10-08T03:42:32.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　首先祝賀自己在 <a href="http://www.codewars.com/users/XadillaX" target="_blank" rel="external">CodeWars</a> 升級到 3 Kyu，以及感謝 @<a href="http://www.html-js.com/card/473" target="_blank" rel="external">Bolt_白衣蒼狗</a> 童鞋讓我知道有 CodeWars 這麼個好玩的東西。</p>
 <p>　　雖然裏面水題居多，不過在上班比較空閒的檔口 #<strong>帶薪刷題</strong># 的感覺還是蠻不錯的。</p>
 <h2 id="話嘮一下">話嘮一下</h2><p>　　高中的時候就跟 @<a href="http://www.lvchaoshuai.com/" target="_blank" rel="external">MatRush</a> 發現了一個名字超級好玩的編程語言叫 <a href="http://en.wikipedia.org/wiki/Brainfuck" target="_blank" rel="external">BrainF**k</a>，它比較搞腦筋，因爲所有的編程操作都是集合在操作符裏面，然後控制指針偏移和內存值的修改來進行一系列操作。</p>
@@ -1083,7 +1226,7 @@ $(function()
     <link href="http://xcoder.in/2014/09/30/javascript-singleton/"/>
     <id>http://xcoder.in/2014/09/30/javascript-singleton/</id>
     <published>2014-09-30T07:21:13.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　今天隨便玩了一道 <a href="http://www.codewars.com/kata/singleton-pattern/javascript" target="_blank" rel="external">CodeWar 的題</a>。</p>
 <p>　　題意大致就是你需要實現一個 <code>Singleton</code> 也就是單件模式的類，讓其下面代碼執行成功：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj1 = <span class="keyword">new</span> Singleton();</span><br><span class="line"><span class="keyword">var</span> obj2 = <span class="keyword">new</span> Singleton();</span><br><span class="line">obj1 === obj2; <span class="comment">// =&gt; true</span></span><br><span class="line">obj1.test = <span class="number">1</span>;</span><br><span class="line">obj2.test; <span class="comment">// =&gt; 1</span></span><br></pre></td></tr></table></figure>
@@ -1123,7 +1266,7 @@ $(function()
     <link href="http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/"/>
     <id>http://xcoder.in/2014/09/20/lets-build-ourselves-ddns/</id>
     <published>2014-09-20T07:51:40.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2><p>　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 <a href="http://kacaka.ca/" target="_blank" rel="external">kacaka.ca</a>（目前暫失效）。</p>
 <p>　　爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 <a href="http://cloudflare.com/" target="_blank" rel="external">CloudFlare</a>。而且它也有提供 API 讓開發者自己開發通過他的服務解析域名的服務。</p>
 <p>　　再然後，去年的九月份，我的早期 Node.js 作品 <strong><a href="https://github.com/XadillaX/dloucflare/tree/0.0.2" target="_blank" rel="external">dloucflare</a></strong> 發佈了。所以就有了<a href="http://cnodejs.org/topic/522b64c3101e574521332451" target="_blank" rel="external">這個帖子</a>。</p>
@@ -1234,7 +1377,7 @@ $(function()
     <link href="http://xcoder.in/2014/09/17/theme-color-extract/"/>
     <id>http://xcoder.in/2014/09/17/theme-color-extract/</id>
     <published>2014-09-17T03:34:54.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:20.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>所謂主題色提取，就是對於一張圖片，近似地提取出一個調色板，使得調色板裏面的顏色能組成這張圖片的主色調。</p>
 </blockquote>
@@ -1356,7 +1499,7 @@ $(function()
     <link href="http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/"/>
     <id>http://xcoder.in/2014/09/01/how-i-made-chinese-random-x/</id>
     <published>2014-09-01T12:36:33.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<h2 id="序">序</h2><p>最近閒着蛋疼實現了兩個庫。</p>
 <ul>
 <li>隨機生成中文名字</li>
@@ -1443,7 +1586,7 @@ $(function()
     <link href="http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/"/>
     <id>http://xcoder.in/2014/08/04/storm-clojure-prepare-bolt/</id>
     <published>2014-08-04T03:50:21.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起因">起因</h2><p>　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概念被淡化的 LIST 方言中，你要做的就是把所有跟 bolt 初始化計算相關的代碼放到其 <code>prepare</code> 的代碼當中去。</p>
 <p>　　你想一下，當你在文件加載的時候初始化了一個 MongoDB 鏈接，這個鏈接總不能被序列化到遠程去吧？所以說辦法就是把 bolt 搞上去之後，bolt 自動去初始化一個鏈接——這就是 <code>prepare</code> 的作用了。</p>
 <p>　　說白了，這個還是我們在 <strong><em>Suwako</em></strong> 當中踩到的坑。</p>
@@ -1483,7 +1626,7 @@ $(function()
     <link href="http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/"/>
     <id>http://xcoder.in/2014/07/30/kafka-ui-sender-mikasa/</id>
     <published>2014-07-30T02:14:29.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<h2 id="起_(灬ºωº灬)">起 (灬ºωº灬)</h2><p>　　說來話長，自從入了花瓣，整個人就掉進連環坑了。</p>
 <p>　　後端元數據採集是用 Storm 來走拓撲流程的，又因爲 @<a href="http://weibo.com/zolazhou" target="_blank" rel="external">Zola</a> 不是很喜歡 Java，所以退而求其次選擇了 Clojure，所以正在苦逼地學習 Clojure 和 Storm 中。</p>
 <p>　　目前來說外面的 Storm 拓撲的 Spout 是從 Kafka 中流入數據的。但是我們要給 Kafka 發送測試數據的時候，就需要跑到 Kafka 的測試服務器打開它的一個發送腳本進去發送，非常蛋疼；要麼就是直接通過特定的發送業務邏輯代碼測試，沒有一個稍微泛一點的測試用發數據工具，於是 Mikasa 誕生了。</p>
@@ -1536,7 +1679,7 @@ $(function()
     <link href="http://xcoder.in/2014/06/12/untrusted-solution/"/>
     <id>http://xcoder.in/2014/06/12/untrusted-solution/</id>
     <published>2014-06-12T03:08:34.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:20.000Z</updated>
     <content type="html"><![CDATA[<p>　　<a href="http://alexnisnevich.github.io/untrusted/" target="_blank" rel="external">Trusted</a> 是一個代碼解謎遊戲，用 Javascript 來過關的。</p>
 <p>　　昨天凌晨花了仨小時通關了這個遊戲，在這裏就粗粗做一下題解吧，好幾題都是 Hack 過去的。（不要臉，( ﾟДﾟ)σ</p>
 <h2 id="Ceil_Block_A">Ceil Block A</h2><p>　　這有點像教學關吧，總之先拿到那臺電腦你就能操作了。拿到電腦後你就能修改地圖內部黑色底色的代碼了。</p>
@@ -1696,7 +1839,7 @@ $(function()
     <link href="http://xcoder.in/2014/06/07/cocos2d-311-setup/"/>
     <id>http://xcoder.in/2014/06/07/cocos2d-311-setup/</id>
     <published>2014-06-07T11:34:02.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　由於偷懶，所以在此感謝 Etond 的指導（喂喂喂，明明是自己懶得看文檔，明明 <a href="README"><code>READEME.md</code></a> 裏面就有！(´≖◞౪◟≖)</p>
 <p>　　另，在搭建環境的時候，最好保證你在<span style="background: #222;">牆外</span>。以及我默認覺得大家已經有了 <code>Python</code> 環境和 <code>JDK</code>。</p>
 <h2 id="前驅工作">前驅工作</h2><p>　　先去 <a href="http://www.cocos2d-x.org/download" target="_blank" rel="external">cocos2d-x 官網</a>下壓縮包，放到一個只有神知道的世界裏面。</p>
@@ -1761,7 +1904,7 @@ $(function()
     <link href="http://xcoder.in/2014/06/07/tcp-those-things-1/"/>
     <id>http://xcoder.in/2014/06/07/tcp-those-things-1/</id>
     <published>2014-06-06T17:47:10.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:20.000Z</updated>
     <content type="html"><![CDATA[<p>　　TCP是一個巨複雜的協議，因爲他要解決很多問題，而這些問題又帶出了很多子問題和陰暗面。所以學習 TCP 本身是個比較痛苦的過程，但對於學習的過程卻能讓人有很多收穫。關於 TCP 這個協議的細節，我還是推薦你去看 <a href="http://www.kohala.com/start/" target="_blank" rel="external">W.Richard Stevens</a> 的《<a href="http://book.douban.com/subject/1088054/" target="_blank" rel="external">TCP/IP 詳解 卷1：協議</a>》（當然，你也可以去讀一下 <a href="http://tools.ietf.org/html/rfc793" target="_blank" rel="external">RFC793</a> 以及後面 N 多的 RFC）。另外，本文我會使用英文術語，這樣方便你通過這些英文關鍵詞來查找相關的技術文檔。</p>
 <p>　　之所以想寫這篇文章，目的有三個，</p>
 <ul>
@@ -1891,7 +2034,7 @@ $(function()
     <link href="http://xcoder.in/2014/06/03/scartlet-task/"/>
     <id>http://xcoder.in/2014/06/03/scartlet-task/</id>
     <published>2014-06-02T16:17:38.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　事情很曲折，我某天在萌否收音機裏面聽到了一首歌，很好聽，叫 <code>hypnotized</code>，於是紅心了。</p>
 <p>　　過了幾天我再去聽——發現這首歌變了。</p>
 <p>　　最後經過多方面求證，我大概得出結果就是應該有人傳錯了歌，然後後來有人重新傳了一遍，導致我聽的不是原來那首歌了。那我那天聽的那首歌到底叫什麼名字呢？</p>
@@ -1922,7 +2065,7 @@ $(function()
     <link href="http://xcoder.in/2014/06/02/vim-hexo-environment/"/>
     <id>http://xcoder.in/2014/06/02/vim-hexo-environment/</id>
     <published>2014-06-01T20:52:30.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:20.000Z</updated>
     <content type="html"><![CDATA[<p>　　本文只講兩個函數，對於 <code>markdown</code> 如何高亮之類的問題還請自行谷歌。</p>
 <p>　　然後請打開你自己的 <code>.vimrc</code> 文件。</p>
 <h2 id="預備工作">預備工作</h2><p>　　首先定義一個變量——你自己的 <code>hexo</code> 目錄，如果要跨平臺可以做個判斷之類的，如下：</p>
@@ -1964,7 +2107,7 @@ $(function()
     <link href="http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/"/>
     <id>http://xcoder.in/2014/05/05/nbut-2014-acm-contest-solution/</id>
     <published>2014-05-05T07:08:39.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　這次比賽由 <a href="http://blog.163.com/surgy_han/" target="_blank" rel="external">Hungar</a>，<a href="http://www.cnblogs.com/Wine93/" target="_blank" rel="external">8Mao</a> 以及我負責的。明明都讀研了，還詐屍回來出題——歸結起來大概是因爲各種面試不順吧，想來虐虐學弟妹們怒刷存在感。結果網絡賽還是被虐得死去活來。（果然我是蒟蒻 (◓Д◒)✄╰⋃╯</p>
 <p>　　好了廢話不多說，還是直接上題解吧。</p>
 <h2 id="Minecraft_Server_Bug">Minecraft Server Bug</h2><p>　　題意大概就是說一排巖漿和水，你要拿一桶水和巖漿，並且水的下標小於巖漿。</p>
@@ -1993,7 +2136,7 @@ $(function()
     <link href="http://xcoder.in/2014/04/11/hero-snake/"/>
     <id>http://xcoder.in/2014/04/11/hero-snake/</id>
     <published>2014-04-11T05:53:35.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>注：備份到這篇日誌的時候，感覺眼睛進了什麼奇怪的東西。（才……纔不是眼淚呢，那一定是沙子！(;´༎ຶД༎ຶ`)</p>
 <p>主要引起感傷的還是這首軒轅劍的 BGM 吧。因爲 Hero Snake 的BGM就是這個。</p>
@@ -2054,7 +2197,7 @@ $(function()
     <link href="http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/"/>
     <id>http://xcoder.in/2014/04/06/nodejs-cpp-addons-3/</id>
     <published>2014-04-06T08:15:39.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　<a href="/2014/04/03/nodejs-cpp-addons-2/">上一章</a>我們偷偷學習瞭如何在 <code>C++</code> 中實現 <code>Node.js</code> 調用時傳參數和調用回調函數，並且我自己也心血來潮寫了個<a href="/2014/04/05/cpp-class-inline-keng/#simpleini">小 Demo</a> 供大家參考。</p>
 <p>　　今天我們就不複習了，直搗黃龍吧。</p>
 ]]></content>
@@ -2075,7 +2218,7 @@ $(function()
     <link href="http://xcoder.in/2014/04/05/cpp-class-inline-keng/"/>
     <id>http://xcoder.in/2014/04/05/cpp-class-inline-keng/</id>
     <published>2014-04-05T08:55:57.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　今天我來講一講 <code>C++</code> 中類成員函數 <code>inline</code> 修飾符的一個坑。</p>
 <p>　　這個坑是我在嘗試着寫我的第一個 <code>Node.js</code> 擴展 <code>simpleini</code> 時候遇到的。</p>
 <h2 id="坑描述">坑描述</h2><p>　　因爲只是嘗試着寫，所以懶得自己實現，於是網上找了個開源的 <code>C++</code> 閱讀 ini 文件的項目，名不見經傳，叫 <a href="http://miniini.tuxfamily.org/" target="_blank" rel="external">miniini</a>。</p>
@@ -2116,7 +2259,7 @@ $(function()
     <link href="http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/"/>
     <id>http://xcoder.in/2014/04/03/nodejs-cpp-addons-2/</id>
     <published>2014-04-03T14:37:15.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　好，今天讓我們更深入地搞基吧！</p>
 <h2 id="溫故而知新，可以爲溼矣">溫故而知新，可以爲溼矣</h2><p>　　首先請大家記住這個 V8 的在線手冊——<a href="http://izs.me/v8-docs/main.html" target="_blank" rel="external">http://izs.me/v8-docs/main.html</a>。</p>
 <p>　　還記得上次的 <code>building.gyp</code> 文件嗎？</p>
@@ -2236,7 +2379,7 @@ $(function()
     <link href="http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/"/>
     <id>http://xcoder.in/2014/04/02/nodejs-cpp-addons-1/</id>
     <published>2014-04-01T16:53:22.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　N久之前的一個坑——用 <strong>Node.js</strong> 來重構 NBUT 的 <strong>Online Judge</strong>，包括評測端也得重構一遍。（至於什麼時候完成大家就不要關心了，(／‵Д′)／~ ╧╧</p>
 <p>　　總之我們現在要做的其實簡而言之就是——用C/C++來實現 <strong>Node.js</strong> 的模塊。</p>
 <h2 id="準備工作">準備工作</h2><p>　　工欲善其事，必先<del>耍流氓</del>利其器。</p>
@@ -2354,7 +2497,7 @@ $(function()
     <link href="http://xcoder.in/2014/03/27/node-public-file-house/"/>
     <id>http://xcoder.in/2014/03/27/node-public-file-house/</id>
     <published>2014-03-26T17:34:04.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　所謂“公衆檔所”，其實就是一個公共的臨時網盤了。這個東西是一個老物了，在我剛接觸 <code>Expressjs</code> 的時候寫的。當時還隨便搞了一下 <code>backbone.js</code>，但是沒有深入，勿笑。關於深入構架 <code>Expressjs</code> 方面也沒做，只是粗粗寫了下最基礎的路由，所以整個文件結構也不是很規範。但是應該能比較適合剛學 <code>Node.js</code> 以及剛接觸 <code>Expressjs</code> 的人吧。</p>
 <p>　　Repo地址在<a href="https://github.com/XadillaX/public-file-house" target="_blank" rel="external">我的Github</a>上。Demo地址在 <a href="http://dang.kacaka.ca/" target="_blank" rel="external">http://dang.kacaka.ca/</a>，由於個人電腦的不穩定性，所以不保證你們隨時可以訪問，保不定哪天就失效了，所以最好的辦法還是自己 <code>clone</code> 下來啪啪啪。</p>
 <p>　　它所需要的東西大致就是 <code>Expressjs</code> + <code>Redis</code> + <code>Backbone</code> 了。不過都是最最基礎的代碼。</p>
@@ -2505,7 +2648,7 @@ $(function()
     <link href="http://xcoder.in/2013/12/28/xplan-spider-doc/"/>
     <id>http://xcoder.in/2013/12/28/xplan-spider-doc/</id>
     <published>2013-12-27T16:00:00.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:20.000Z</updated>
     <content type="html"><![CDATA[<h2 id="前言">前言</h2><p><strong>XPlan</strong> 是一個“基於校園強關係的社交應用”的開發代號。其中有一個功能是從學校網站上通過網絡爬蟲（Web Crawler）形式將學校新聞抓取到XPlan自身的數據庫當中。</p>
 <p>而這裏出現的一個問題就是學校網站上面的文章是通過類似於 <a href="http://kindeditor.net/" target="_blank" rel="external"><code>KindEditor</code></a>、<a href="http://ueditor.baidu.com/website/" target="_blank" rel="external"><code>UEditor</code></a>這類<strong>在線富文本編輯器</strong>生成的代碼。</p>
 <p>這類代碼有幾個共性：</p>
@@ -2595,7 +2738,7 @@ $(function()
     <link href="http://xcoder.in/2013/08/31/srm-589-div2/"/>
     <id>http://xcoder.in/2013/08/31/srm-589-div2/</id>
     <published>2013-08-30T16:00:00.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　好久沒擼 <strong>TC</strong> 了，手都生了。前兩天剛折騰好 <strong>LinuxMint</strong> + <strong>Cinnamon</strong>，順便手賤把 <strong>TC</strong> 環境配好了。</p>
 <p>　　隨便進去扯了一套最新的 <strong>SRM</strong> 來搞，全跑完之後才發現原來這場比賽還處於 <strong>System Running</strong> 階段。於是知道了比賽一結束還在 <strong>Running</strong> 的時候你就已經可以自己拉出來做了。小綠名大家不要笑。</p>
 <!-- 我是小小分割符 -->
@@ -2660,7 +2803,7 @@ $(function()
     <link href="http://xcoder.in/2013/08/16/node-4-base/"/>
     <id>http://xcoder.in/2013/08/16/node-4-base/</id>
     <published>2013-08-15T16:00:00.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p><strong>Node.js</strong> 的基礎是 <strong>JavaScript</strong> 這門 <strong><em>腳本語言</em></strong>。而大多數的腳本語言一個共同的特點就是“<a href="http://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1#.E5.BC.B7.E5.9E.8B.E5.88.A5.E5.92.8C.E5.BC.B1.E5.9E.8B.E5.88.A5" target="_blank" rel="external">弱類型</a>”。</p>
 <p>　　不同於 <strong>PHP</strong> 的是，<strong>PHP</strong> 就是是有了新變量也無需申明，而 <strong>JavaScript</strong> 則還是需要 <code>var</code> 來申明一下的。而這個 <code>var</code> 涵蓋了 <strong>C++</strong> 中的<code>int</code>、<code>string</code>、<code>char</code>等一切類型的含義，甚至是 <code>function</code>。</p>
 <p>　　本篇以及後篇的所有內容都是在 <strong>Linux</strong> 或者 <strong>Cygwin</strong> 下用 <strong>vim</strong> 進行編輯（若不是則請自行轉變成你自己的方法），然後在命令行下進行查看結果的。</p>
@@ -2860,7 +3003,7 @@ $(function()
     <link href="http://xcoder.in/2013/08/15/node-2-environment-in-windows/"/>
     <id>http://xcoder.in/2013/08/15/node-2-environment-in-windows/</id>
     <published>2013-08-14T16:00:00.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　由於<a href="!--￼11--&gt;#linux-環境">Linux</a>中的環境搭建比較簡單，所以草草略過。</p>
 <p>　　其實<a href="!--￼12--&gt;#windows-環境">Windows</a>下也不算麻煩，但是這裏會講一定量的別的環境的搭建。</p>
 <!-- 我是小小分割符 -->
@@ -3003,7 +3146,7 @@ $(function()
     <link href="http://xcoder.in/2013/08/13/node-1-summary/"/>
     <id>http://xcoder.in/2013/08/13/node-1-summary/</id>
     <published>2013-08-12T16:00:00.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　本系列教程主要是寫給我帶的那幫熊孩子們看的。我自己的 <strong>Node.js</strong> 水平半斤八兩，措辭之中也免不了有自己錯誤的理解，會誤人子弟。但是對於初學者來說，某些自己助記的理解還是可取的。有些概念性的錯誤可以等他們進一步深入研究之後再自行更正。</p>
 <p>　　由於那幫人大多還處於使用 <strong>M$ Windows</strong> 的令人不愉快的階段，所以本教程將會退而求其次，使其在 <strong>Cygwin</strong> 中模擬 <strong>linux</strong> 的命令（Windows的bat腳本實在是讓人不敢恭維）。以及在這裏會講述一些 <strong>Git</strong> 操作的初步。當然，如果你已經在使用 <strong>linux</strong> 進行開發的話，可以跳過前面一堆令人感到厭煩的環境配置章節。或者你在使用 <strong>M$ Windows</strong> 但卻不想改變自己的腳本習慣的話，也可以選擇性地跳過一些章節和步驟。</p>
 <!-- 我是小小分割符 -->
@@ -3081,7 +3224,7 @@ $(function()
     <link href="http://xcoder.in/2013/07/15/javascript-callback-this-bind/"/>
     <id>http://xcoder.in/2013/07/15/javascript-callback-this-bind/</id>
     <published>2013-07-15T06:20:29.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　最近在寫 <strong>NBUT Virtual Judge</strong> 的內核框架，用的又是 <strong>Node.JS</strong> 了，把它當作一個本地運行的腳本不斷進行輪詢。</p>
 <p>　　衆所周知JS中的一個精髓就是異步回調。</p>
 <p>　　所以在我自己寫的框架中也經常會出現類似於下面的代碼：</p>
@@ -3120,7 +3263,7 @@ $(function()
     <link href="http://xcoder.in/2013/03/29/nodejs-mongodb-sync/"/>
     <id>http://xcoder.in/2013/03/29/nodejs-mongodb-sync/</id>
     <published>2013-03-29T01:31:38.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　<strong><em>注：本文僅爲我初學 Node.JS 的時候的稚嫩筆記。是從 <a href="http://web.archive.org/" target="_blank" rel="external">http://web.archive.org/</a> 扒回來的。現在看來已無多大參考價值，各位可以略過。我只是把它扒回來紀念一下而已，以記錄我的歷程。而那個相對應的 <code>SevenzJS</code> 也已經被遺棄</em></strong></p>
 <h2 id="背景">背景</h2><p>　　最近在做公司項目的一個模塊，主要用於 <strong>JSON Api</strong> 的傳輸，所以開發環境的目標就鎖定在了 <strong>Node.js</strong>。而這一塊的登陸用戶又是存在 <strong>MongoDB</strong> 裏面的，所以就有瞭如下的問題。</p>
 <ul>
@@ -3168,7 +3311,7 @@ $(function()
     <link href="http://xcoder.in/2012/12/24/jquery-animate-color-support/"/>
     <id>http://xcoder.in/2012/12/24/jquery-animate-color-support/</id>
     <published>2012-12-24T01:20:16.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　最近在做一個汽車團購網的項目，由於老大力求簡潔，所以界面做得有些小清新。不過得說一下頁面不是我設計的，是一位美工同志。</p>
 <p>　　廢話不多說，直接切入正題吧——</p>
 <p>　　我要做得就是讓下面一段代碼生效：</p>
@@ -3207,7 +3350,7 @@ $(function()
     <link href="http://xcoder.in/2012/09/08/scope-lock/"/>
     <id>http://xcoder.in/2012/09/08/scope-lock/</id>
     <published>2012-09-07T17:31:59.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　<strong><em>嘛，本文是建立在M$的Visual Studio基礎上的，linux☭勿噴。</em></strong></p>
 <p>　　我最先用到 ScopeLock 模式是在自己開發 <strong>XAE引擎</strong> 的時候。在裏面用到挺多的線程函數，那麼如何解決臨界區就成了一個重要的課題。可能大家想，不就一個線程鎖臨界區什麼的麼，一個 <code>EnterCriticalSection</code> 和一個 <code>LeaveCriticalSection</code> 不就解決了麼？</p>
 <p>　　其實不然。在 <strong>M$</strong> 中，最常用的當然就是 <code>CRITICAL_SECTION</code> 了，但是如果臨界區上鎖卻木有解鎖呢？這就會發生死鎖現象。對於一個粗心的程序猿來說這樣的錯誤還是有機率發生的。就算你足夠細心，還是有時候會一失足成千古恨。</p>
@@ -3246,7 +3389,7 @@ $(function()
     <link href="http://xcoder.in/2012/07/04/codeforces-128-div2/"/>
     <id>http://xcoder.in/2012/07/04/codeforces-128-div2/</id>
     <published>2012-07-04T03:38:59.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　這次玩脫了。好不容易四題都做出來，卻因爲小細節掛了兩題。</p>
 <h2 id="Description">Description</h2><h3 id="Two_Problems">Two Problems</h3><p>　　題意就是說，CF有兩題，每題初始分A和B，然後每題在每分鐘會扣DA和DB分。給你比賽總時間T，問你某個人可不可能拿到X分。（注意可能做出一題、兩題或者一題也沒做出）</p>
 <p>　　(0 ≤ x ≤ 600; 1 ≤ t, a, b, da, db ≤ 300且保證及時比賽時間到了各題的分數也不會小於0)</p>
@@ -3285,7 +3428,7 @@ $(function()
     <link href="http://xcoder.in/2011/10/18/hge-hotspot-collision/"/>
     <id>http://xcoder.in/2011/10/18/hge-hotspot-collision/</id>
     <published>2011-10-18T07:22:21.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　碰撞檢測始終是做2D遊戲中的一個熱點話題，我本人並沒有做過這類遊戲，所以一切只是理論而已，不過正打算做這麼個小遊戲練練手。</p>
 <p>　　前幾天在HGE的羣裏看到有人突然問到如何判斷鼠標有沒有點到人（點到紋理的透明區域不算），從而引申出了碰撞檢測問題。</p>
 <p>　　他的問題相對好實現，只要算出紋理所按的點是不是透明即可。</p>
@@ -3327,7 +3470,7 @@ $(function()
     <link href="http://xcoder.in/2011/09/13/hge-transparent-color/"/>
     <id>http://xcoder.in/2011/09/13/hge-transparent-color/</id>
     <published>2011-09-13T04:12:32.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　嘛 = = 在做那個項目的動畫預覽器的時候，因爲那引擎封裝得太麻煩了，於是自己基於HGE再移植一遍，發現其中有一個SetTransparentColor函數，即設置透明色。</p>
 <p>　　拿出來分享一下吧。</p>
 <p>　　其實方法很簡單，<code>HTEXTURE</code> 是紋理句柄，當你用 <code>Texture_Lock</code> 這個函數鎖定這個紋理的時候，它的返回值就是這個紋理在內存中的首地址。也就是說接下來的 width * height 個地址中就是這個紋理的每一個像素了。既然要設置透明色，只要對於每個像素判斷一下與運算一下就好了。</p>
@@ -3355,7 +3498,7 @@ $(function()
     <link href="http://xcoder.in/2011/06/16/resource-pack/"/>
     <id>http://xcoder.in/2011/06/16/resource-pack/</id>
     <published>2011-06-15T17:20:31.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　最近除了忙各種各樣的期末考試、去西班牙的簽證，就是公司的那個韓國項目了。</p>
 <p>　　我的任務基本完成——將原本單屏的遊戲改成三屏，完善整個 GUI系統 以及“劫持”了原遊戲中的一些邏輯，比如滾軸的排列可以任意控制等。由於原代碼中的GUI系統沒有文本編輯框，我還得自己寫一個。然而我對於IME的操作、GDI和DX的結合不是非常熟悉，所以還是參照了一下 <strong>ShowLong</strong> 所修改的微妙的平衡給HGE寫的中文解決方案。</p>
 <p>　　完成了以上的任務之後，由於我的考試以及簽證問題以及我本身的任務差不多了，就把這個攤子就扔回公司去了。在交接的時候，老大給我派了一個任務，讓我來寫這個遊戲資源包的代碼。</p>
@@ -3398,7 +3541,7 @@ $(function()
     <link href="http://xcoder.in/2011/05/16/lianlinakan-algorighm-i/"/>
     <id>http://xcoder.in/2011/05/16/lianlinakan-algorighm-i/</id>
     <published>2011-05-16T04:30:12.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　<strong>注：這篇文章我到現在也沒有填第二篇的坑。數據沒了重新從 Capture 裏面取出來，看看捨不得，於是把這篇文章也拿回來了。權當紀唸吧，以及當時和 <code>Kalxd</code> 的對話。</strong></p>
 <h2 id="正文">正文</h2><p>　　剛忙完邀請賽，蹭了塊銅。剛纔在逛別人博客的時候看別人的文章，突然心血來潮想記一些東西。</p>
 <p>　　連連看是我學HGE做的第一個小遊戲，素材用的是QQ的。時間大概是去年國慶吧。好吧，廢話不多說，就講講連連看怎麼找到能消的兩塊吧。</p>
@@ -3451,7 +3594,7 @@ $(function()
     <link href="http://xcoder.in/2011/04/25/my-first-game/"/>
     <id>http://xcoder.in/2011/04/25/my-first-game/</id>
     <published>2011-04-25T04:30:53.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　最近網之遊在和棒子一起開發一個類似賭博的網遊（別牆我，做好是給棒子自己玩的），然後機緣巧合，他們的引擎是結合了MFC以及從我用過的幾個引擎之一移植過來的。就引擎本身而言很強大，然後我又有一點小經驗，所以網之遊的柯總便也讓我加入了開發行列。之前也是託網之遊的福讓我研究了一番網狐的平臺。</p>
 <p>　　開發過程中學到了不少底層的東西。我的任務是先將遊戲的單屏給弄成三份，以三個邏輯來實現。由於工程耦合性太高，原程序員是C語言出生的，造成了我修改工程一定程度上的麻煩。先自己寫了個Wrapper類來包含三個SceneGAME，然後一次性將三個SceneGAME渲染到目標上。這樣改了一下之後，有兩百多個錯誤。不知道其它遊戲是不是也有這樣的特點，因爲這是我開發的第一款遊戲，所以也沒經驗。</p>
 <p>　　不過幸好最後還是讓我給完成了這第一個quest。接着是添加GUI，就是現在正在做的。還有就是完全分離三塊分屏的邏輯代碼。讓我這個大二學生興奮的是，這個遊戲完成之後，是會有獎金的。這個可是讓我這個窮孩子兩眼放光莫。YY一下到底會有多少呢，我本身也只是過去見識一下真正的工程而已，壓根沒想過money這事。</p>
@@ -3479,7 +3622,7 @@ $(function()
     <link href="http://xcoder.in/2010/11/17/objectfactory-learning/"/>
     <id>http://xcoder.in/2010/11/17/objectfactory-learning/</id>
     <published>2010-11-17T07:49:45.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　對象工廠，顧名思義，就是產生對象的一個“工廠”。根據傳入的一個參數而產生相應的不同種類的對象。</p>
 <p>　　用於批量生成同一個父類的不同子類的對象時用到。</p>
 <p>　　本學習筆記基於Singleton（單件模式）基礎上進行擴展。</p>
@@ -3517,7 +3660,7 @@ $(function()
     <link href="http://xcoder.in/2010/11/13/singleton-learning/"/>
     <id>http://xcoder.in/2010/11/13/singleton-learning/</id>
     <published>2010-11-13T07:44:15.000Z</published>
-    <updated>2016-07-09T11:17:54.000Z</updated>
+    <updated>2016-07-12T11:26:19.000Z</updated>
     <content type="html"><![CDATA[<p>　　單件模式（Singleton）是一種用於確保整個應用程序中只有一個類實例且這個實例所佔資源在整個應用程序中是共享時的程序設計方法（根據實際情況，可能需要幾個類實例）。在某些情況下，這種程序設計方法是很有用處的。</p>
 <p>　　在小小地學習了一下C++的單件模式之後，突然聯想到PHP的ThinkPHP的MVC框架，覺得這就是一個單件模式的很好實例吧？</p>
 <p>　　我上次在PUDN上載了一個HGE的RPG Demo，裏面就用了Singleton模式還有ObjectFactory模式寫的。沒看懂，於是問了谷歌。</p>
