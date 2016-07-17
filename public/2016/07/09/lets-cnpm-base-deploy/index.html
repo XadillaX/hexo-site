@@ -103,7 +103,7 @@
         <h1>跟我一起部署和定製 CNPM——基礎部署</h1>
         
         <div class="time-info">
-发表于:<time datetime="2016-07-09T11:19:22.000Z" itemprop="datePublished">2016年07月09日</time>，更新于:<time datetime="2016-07-12T11:26:19.000Z" itemprop="dateModified">2016年07月12日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
+发表于:<time datetime="2016-07-09T11:19:22.000Z" itemprop="datePublished">2016年07月09日</time>，更新于:<time datetime="2016-07-22T06:34:49.000Z" itemprop="dateModified">2016年07月22日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
         </div>
         
         <div class="post-body-inner">
@@ -170,7 +170,7 @@
 <li><code>storege</code>：僅對 SQLite 配置有效，數據庫地址，默認爲 <code>~/.cnpmjs/data.sqlite</code>；</li>
 </ul>
 </li>
-<li><code>nfs</code>：包文件系統處理對象，爲一個 Node.js 對象，默認是 <a href="">fs-cnpm</a> 這個包，並且配置在 <code>~/.cnpmjs/nfs</code> 目錄下，也就是說默認所有同步的包都會被放在這個目錄下；開發者可以使用別的一些文件系統插件（如上傳到又拍雲等）,又或者自己去按接口開發一個邏輯層，這些都是後話了；</li>
+<li><code>nfs</code>：包文件系統處理對象，爲一個 Node.js 對象，默認是 <a href="https://github.com/cnpm/fs-cnpm" target="_blank" rel="external">fs-cnpm</a> 這個包，並且配置在 <code>~/.cnpmjs/nfs</code> 目錄下，也就是說默認所有同步的包都會被放在這個目錄下；開發者可以使用別的一些文件系統插件（如上傳到又拍雲等）,又或者自己去按接口開發一個邏輯層，這些都是後話了；</li>
 <li><code>registryHost</code>：暫時還未試過，我猜是用於 Web 頁面顯示用的，默認爲 <code>r.cnpmjs.org</code>；</li>
 <li><code>enablePrivate</code>：是否開啓私有模式，默認爲 <code>false</code>；<ul>
 <li>如果是私有模式則只有管理員能發佈包，其它人只能從源站同步包；</li>

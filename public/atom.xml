@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in/"/>
-  <updated>2016-07-12T11:26:19.000Z</updated>
+  <updated>2016-07-17T08:46:27.000Z</updated>
   <id>http://xcoder.in/</id>
   
   <author>
@@ -15,11 +15,158 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[跟我一起部署和定製 CNPM——自定義包存儲層]]></title>
+    <link href="http://xcoder.in/2016/07/22/lets-cnpm-storage/"/>
+    <id>http://xcoder.in/2016/07/22/lets-cnpm-storage/</id>
+    <published>2016-07-22T06:23:01.000Z</published>
+    <updated>2016-07-17T08:46:27.000Z</updated>
+    <content type="html"><![CDATA[<p>CNPM 的自定義包存儲層文件系統簡稱 NFS，我猜是 NPM File System 的意思。</p>
+<p>在之前《<a href="https://xcoder.in/2016/07/09/lets-cnpm-base-deploy/">跟我一起部署和定製 CNPM——基礎部署</a>》中提到過，CNPM 配置項裏面有一項配置 <code>nfs</code>，它所對應的是一個 NFS 對象。</p>
+<p>在同步 package 的時候，CNPM 會把源站的包下載到本地，然後傳給 NFS 對象相應的函數交予去處理，由 NFS 對象返回處理結束之後該包在我們自己部署的 CNPM 對應的包下載鏈接。</p>
+<p>上面的這一套流程就給我們自定義包存儲提供了可能，比如我們可以把包同步到又拍雲存儲、阿里雲 OSS 等地方去，也可以以二進制的形式存入我們自己的數據庫（不推薦），甚至可以什麼都不用做直接放在本地，然後把本地文件對外網暴露即可。</p>
+<h2 id="NFS_接口">NFS 接口</h2><p>NFS 的接口是實現定義好的，我們如果要寫一個自己的 NFS 類，只需要按照約定的接口實現他們的邏輯即可。</p>
+<blockquote>
+<p>雖然我自己不喜歡，但是 NFS 的所有函數需要在菊花函數中被實現。</p>
+</blockquote>
+<p>下面給出接口的定義：</p>
+<ul>
+<li><code>function* upload(filepath, options)</code><ul>
+<li><code>filepath</code>：文件路徑。</li>
+<li><code>options</code><ul>
+<li><code>key</code>：待上傳文件的標識</li>
+<li><code>size</code>：待上傳文件大小</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>function* uploadBuffer(fileBuffer, options)</code><ul>
+<li><code>fileBuffer</code>：待上傳文件的 Buffer</li>
+<li><code>options</code><ul>
+<li><code>key</code>：待上傳文件的標識</li>
+<li><code>size</code>：待上傳文件的大小</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>function* remove(key)</code><ul>
+<li><code>key</code>: 文件標識</li>
+</ul>
+</li>
+<li><code>function* download(key, savePath, options)</code>（可選實現）<ul>
+<li><code>key</code>：文件標識</li>
+<li><code>savePath</code>：保存路徑</li>
+<li><code>options</code><ul>
+<li><code>timeout</code>：超時時間</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>function* createDownloadStream(key, options)</code>（可選實現）<ul>
+<li><code>key</code>: 文件標識</li>
+<li><code>options</code><ul>
+<li><code>timeout</code>：超時時間</li>
+</ul>
+</li>
+<li>返回一個 <code>ReadStream</code></li>
+</ul>
+</li>
+<li><code>function[*] url(key)</code>（可選實現，可以不是菊花函數）<ul>
+<li><code>key</code>: 文件標識</li>
+</ul>
+</li>
+</ul>
+<h2 id="OSS-CNPM_解析">OSS-CNPM 解析</h2><p>這裏拿出一個 NFS 的官方實現阿里雲 OSS 版來作爲解析。它的 Repo 是 <a href="https://github.com/cnpm/oss-cnpm" target="_blank" rel="external">https://github.com/cnpm/oss-cnpm</a>。</p>
+<p>打開 <a href="https://github.com/cnpm/oss-cnpm/tree/2.1.0/index.js" target="_blank" rel="external">index.js</a> 我們能看到，的確 <code>OssWrapper</code> 實現了上面的一些接口。</p>
+<h3 id="構造函數">構造函數</h3><p>在 <code>function OssWrapper</code> 裏面我們看到它 <code>new</code> 了 <a href="https://github.com/aliyun/oss-nodejs-sdk" target="_blank" rel="external">ali-oss</a> 對象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (options.cluster) &#123;</span><br><span class="line">  options.schedule = options.schedule || <span class="string">'masterSlave'</span>;</span><br><span class="line">  <span class="keyword">this</span>.client = <span class="keyword">new</span> oss.ClusterClient(options);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.client = oss(options);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也就是說在各種上傳等函數裏面都是以這個 <code>client</code> 爲主體做的事情的。</p>
+<h3 id="upload_和_uploadBuffer">upload 和 uploadBuffer</h3><p>首先我們看看 <code>upload</code> 函數，從外部傳進來文件的 <code>key</code>，NFS 對象將該文件以 <code>key</code> 爲名傳到 OSS 去，並返回該文件上傳之後在 OSS 上的地址。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">proto.upload = <span class="function"><span class="keyword">function</span>* (<span class="params">filePath, options</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> key = trimKey(options.key);</span><br><span class="line">  <span class="comment">// https://github.com/ali-sdk/ali-oss#putname-file-options</span></span><br><span class="line">  <span class="keyword">const</span> result = <span class="keyword">yield</span> <span class="keyword">this</span>.client.put(key, filePath, &#123;</span><br><span class="line">    headers: <span class="keyword">this</span>._defaultHeaders,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>._mode === <span class="string">'public'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; url: result.url &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> &#123; key: key &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>uploadBuffer</code> 其實也一樣，參數第一個 <code>fileBuffer</code> 是一個文件二進制 Buffer 對象，而 <code>ali-oss</code> 包的 <code>put</code> 函數第二個參數既可以傳一個文件路徑，也可以傳一個 Buffer，所以相當於把 <code>upload</code> 這個函數直接拿過來就能用了，於是就有了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proto.uploadBuffer = proto.upload;</span><br></pre></td></tr></table></figure>
+<h3 id="remove、download_和_createDownloadStream">remove、download 和 createDownloadStream</h3><p>這兩個函數實際上也是直接調用了 <code>ali-oss</code> 的函數，並沒有什麼好講的，大家自己看看就好了。</p>
+<h3 id="url">url</h3><p>這個函數無非就是判斷下有沒有自定義的 CDN 域名什麼的，根據不同的返回不同的網址而已。</p>
+<h3 id="trimKey">trimKey</h3><p>把 <code>key</code> 裏面帶的最前面的斜槓去掉。</p>
+<h2 id="我的_OSS-CNPM_隨意改造">我的 OSS-CNPM 隨意改造</h2><p>上面一節解析了 <code>oss-cnpm</code> 這個包的代碼，如果官方出的幾個 NFS 包不能滿足，大家也能自己去寫一個 CNPM 存儲層的包了。</p>
+<p>我們公司的包是直接在 OSS 上面的，所以用 <code>oss-cnpm</code> 並沒有什麼不妥。</p>
+<p>不過對於阿里系本身的公司門來說，OSS 並不是什麼大事兒，對於我們來說，OSS 的 bucket 資源還是蠻稀缺的，上次就達到上限了。所以我們目前的 NPM 包跟公司別的測試業務用的是同一個 bucket。</p>
+<p>那麼問題來了：</p>
+<p><strong><code>oss-cnpm</code> 直接把所有文件放在根目錄下建文件夾，太亂了，而且的確是有小可能衝突的。而這個包又不能讓人自定義前綴什麼什麼的。</strong></p>
+<p>於是我就自己 Fork 小小改裝了一下這個包，讓它適合我們公司自己。</p>
+<p>改裝很簡單，在上傳的目錄中加一個文件夾前綴。</p>
+<p>動的是 <code>trimKey</code> 函數：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trimKey</span>(<span class="params">key</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">'_snpm_/'</span> + (key ? key.replace(<span class="regexp">/^\//</span>, <span class="string">''</span>) : <span class="string">''</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>這下所有在我們內部 CNPM 裏面的包的鏈接都多了個 <code>_snpm_/</code> 的前綴了。</p>
+<h2 id="CNPM_調用解析">CNPM 調用解析</h2><p>上面解析了接口之後，我們來扒一扒什麼時候會調用上面實現的接口們吧，這樣就知道 CNPM 對於 NFS 使用的工作原理了。</p>
+<h3 id="controllers/registry/package/download-js">controllers/registry/package/download.js</h3><blockquote>
+<p><a href="https://github.com/cnpm/cnpmjs.org/blob/2.12.2/controllers/registry/package/download.js" target="_blank" rel="external">源碼參考</a></p>
+</blockquote>
+<p>對於包下載來說，它的路由是：</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/&#123;<span class="package"><span class="keyword">package</span>&#125;/<span class="title">download</span>/&#123;</span><span class="package"><span class="keyword">package</span>&#125;-&#123;</span>version&#125;.tgz</span><br></pre></td></tr></table></figure>
+<p>然後在裏面判斷一下如果 NFS 對象有實現 <code>url()</code> 函數的話，先用 <code>url()</code> 函數生成對該包而言的真實下載鏈接。</p>
+<p>讀出這個包的 registry 信息，裏面如果沒有 <code>dist</code> 等參數的話直接 302 到剛生成的地址去。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> nfs.url === <span class="string">'function'</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (is.generatorFunction(nfs.url)) &#123;</span><br><span class="line">    url = <span class="keyword">yield</span> nfs.url(common.getCDNKey(name, filename));</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    url = nfs.url(common.getCDNKey(name, filename));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!row || !row.package || !row.package.dist) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!url) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">yield</span>* next;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">this</span>.status = <span class="number">302</span>;</span><br><span class="line">  <span class="keyword">this</span>.set(<span class="string">'Location'</span>, url);</span><br><span class="line">  _downloads[name] = (_downloads[name] || <span class="number">0</span>) + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下去是涉及到上一章沒有提到過的一個配置參數，叫 <code>downloadRedirectToNFS</code>，默認爲 <code>false</code>。如果該值爲 <code>true</code> 的話並且剛纔由 <code>url()</code> 函數生成了下載鏈接的話，也是直接 302 到真實下載鏈接去。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (config.downloadRedirectToNFS &amp;&amp; url) &#123;</span><br><span class="line">  <span class="keyword">this</span>.status = <span class="number">302</span>;</span><br><span class="line">  <span class="keyword">this</span>.set(<span class="string">'Location'</span>, url);</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不過如果本身 registry 裏面就沒 <code>key</code> 這個選項的話也會直接用 <code>url()</code> 生成的鏈接給跳過去。如果沒有 <code>url()</code> 的鏈接，那麼直接用 registry 裏面的 <code>tarball</code> 字段。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> dist = row.package.dist;</span><br><span class="line"><span class="keyword">if</span> (!dist.key) &#123;</span><br><span class="line">  url = url || dist.tarball;</span><br><span class="line">  <span class="keyword">this</span>.status = <span class="number">302</span>;</span><br><span class="line">  <span class="keyword">this</span>.set(<span class="string">'Location'</span>, url);</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面如果都跳過去了，那麼說明要開始調用事先寫好的 <code>download</code> 那兩個函數了，把文件讀到 Buffer 裏面，然後把 Buffer 放到 Response 裏面傳回去。</p>
+<h3 id="controllers/registry/package/remove-js">controllers/registry/package/remove.js</h3><blockquote>
+<p><a href="https://github.com/cnpm/cnpmjs.org/blob/2.12.2/controllers/registry/package/remove.js" target="_blank" rel="external">源碼參考</a></p>
+</blockquote>
+<p>對於刪除包來說，除了把包從數據庫刪掉之外，還要循環遍歷一遍這個包的所有版本，把所有版本的這個包都從 NFS 裏面刪除。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="keyword">yield</span> keys.map(<span class="function"><span class="keyword">function</span> (<span class="params">key</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> nfs.remove(key);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">  logger.error(err);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>這裏就調用了你事先寫好的 <code>remove</code> 了。當然你不實現也沒關係，最多是包的壓縮文件不刪除而已。</p>
+<h3 id="controllers/registry/package/remove_version-js">controllers/registry/package/remove_version.js</h3><blockquote>
+<p><a href="https://github.com/cnpm/cnpmjs.org/blob/2.12.2/controllers/registry/package/remove_version.js" target="_blank" rel="external">源碼參考</a></p>
+</blockquote>
+<p>這裏跟上一小節差不多，之前是刪除整個包，這裏是刪除包的某一個版本，所以就不用循環刪除了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="keyword">yield</span> nfs.remove(key);</span><br><span class="line">&#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">  logger.error(err);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="controllers/registry/package/save-js">controllers/registry/package/save.js</h3><blockquote>
+<p><a href="https://github.com/cnpm/cnpmjs.org/blob/2.12.2/controllers/registry/package/save.js" target="_blank" rel="external">源碼參考</a></p>
+</blockquote>
+<p>然後就是用戶 <code>$ npm publish</code> 用的路由了，在一堆判斷之後，發佈傳過來的包被放在二進制 Buffer 內存裏面：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> tarballBuffer;</span><br><span class="line">tarballBuffer = <span class="keyword">new</span> Buffer(attachment.data, <span class="string">'base64'</span>);</span><br></pre></td></tr></table></figure>
+<p>接下去又判斷來判斷去，最後交由 NFS 的 <code>uploadBuffer</code> 來上傳並得到結果。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> uploadResult = <span class="keyword">yield</span> nfs.uploadBuffer(tarballBuffer, options);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> dist = &#123;</span><br><span class="line">  shasum: shasum,</span><br><span class="line">  size: attachment.length</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (uploadResult.url) &#123;</span><br><span class="line">  dist.tarball = uploadResult.url;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (uploadResult.key) &#123;</span><br><span class="line">  dist.key = uploadResult.key;</span><br><span class="line">  dist.tarball = uploadResult.key;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看到沒有，就是這裏記錄的它到底是 <code>key</code> 還是 <code>tarball</code> 了。</p>
+<p>如果你的 <code>upload</code> 函數返回的是 <code>{ url: &#39;FOO&#39; }</code>，那麼就是 <code>tarball</code> 設置成該值，在下載的時候會直接 302 到 <code>tarball</code> 所指的地址去；如果返回的是 <code>{ key: &#39;key&#39; }</code> 的話，會在 <code>dist</code> 裏面存個 <code>key</code>，下載的時候判斷如果有 <code>key</code> 的話會把它傳進你的 <code>createDownloadStream</code> 或者 <code>download</code> 函數去交由你的函數生成包 Buffer 並傳回 Response。</p>
+<h3 id="controller/sync_module_worker-js">controller/sync_module_worker.js</h3><blockquote>
+<p><a href="https://github.com/cnpm/cnpmjs.org/blob/2.12.2/controllers/sync_module_worker.js" target="_blank" rel="external">源碼參考</a></p>
+</blockquote>
+<p>這個文件是從源端同步相關的一些邏輯了，這裏面有兩個操作。</p>
+<p>一個是 <code>unpublish</code>，調用的就是 NFS 的 <code>remove</code>，不作詳談了。</p>
+<p>另一個就是同步了。同步包會被打散成同步一個版本，然後把每個版本同步過來。在同步版本的時候先把包文件<a href="https://github.com/cnpm/cnpmjs.org/blob/2.12.2/controllers/sync_module_worker.js#L940" target="_blank" rel="external">下載</a>到本地文件 <code>filepath</code> 裏面去。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> r = <span class="keyword">yield</span> urllib.request(downurl, options);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/node-modules/urllib" target="_blank" rel="external">urllib</a> 是蘇千死馬他們自己寫的比較方便和適合他們自己的一個 http 請求庫。</p>
+</blockquote>
+<p>上面的代碼 <code>options</code> 裏面有一個文件流，鏈接到 <code>filepath</code> 目錄的這個文件去，相當於這一步就是把源端的包下載到本地 <code>filepath</code> 去了。</p>
+<p>經過一堆 blahblah 的判斷（比如 SHASUM）之後，這個這個函數就會<a href="https://github.com/cnpm/cnpmjs.org/blob/2.12.2/controllers/sync_module_worker.js#L995" target="_blank" rel="external">調用 NFS 的 <code>upload</code> 函數</a>將本地文件名對應的文件上傳到你所需要的地方去了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  result = <span class="keyword">yield</span> nfs.upload(filepath, options);</span><br><span class="line">&#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">  logger.syncInfo(<span class="string">'[sync_module_worker] upload %j to nfs error: %s'</span>, err);</span><br><span class="line">  <span class="keyword">throw</span> err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>其結果到底是 <code>key</code> 還是 <code>url</code> 對於下載的影響跟前一小節一個道理。</p>
+</blockquote>
+<h2 id="小結">小結</h2><p>本章講了如何使用和自己定製一個 CNPM 的 NFS 層，讓包的走向跟着你的心走。在描述了開發規範和出示了樣例代碼和改造小例子之後，又解析了這個 NFS 是如何在 CNPM 裏面工作的，上面已經提到了 2.12.2 版本中所有用到 NFS 的地方。</p>
+<p>看了上面的解析之後會對 NFS 的工作流程有更深一層的瞭解，然後就不會有寫 NFS 層的時候有種心慌慌摸不着底的情況了。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>CNPM 的自定義包存儲層文件系統簡稱 NFS，我猜是 NPM File System 的意思。</p>
+<p>在之前《<a href="https://xcoder.in/2016/07/09/lets-cnpm-base-deploy/">跟我一起部署和定製 CNPM—]]>
+    </summary>
+    
+      <category term="CNPM" scheme="http://xcoder.in/tags/CNPM/"/>
+    
+      <category term="Node.js" scheme="http://xcoder.in/tags/Node-js/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[跟我一起部署和定製 CNPM——基礎部署]]></title>
     <link href="http://xcoder.in/2016/07/09/lets-cnpm-base-deploy/"/>
     <id>http://xcoder.in/2016/07/09/lets-cnpm-base-deploy/</id>
     <published>2016-07-09T11:19:22.000Z</published>
-    <updated>2016-07-12T11:26:19.000Z</updated>
+    <updated>2016-07-22T06:34:49.000Z</updated>
     <content type="html"><![CDATA[<p>本章會介紹 CNPM 的基礎部署方法。</p>
 <blockquote>
 <p>該文章所對應的 cnpm 目標版本爲 <a href="https://github.com/cnpm/cnpmjs.org/tree/2.12.2" target="_blank" rel="external">v2.12.2</a>，上下浮動一些兼容的版本問題也都不是特別大。</p>
@@ -78,7 +225,7 @@
 <li><code>storege</code>：僅對 SQLite 配置有效，數據庫地址，默認爲 <code>~/.cnpmjs/data.sqlite</code>；</li>
 </ul>
 </li>
-<li><code>nfs</code>：包文件系統處理對象，爲一個 Node.js 對象，默認是 <a href="">fs-cnpm</a> 這個包，並且配置在 <code>~/.cnpmjs/nfs</code> 目錄下，也就是說默認所有同步的包都會被放在這個目錄下；開發者可以使用別的一些文件系統插件（如上傳到又拍雲等）,又或者自己去按接口開發一個邏輯層，這些都是後話了；</li>
+<li><code>nfs</code>：包文件系統處理對象，爲一個 Node.js 對象，默認是 <a href="https://github.com/cnpm/fs-cnpm" target="_blank" rel="external">fs-cnpm</a> 這個包，並且配置在 <code>~/.cnpmjs/nfs</code> 目錄下，也就是說默認所有同步的包都會被放在這個目錄下；開發者可以使用別的一些文件系統插件（如上傳到又拍雲等）,又或者自己去按接口開發一個邏輯層，這些都是後話了；</li>
 <li><code>registryHost</code>：暫時還未試過，我猜是用於 Web 頁面顯示用的，默認爲 <code>r.cnpmjs.org</code>；</li>
 <li><code>enablePrivate</code>：是否開啓私有模式，默認爲 <code>false</code>；<ul>
 <li>如果是私有模式則只有管理員能發佈包，其它人只能從源站同步包；</li>
@@ -162,7 +309,7 @@
     <link href="http://xcoder.in/2016/07/08/lets-cnpm-toc/"/>
     <id>http://xcoder.in/2016/07/08/lets-cnpm-toc/</id>
     <published>2016-07-08T11:14:58.000Z</published>
-    <updated>2016-07-12T11:26:19.000Z</updated>
+    <updated>2016-07-17T08:46:27.000Z</updated>
     <content type="html"><![CDATA[<p>本系列文章將會基於 <a href="https://github.com/cnpm/cnpmjs.org" target="_blank" rel="external">cnpm</a> 部署搭建一套屬於自己（或者公司）的內部私有 NPM 系統。</p>
 <h2 id="什麼是_CNPM">什麼是 CNPM</h2><p><a href="https://github.com/cnpm/cnpmjs.org" target="_blank" rel="external">cnpm</a> 是 Node.js 中國社區成員主導的一個私有 NPM 開源項目，可以用於部署私有 NPM、公共 NPM 鏡像等。</p>
 <h2 id="閱讀對象">閱讀對象</h2><ul>
@@ -171,7 +318,8 @@
 <li>想要研究 CNPM 實現</li>
 </ul>
 <h2 id="目錄">目錄</h2><ol>
-<li><a href="lets-cnpm-base-deploy">基礎部署</a></li>
+<li><a href="/lets-cnpm-base-deploy">基礎部署</a></li>
+<li><a href="/let-cnpm-storage">自定義包存儲層</a></li>
 <li>To be continued</li>
 </ol>
 <h2 id="貢獻">貢獻</h2><p>你可以對本系列文章進行勘誤或者更新，直接提交 PR 或者在博客文章後方留言。</p>

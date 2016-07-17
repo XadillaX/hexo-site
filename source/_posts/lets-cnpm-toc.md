@@ -18,7 +18,7 @@ tags: [ "CNPM", "Node.js" ]
 ## 目錄
 
 1. [基礎部署](/lets-cnpm-base-deploy)
-2. [自定义包存储层](/let-cnpm-storage)
+2. [自定義包存儲層](/let-cnpm-storage)
 3. To be continued
 
 ## 貢獻
