@@ -4,7 +4,7 @@
   <subtitle><![CDATA[一個偽宅级别的蒟蒻碼畜。]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xcoder.in/"/>
-  <updated>2016-07-17T08:46:27.000Z</updated>
+  <updated>2016-07-22T08:53:43.000Z</updated>
   <id>http://xcoder.in/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://xcoder.in/2016/07/22/lets-cnpm-storage/"/>
     <id>http://xcoder.in/2016/07/22/lets-cnpm-storage/</id>
     <published>2016-07-22T06:23:01.000Z</published>
-    <updated>2016-07-17T08:46:27.000Z</updated>
+    <updated>2016-07-22T08:53:43.000Z</updated>
     <content type="html"><![CDATA[<p>CNPM 的自定義包存儲層文件系統簡稱 NFS，我猜是 NPM File System 的意思。</p>
 <p>在之前《<a href="https://xcoder.in/2016/07/09/lets-cnpm-base-deploy/">跟我一起部署和定製 CNPM——基礎部署</a>》中提到過，CNPM 配置項裏面有一項配置 <code>nfs</code>，它所對應的是一個 NFS 對象。</p>
 <p>在同步 package 的時候，CNPM 會把源站的包下載到本地，然後傳給 NFS 對象相應的函數交予去處理，由 NFS 對象返回處理結束之後該包在我們自己部署的 CNPM 對應的包下載鏈接。</p>
@@ -147,7 +147,7 @@
 <blockquote>
 <p>其結果到底是 <code>key</code> 還是 <code>url</code> 對於下載的影響跟前一小節一個道理。</p>
 </blockquote>
-<h2 id="小結">小結</h2><p>本章講了如何使用和自己定製一個 CNPM 的 NFS 層，讓包的走向跟着你的心走。在描述了開發規範和出示了樣例代碼和改造小例子之後，又解析了這個 NFS 是如何在 CNPM 裏面工作的，上面已經提到了 2.12.2 版本中所有用到 NFS 的地方。</p>
+<h2 id="小結">小結</h2><p>本章講瞭如何使用和自己定製一個 CNPM 的 NFS 層，讓包的走向跟着你的心走。在描述了開發規範和出示了樣例代碼和改造小例子之後，又解析了這個 NFS 是如何在 CNPM 裏面工作的，上面已經提到了 2.12.2 版本中所有用到 NFS 的地方。</p>
 <p>看了上面的解析之後會對 NFS 的工作流程有更深一層的瞭解，然後就不會有寫 NFS 層的時候有種心慌慌摸不着底的情況了。</p>
 ]]></content>
     <summary type="html">
@@ -309,7 +309,7 @@
     <link href="http://xcoder.in/2016/07/08/lets-cnpm-toc/"/>
     <id>http://xcoder.in/2016/07/08/lets-cnpm-toc/</id>
     <published>2016-07-08T11:14:58.000Z</published>
-    <updated>2016-07-17T08:46:27.000Z</updated>
+    <updated>2016-07-22T08:53:43.000Z</updated>
     <content type="html"><![CDATA[<p>本系列文章將會基於 <a href="https://github.com/cnpm/cnpmjs.org" target="_blank" rel="external">cnpm</a> 部署搭建一套屬於自己（或者公司）的內部私有 NPM 系統。</p>
 <h2 id="什麼是_CNPM">什麼是 CNPM</h2><p><a href="https://github.com/cnpm/cnpmjs.org" target="_blank" rel="external">cnpm</a> 是 Node.js 中國社區成員主導的一個私有 NPM 開源項目，可以用於部署私有 NPM、公共 NPM 鏡像等。</p>
 <h2 id="閱讀對象">閱讀對象</h2><ul>
@@ -318,8 +318,8 @@
 <li>想要研究 CNPM 實現</li>
 </ul>
 <h2 id="目錄">目錄</h2><ol>
-<li><a href="/lets-cnpm-base-deploy">基礎部署</a></li>
-<li><a href="/let-cnpm-storage">自定義包存儲層</a></li>
+<li><a href="https://xcoder.in/2016/07/09/lets-cnpm-base-deploy/">基礎部署</a></li>
+<li><a href="https://xcoder.in/2016/07/22/lets-cnpm-storage/">自定義包存儲層</a></li>
 <li>To be continued</li>
 </ol>
 <h2 id="貢獻">貢獻</h2><p>你可以對本系列文章進行勘誤或者更新，直接提交 PR 或者在博客文章後方留言。</p>
