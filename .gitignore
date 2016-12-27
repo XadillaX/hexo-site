@@ -6,4 +6,6 @@ node_modules/
 .deploy*/
 
 *.swp
-
+public.bak
+_config.bak.yml
+hexadillax.bak

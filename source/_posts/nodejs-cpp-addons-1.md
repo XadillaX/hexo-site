@@ -1,50 +1,50 @@
-title: 讓Node.js和C++一起搞基 —— 1
+title: 让Node.js和C++一起搞基 —— 1
 date: 2014-04-02 00:53:22
 tags: [ Node.js, C++ ]
 category: NodeJS
 ---
 
-　　N久之前的一個坑——用 **Node.js** 來重構 NBUT 的 **Online Judge**，包括評測端也得重構一遍。（至於什麼時候完成大家就不要關心了，(／‵Д′)／~ ╧╧
+　　N久之前的一个坑——用 **Node.js** 来重构 NBUT 的 **Online Judge**，包括评测端也得重构一遍。（至于什么时候完成大家就不要关心了，(／‵Д′)／~ ╧╧
 
-　　總之我們現在要做的其實簡而言之就是——用C/C++來實現 **Node.js** 的模塊。
+　　总之我们现在要做的其实简而言之就是——用C/C++来实现 **Node.js** 的模块。
 
-## 準備工作
+## 准备工作
 
 　　工欲善其事，必先~~耍流氓~~利其器。
   
 ### node-gyp
 
-　　首先你需要一個 `node-gyp` 模塊。
+　　首先你需要一个 `node-gyp` 模块。
 
-　　在任意角落，執行：
+　　在任意角落，执行：
 
 {% code shell %}
 $ npm install node-gyp -g
 {% endcode %}
 
-　　在進行一系列的 `blahblah` 之後，你就安裝好了。
+　　在进行一系列的 `blahblah` 之后，你就安装好了。
 
 ### Python
 
-　　然後你需要有個 `python` 環境。
+　　然后你需要有个 `python` 环境。
 
-　　自己去[官網](http://python.org/)搞一個來。
+　　自己去[官网](http://python.org/)搞一个来。
 
-> **注意：** 根據 `node-gyp` 的[GitHub](https://github.com/TooTallNate/node-gyp#installation)顯示，請務必保證你的 `python` 版本介於 `2.5.0` 和 `3.0.0` 之間。
+> **注意：** 根据 `node-gyp` 的[GitHub](https://github.com/TooTallNate/node-gyp#installation)显示，请务必保证你的 `python` 版本介于 `2.5.0` 和 `3.0.0` 之间。
 
-### 編譯環境
+### 编译环境
 
-　　嘛嘛，我就偷懶點不細寫了，還請自己移步到 [node-gyp](https://github.com/TooTallNate/node-gyp#installation) 去看編譯器的需求。並且倒騰好。
+　　嘛嘛，我就偷懒点不细写了，还请自己移步到 [node-gyp](https://github.com/TooTallNate/node-gyp#installation) 去看编译器的需求。并且倒腾好。
 
-## 入門
+## 入门
 
-　　我就拿[官網的入門 Hello World](http://nodejs.org/api/addons.html#addons_hello_world)說事兒了。
+　　我就拿[官网的入门 Hello World](http://nodejs.org/api/addons.html#addons_hello_world)说事儿了。
 
 ### Hello World
 
-　　請準備一個 `C++` 文件，比如就叫 ~~sb.cc~~ hello.cc。
+　　请准备一个 `C++` 文件，比如就叫 ~~sb.cc~~ hello.cc。
 
-　　然後我們一步步來，先往裏面搞出頭文件和定義好命名空間：
+　　然后我们一步步来，先往里面搞出头文件和定义好命名空间：
 
 {% code cpp %}
 #include <node.h>
@@ -52,42 +52,42 @@ $ npm install node-gyp -g
 using namespace v8;
 {% endcode %}
 
-#### 主要函數
+#### 主要函数
 
-　　接下去我們寫一個函數，其返回值是 `Handle<Value>`。
+　　接下去我们写一个函数，其返回值是 `Handle<Value>`。
 
 {% code cpp %}
 Handle<Value> Hello(const Arguments& args)
 {
-    //... 嗷嗷待寫
+    //... 嗷嗷待写
 }
 {% endcode %}
 
-　　然後我來粗粗解析一下這些東西：
+　　然后我来粗粗解析一下这些东西：
 
 ##### Handle&lt;Value>
 
-　　做人要有節操，我事先申明我是從[這裏](http://cnodejs.org/topic/4f16442ccae1f4aa270010c5)([@fool](http://cnodejs.org/user/fool))參考的。
+　　做人要有节操，我事先申明我是从[这里](http://cnodejs.org/topic/4f16442ccae1f4aa270010c5)([@fool](http://cnodejs.org/user/fool))参考的。
 
-> V8 裏使用 Handle 類型來託管 JavaScript 對象，與 C++ 的 std::sharedpointer 類似，Handle 類型間的賦值均是直接傳遞對象引用，但不同的是，V8 使用自己的 GC 來管理對象生命週期，而不是智能指針常用的引用計數。
+> V8 里使用 Handle 类型来托管 JavaScript 对象，与 C++ 的 std::sharedpointer 类似，Handle 类型间的赋值均是直接传递对象引用，但不同的是，V8 使用自己的 GC 来管理对象生命周期，而不是智能指针常用的引用计数。
 >
-> JavaScript 類型在 C++ 中均有對應的自定義類型，如 String 、 Integer 、 Object 、 Date 、 Array 等，嚴格遵守在 JavaScript 中的繼承關係。 C++ 中使用這些類型時，必須使用 Handle 託管，以使用 GC 來管理它們的生命週期，而不使用原生棧和堆。
+> JavaScript 类型在 C++ 中均有对应的自定义类型，如 String 、 Integer 、 Object 、 Date 、 Array 等，严格遵守在 JavaScript 中的继承关系。 C++ 中使用这些类型时，必须使用 Handle 托管，以使用 GC 来管理它们的生命周期，而不使用原生栈和堆。
 
-　　而這個所謂的 **Value** ，從 V8 引擎的頭文件 [v8.h](http://code.google.com/p/v8/source/browse/trunk/include/v8.h#1417) 中的各種繼承關係中可以看出來，其實就是 JavaScript 中各種對象的基類。
+　　而这个所谓的 **Value** ，从 V8 引擎的头文件 [v8.h](http://code.google.com/p/v8/source/browse/trunk/include/v8.h#1417) 中的各种继承关系中可以看出来，其实就是 JavaScript 中各种对象的基类。
 
-　　在瞭解了這件事之後，我們大致能明白上面那段函數的申明的意思就是說，我們寫一個 `Hello` 函數，其返回的是一個不定類型的值。
+　　在了解了这件事之后，我们大致能明白上面那段函数的申明的意思就是说，我们写一个 `Hello` 函数，其返回的是一个不定类型的值。
 
-> **注意：** 我們只能返回特定的類型，即在 Handle 託管下的 String 啊 Integer 啊等等等等。
+> **注意：** 我们只能返回特定的类型，即在 Handle 托管下的 String 啊 Integer 啊等等等等。
 
 ##### Arguments
 
-　　這個就是傳入這個函數的參數了。我們都知道在 `Node.js` 中，參數個數是亂來的。而這些參數傳進去到 `C++` 中的時候，就轉變成了這個 `Arguments` 類型的對象了。
+　　这个就是传入这个函数的参数了。我们都知道在 `Node.js` 中，参数个数是乱来的。而这些参数传进去到 `C++` 中的时候，就转变成了这个 `Arguments` 类型的对象了。
 
-　　具體的用法我們在後面再說，在這裏只需要明白這個是個什麼東西就好。（爲毛要賣關子？因爲 `Node.js` 官方文檔中的[例子](https://github.com/rvagg/node-addon-examples)就是分開來講的，我現在只是講第一個 `Hello World` 的例子而已( ´థ౪థ）σ
+　　具体的用法我们在后面再说，在这里只需要明白这个是个什么东西就好。（为毛要卖关子？因为 `Node.js` 官方文档中的[例子](https://github.com/rvagg/node-addon-examples)就是分开来讲的，我现在只是讲第一个 `Hello World` 的例子而已( ´థ౪థ）σ
   
-#### 添磚加瓦
+#### 添砖加瓦
 
-　　接下去我們就開始添磚加瓦了。就最簡單的兩句話：
+　　接下去我们就开始添砖加瓦了。就最简单的两句话：
 
 {% code cpp %}
 Handle<Value> Hello(const Arguments& args)
@@ -97,15 +97,15 @@ Handle<Value> Hello(const Arguments& args)
 }
 {% endcode %}
 
-　　這兩句話是什麼意思呢？大致的意思就是返回一個 `Node.js` 中的字符串 `"world"`。
+　　这两句话是什么意思呢？大致的意思就是返回一个 `Node.js` 中的字符串 `"world"`。
 
 ##### HandleScope
 
-　　同參考自[這裏](http://cnodejs.org/topic/4f16442ccae1f4aa270010c5)。
+　　同参考自[这里](http://cnodejs.org/topic/4f16442ccae1f4aa270010c5)。
 
-> Handle 的生命週期和 C++ 智能指針不同，並不是在 C++ 語義的 scope 內生存（即{} 包圍的部分），而需要通過 HandleScope 手動指定。HandleScope 只能分配在棧上，HandleScope 對象聲明後，其後建立的 Handle 都由 HandleScope 來管理生命週期，HandleScope 對象析構後，其管理的 Handle 將由 GC 判斷是否回收。
+> Handle 的生命周期和 C++ 智能指针不同，并不是在 C++ 语义的 scope 内生存（即{} 包围的部分），而需要通过 HandleScope 手动指定。HandleScope 只能分配在栈上，HandleScope 对象声明后，其后建立的 Handle 都由 HandleScope 来管理生命周期，HandleScope 对象析构后，其管理的 Handle 将由 GC 判断是否回收。
 
-　　所以呢，我們得在需要管理他的生命週期的時候申明這個 `Scope` 。好的，那麼爲什麼我們的代碼不這麼寫呢？
+　　所以呢，我们得在需要管理他的生命周期的时候申明这个 `Scope` 。好的，那么为什么我们的代码不这么写呢？
 
 {% code cpp %}
 Handle<Value> Hello(const Arguments& args)
@@ -115,15 +115,15 @@ Handle<Value> Hello(const Arguments& args)
 }
 {% endcode %}
 
-　　因爲當函數返回時，`scope` 會被析構，其管理的Handle也都將被回收，所以這個 `String` 就會變得沒有意義。
+　　因为当函数返回时，`scope` 会被析构，其管理的Handle也都将被回收，所以这个 `String` 就会变得没有意义。
 
-　　所以呢 V8 就想出了個神奇的點子——`HandleScope::Close(Handle<T> Value)` 函數！這個函數的用處就是關閉這個 Scope 並且把裏面的參數轉交給上一個 Scope 管理，也就是進入這個函數前的 Scope。
+　　所以呢 V8 就想出了个神奇的点子——`HandleScope::Close(Handle<T> Value)` 函数！这个函数的用处就是关闭这个 Scope 并且把里面的参数转交给上一个 Scope 管理，也就是进入这个函数前的 Scope。
 
-　　於是就有了我們之前的代碼 `scope.Close(String::New("world"));`。
+　　于是就有了我们之前的代码 `scope.Close(String::New("world"));`。
 
 ##### String::New
 
-　　這個 `String` 類所對應的就是 `Node.js` 中原生的字符串類。繼承自 `Value` 類。與此類似，還有：
+　　这个 `String` 类所对应的就是 `Node.js` 中原生的字符串类。继承自 `Value` 类。与此类似，还有：
 
 + Array
 + Integer
@@ -134,36 +134,36 @@ Handle<Value> Hello(const Arguments& args)
 + Function
 + ...
 
-　　這些東西有些是繼承自 `Value`，有些是二次繼承。我們這裏就不多做研究，自己可以看看 V8 的代碼（至少是頭文件）研究研究或者看看這個[手冊](http://bespin.cz/~ondras/html/classv8_1_1Value.html#a70d4afaccc7903e6a01f40a46ad04188)。
+　　这些东西有些是继承自 `Value`，有些是二次继承。我们这里就不多做研究，自己可以看看 V8 的代码（至少是头文件）研究研究或者看看这个[手册](http://bespin.cz/~ondras/html/classv8_1_1Value.html#a70d4afaccc7903e6a01f40a46ad04188)。
 
-　　而這個 `New` 呢？[這裏](http://bespin.cz/~ondras/html/classv8_1_1String.html)可以看的。就是新建一個 `String` 對象。
+　　而这个 `New` 呢？[这里](http://bespin.cz/~ondras/html/classv8_1_1String.html)可以看的。就是新建一个 `String` 对象。
 
-　　至此，這個主要函數我們就解析完畢了。
+　　至此，这个主要函数我们就解析完毕了。
 
-#### 導出對象
+#### 导出对象
 
-　　我們來溫習一下，如果是在 `Node.js` 裏面寫的話，我們怎麼導出函數或者對象什麼的呢？
+　　我们来温习一下，如果是在 `Node.js` 里面写的话，我们怎么导出函数或者对象什么的呢？
 
 {% code javascript %}
 exports.hello = function() {}
 {% endcode %}
 
-　　那麼，在 `C++` 中我們該如何做到這一步呢？
+　　那么，在 `C++` 中我们该如何做到这一步呢？
 
-##### 初始化函數
+##### 初始化函数
 
-　　首先，我們寫個初始化函數：
+　　首先，我们写个初始化函数：
 
 {% code cpp %}
 void init(Handle<Object> exports)
 {
-    //... 嗷嗷待寫你妹啊！#ﾟÅﾟ）⊂彡☆))ﾟДﾟ)･∵
+    //... 嗷嗷待写你妹啊！#ﾟÅﾟ）⊂彡☆))ﾟДﾟ)･∵
 }
 {% endcode %}
 
-　　這是龜腚！函數名什麼的無所謂，但是傳入的參數一定是一個 `Handle&lt;Object>`，代表我們下面將要在這貨上導出東西。
+　　这是龟腚！函数名什么的无所谓，但是传入的参数一定是一个 `Handle&lt;Object>`，代表我们下面将要在这货上导出东西。
 
-　　然後，我們就在這裏面寫上導出的東西了：
+　　然后，我们就在这里面写上导出的东西了：
 
 {% code cpp %}
 void init(Handle<Object> exports)
@@ -173,9 +173,9 @@ void init(Handle<Object> exports)
 }
 {% endcode %}
 
-　　大致的意思就是說，爲這個 `exports` 對象添加一個字段叫 `hello`，所對應的東西是一個[函數](http://bespin.cz/~ondras/html/classv8_1_1FunctionTemplate.html)，而這個函數就是我們親愛的 `Hello` 函數了。
+　　大致的意思就是说，为这个 `exports` 对象添加一个字段叫 `hello`，所对应的东西是一个[函数](http://bespin.cz/~ondras/html/classv8_1_1FunctionTemplate.html)，而这个函数就是我们亲爱的 `Hello` 函数了。
 
-　　用僞代碼寫直白點就是：
+　　用伪代码写直白点就是：
 
 
 {% code cpp %}
@@ -187,23 +187,23 @@ void init(Handle<Object> exports)
 
 　　大功告成！
 
-　　（大功告成你妹啊！閉嘴( ‘д‘⊂彡☆))Д´)
+　　（大功告成你妹啊！闭嘴( ‘д‘⊂彡☆))Д´)
 
-##### 真·導出
+##### 真·导出
 
-　　這纔是最後一步，我們最後要申明，這個就是導出的入口，所以我們在代碼的末尾加上這一行：
+　　这才是最后一步，我们最后要申明，这个就是导出的入口，所以我们在代码的末尾加上这一行：
 
 {% code cpp %}
 NODE_MODULE(hello, init)
 {% endcode %}
 
-　　納了個尼？！這又是什麼東西？
+　　纳了个尼？！这又是什么东西？
 
-　　彆着急，這個 `NODE_MODULE` 是一個宏，它的意思呢就是說我們採用 `init` 這個初始化函數來把要導出的東西導出到 `hello` 中。那麼這個 `hello` 哪來呢？
+　　别着急，这个 `NODE_MODULE` 是一个宏，它的意思呢就是说我们采用 `init` 这个初始化函数来把要导出的东西导出到 `hello` 中。那么这个 `hello` 哪来呢？
 
-　　**它來自文件名！**對，沒錯，它來自文件名。你並不需要事先申明它，你也不必擔心不能用，總之你的這個最終編譯好的二進制文件名叫什麼，這裏的 `hello` 你就填什麼，當然要除去後綴名了。
+　　**它来自文件名！**对，没错，它来自文件名。你并不需要事先申明它，你也不必担心不能用，总之你的这个最终编译好的二进制文件名叫什么，这里的 `hello` 你就填什么，当然要除去后缀名了。
 
-　　詳見[官方文檔](http://nodejs.org/api/addons.html#addons_hello_world)。
+　　详见[官方文档](http://nodejs.org/api/addons.html#addons_hello_world)。
 
 > Note that all Node addons must export an initialization function:
 > 
@@ -215,13 +215,13 @@ NODE_MODULE(module_name, Initialize)
 >
 > The module_name needs to match the filename of the final binary (minus the .node suffix).
 
-### 編譯 (๑•́ ₃ •̀๑)
+### 编译 (๑•́ ₃ •̀๑)
 
-　　來吧，讓我們一起編譯吧！
+　　来吧，让我们一起编译吧！
 
-　　我們再新建一個類似於 `Makefile` 的歸檔文件吧——`binding.gyp`。
+　　我们再新建一个类似于 `Makefile` 的归档文件吧——`binding.gyp`。
 
-　　並且在裏面添加這樣的[代碼](https://github.com/TooTallNate/node-gyp#the-bindinggyp-file)：
+　　并且在里面添加这样的[代码](https://github.com/TooTallNate/node-gyp#the-bindinggyp-file)：
 
 {% code json %}
 {
@@ -234,40 +234,40 @@ NODE_MODULE(module_name, Initialize)
 }
 {% endcode %}
 
-　　爲什麼這麼寫呢？可以參考 `node-gyp` 的[官方文檔](http://code.google.com/p/gyp/wiki/GypUserDocumentation#Skeleton_of_a_typical_Chromium_.gyp_file)。
+　　为什么这么写呢？可以参考 `node-gyp` 的[官方文档](http://code.google.com/p/gyp/wiki/GypUserDocumentation#Skeleton_of_a_typical_Chromium_.gyp_file)。
 
 #### configure
 
-　　在文件搞好之後，我們要在這個目錄下面執行這個命令了：
+　　在文件搞好之后，我们要在这个目录下面执行这个命令了：
 
 {% code shell %}
 $ node-gyp configure
 {% endcode %}
 
-　　如果一切正常的話，應該會生成一個 `build` 的目錄，然後裏面有相關文件，也許是 **M$ Visual Studio** 的 `vcxproj` 文件等，也許是 `Makefile` ，視平臺而定。
+　　如果一切正常的话，应该会生成一个 `build` 的目录，然后里面有相关文件，也许是 **M$ Visual Studio** 的 `vcxproj` 文件等，也许是 `Makefile` ，视平台而定。
 
 #### build
 
-　　`Makefile` 也生成好之後，我們就開始構造編譯了：
+　　`Makefile` 也生成好之后，我们就开始构造编译了：
 
 {% code shell %}
 $ node-gyp build
 {% endcode %}
 
-　　等到一切編譯完成，纔算是真正的大功告成了！不信你去看看 `build/Release` 目錄，下面是不是有一個 `hello.node` 文件了？沒錯，這個就是 C++ 等下要給 Node.js 撿的肥皂！
+　　等到一切编译完成，才算是真正的大功告成了！不信你去看看 `build/Release` 目录，下面是不是有一个 `hello.node` 文件了？没错，这个就是 C++ 等下要给 Node.js 捡的肥皂！
 
 ### 搞基吧！Node ヽ(✿ﾟ▽ﾟ)ノ C++
 
-　　我們在剛纔那個目錄下新建一個文件 `jianfeizao.js`：
+　　我们在刚才那个目录下新建一个文件 `jianfeizao.js`：
 
 {% code javascript %}
 var addon = require("./build/Release/hello");
 console.log(addon.hello());
 {% endcode %}
 
-　　看到沒！看到沒！出來了出來了！Node.js 和 C++ 搞基的結果！這個 `addon.hello()` 就是我們之前在 C++ 代碼中寫的 `Handle<Value> Hello(const Arguments& args)` 了，我們現在就已經把它返回的值給輸出了。
+　　看到没！看到没！出来了出来了！Node.js 和 C++ 搞基的结果！这个 `addon.hello()` 就是我们之前在 C++ 代码中写的 `Handle<Value> Hello(const Arguments& args)` 了，我们现在就已经把它返回的值给输出了。
   
-## 洗洗睡吧，下節更深入
+## 洗洗睡吧，下节更深入
 
-　　時間不早了，今天就寫到這裏了，至此爲止大家都能搞出最基礎的 **Hello world** 的 C++ 擴展了吧。下一次寫的應該會更深入一點，至於下一次是什麼時候，我也不知道啦其實。
-　　（喂喂喂，擼主怎麼可以這麼不負責！(ｏﾟﾛﾟ)┌┛Σ(ﾉ´*ω*`)ﾉ
+　　时间不早了，今天就写到这里了，至此为止大家都能搞出最基础的 **Hello world** 的 C++ 扩展了吧。下一次写的应该会更深入一点，至于下一次是什么时候，我也不知道啦其实。
+　　（喂喂喂，撸主怎么可以这么不负责！(ｏﾟﾛﾟ)┌┛Σ(ﾉ´*ω*`)ﾉ

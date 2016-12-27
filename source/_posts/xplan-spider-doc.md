@@ -1,4 +1,4 @@
-title       : 浙江大學XPlan項目新聞爬蟲手機屏幕適配文檔
+title       : 浙江大学XPlan项目新闻爬虫手机屏幕适配文档
 category    : Programming
 date        : 2013-12-28
 tags        : [ Node.js, XPlan ]
@@ -6,25 +6,25 @@ tags        : [ Node.js, XPlan ]
 
 ## 前言
 
-**XPlan** 是一個“基於校園強關係的社交應用”的開發代號。其中有一個功能是從學校網站上通過網絡爬蟲（Web Crawler）形式將學校新聞抓取到XPlan自身的數據庫當中。
+**XPlan** 是一个“基于校园强关系的社交应用”的开发代号。其中有一个功能是从学校网站上通过网络爬虫（Web Crawler）形式将学校新闻抓取到XPlan自身的数据库当中。
 
-而這裏出現的一個問題就是學校網站上面的文章是通過類似於 [`KindEditor`](http://kindeditor.net/)、[`UEditor`](http://ueditor.baidu.com/website/)這類**在線富文本編輯器**生成的代碼。
+而这里出现的一个问题就是学校网站上面的文章是通过类似于 [`KindEditor`](http://kindeditor.net/)、[`UEditor`](http://ueditor.baidu.com/website/)这类**在线富文本编辑器**生成的代码。
 
-這類代碼有幾個共性：
+这类代码有几个共性：
 
-  1. 代碼有大量冗餘、多重無用嵌套。
-  2. 非常低的代碼可讀性。
-  3. 在PC瀏覽器中表現力不錯，往往能以低效的代碼實現預期排版。
+  1. 代码有大量冗余、多重无用嵌套。
+  2. 非常低的代码可读性。
+  3. 在PC浏览器中表现力不错，往往能以低效的代码实现预期排版。
   
-所以這些富文本編輯器可以在PC各大內核瀏覽器中表現良好，但是不便人工修改代碼。
+所以这些富文本编辑器可以在PC各大内核浏览器中表现良好，但是不便人工修改代码。
 
-而 **XPlan** 確是一個由智能手機主導的應用，新聞將會通過一個 **WebView** 體現出來。所以就需要一定的方法將這些髒亂的代碼適配成手機屏幕下表現力良好的代碼。
+而 **XPlan** 确是一个由智能手机主导的应用，新闻将会通过一个 **WebView** 体现出来。所以就需要一定的方法将这些脏乱的代码适配成手机屏幕下表现力良好的代码。
 
-## 預處理
+## 预处理
 
-在這裏，我們將新聞的代碼鎖定在新聞內容排版，而排除了其它類似於新聞標題、新聞作者等其它信息。
+在这里，我们将新闻的代码锁定在新闻内容排版，而排除了其它类似于新闻标题、新闻作者等其它信息。
 
-以我們浙江大學軟件學院爲例，我們爬取的新聞內容代碼將如下：
+以我们浙江大学软件学院为例，我们爬取的新闻内容代码将如下：
 
 {% code html %}
 <div class="vid_wz">
@@ -32,15 +32,15 @@ tags        : [ Node.js, XPlan ]
 </div>
 {% endcode %}
 
-所有內容將被包括在這個類型爲 `vid_wz` 的 `div` 當中。
+所有内容将被包括在这个类型为 `vid_wz` 的 `div` 当中。
 
-這時，我們將其包括在一個自己實現定義好的模板當中。該模板與新聞內容將會形成一個完整的網頁，包括完整的 `html`、`head`、`body` 等標籤。
+这时，我们将其包括在一个自己实现定义好的模板当中。该模板与新闻内容将会形成一个完整的网页，包括完整的 `html`、`head`、`body` 等标签。
 
 {% code html %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>新聞內頁</title>
+    <title>新闻内页</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
@@ -55,60 +55,60 @@ tags        : [ Node.js, XPlan ]
 </html>
 {% endcode %}
 
-這裏需要注意的一點的就是其中的一個 `meta` 標籤：
+这里需要注意的一点的就是其中的一个 `meta` 标签：
 
 {% code html %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 {% endcode %}
 
-它的意思是定義 `viewport` 的一些屬性，實現了初步的手機網頁適配。
+它的意思是定义 `viewport` 的一些属性，实现了初步的手机网页适配。
 
 ### Viewport
 
-手機瀏覽器是把頁面放在一個虛擬窗口（即 `viewport`）中，用戶可以通過平移和縮放來看網頁的不同部分。
+手机浏览器是把页面放在一个虚拟窗口（即 `viewport`）中，用户可以通过平移和缩放来看网页的不同部分。
 
-通過 `viewport` 我們能對頁面的一些縮放進行手機適配。
+通过 `viewport` 我们能对页面的一些缩放进行手机适配。
 
-我們所需要做的僅是在 `head` 中插入一個 `meta` 標籤，命名爲 `viewport`，然後定義好其 `content`。
+我们所需要做的仅是在 `head` 中插入一个 `meta` 标签，命名为 `viewport`，然后定义好其 `content`。
 
-`content` 的語法如下：
+`content` 的语法如下：
 
 #### width
 
-控制 `viewport` 的寬度，可以指定一個值或者特殊的值，如 `device-width` 爲設備寬度。
+控制 `viewport` 的宽度，可以指定一个值或者特殊的值，如 `device-width` 为设备宽度。
 
 #### height
 
-與 `width` 相對應，指定高度
+与 `width` 相对应，指定高度
 
 #### initial-scale
 
-初始縮放，即頁面初始縮放程度。這是一個浮點值，是頁面大小的一個乘數。例如，如果你設置初始縮放爲 `1.0`，那麼頁面在展現的時候就會以分辨率的1:1來展現。如果你設置爲`2.0`，那麼這個頁面就會放大爲2倍。
+初始缩放，即页面初始缩放程度。这是一个浮点值，是页面大小的一个乘数。例如，如果你设置初始缩放为 `1.0`，那么页面在展现的时候就会以分辨率的1:1来展现。如果你设置为`2.0`，那么这个页面就会放大为2倍。
 
 #### maximum-scale
 
-最大放大倍數。
+最大放大倍数。
 
 #### user-scaleble
 
-用戶調整縮放，即用戶是否能改變頁面縮放程度。如果爲 `yes` 即爲可以， `no` 爲不可以。
+用户调整缩放，即用户是否能改变页面缩放程度。如果为 `yes` 即为可以， `no` 为不可以。
 
-## Cheerio模塊*
+## Cheerio模块*
 
-由於 **XPlan** 的後端是基於 `node.js` 構架的，所以 **cheerio** 模塊是一個 `node.js` 專有的模塊。
+由于 **XPlan** 的后端是基于 `node.js` 构架的，所以 **cheerio** 模块是一个 `node.js` 专有的模块。
 
-它的作用是將一段HTML代碼轉換爲一棵DOM元素樹。
+它的作用是将一段HTML代码转换为一棵DOM元素树。
 
-在其官網上是這麼詮釋的：爲服務端定製的快速、靈活、輕量級實現的 jQuery 內核。通常熟悉 jQuery 使用的開發者應該會對其使用方法比較熟悉。
+在其官网上是这么诠释的：为服务端定制的快速、灵活、轻量级实现的 jQuery 内核。通常熟悉 jQuery 使用的开发者应该会对其使用方法比较熟悉。
 
-所以在我們做接下去適配修改的之前，我們需要將我們剛纔生成的完整HTML代碼 轉換爲一棵我們可以操作的DOM元素樹。
+所以在我们做接下去适配修改的之前，我们需要将我们刚才生成的完整HTML代码 转换为一棵我们可以操作的DOM元素树。
 
 {% code javascript %}
 var cheerio = require("cheerio");
 $ = cheerio.load(...);
 {% endcode %}
 
-這時我們便能以熟悉的jQuery模式對其進行操作了，如：
+这时我们便能以熟悉的jQuery模式对其进行操作了，如：
 
 {% code javascript %}
 $("p").html("hello foo!");
@@ -116,15 +116,15 @@ $("p").html("hello foo!");
 
 ## Bootstrap
 
-Bootstrap是Twitter推出的一個開源的用於前端開發的工具包。它有一個非常好的響應式的頁面風格，使其在個尺寸屏幕上表現良好。
+Bootstrap是Twitter推出的一个开源的用于前端开发的工具包。它有一个非常好的响应式的页面风格，使其在个尺寸屏幕上表现良好。
 
-爲了能更好適應屏幕，我們決定採用其自帶的柵格系統，於是剛纔的頁面模板就有了新的變化：
+为了能更好适应屏幕，我们决定采用其自带的栅格系统，于是刚才的页面模板就有了新的变化：
 
 {% code html %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>新聞內頁</title>
+    <title>新闻内页</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
@@ -141,27 +141,27 @@ Bootstrap是Twitter推出的一個開源的用於前端開發的工具包。它�
 </html>
 {% endcode %}
 
-首先最外框的 `container`，用其包裹的元素將實現居中對齊。在不同的媒體查詢閾值範圍內都爲 `container` 設置了 `width`，用以匹配柵格系統。
+首先最外框的 `container`，用其包裹的元素将实现居中对齐。在不同的媒体查询阈值范围内都为 `container` 设置了 `width`，用以匹配栅格系统。
 
-`row` 是一行柵格系統的外包元素。一行可以有12個柵格。
+`row` 是一行栅格系统的外包元素。一行可以有12个栅格。
 
-以 `.col-md-` 開頭的柵格的最大 `container` 寬度爲970，最大列寬爲78，並能自適應屏幕。
+以 `.col-md-` 开头的栅格的最大 `container` 宽度为970，最大列宽为78，并能自适应屏幕。
 
-## 細節處理
+## 细节处理
 
-在完成了以上操作以後，我們將對各元素進行微調處理。
+在完成了以上操作以后，我们将对各元素进行微调处理。
 
-好在在手機瀏覽器或者 `WebView` 中，對各種字體的設置不是非常敏感，所以我們仍然可以不處理一些關於字體變更的設置，以減輕開髮量。
+好在在手机浏览器或者 `WebView` 中，对各种字体的设置不是非常敏感，所以我们仍然可以不处理一些关于字体变更的设置，以减轻开发量。
 
-這裏距幾個微調的例子。
+这里距几个微调的例子。
 
 ### &lt;img />
 
-在新聞當中，圖片充當的基本上是新聞照片的角色，在手機當中以單行出現爲佳。
+在新闻当中，图片充当的基本上是新闻照片的角色，在手机当中以单行出现为佳。
 
-而 Bootstrap 當中本身就有元素類型來讓圖片元素響應屏幕寬度，並可以加上圓角邊框。
+而 Bootstrap 当中本身就有元素类型来让图片元素响应屏幕宽度，并可以加上圆角边框。
 
-所以我們需要做的就是爲所有圖片加上響應的類型：
+所以我们需要做的就是为所有图片加上响应的类型：
 
 {% code javascript %}
 $("img").addClass("img-thumbnail");
@@ -169,16 +169,16 @@ $("img").addClass("img-responsive");
 $("img").removeAttr("style");
 {% endcode %}
 
-> **注意：** 最後的一個移除 `img` 元素自帶的 `style` 屬性是因爲在文章發佈的時候，有可能會被富文本編輯器自動加上一些寬高、邊框等信息。爲了統一所有圖片風格以及讓響應式生效，需要將其 `style` 屬性全部移除。
+> **注意：** 最后的一个移除 `img` 元素自带的 `style` 属性是因为在文章发布的时候，有可能会被富文本编辑器自动加上一些宽高、边框等信息。为了统一所有图片风格以及让响应式生效，需要将其 `style` 属性全部移除。
 
-下面是是適配前與適配後的對比：
+下面是是适配前与适配后的对比：
 
-![適配前](./xplan-news-2.jpg)
-![適配後](./xplan-news-1.jpg)
+![适配前](./xplan-news-2.jpg)
+![适配后](./xplan-news-1.jpg)
 
 ### &lt;table>&lt;/table>
 
-對於 `table` 元素也需要對它進行自適配，不然很有可能會溢出屏幕，使其多出了一個橫向的滾動條。
+对于 `table` 元素也需要对它进行自适配，不然很有可能会溢出屏幕，使其多出了一个横向的滚动条。
 
 {% code javascript %}
 $("table").removeAttr("style");
@@ -189,53 +189,53 @@ $("table").addClass("table-bordered");
 $("table").addClass("table-striped");
 {% endcode %}
 
-上面兩句是移除 `table` 的原有的一些風格信息以及屬性。後面是爲其加上 Bootstrap 特有的 `table` 類型。
+上面两句是移除 `table` 的原有的一些风格信息以及属性。后面是为其加上 Bootstrap 特有的 `table` 类型。
 
-當然，更多的 `table` 元素還需要其它更多操作。不過就目前爲止，**XPlan** 還沒有着手關於 `table` 的更深一層容錯處理。不過這裏可以提供一個思路。
+当然，更多的 `table` 元素还需要其它更多操作。不过就目前为止，**XPlan** 还没有着手关于 `table` 的更深一层容错处理。不过这里可以提供一个思路。
 
-比如說 [這篇文章中](http://www.cst.zju.edu.cn/index.php?c=Index&a=detail&catid=72&id=1885)，不知道是誰給的在線富文本編輯器勇氣，使其下面幾張圖片都各自被一個 `table` 及其子元素所包含。更有甚者，有一篇文章的一個段落被一個 `table` 所包容，並且在其左側還有一個看不見的 `td` 元素。
+比如说 [这篇文章中](http://www.cst.zju.edu.cn/index.php?c=Index&a=detail&catid=72&id=1885)，不知道是谁给的在线富文本编辑器勇气，使其下面几张图片都各自被一个 `table` 及其子元素所包含。更有甚者，有一篇文章的一个段落被一个 `table` 所包容，并且在其左侧还有一个看不见的 `td` 元素。
 
-我們可以提供的思路就是如果一個 `table` 只有一行一列就直接將其內容取出並刪除該 `table` 。
+我们可以提供的思路就是如果一个 `table` 只有一行一列就直接将其内容取出并删除该 `table` 。
 
 ### &lt;a />
 
-超鏈接元素是一個新聞與用戶互動的比較重要的元素之一。我們需要保持其美觀性。
+超链接元素是一个新闻与用户互动的比较重要的元素之一。我们需要保持其美观性。
 
-舉幾個例子來說，我們可以將超鏈接以一個類按鈕的形式出現：
+举几个例子来说，我们可以将超链接以一个类按钮的形式出现：
 
 {% code javascript %}
 $("a").removeAttr("style");
 $("a").addClass("btn btn-default btn-xs btn-info");
 {% endcode %}
 
-然後我們甚至可以對其做一些細微的詞彙修改。
+然后我们甚至可以对其做一些细微的词汇修改。
 
-比如當新聞發佈者上傳了一個附件然後不負責任地直接將文件名貼上的時候，我們可以貼心地將其顯示文字改爲“下載附件”。
+比如当新闻发布者上传了一个附件然后不负责任地直接将文件名贴上的时候，我们可以贴心地将其显示文字改为“下载附件”。
 
-再比如發佈者直接以URL形式顯示一個超鏈接的時候，我們可以貼心地將其改變爲“打開鏈接”等等。
+再比如发布者直接以URL形式显示一个超链接的时候，我们可以贴心地将其改变为“打开链接”等等。
 
 {% code javascript %}
 $("a").each(function(idx, elem) {
     if($(this).html().match(/.*\.(doc|xls|ppt|docx|xlsx|pptx)/)) {
-        $(this).html("<i class='glyphicon glyphicon-paperclip'></i> 下載附件");
+        $(this).html("<i class='glyphicon glyphicon-paperclip'></i> 下载附件");
         $(this).removeClass("btn-info");
         $(this).addClass("btn-warning");
     } else if($(this).html().match(/http.*\/\/.*/)) {
-        $(this).html("<i class='glyphicon glyphicon-flag'></i> 打開鏈接");
+        $(this).html("<i class='glyphicon glyphicon-flag'></i> 打开链接");
         $(this).removeClass("btn-info");
         $(this).addClass("btn-warning");
     }
 });
 {% endcode %}
 
-然後我們再處理幾個由於誤操作而增加的錯誤鏈接，如在經上面操作後，還存在着url與顯示內容相關的超鏈接可以直接取消，如這類：
+然后我们再处理几个由于误操作而增加的错误链接，如在经上面操作后，还存在着url与显示内容相关的超链接可以直接取消，如这类：
 
 {% code html %}
-讓我們蕩<a href="起雙槳">起雙槳</a>
+让我们荡<a href="起双桨">起双桨</a>
 {% endcode %}
 
-## 結束語
+## 结束语
 
-至此，當下版本的 **XPlan** 的新聞爬蟲手機屏幕適配基本完成。其中當然還存在着一些細節處理和顯示錯誤處理的不足，但是已經定下了基本的適配思路。
+至此，当下版本的 **XPlan** 的新闻爬虫手机屏幕适配基本完成。其中当然还存在着一些细节处理和显示错误处理的不足，但是已经定下了基本的适配思路。
 
-我們還在探索更好的適配方法，而當下的適配形式暫時已經可以滿足了我們項目的需求。
+我们还在探索更好的适配方法，而当下的适配形式暂时已经可以满足了我们项目的需求。

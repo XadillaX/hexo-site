@@ -1,32 +1,32 @@
-title: C++中類成員函數 inline 的坑
+title: C++中类成员函数 inline 的坑
 date: 2014-04-05 16:55:57
 tags: [ Programming, C++ ]
 category: Programming
 ---
 
-　　今天我來講一講 `C++` 中類成員函數 `inline` 修飾符的一個坑。
+　　今天我来讲一讲 `C++` 中类成员函数 `inline` 修饰符的一个坑。
 
-　　這個坑是我在嘗試着寫我的第一個 `Node.js` 擴展 `simpleini` 時候遇到的。
+　　这个坑是我在尝试着写我的第一个 `Node.js` 扩展 `simpleini` 时候遇到的。
 
 ## 坑描述
 
-　　因爲只是嘗試着寫，所以懶得自己實現，於是網上找了個開源的 `C++` 閱讀 ini 文件的項目，名不見經傳，叫 [miniini](http://miniini.tuxfamily.org/)。
+　　因为只是尝试着写，所以懒得自己实现，于是网上找了个开源的 `C++` 阅读 ini 文件的项目，名不见经传，叫 [miniini](http://miniini.tuxfamily.org/)。
 
-　　好了，問題來了，當我寫好我的源文件的時候，然後寫好了我的 `binding.gyp` ，總之一切大功告成開始編譯的時候—— `Windows` 下沒問題，`MacOS` 下也可以正常運行，但是在 `Linux` 下就出問題了：
+　　好了，问题来了，当我写好我的源文件的时候，然后写好了我的 `binding.gyp` ，总之一切大功告成开始编译的时候—— `Windows` 下没问题，`MacOS` 下也可以正常运行，但是在 `Linux` 下就出问题了：
 
 ```sh
 node: symbol lookup err: .../simpleIni.node: undefined symbol: _ZNK10INISection10ReadStringEPKcRS1_
 ```
 
-　　大致的意思呢就是說找不到 `INISection` 的 `ReadString` 函數符號。
+　　大致的意思呢就是说找不到 `INISection` 的 `ReadString` 函数符号。
 
-## 問題分析
+## 问题分析
 
-　　又是懷着崇敬的心情去 [SO](http://stackoverflow.com/questions/22868307/undefined-symbol-in-node-js-c-addon-under-linux-why) 求解了。
+　　又是怀着崇敬的心情去 [SO](http://stackoverflow.com/questions/22868307/undefined-symbol-in-node-js-c-addon-under-linux-why) 求解了。
 
-　　最後的解答大概[如下](http://isocpp.org/wiki/faq/inline-functions#inline-member-fns)：
+　　最后的解答大概[如下](http://isocpp.org/wiki/faq/inline-functions#inline-member-fns)：
 
-> 內聯成員函數的聲明看起來像一個非內聯函數的聲明：
+> 内联成员函数的声明看起来像一个非内联函数的声明：
 >```cpp
 class Fred {
 public:
@@ -34,7 +34,7 @@ public:
 };
 ```
 
-> 但是你的內斂成員函數定義前面又加了 `inline` 這個關鍵字時，你必須把這個定義放到頭文件中：
+> 但是你的内敛成员函数定义前面又加了 `inline` 这个关键字时，你必须把这个定义放到头文件中：
 >```cpp
 inline
 void Fred::f(int i, char c)
@@ -43,26 +43,26 @@ void Fred::f(int i, char c)
 }
 ```
 
-> 這麼做的原因就是爲了避免鏈接器 `unresolved external` 的發生。如果你不這麼做，這個錯誤就將會在你從另外一個 `.cpp` 文件中調用它時出現。
+> 这么做的原因就是为了避免链接器 `unresolved external` 的发生。如果你不这么做，这个错误就将会在你从另外一个 `.cpp` 文件中调用它时出现。
 
 
-　　好嘛，原來是原作者自己寫的代碼有問題啊。但是不得不說一下又漲姿勢了。C++還真是有千奇百怪的坑和錯誤啊。
+　　好嘛，原来是原作者自己写的代码有问题啊。但是不得不说一下又涨姿势了。C++还真是有千奇百怪的坑和错误啊。
 
-## 解決方案
+## 解决方案
 
-　　最後的解決方案大致就是把函數定義放到頭文件中去，或者在函數聲明前面也加上 `inline` 關鍵字。
+　　最后的解决方案大致就是把函数定义放到头文件中去，或者在函数声明前面也加上 `inline` 关键字。
   
 ## simpleini
 
-　　我的第一個 `C++` 模塊，叫 `simpleini` ，其實只是抱着試試看 `Node.j` 的 `C++` 模塊是不是這麼寫的而已，並沒有多大實際用處。Repo 在 [Github](https://github.com/XadillaX/node-simple-ini) 上。
+　　我的第一个 `C++` 模块，叫 `simpleini` ，其实只是抱着试试看 `Node.j` 的 `C++` 模块是不是这么写的而已，并没有多大实际用处。Repo 在 [Github](https://github.com/XadillaX/node-simple-ini) 上。
 
-　　然後用法很簡單，先安裝：
+　　然后用法很简单，先安装：
 
 ```sh
 $ npm install simpleini
 ```
 
-　　然後下面的代碼就是例子了：
+　　然后下面的代码就是例子了：
 
 ```javascript
 var simpleIni = require("simpleini");
@@ -74,4 +74,4 @@ console.log(simpleIni.read("SETTINGS", "sections"));
 console.log(simpleIni.read("vals", "float"));
 ```
 
-　　讀取配置的時候第一個參數是 `Section`，第二個參數是 `Key`，第三個參數是取不到該值時的默認值。
+　　读取配置的时候第一个参数是 `Section`，第二个参数是 `Key`，第三个参数是取不到该值时的默认值。

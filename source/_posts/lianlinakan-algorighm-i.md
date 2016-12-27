@@ -1,43 +1,43 @@
-title: 連連看核心算法小分享——1
+title: 连连看核心算法小分享——1
 date: 2011-05-16 12:30:12
-tags: [ 老博客備份歸檔, C++, HGE ]
-category: 老博客備份歸檔
+tags: [ 老博客备份归档, C++, HGE ]
+category: 老博客备份归档
 ---
 
-　　**注：這篇文章我到現在也沒有填第二篇的坑。數據沒了重新從 Capture 裏面取出來，看看捨不得，於是把這篇文章也拿回來了。權當紀唸吧，以及當時和 `Kalxd` 的對話。**
+　　**注：这篇文章我到现在也没有填第二篇的坑。数据没了重新从 Capture 里面取出来，看看舍不得，于是把这篇文章也拿回来了。权当纪念吧，以及当时和 `Kalxd` 的对话。**
 
 ## 正文
 
-　　剛忙完邀請賽，蹭了塊銅。剛纔在逛別人博客的時候看別人的文章，突然心血來潮想記一些東西。
+　　刚忙完邀请赛，蹭了块铜。刚才在逛别人博客的时候看别人的文章，突然心血来潮想记一些东西。
 
-　　連連看是我學HGE做的第一個小遊戲，素材用的是QQ的。時間大概是去年國慶吧。好吧，廢話不多說，就講講連連看怎麼找到能消的兩塊吧。
+　　连连看是我学HGE做的第一个小游戏，素材用的是QQ的。时间大概是去年国庆吧。好吧，废话不多说，就讲讲连连看怎么找到能消的两块吧。
 
-　　首先來回顧一下消方塊的規則，一共有三種可能性：
+　　首先来回顾一下消方块的规则，一共有三种可能性：
 
-1. 直線消除（包括水平或者垂直）
-2. 一個拐角消除
-3. 兩個拐角消除
+1. 直线消除（包括水平或者垂直）
+2. 一个拐角消除
+3. 两个拐角消除
 
-　　嗯，接下去我們就針對每種可能性開始寫代碼。
+　　嗯，接下去我们就针对每种可能性开始写代码。
 
-　　首先講講一些定義：
+　　首先讲讲一些定义：
 
-　　座標結構體，這個結構體包含了x、y的值以及一些座標中常用的函數。
+　　座标结构体，这个结构体包含了x、y的值以及一些座标中常用的函数。
 
 ```cpp
 /**
- * @brief 地圖座標結構體
+ * @brief 地图座标结构体
  *
- * 地圖座標結構體，包含x軸值、y軸值
- * 以及一些操作函數。
+ * 地图座标结构体，包含x轴值、y轴值
+ * 以及一些操作函数。
  */
 struct CoorType {
-    int x;                                          ///< x軸
-    int y;                                          ///< y軸
+    int x;                                          ///< x轴
+    int y;                                          ///< y轴
 
     /**
-     * 重載構造函數
-     * 將x、y值各初始化爲-1
+     * 重载构造函数
+     * 将x、y值各初始化为-1
      */
     CoorType()
     {
@@ -45,10 +45,10 @@ struct CoorType {
     }
 
     /**
-     * 構造函數重載
-     * 將x、y各賦值爲b、a
-     * @param a 將要賦值的y軸數值
-     * @param b 將要賦值的x軸數值
+     * 构造函数重载
+     * 将x、y各赋值为b、a
+     * @param a 将要赋值的y轴数值
+     * @param b 将要赋值的x轴数值
      */
     CoorType(int a, int b)
     {
@@ -56,10 +56,10 @@ struct CoorType {
     }
 
     /**
-     * 設置座標
-     * 將x、y各賦值爲b、a
-     * @param a 將要賦值的y軸數值
-     * @param b 將要賦值的x軸數值
+     * 设置座标
+     * 将x、y各赋值为b、a
+     * @param a 将要赋值的y轴数值
+     * @param b 将要赋值的x轴数值
      */
     void Set(int a, int b)
     {
@@ -67,10 +67,10 @@ struct CoorType {
     }
 
     /**
-     * 運算符"+="重載
-     * 將此座標與另一座標相加
-     * @param &a 另一座標
-     * @return 返回結果座標值
+     * 运算符"+="重载
+     * 将此座标与另一座标相加
+     * @param &a 另一座标
+     * @return 返回结果座标值
      */
     CoorType & operator += (const CoorType &a)
     {
@@ -79,10 +79,10 @@ struct CoorType {
     }
 
     /**
-     * 重載運算符"!="
-     * 判斷與另一座標是否表示同一個值
-     * @param &a 另一座標
-     * @return 返回布爾類型表示是否相等
+     * 重载运算符"!="
+     * 判断与另一座标是否表示同一个值
+     * @param &a 另一座标
+     * @return 返回布尔类型表示是否相等
      */
     bool operator != (const CoorType &a)
     {
@@ -91,9 +91,9 @@ struct CoorType {
     }
 
     /**
-     * 判斷此座標是否合法
-     * 若出界則不合法
-     * @return 返回布爾類型表示是否合法
+     * 判断此座标是否合法
+     * 若出界则不合法
+     * @return 返回布尔类型表示是否合法
      */
     bool isIll()
     {
@@ -103,147 +103,147 @@ struct CoorType {
 };
 ```
 
-　　然後是關於地圖數組的定義：
+　　然后是关于地图数组的定义：
 
 ```cpp
 int Map[MAP_HEIGHT][MAP_WIDTH];
 ```
 
-　　接着是路徑結構體：
+　　接着是路径结构体：
 
 ```cpp
 /**
- * @brief 路線結構體
+ * @brief 路线结构体
  *
- * 合法路線結構體
- * 儲存最多四個點（起點終點和兩個轉折點）
+ * 合法路线结构体
+ * 储存最多四个点（起点终点和两个转折点）
  */
 struct PointPath {
-    bool bExist;                                    ///< 是否有路徑
-    int Num;                                        ///< 駐點個數
-    CoorType Points[4];                             ///< 各駐點
+    bool bExist;                                    ///< 是否有路径
+    int Num;                                        ///< 驻点个数
+    CoorType Points[4];                             ///< 各驻点
 };
 ```
 
-　　接着可以正式開始了。首先我們來想一下，哪些條件各符合上面三種情況的哪一種。對於一條直線的，顯然是x相等或者y相等；對於有一個轉折點的話，我們只需要判斷起點橫向畫線（或者縱向），然後終點縱向畫線（或者橫向），然後從起點到交點以及從交點到終點各可行不；對於兩個轉折點，其中一個轉折點的x或者y跟起點的x或者y相等，另一個轉折點跟終點的x或者y相等。於是這兩個轉折點就根據這樣的性質進行枚舉。因爲連連看的地圖比較小，所以這種O(n^2)的時間複雜度不礙事。
+　　接着可以正式开始了。首先我们来想一下，哪些条件各符合上面三种情况的哪一种。对于一条直线的，显然是x相等或者y相等；对于有一个转折点的话，我们只需要判断起点横向画线（或者纵向），然后终点纵向画线（或者横向），然后从起点到交点以及从交点到终点各可行不；对于两个转折点，其中一个转折点的x或者y跟起点的x或者y相等，另一个转折点跟终点的x或者y相等。于是这两个转折点就根据这样的性质进行枚举。因为连连看的地图比较小，所以这种O(n^2)的时间复杂度不碍事。
 
-　　爲了方便，我們寫一個 `Abled(CoorType, CoorType, bool, bool);` 函數來進行判斷兩個點（當然兩點是在同一直線上的）是否有同路（即中間沒有東西擋着）。我們先放着這個Abled不管，先實現尋路過程吧。
+　　为了方便，我们写一个 `Abled(CoorType, CoorType, bool, bool);` 函数来进行判断两个点（当然两点是在同一直线上的）是否有同路（即中间没有东西挡着）。我们先放着这个Abled不管，先实现寻路过程吧。
 
-　　我是用一個CMapSearch類來實現的，聲明如下：
+　　我是用一个CMapSearch类来实现的，声明如下：
 
 ```cpp
 /**
- * @brief 地圖搜索類
+ * @brief 地图搜索类
  *
- * 根據指定地圖搜索出各合法路徑。
+ * 根据指定地图搜索出各合法路径。
  */
 class CMapSearch
 {
 private:
-    int Map[MAP_HEIGHT][MAP_WIDTH];                                             ///< 地圖數據矩陣
-    PointPath dis[MAP_HEIGHT][MAP_WIDTH][MAP_HEIGHT][MAP_WIDTH];                ///< 路徑數組
+    int Map[MAP_HEIGHT][MAP_WIDTH];                                             ///< 地图数据矩阵
+    PointPath dis[MAP_HEIGHT][MAP_WIDTH][MAP_HEIGHT][MAP_WIDTH];                ///< 路径数组
     STLMap grap;                                                                ///< STL映射
-    CoorType dir[4];                                                            ///< 常量座標增量
-    PointPath Hint;                                                             ///< 提示時用的合法路徑
+    CoorType dir[4];                                                            ///< 常量座标增量
+    PointPath Hint;                                                             ///< 提示时用的合法路径
 
     /**
-     * @brief 兩點尋徑
+     * @brief 两点寻径
      *
-     * 對(x1, y1)和(x2, y2)進行尋徑
-     * @param x1 第一個座標的x軸
-     * @param y1 第一個座標的y軸
-     * @param x2 第二個座標的x軸
-     * @param y2 第二個座標的y軸
-     * @return 返回一個路線結構體的值，若不存在路徑，則結構體的bExist爲假
+     * 对(x1, y1)和(x2, y2)进行寻径
+     * @param x1 第一个座标的x轴
+     * @param y1 第一个座标的y轴
+     * @param x2 第二个座标的x轴
+     * @param y2 第二个座标的y轴
+     * @return 返回一个路线结构体的值，若不存在路径，则结构体的bExist为假
      * @see Abled
      */
     PointPath DoSearch(int y1, int x1, int y2, int x2);
 
 public:
     /**
-     * @brief 構造函數
+     * @brief 构造函数
      *
-     * @param _Map[][Map_Width] 地圖矩陣
+     * @param _Map[][Map_Width] 地图矩阵
      */
     CMapSearch(int _Map[][MAP_WIDTH]);
 
     /**
-     * @brief 析構函數
+     * @brief 析构函数
      */
     ~CMapSearch(void);
 
     /**
-     * @brief 載入地圖
-     * 從矩陣中載入地圖到對象
+     * @brief 载入地图
+     * 从矩阵中载入地图到对象
      *
-     * @param _Map[][Map_Width] 地圖矩陣
+     * @param _Map[][Map_Width] 地图矩阵
      */
     void LoadMap(int _Map[][MAP_WIDTH]);
 
     /**
-     * @brief 搜索地圖
-     * 對整個地圖進行搜索每兩個相同方塊之間的路徑
+     * @brief 搜索地图
+     * 对整个地图进行搜索每两个相同方块之间的路径
      *
-     * @return 如果存在至少一條路徑則返回真，否則爲假，用於是否重列
+     * @return 如果存在至少一条路径则返回真，否则为假，用于是否重列
      * @see CreateSTLMap
      * @see DoSearch
      */
     bool Search();
 
     /**
-     * @brief 創建map映射
-     * 創建一個方塊ID的映射，對每個ID創建一條的該ID的方塊在地圖中的各座標的鏈表
+     * @brief 创建map映射
+     * 创建一个方块ID的映射，对每个ID创建一条的该ID的方块在地图中的各座标的链表
      */
     void CreateSTLMap();
 
     /**
-     * @brief 判斷是否有障礙
-     * 對於a、b兩座標（在同一直線）進行判斷期間是否有方塊障礙而導致不能連線
+     * @brief 判断是否有障碍
+     * 对于a、b两座标（在同一直线）进行判断期间是否有方块障碍而导致不能连线
      *
-     * @param a 座標a（頭座標）
-     * @param b 座標b（尾座標）
-     * @param head 若包括頭座標則爲true，否則爲false
-     * @param tail 若包括尾座標則爲true，否則爲false
-     * @return 若有障礙則返回false，否則爲true
+     * @param a 座标a（头座标）
+     * @param b 座标b（尾座标）
+     * @param head 若包括头座标则为true，否则为false
+     * @param tail 若包括尾座标则为true，否则为false
+     * @return 若有障碍则返回false，否则为true
      */
     bool Abled(CoorType a, CoorType b, bool head = false, bool tail = false);
 
     /**
-     * @brief 得到路徑
-     * 得到兩個座標的連線具體路徑
+     * @brief 得到路径
+     * 得到两个座标的连线具体路径
      *
-     * @param y1 第一個座標的y軸
-     * @param x1 第一個座標的x軸
-     * @param y2 第二個座標的y軸
-     * @param x2 第二個座標的x軸
-     * @return 返回一個路線結構體，表示該兩個座標直接的路線
+     * @param y1 第一个座标的y轴
+     * @param x1 第一个座标的x轴
+     * @param y2 第二个座标的y轴
+     * @param x2 第二个座标的x轴
+     * @return 返回一个路线结构体，表示该两个座标直接的路线
      */
     PointPath GetPath(int y1, int x1, int y2, int x2);
 
     /**
-     * @brief 得到提示路徑
-     * 得到一條提示的路徑的相應兩個方塊
+     * @brief 得到提示路径
+     * 得到一条提示的路径的相应两个方块
      *
-     * @param &a 接受第一個方塊ID的變量
-     * @param &b 接受第二個方塊ID的變量
+     * @param &a 接受第一个方块ID的变量
+     * @param &b 接受第二个方块ID的变量
      */
     void GetRandomHint(int &a, int &b);
 };
 ```
 
-　　然後我這個分享裏所講的算法就是DoSearch和Abled函數了，因爲其它函數就是用於“提示”道具的。在DoSearch中我們先定義兩個臨時變量，一個是返回值（一個PointPath），四個座標變量：
+　　然后我这个分享里所讲的算法就是DoSearch和Abled函数了，因为其它函数就是用于“提示”道具的。在DoSearch中我们先定义两个临时变量，一个是返回值（一个PointPath），四个座标变量：
 
 ```cpp
 PointPath ans;
 CoorType a(y1, x1), b(y2, x2), c, d;
 ```
 
-　　其中a、b表示起點和終點，c、d表示可能用到的兩個轉折點。
+　　其中a、b表示起点和终点，c、d表示可能用到的两个转折点。
 
-　　首先我們先來判斷直線情況吧，這種情況比較簡單：
+　　首先我们先来判断直线情况吧，这种情况比较简单：
 
 ```cpp
-//如果是直線
+//如果是直线
 if(a.x == b.x || a.y == b.y)
 {
     if(Abled(a, b, true, true))
@@ -256,14 +256,14 @@ if(a.x == b.x || a.y == b.y)
 }
 ```
 
-　　對於這種情況，我們只需直接判斷a、b直接有沒有通路就好，如果有通路我們就將結果記錄到ans中並返回即可。
+　　对于这种情况，我们只需直接判断a、b直接有没有通路就好，如果有通路我们就将结果记录到ans中并返回即可。
 
-　　而有一個轉折點、兩個轉折點的情況以及Abled函數將在下一篇文章中小分享一下。
+　　而有一个转折点、两个转折点的情况以及Abled函数将在下一篇文章中小分享一下。
   
-## 回憶時間
+## 回忆时间
 
-　　然後下面就是在這篇文章裏面我跟 `Kalxd` 的對話了，想想現在真是滄海桑田啊。
+　　然后下面就是在这篇文章里面我跟 `Kalxd` 的对话了，想想现在真是沧海桑田啊。
 
-　　CSS 樣式早已經不在了，截圖裏面是一篇白板
+　　CSS 样式早已经不在了，截图里面是一篇白板
 
-![評論回憶](comment.png)
+![评论回忆](comment.png)

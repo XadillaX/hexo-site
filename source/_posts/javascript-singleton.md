@@ -1,12 +1,12 @@
-title: 用 Node.js 實現一個 Singleton
+title: 用 Node.js 实现一个 Singleton
 date: 2014-09-30 15:21:13
-tags: [ 設計模式, Node.js ]
+tags: [ 设计模式, Node.js ]
 category: Node.js
 ---
 
-　　今天隨便玩了一道 [CodeWar 的題](http://www.codewars.com/kata/singleton-pattern/javascript)。
+　　今天随便玩了一道 [CodeWar 的题](http://www.codewars.com/kata/singleton-pattern/javascript)。
 
-　　題意大致就是你需要實現一個 `Singleton` 也就是單件模式的類，讓其下面代碼執行成功：
+　　题意大致就是你需要实现一个 `Singleton` 也就是单件模式的类，让其下面代码执行成功：
 
 ```javascript
 var obj1 = new Singleton();
@@ -16,13 +16,13 @@ obj1.test = 1;
 obj2.test; // => 1
 ```
 
-　　並且還有很重要的一點就是 `Singleton` 的對象的 `instanceof` 也得的確是 `Singleton` 才行。
+　　并且还有很重要的一点就是 `Singleton` 的对象的 `instanceof` 也得的确是 `Singleton` 才行。
 
-## 開始試驗
+## 开始试验
 
-　　我們猜想 `new Singleton()` 的結果，如果 `Singleton` 函數也就是這個類的構造函數沒返回值的話，直接會返回 `this`，有返回值的話，那麼就是等於其返回值了。
+　　我们猜想 `new Singleton()` 的结果，如果 `Singleton` 函数也就是这个类的构造函数没返回值的话，直接会返回 `this`，有返回值的话，那么就是等于其返回值了。
 
-　　我們碼下面的代碼看一下：
+　　我们码下面的代码看一下：
 
 ```javascript
 var Singleton = function() {
@@ -32,15 +32,15 @@ var Singleton = function() {
 console.log(new Singleton());
 ```
 
-　　跑一遍之後我們的確發現了輸出的值就是：
+　　跑一遍之后我们的确发现了输出的值就是：
 
 ```javascript
 { foo: "bar" }
 ```
 
-## 小作弊失敗
+## 小作弊失败
 
-　　於是我這麼做：
+　　于是我这么做：
 
 ```javascript
 var foo = {};
@@ -49,17 +49,17 @@ var Singleton = function() {
 };
 ```
 
-　　結果上面的幾個條件都符合了，不信大家可以自己輸出一遍看看。
+　　结果上面的几个条件都符合了，不信大家可以自己输出一遍看看。
 
 　　但是——
 
-　　這東西不是一個 `Singleton` 的實例，它只是一個簡單的 `JSON` 對象，所以還是無法通過。
+　　这东西不是一个 `Singleton` 的实例，它只是一个简单的 `JSON` 对象，所以还是无法通过。
 
 ## 死月の正解
 
-　　答案有很多，CodeWar 上面每個人的解法都不一樣，但是歸根結底本質還是大同小異的。
+　　答案有很多，CodeWar 上面每个人的解法都不一样，但是归根结底本质还是大同小异的。
 
-　　就是第一次的時候先直接返回 `this`，並且把 `this` 放在某個地方。以後每次來這裏創建的時候返回之前存好的 `this` 即可：
+　　就是第一次的时候先直接返回 `this`，并且把 `this` 放在某个地方。以后每次来这里创建的时候返回之前存好的 `this` 即可：
 
 ```javascript
 var Singleton = function() {
@@ -73,9 +73,9 @@ var Singleton = function() {
 };
 ```
 
-## 別的寫法
+## 别的写法
 
-　　寫法很多，我這裏隨意挑幾個別人的答案吧。
+　　写法很多，我这里随意挑几个别人的答案吧。
 
 ```javascript
 /**

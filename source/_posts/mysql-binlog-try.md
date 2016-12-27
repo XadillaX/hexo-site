@@ -3,62 +3,62 @@ date: 2015-08-10 11:39:53
 tags: [ MySQL, Binary Log, Binlog ]
 ---
 
-　　花瓣網的搜索架構需要重構，尤其是在索引建立或者更新層面。
+　　花瓣网的搜索架构需要重构，尤其是在索引建立或者更新层面。
 
-　　目前的一個架構導致的結果就是時間越久，數據本體與搜索引擎索引中的數據越不同步，相差甚大。
+　　目前的一个架构导致的结果就是时间越久，数据本体与搜索引擎索引中的数据越不同步，相差甚大。
 
-　　新的一個架構打算從 MySQL 的 Binlog 中讀取數據更新、刪除、新增等歷史記錄，並把相應信息提取出來丟到隊列中慢慢去同步。
+　　新的一个架构打算从 MySQL 的 Binlog 中读取数据更新、删除、新增等历史记录，并把相应信息提取出来丢到队列中慢慢去同步。
 
-　　所以我就在這裏小小去了解一下 Binlog。
+　　所以我就在这里小小去了解一下 Binlog。
 
-## 準備工作
+## 准备工作
 
-### 什麼是 Binlog
+### 什么是 Binlog
 
-　　MySQL Server 有四種類型的日誌——Error Log、General Query Log、Binary Log 和 Slow Query Log。
+　　MySQL Server 有四种类型的日志——Error Log、General Query Log、Binary Log 和 Slow Query Log。
 
-　　第一個是錯誤日誌，記錄 mysqld 的一些錯誤。第二個是一般查詢日誌，記錄 mysqld 正在做的事情，比如客戶端的連接和斷開、來自客戶端每條 Sql Statement 記錄信息；如果你想準確知道客戶端到底傳了什麼瞎 [嗶嗶] 玩意兒給服務端，這個日誌就非常管用了，不過它非常影響性能。第四個是慢查詢日誌，記錄一些查詢比較慢的 SQL 語句——這種日誌非常常用，主要是給開發者調優用的。
+　　第一个是错误日志，记录 mysqld 的一些错误。第二个是一般查询日志，记录 mysqld 正在做的事情，比如客户端的连接和断开、来自客户端每条 Sql Statement 记录信息；如果你想准确知道客户端到底传了什么瞎 [哔哔] 玩意儿给服务端，这个日志就非常管用了，不过它非常影响性能。第四个是慢查询日志，记录一些查询比较慢的 SQL 语句——这种日志非常常用，主要是给开发者调优用的。
 
-　　剩下的第三種就是 Binlog 了，包含了一些事件，這些事件描述了數據庫的改動，如建表、數據改動等，也包括一些潛在改動，比如 `DELETE FROM ran WHERE bing = luan`，然而一條數據都沒被刪掉的這種情況。除非使用 Row-based logging，否則會包含所有改動數據的 SQL Statement。
+　　剩下的第三种就是 Binlog 了，包含了一些事件，这些事件描述了数据库的改动，如建表、数据改动等，也包括一些潜在改动，比如 `DELETE FROM ran WHERE bing = luan`，然而一条数据都没被删掉的这种情况。除非使用 Row-based logging，否则会包含所有改动数据的 SQL Statement。
 
-　　那麼 Binlog 就有了兩個重要的用途——複製和恢復。比如主從表的複製，和備份恢復什麼的。
+　　那么 Binlog 就有了两个重要的用途——复制和恢复。比如主从表的复制，和备份恢复什么的。
 
-### 啓用 Binlog
+### 启用 Binlog
 
-　　通常情況 MySQL 是默認關閉 Binlog 的，所以你得配置一下以啓用它。
+　　通常情况 MySQL 是默认关闭 Binlog 的，所以你得配置一下以启用它。
 
-　　啓用的過程就是修改配置文件 `my.cnf` 了。
+　　启用的过程就是修改配置文件 `my.cnf` 了。
 
-　　至於 `my.cnf` 位置請自行尋找。例如通過 OSX 的 `brew` 安裝的 `mysql` 默認配置目錄通常在
+　　至于 `my.cnf` 位置请自行寻找。例如通过 OSX 的 `brew` 安装的 `mysql` 默认配置目录通常在
 
 > /usr/local/Cellar/mysql/$VERSION/support-files/my-default.cnf
 
-　　這個時候需要將它拷貝到 `/etc/my.cnf` 下面。
+　　这个时候需要将它拷贝到 `/etc/my.cnf` 下面。
 
-> 詳見 <[StackOverflow - MySQL 'my.cnf' location?](http://stackoverflow.com/questions/10757169/mysql-my-cnf-location)>。
+> 详见 <[StackOverflow - MySQL 'my.cnf' location?](http://stackoverflow.com/questions/10757169/mysql-my-cnf-location)>。
 
-　　緊接着配置 `log-bin` 和 `log-bin-index` 的值，如果沒有則自行加上去。
+　　紧接着配置 `log-bin` 和 `log-bin-index` 的值，如果没有则自行加上去。
 
 ```ini
 log-bin=master-bin
 log-bin-index=master-bin.index
 ```
 
-　　這裏的 `log-bin` 是指以後生成各 Binlog 文件的前綴，比如上述使用 `master-bin`，那麼文件就將會是 `master-bin.000001`、`master-bin.000002` 等。而這裏的 `log-bin-index` 則指 binlog index 文件的名稱，這裏我們設置爲 `master-bin.index`。
+　　这里的 `log-bin` 是指以后生成各 Binlog 文件的前缀，比如上述使用 `master-bin`，那么文件就将会是 `master-bin.000001`、`master-bin.000002` 等。而这里的 `log-bin-index` 则指 binlog index 文件的名称，这里我们设置为 `master-bin.index`。
 
-　　如果上述工作做完之後重啓 MySQL 服務，你可以進入你的 MySQL CLI 驗證一下是否真的啓用了。
+　　如果上述工作做完之后重启 MySQL 服务，你可以进入你的 MySQL CLI 验证一下是否真的启用了。
 
 ```sh
 $ mysql -u $USERNAME ...
 ```
 
-　　然後在終端裏面輸入下面一句 SQL 語句：
+　　然后在终端里面输入下面一句 SQL 语句：
 
 ```sql
 SHOW VARIABLES LIKE '%log_bin%';
 ```
 
-　　如果結果裏面出來這樣類似的話就表示成功了：
+　　如果结果里面出来这样类似的话就表示成功了：
 
 ```sh
 +---------------------------------+---------------------------------------+
@@ -74,27 +74,27 @@ SHOW VARIABLES LIKE '%log_bin%';
 6 rows in set (0.00 sec)
 ```
 
-　　更多的一些相關配置可以參考這篇《[MySQL 的 binary log 初探](http://blog.csdn.net/jolly10/article/details/13998761)》。
+　　更多的一些相关配置可以参考这篇《[MySQL 的 binary log 初探](http://blog.csdn.net/jolly10/article/details/13998761)》。
 
-### 隨便玩玩
+### 随便玩玩
 
-　　然後你就可以隨便去執行一些數據變動的 SQL 語句了。當你執行了一堆語句之後就可以看到你的 Binlog 裏面有內容了。
+　　然后你就可以随便去执行一些数据变动的 SQL 语句了。当你执行了一堆语句之后就可以看到你的 Binlog 里面有内容了。
 
-　　如上表所示，`log_bin_basename` 的值是 `/usr/local/var/mysql/master-bin` 就是 Binlog 的基礎文件名了。
+　　如上表所示，`log_bin_basename` 的值是 `/usr/local/var/mysql/master-bin` 就是 Binlog 的基础文件名了。
 
-　　那我們進去看，比如我的這邊就有這麼幾個文件：
+　　那我们进去看，比如我的这边就有这么几个文件：
 
 ![Binlog 文件](binlog-files.jpg)
 
-　　很容易發現，裏面有 `master-bin.index` 和 `master-bin.000001` 兩個文件，這兩個文件在上文中有提到過了。
+　　很容易发现，里面有 `master-bin.index` 和 `master-bin.000001` 两个文件，这两个文件在上文中有提到过了。
 
-　　我們打開那個 `master-bin.index` 文件，會發現這個索引文件就是一個普通的文本文件，然後列舉了各 binlog 的文件名。而 `master-bin.000001` 文件就是一堆亂碼了——畢竟人家是二進制文件。
+　　我们打开那个 `master-bin.index` 文件，会发现这个索引文件就是一个普通的文本文件，然后列举了各 binlog 的文件名。而 `master-bin.000001` 文件就是一堆乱码了——毕竟人家是二进制文件。
 
-## 結構解析
+## 结构解析
 
 ### 索引文件
 
-　　索引文件就是上文中的 `master-bin.index` 文件，是一個普通的文本文件，以換行爲間隔，一行一個文件名。比如它可能是：
+　　索引文件就是上文中的 `master-bin.index` 文件，是一个普通的文本文件，以换行为间隔，一行一个文件名。比如它可能是：
 
 ```
 master-bin.000001
@@ -102,39 +102,39 @@ master-bin.000002
 master-bin.000003
 ```
 
-　　然後對應的每行文件就是一個 Binlog 實體文件了。
+　　然后对应的每行文件就是一个 Binlog 实体文件了。
 
 ### Binlog 文件
 
-　　Binlog 的文件結構大致由如下幾個方面組成。
+　　Binlog 的文件结构大致由如下几个方面组成。
 
-#### 文件頭
+#### 文件头
 
-　　文件頭由一個四字節 Magic Number，其值爲 `1852400382`，在內存中就是 `"\xfe\x62\x69\x6e"`，參考 MySQL 源碼的 [log_event.h](://github.com/mysql/mysql-server/blob/a2757a60a7527407d08115e44e889a25f22c96c6/sql/log_event.h#L187)，也就是 `'\0xfe' 'b' 'i' 'n'`。
+　　文件头由一个四字节 Magic Number，其值为 `1852400382`，在内存中就是 `"\xfe\x62\x69\x6e"`，参考 MySQL 源码的 [log_event.h](://github.com/mysql/mysql-server/blob/a2757a60a7527407d08115e44e889a25f22c96c6/sql/log_event.h#L187)，也就是 `'\0xfe' 'b' 'i' 'n'`。
 
-　　與平常二進制一樣，通常都有一個 Magic Number 進行文件識別，如果 Magic Number 不吻合上述的值那麼這個文件就不是一個正常的 Binlog。
+　　与平常二进制一样，通常都有一个 Magic Number 进行文件识别，如果 Magic Number 不吻合上述的值那么这个文件就不是一个正常的 Binlog。
 
 #### 事件
 
-　　在文件頭之後，跟隨的是一個一個事件依次排列。每個事件都由一個事件頭和事件體組成。
+　　在文件头之后，跟随的是一个一个事件依次排列。每个事件都由一个事件头和事件体组成。
 
-　　事件頭裏面的內容包含了這個事件的類型（如新增、刪除等）、事件執行時間以及是哪個服務器執行的事件等信息。
+　　事件头里面的内容包含了这个事件的类型（如新增、删除等）、事件执行时间以及是哪个服务器执行的事件等信息。
 
-　　第一個事件是一個事件描述符，描述了這個 Binlog 文件格式的版本。接下去的一堆事件將會按照第一個事件描述符所描述的結構版本進行解讀。最後一個事件是一個銜接事件，指定了下一個 Binlog 文件名——有點類似於鏈表裏面的 `next` 指針。
+　　第一个事件是一个事件描述符，描述了这个 Binlog 文件格式的版本。接下去的一堆事件将会按照第一个事件描述符所描述的结构版本进行解读。最后一个事件是一个衔接事件，指定了下一个 Binlog 文件名——有点类似于链表里面的 `next` 指针。
 
-　　根據《[High-Level Binary Log Structure and Contents](High-Level Binary Log Structure and Contents)》所述，不同版本的 Binlog 格式不一定一樣，所以也沒有一個定性。在我寫這篇文章的時候，目前有三種版本的格式。
+　　根据《[High-Level Binary Log Structure and Contents](High-Level Binary Log Structure and Contents)》所述，不同版本的 Binlog 格式不一定一样，所以也没有一个定性。在我写这篇文章的时候，目前有三种版本的格式。
 
-* v1，用於 MySQL 3.2.3
-* v3，用於 MySQL 4.0.2 以及 4.1.0
-* v4，用於 MySQL 5.0 以及更高版本
+* v1，用于 MySQL 3.2.3
+* v3，用于 MySQL 4.0.2 以及 4.1.0
+* v4，用于 MySQL 5.0 以及更高版本
 
-　　實際上還有一個 v2 版本，不過只在早期 4.0.x 的 MySQL 版本中使用過，但是 v2 已經過於陳舊並且不再被 MySQL 官方支持了。
+　　实际上还有一个 v2 版本，不过只在早期 4.0.x 的 MySQL 版本中使用过，但是 v2 已经过于陈旧并且不再被 MySQL 官方支持了。
 
-> **通常我們現在用的 MySQL 都是在 5.0 以上的了，所以就略過 v1 ~ v3 版本的 Binlog，如果需要了解 v1 ~ v3 版本的 Binlog 可以自行前往上述的《High-level...》文章查看。**
+> **通常我们现在用的 MySQL 都是在 5.0 以上的了，所以就略过 v1 ~ v3 版本的 Binlog，如果需要了解 v1 ~ v3 版本的 Binlog 可以自行前往上述的《High-level...》文章查看。**
 
-##### 事件頭
+##### 事件头
 
-　　一個事件頭有 19 字節，依次排列爲四字節的時間戳、一字節的當前事件類型、四字節的服務端 ID、四字節的當前事件長度描述、四字節的下個事件位置（方便跳轉）以及兩字節的標識。
+　　一个事件头有 19 字节，依次排列为四字节的时间戳、一字节的当前事件类型、四字节的服务端 ID、四字节的当前事件长度描述、四字节的下个事件位置（方便跳转）以及两字节的标识。
 
 　　用 ASCII Diagram 表示如下：
 
@@ -145,7 +145,7 @@ master-bin.000003
 +---------+---------+---------+------------+-------------+-------+
 ```
 
-　　也可以字節編造一個結構體來解讀這個頭：
+　　也可以字节编造一个结构体来解读这个头：
 
 ```c
 struct BinlogEventHeader
@@ -159,15 +159,15 @@ struct BinlogEventHeader
 };
 ```
 
-> 如果你要直接用這個結構體來讀取數據的話，需要加點手腳。
+> 如果你要直接用这个结构体来读取数据的话，需要加点手脚。
 >
-> 因爲默認情況下 GCC 或者 G++ 編譯器會對結構體進行字節對齊，這樣讀進來的數據就不對了，因爲 Binlog 並不是對齊的。爲了統一我們需要取消這個結構體的字節對齊，一個方法是使用 `#pragma pack(n)`，一個方法是使用 `__attribute__((__packed__))`，還有一種情況是在編譯器編譯的時候強制把所有的結構體對其取消，即在編譯的時候使用 `fpack-struct` 參數，如：
+> 因为默认情况下 GCC 或者 G++ 编译器会对结构体进行字节对齐，这样读进来的数据就不对了，因为 Binlog 并不是对齐的。为了统一我们需要取消这个结构体的字节对齐，一个方法是使用 `#pragma pack(n)`，一个方法是使用 `__attribute__((__packed__))`，还有一种情况是在编译器编译的时候强制把所有的结构体对其取消，即在编译的时候使用 `fpack-struct` 参数，如：
 >
 > ```sh
 $ g++ temp.cpp -o a -fpack-struct=1
 ```
 
-　　根據上述的結構我們可以明確得到各變量在結構體裏面的偏移量，所以在 MySQL 源碼裏面（[libbinlogevents/include/binlog_event.h](https://github.com/mysql/mysql-server/blob/5.7/libbinlogevents/include/binlog_event.h#L353)）有下面幾個常量以快速標記偏移：
+　　根据上述的结构我们可以明确得到各变量在结构体里面的偏移量，所以在 MySQL 源码里面（[libbinlogevents/include/binlog_event.h](https://github.com/mysql/mysql-server/blob/5.7/libbinlogevents/include/binlog_event.h#L353)）有下面几个常量以快速标记偏移：
 
 ```c
 #define EVENT_TYPE_OFFSET    4
@@ -177,19 +177,19 @@ $ g++ temp.cpp -o a -fpack-struct=1
 #define FLAGS_OFFSET         17
 ```
 
-　　而具體有哪些事件則在 [libbinlogevents/include/binlog_event.h#L245](https://github.com/mysql/mysql-server/blob/5.7/libbinlogevents/include/binlog_event.h#L245) 裏面被定義。如有個 `FORMAT_DESCRIPTION_EVENT` 事件的 `type_code` 是 15、`UPDATE_ROWS_EVENT` 的 `type_code` 是 31。
+　　而具体有哪些事件则在 [libbinlogevents/include/binlog_event.h#L245](https://github.com/mysql/mysql-server/blob/5.7/libbinlogevents/include/binlog_event.h#L245) 里面被定义。如有个 `FORMAT_DESCRIPTION_EVENT` 事件的 `type_code` 是 15、`UPDATE_ROWS_EVENT` 的 `type_code` 是 31。
 
-　　還有那個 `next_position`，在 v4 版本中代表從 Binlog 一開始到下一個事件開始的偏移量，比如到第一個事件的 `next_position` 就是 4，因爲文件頭有一個字節的長度。然後接下去對於事件 n 和事件 n + 1 來說，他們有這樣的關係：
+　　还有那个 `next_position`，在 v4 版本中代表从 Binlog 一开始到下一个事件开始的偏移量，比如到第一个事件的 `next_position` 就是 4，因为文件头有一个字节的长度。然后接下去对于事件 n 和事件 n + 1 来说，他们有这样的关系：
 
 > next_position(n + 1) = next_position(n) + event_length(n)
 
-　　關於 flags 暫時不需要了解太多，如果真的想了解的話可以看看 MySQL 的[相關官方文檔](http://dev.mysql.com/doc/internals/en/event-flags.html)。
+　　关于 flags 暂时不需要了解太多，如果真的想了解的话可以看看 MySQL 的[相关官方文档](http://dev.mysql.com/doc/internals/en/event-flags.html)。
 
-##### 事件體
+##### 事件体
 
-　　事實上在 Binlog 事件中應該是有三個部分組成，`header`、`post-header` 和 `payload`，不過通常情況下我們把 `post-header` 和 `payload` 都歸結爲事件體，實際上這個 `post-header` 裏面放的是一些定長的數據，只不過有時候我們不需要特別地關心。想要深入瞭解可以去查看 MySQL 的官方文檔。
+　　事实上在 Binlog 事件中应该是有三个部分组成，`header`、`post-header` 和 `payload`，不过通常情况下我们把 `post-header` 和 `payload` 都归结为事件体，实际上这个 `post-header` 里面放的是一些定长的数据，只不过有时候我们不需要特别地关心。想要深入了解可以去查看 MySQL 的官方文档。
 
-　　所以實際上一個真正的事件體由兩部分組成，用 ASCII Diagram 表示就像這樣：
+　　所以实际上一个真正的事件体由两部分组成，用 ASCII Diagram 表示就像这样：
 
 ```
 +=====================================+
@@ -199,13 +199,13 @@ $ g++ temp.cpp -o a -fpack-struct=1
 +=====================================+
 ```
 
-　　而這個 `post-header` 對於不同類型的事件來說長度是不一樣的，同種類型來說是一樣的，而這個長度的預先規定將會在一個“格式描述事件”中定好。
+　　而这个 `post-header` 对于不同类型的事件来说长度是不一样的，同种类型来说是一样的，而这个长度的预先规定将会在一个“格式描述事件”中定好。
 
 ##### 格式描述事件
 
-　　在上文我們有提到過，在 Magic Number 之後跟着的是一個格式描述事件（Format Description Event），其實這只是在 v4 版本中的稱呼，在以前的版本里面叫起始事件（Start Event）。
+　　在上文我们有提到过，在 Magic Number 之后跟着的是一个格式描述事件（Format Description Event），其实这只是在 v4 版本中的称呼，在以前的版本里面叫起始事件（Start Event）。
 
-　　在 v4 版本中這個事件的結構如下面的 ASCII Diagram 所示。
+　　在 v4 版本中这个事件的结构如下面的 ASCII Diagram 所示。
 
 ```
 +=====================================+
@@ -235,13 +235,13 @@ $ g++ temp.cpp -o a -fpack-struct=1
 +=====================================+
 ```
 
-　　這個事件的 `type_code` 是 15，然後 `event_length` 是大於等於 91 的值的，這個主要取決於所有事件類型數。
+　　这个事件的 `type_code` 是 15，然后 `event_length` 是大于等于 91 的值的，这个主要取决于所有事件类型数。
 
-　　因爲從第 76 字節開始後面的二進制就代表一個字節類型的數組了，一個字節代表一個事件類型的 `post-header` 長度，即每個事件類型固定數據的長度。
+　　因为从第 76 字节开始后面的二进制就代表一个字节类型的数组了，一个字节代表一个事件类型的 `post-header` 长度，即每个事件类型固定数据的长度。
  
-　　那麼按照上述的一些線索來看，我們能非常快地寫出一個簡單的解讀 Binlog 格式描述事件的代碼。
+　　那么按照上述的一些线索来看，我们能非常快地写出一个简单的解读 Binlog 格式描述事件的代码。
 
-> 如上文所述，如果需要正常解讀 Binlog 文件的話，下面的代碼編譯時候需要加上 `-fpack-struct=1` 這個參數。
+> 如上文所述，如果需要正常解读 Binlog 文件的话，下面的代码编译时候需要加上 `-fpack-struct=1` 这个参数。
 
 ```c++
 #include <cstdio>
@@ -305,7 +305,7 @@ int main()
 }
 ```
 
-　　這個時候你得到的結果有可能就是這樣的了：
+　　这个时候你得到的结果有可能就是这样的了：
 
 ```
 1852400382 - �binpz�
@@ -331,32 +331,32 @@ header_length: 19
   - ...
 ```
 
-　　一共會輸出 40 種類型（從 1 到 40），如官方文檔所說，這個數組從 `START_EVENT_V3` 事件開始（`type_code` 是 1）。
+　　一共会输出 40 种类型（从 1 到 40），如官方文档所说，这个数组从 `START_EVENT_V3` 事件开始（`type_code` 是 1）。
 
-##### 跳轉事件
+##### 跳转事件
 
-　　跳轉事件即 `ROTATE_EVENT`，其 `type_code` 是 4，其 `post-header` 長度爲 8。
+　　跳转事件即 `ROTATE_EVENT`，其 `type_code` 是 4，其 `post-header` 长度为 8。
 
-　　當一個 Binlog 文件大小已經差不多要分割了，它就會在末尾被寫入一個 `ROTATE_EVENT`——用於指出這個 Binlog 的下一個文件。
+　　当一个 Binlog 文件大小已经差不多要分割了，它就会在末尾被写入一个 `ROTATE_EVENT`——用于指出这个 Binlog 的下一个文件。
 
-　　它的 `post-header` 是 8 字節的一個東西，內容通常就是一個整數 `4`，用於表示下一個 Binlog 文件中的第一個事件起始偏移量。我們從上文就能得出在一般情況下這個數字只可能是四，就偏移了一個魔法數字。當然我們講的是在 v4 這個 Binlog 版本下的情況。
+　　它的 `post-header` 是 8 字节的一个东西，内容通常就是一个整数 `4`，用于表示下一个 Binlog 文件中的第一个事件起始偏移量。我们从上文就能得出在一般情况下这个数字只可能是四，就偏移了一个魔法数字。当然我们讲的是在 v4 这个 Binlog 版本下的情况。
 
-　　然後在 `payload` 位置是一個字符串，即下一個 Binlog 文件的文件名。
+　　然后在 `payload` 位置是一个字符串，即下一个 Binlog 文件的文件名。
 
-##### 各種不同的事件體
+##### 各种不同的事件体
 
-　　由於篇幅原因這裏就不詳細舉例其它普通的不同事件體了，具體的詳解在 [MySQL 文檔](http://dev.mysql.com/doc/internals/en/event-data-for-specific-event-types.html)中一樣有介紹，用到什麼類型的事件體就可以自己去查詢。
+　　由于篇幅原因这里就不详细举例其它普通的不同事件体了，具体的详解在 [MySQL 文档](http://dev.mysql.com/doc/internals/en/event-data-for-specific-event-types.html)中一样有介绍，用到什么类型的事件体就可以自己去查询。
 
-## 小結
+## 小结
 
-　　本文大概介紹了 Binlog 的一些情況，以及 Binlog 的內部二進制解析結構。方便大家造輪子用——不然老用別人的輪子，只知其然而不知其所以然多沒勁。
+　　本文大概介绍了 Binlog 的一些情况，以及 Binlog 的内部二进制解析结构。方便大家造轮子用——不然老用别人的轮子，只知其然而不知其所以然多没劲。
 
-　　好了要下班了，就寫到這裏過吧。
+　　好了要下班了，就写到这里过吧。
 
-## 參考
+## 参考
 
-1. [MySQL's binary log 結構簡介](http://my.oschina.net/leejun2005/blog/75273)，目測原文在 [TaobaoDBA](http://www.taobaodba.com/html/474_mysqls-binary-log_details.html)（已無法訪問）
-2. [MySQL Binlog 的介紹](http://www.linuxidc.com/Linux/2014-09/107095.htm)
+1. [MySQL's binary log 结构简介](http://my.oschina.net/leejun2005/blog/75273)，目测原文在 [TaobaoDBA](http://www.taobaodba.com/html/474_mysqls-binary-log_details.html)（已无法访问）
+2. [MySQL Binlog 的介绍](http://www.linuxidc.com/Linux/2014-09/107095.htm)
 3. [MySQL 的 binary log 初探](http://blog.csdn.net/jolly10/article/details/13998761)
 4. [High-Level Binary Log Structure and Contents](http://dev.mysql.com/doc/internals/en/binary-log-structure-and-contents.html) and related official documents
 5. [#pragma pack vs -fpack-struct for Intel C](http://stackoverflow.com/questions/21912098/pragma-pack-vs-fpack-struct-for-intel-c)

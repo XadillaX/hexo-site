@@ -1,18 +1,18 @@
-title       : 一起擼Node.JS（負貳）——環境
+title       : 一起撸Node.JS（负贰）——环境
 category    : NodeJS
 date        : 2013-08-15
-tags        : [ Node.js, JavaScript, 一起擼Node.JS ]
+tags        : [ Node.js, JavaScript, 一起撸Node.JS ]
 ---
 
-　　由於[Linux]({{ page.url }}#linux-環境)中的環境搭建比較簡單，所以草草略過。
+　　由于[Linux]({{ page.url }}#linux-环境)中的环境搭建比较简单，所以草草略过。
 
-　　其實[Windows]({{ page.url }}#windows-環境)下也不算麻煩，但是這裏會講一定量的別的環境的搭建。
+　　其实[Windows]({{ page.url }}#windows-环境)下也不算麻烦，但是这里会讲一定量的别的环境的搭建。
 
 
 <!-- 我是小小分割符 -->
-## Linux 環境
+## Linux 环境
 
-講到這個就很簡單了，跟着下面的 **bash** 操作即可：
+讲到这个就很简单了，跟着下面的 **bash** 操作即可：
 
 {% code sh %}
 $ cd /usr/local/bin
@@ -21,11 +21,11 @@ $ tar zxf node-v0.00.00-linux-x00.tar.gz
 $ cd node-v0.00.00-linux-x00
 {% endcode %}
 
-> 其中將上方的 **v0.00.00** 替換成 **Node.js** 最新的版本號，把 **x00** 替換成你自己電腦的位數。
+> 其中将上方的 **v0.00.00** 替换成 **Node.js** 最新的版本号，把 **x00** 替换成你自己电脑的位数。
 >
-> 也可以直接去官網 [http://nodejs.org/download/](http://nodejs.org/download/) 找到相應的地址。
+> 也可以直接去官网 [http://nodejs.org/download/](http://nodejs.org/download/) 找到相应的地址。
 
-最後將其的連接加入到 `/usr/bin` 下即可。
+最后将其的连接加入到 `/usr/bin` 下即可。
 
 {% code sh %}
 $ cd bin
@@ -33,58 +33,58 @@ $ ln node /usr/bin
 $ ln npm /usr/bin
 {% endcode %}
 
-> **注意**： 該用 `sudo` 的地方就用 `sudo` 或者 `su` 。
+> **注意**： 该用 `sudo` 的地方就用 `sudo` 或者 `su` 。
 
-至此，**Linux** 下的 **Node.js** 環境基本搭建完畢。
+至此，**Linux** 下的 **Node.js** 环境基本搭建完毕。
 
-## Windows 環境
+## Windows 环境
 
-### Cygwin 安裝和配置
+### Cygwin 安装和配置
 
-***Cygwin*** 是一個在 ***Windows*** 平臺上運行的 ***Unix*** 模擬環境。對於學習 ***Unix/Linux*** 操作環境，或者從 ***Unix*** 到 ***Windows*** 的應用程序移植，或者進行某些特殊的開發工作，尤其是使用 ***GNU工具集*** 在 ***Windows*** 上進行嵌入式系統開發，非常有用。
+***Cygwin*** 是一个在 ***Windows*** 平台上运行的 ***Unix*** 模拟环境。对于学习 ***Unix/Linux*** 操作环境，或者从 ***Unix*** 到 ***Windows*** 的应用程序移植，或者进行某些特殊的开发工作，尤其是使用 ***GNU工具集*** 在 ***Windows*** 上进行嵌入式系统开发，非常有用。
 
-#### Cygwin 安裝
+#### Cygwin 安装
 
-我們先跑到 **Cygwin** 的官網上去把東西下來：
+我们先跑到 **Cygwin** 的官网上去把东西下来：
 
 > [http://cygwin.com/install.html](http://cygwin.com/install.html)
 >
-> > 注意，最好下 **x86** 的包，因爲我們之後要講一個 `cyg-apt` 的腳本插件，這是一個能讓 **Cygwin** 能跟 **Linux** 一樣通過腳本從源安裝軟件包的腳本。爲了方便修改，我們將其下成 **x86** 的版本。
+> > 注意，最好下 **x86** 的包，因为我们之后要讲一个 `cyg-apt` 的脚本插件，这是一个能让 **Cygwin** 能跟 **Linux** 一样通过脚本从源安装软件包的脚本。为了方便修改，我们将其下成 **x86** 的版本。
 
-然後就是安裝步驟了。
+然后就是安装步骤了。
 
-<center>![從網絡安裝](http://blog-xcoder-in.qiniudn.com/cygwin-install-1.png)</center>
-<center><small>[圖2.1]</small></center>
+<center>![从网络安装](http://blog-xcoder-in.qiniudn.com/cygwin-install-1.png)</center>
+<center><small>[图2.1]</small></center>
 
-到 **[圖2.1]** 這個步驟的時候，選擇默認的 `Install from Internet` 即可。
+到 **[图2.1]** 这个步骤的时候，选择默认的 `Install from Internet` 即可。
 
-<center>![選擇安裝路徑](http://blog-xcoder-in.qiniudn.com/cygwin-install-2.png)</center>
-<center><small>[圖2.2]</small></center>
+<center>![选择安装路径](http://blog-xcoder-in.qiniudn.com/cygwin-install-2.png)</center>
+<center><small>[图2.2]</small></center>
 
-在 **[圖2.2]** 的時候選一個安裝路徑。
+在 **[图2.2]** 的时候选一个安装路径。
 
-> **注意**：儘可能讓這個安裝路徑簡單，而不要是類似於
+> **注意**：尽可能让这个安装路径简单，而不要是类似于
 >
 > `c:\Program Files\blahblah`
 >
-> 這樣的文件路徑。
+> 这样的文件路径。
 
-<center>![本地包路徑](http://blog-xcoder-in.qiniudn.com/cygwin-install-3.png)</center>
-<center><small>[圖2.3]</small></center>
+<center>![本地包路径](http://blog-xcoder-in.qiniudn.com/cygwin-install-3.png)</center>
+<center><small>[图2.3]</small></center>
 
-**[圖2.3]** 的時候選一個本地包的路徑，我這裏選的是 `e:\cygwin\tmp`。
+**[图2.3]** 的时候选一个本地包的路径，我这里选的是 `e:\cygwin\tmp`。
 
-<center>![直連](http://blog-xcoder-in.qiniudn.com/cygwin-install-4.png)</center>
-<center><small>[圖2.4]</small></center>
+<center>![直连](http://blog-xcoder-in.qiniudn.com/cygwin-install-4.png)</center>
+<center><small>[图2.4]</small></center>
 
-**[圖2.4]** 選擇直接連接。
+**[图2.4]** 选择直接连接。
 
 <center>![163](http://blog-xcoder-in.qiniudn.com/cygwin-install-5.png)</center>
-<center><small>[圖2.5]</small></center>
+<center><small>[图2.5]</small></center>
 
-我們國內的用戶源還是選擇 `163` 的速度比較快。所以在 **[圖2.5]** 這一步的時候就直接選用默認的 `163` 的源了。如果不是默認的話，請選中它。
+我们国内的用户源还是选择 `163` 的速度比较快。所以在 **[图2.5]** 这一步的时候就直接选用默认的 `163` 的源了。如果不是默认的话，请选中它。
 
-在 **Select Package** 也就是選擇預安裝的軟件的時候，把下列表中的軟件包勾選起來：
+在 **Select Package** 也就是选择预安装的软件的时候，把下列表中的软件包勾选起来：
 
 > + **wget**: 在 **Utils** 中
 > + **vim**: 在 **Editors** 中
@@ -93,23 +93,23 @@ $ ln npm /usr/bin
 > + **make**: 在 **Devel** 中
 > + **cmake**: 在 **Devel** 中
 
-若是這些選項已經被選起來了就不用再選了，如果沒有選起來則把它選中。
+若是这些选项已经被选起来了就不用再选了，如果没有选起来则把它选中。
 
-勾選好了之後就可以下一步安裝了，直至安裝完畢，你就可以打開你的 **Cygwin** 了。
+勾选好了之后就可以下一步安装了，直至安装完毕，你就可以打开你的 **Cygwin** 了。
 
 <center>![Cygwin](http://blog-xcoder-in.qiniudn.com/cygwin-install-6.png)</center>
-<center><small>[圖2.6]</small></center>
+<center><small>[图2.6]</small></center>
 
-> **提示**：你可以點擊窗口左上角的小圖片，然後裏面的 **Options** 中，你可以調整你自己的 **Cygwin** 外觀。
+> **提示**：你可以点击窗口左上角的小图片，然后里面的 **Options** 中，你可以调整你自己的 **Cygwin** 外观。
 
 ### vim 配置
 
-上一步我們已經選中了 **vim** ，也就是說我們已經在 **Cygwin** 中裝上了 **vim**。但是由於這裏的 **vim** 默認配置非常蛋疼，所以我們得改一下。
+上一步我们已经选中了 **vim** ，也就是说我们已经在 **Cygwin** 中装上了 **vim**。但是由于这里的 **vim** 默认配置非常蛋疼，所以我们得改一下。
 
-在你的 **Cygwin** 中一句句輸入下面的命令：
+在你的 **Cygwin** 中一句句输入下面的命令：
 
 {% code sh %}
-$ cd /home/<你自己的用戶名>
+$ cd /home/<你自己的用户名>
 $ wget http://blog-xcoder-in.qiniudn.com/.vimrc
 $ mkdir .vim
 $ cd .vim
@@ -118,11 +118,11 @@ $ cd colors
 $ wget http://blog-xcoder-in.qiniudn.com/molokai.vim
 {% endcode %}
 
-這樣你的 **vim** 就用上了上面的那個地址的配置文件，當然你也可以編輯你自己的配置文件或者說從網上下別的配置文件以滿足你的個性化需求。
+这样你的 **vim** 就用上了上面的那个地址的配置文件，当然你也可以编辑你自己的配置文件或者说从网上下别的配置文件以满足你的个性化需求。
 
-**vim** 配置以及使用請參照：[https://wiki.archlinux.org/index.php/Vim](https://wiki.archlinux.org/index.php/Vim)
+**vim** 配置以及使用请参照：[https://wiki.archlinux.org/index.php/Vim](https://wiki.archlinux.org/index.php/Vim)
 
-> 事無鉅細問 **ArchWiki**。
+> 事无巨细问 **ArchWiki**。
 > <div style="text-align: right;">*-- [kalxd](https://github.com/kalxd)*</div>
 
 ### apt-cyg
@@ -131,53 +131,53 @@ $ wget http://blog-xcoder-in.qiniudn.com/molokai.vim
 >
 > <div style="text-align: right;">*-- From apt-cyg googlecode page*</div>
 
-總之意思就是說 `apt-cyg` 是類似於 **Linux** 中的 `apt-get`， `yum`, `zypper` 等命令行軟件包安裝器一樣，可以通過
+总之意思就是说 `apt-cyg` 是类似于 **Linux** 中的 `apt-get`， `yum`, `zypper` 等命令行软件包安装器一样，可以通过
 
-+ `apt-cyg install <package names>` 來安裝軟件包
-+ `apt-cyg remove <package names>` 來移除軟件包
-+ `apt-cyg update` 來更新 setup.ini
-+ `apt-cyg show` 來列出已安裝的軟件包
-+ `apt-cyg find <pattern(s)>` 來查找符合條件的軟件包
-+ `apt-cyg describe <pattern(s)>` 來描述符合條件的軟件包
-+ `apt-cyg packageof <commands or files>` 來定位其父軟件包
++ `apt-cyg install <package names>` 来安装软件包
++ `apt-cyg remove <package names>` 来移除软件包
++ `apt-cyg update` 来更新 setup.ini
++ `apt-cyg show` 来列出已安装的软件包
++ `apt-cyg find <pattern(s)>` 来查找符合条件的软件包
++ `apt-cyg describe <pattern(s)>` 来描述符合条件的软件包
++ `apt-cyg packageof <commands or files>` 来定位其父软件包
 
-#### apt-cyg 安裝
+#### apt-cyg 安装
 
-其實也不能說是安裝，純粹是把腳本從網絡上拷到自己的 **Cygwin** 的環境目錄中。
+其实也不能说是安装，纯粹是把脚本从网络上拷到自己的 **Cygwin** 的环境目录中。
 
-在你的 **Cygwin** 中輸入以下命令：
+在你的 **Cygwin** 中输入以下命令：
 
 {% code sh %}
 $ cd /usr/local/bin
 $ wget http://apt-cyg.googlecode.com/svn/trunk/apt-cyg
 {% endcode %}
 
-這樣你就“安裝”好了 **apt-cyg** 了。不過這裏用的是默認的源，所有東西都是默認的。
+这样你就“安装”好了 **apt-cyg** 了。不过这里用的是默认的源，所有东西都是默认的。
 
-如果你現在已經心安理得或者不想折騰了可以跳過 **[2.1.3.2. apt-cyg 修改](#apt-cyg-修改)**，如果你想把源換成 `163` 的話那麼稍微看一下吧。
+如果你现在已经心安理得或者不想折腾了可以跳过 **[2.1.3.2. apt-cyg 修改](#apt-cyg-修改)**，如果你想把源换成 `163` 的话那么稍微看一下吧。
 
 #### apt-cyg 修改
 
-接下去我們要對 **apt-cyg** 做一些編輯。
+接下去我们要对 **apt-cyg** 做一些编辑。
 
-你有下面兩個選擇：
+你有下面两个选择：
 
-1. 如果你想學習 **vim** 操作或者你已經熟悉了，那麼直接使用 `vim apt-cyg` 來進行編輯。
-2. 如果你是懶人還是想要直接編輯的話，請跑到你的 **Cygwin** 的安裝目錄，找到 **usr** 文件夾，飛進 **local/bin** 目錄中去，用你自己喜歡的文本編輯器打開並編輯。
+1. 如果你想学习 **vim** 操作或者你已经熟悉了，那么直接使用 `vim apt-cyg` 来进行编辑。
+2. 如果你是懒人还是想要直接编辑的话，请跑到你的 **Cygwin** 的安装目录，找到 **usr** 文件夹，飞进 **local/bin** 目录中去，用你自己喜欢的文本编辑器打开并编辑。
 
-大約是 `68` 行上下吧，有一句是：
+大约是 `68` 行上下吧，有一句是：
 
 {% code bash %}
   mirror=ftp://mirror.mcs.anl.gov/pub/cygwin
 {% endcode %}
 
-將其改成：
+将其改成：
 
 {% code bash %}
   mirror=http://mirrors.163.com/cygwin
 {% endcode %}
 
-還有就是大概在 `98` 行和 `105` 行左右：
+还有就是大概在 `98` 行和 `105` 行左右：
 
 {% code bash %}
     wget -N $mirror/setup.bz2
@@ -193,38 +193,38 @@ $ wget http://apt-cyg.googlecode.com/svn/trunk/apt-cyg
     wget -N $mirror/x86/setup.ini
 {% endcode %}
 
-至此，你的 **Cygwin** 環境基本完成，以後可以再慢慢完善。
+至此，你的 **Cygwin** 环境基本完成，以后可以再慢慢完善。
 
-### Node.js 安裝
+### Node.js 安装
 
-這個就很簡單了，打開 **[Node.js](http://nodejs.org/download/)** 官網下載安裝即可。
+这个就很简单了，打开 **[Node.js](http://nodejs.org/download/)** 官网下载安装即可。
 
-> 選擇 **Windows Installer (.msi)** 或者 **Windows Binary (.exe)**。
+> 选择 **Windows Installer (.msi)** 或者 **Windows Binary (.exe)**。
 
-安裝好後就能直接在 **Cygwin** 裏面使用了。
+安装好后就能直接在 **Cygwin** 里面使用了。
 
 ## 真·Hello World
 
-現在，無論你是 **Linux** 用戶還是 **Windows** 用戶，都可以用一樣的步驟來完成下面的 `Hello World` 了。
+现在，无论你是 **Linux** 用户还是 **Windows** 用户，都可以用一样的步骤来完成下面的 `Hello World` 了。
 
-隨便跑一個目錄裏面新建一個文件並且用 **vim** 編輯：
+随便跑一个目录里面新建一个文件并且用 **vim** 编辑：
 
 {% code sh %}
 $ vim hello.js
 {% endcode %}
 
-在裏面輸入下面的東西：
+在里面输入下面的东西：
 
 {% code javascript %}
 console.log("Hello world!");
 {% endcode %}
 
-然後退出 **vim** 執行：
+然后退出 **vim** 执行：
 
 {% code sh %}
 $ node hello.js
 {% endcode %}
 
-終於，**真·Hello world** 出現在了你的眼前，而不需要藉助 **[IDEOne](http://ideone.com/)** 了。
+终于，**真·Hello world** 出现在了你的眼前，而不需要借助 **[IDEOne](http://ideone.com/)** 了。
 
 ***To be continued...***

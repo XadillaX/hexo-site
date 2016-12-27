@@ -1,261 +1,132 @@
-
-
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    
-    <meta name="author" content="小鳥遊死月">
-    
-    <meta name="description" content="花瓣網的搜索架構需要重構，尤其是在索引建立或者更新層面。
-　　目前的一個架構導致的結果就是時間越久，數據本體與搜索引擎索引中的數據越不同步，相差甚大。
-　　新的一個架構打算從 MySQL 的 Binlog 中讀取數據更新、刪除、新增等歷史記錄，並把相應信息提取出來丟到隊列中慢慢去同步。
-　　所以我就">
-    
-    
-
-    
-    <link rel="alternative" href="http://xcoder.in/atom.xml" title="艾克斯の編碼者" type="application/atom+xml">
-    
-    
-    
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>初探 MySQL 的 Binlog | 艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
-
-    <!-- Javascript -->
-    <script src="/js/jquery-2.1.0.min.js"></script>
-    <script src="/js/jquery.backstretch.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/js/headroom.min.js"></script>
-    <script src="/js/jquery.headroom.min.js"></script> 
-    <script src="/js/common.js"></script>
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-</head>
-<body>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="banner">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="http://xcoder.in" title="艾克斯の編碼者">艾克斯の編碼者</a>
-            </div>
-
-            <div role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
-                <p class="navbar-text pull-right">一個偽宅级别的蒟蒻碼畜。</p>
-
-                <ul class="nav navbar-nav">
-                    
-                    <li id="nav-index"><a href="/">首页</a></li>
-                    
-                    <li id="nav-archives"><a href="/archives">归档</a></li>
-                    
-                    <li id="nav-tags"><a href="/tags">标签</a></li>
-                    
-                    <li id="nav-categories"><a href="/categories">分类</a></li>
-                    
-                    <li id="nav-curriculumvitae"><a href="/curriculumvitae">关于</a></li>
-                    
-                    <li id="nav-links"><a href="/links">链接</a></li>
-                    
-                    
-                    <li><a href="https://github.com/XadillaX" target="_blank">GitHub</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    
-    <script>
-    var backRoot = "/images/background/";
-    var backArray = [ "1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "6.jpeg", "img/iPad_Photo_20140328181354FGPM.JPG", "img/iPad_Photo_20140328181218SLUY.JPG", "img/iPad_Photo_20140328181239ME9E.JPG", "img/iPad_Photo_20140328175718BF7T.JPG", "likeit/465_16170978_35afb62980c6d1a.jpg", "likeit/wallpaper-86487.jpg", "likeit/wallpaper-651939.jpg", "likeit/wallpaper-648634.jpg", "likeit/wallpaper-657798.jpg", "likeit/wallpaper-1479749.jpg", "likeit/wallpaper-1961179.jpg", "likeit/wallpaper-1947874.jpg", "likeit/wallpaper-2055407.jpg", "likeit/wallpaper-2060090.png", "likeit/wallpaper-2142870.jpg", "likeit/wallpaper-2078006.jpg", "likeit/wallpaper-2127699.jpg", "likeit/wallpaper-2211066.jpg", "likeit/wallpaper-2588686.jpg", "likeit/wallpaper-2639031.jpg", "likeit/wallpaper-2430341.jpg", "likeit/wallpaper-2294985.jpg", "likeit/wallpaper-2705897.jpg", "likeit/wallpaper-2063319.jpg", "likeit/wallpaper-2060101.jpg", "likeit/wallpaper-1970791.jpg", "img/iPad_Photo_20140328174508AZ11.JPG", "img/new/iPad_Photo_201403281903078UKK.JPG", "img/iPad_Photo_20140328175639RA5N.JPG", "img/iPad_Photo_20140328175820DYAC.JPG", "img/iPad_Photo_201403281806230195.JPG", "img/new/iPad_Photo_201403281919292STQ.JPG", "img/new/iPad_Photo_20140328190703781D.JPG", "flandre/p541758_2girls barefoot bat_wings bed blonde_hair blue_hair feet fetal_position flandre_scarlet flat_chest hat nude red_eyes ~.jpg", "flandre/p575023_blonde_hair flandre_scarlet hat horumon multiple_persona ponytail red_eyes side_ponytail touhou wings.jpg", "flandre/p569665_2girls barefoot blonde_hair blue_hair flandre_scarlet hat highres kinoko red_eyes remilia_scarlet siblings sisters to~.jpg", "flandre/p566082_blonde_hair flandre_scarlet hat mitsuki_(artist) ponytail red_eyes short_hair side_ponytail touhou wings.jpg", "flandre/p548132_2girls bat_wings blonde_hair blue_eyes blue_hair flandre_scarlet hat kaedena_akino mask moon red_eyes red_moon remili~.jpg", "flandre/p552906_flandre_scarlet gusutafu hong_meiling izayoi_sakuya koakuma patchouli_knowledge remilia_scarlet swimsuit touhou.jpg", "flandre/p551605_flandre_scarlet kona-ta touhou.jpg", "flandre/p551983_asuka_roze danmaku flandre_scarlet remilia_scarlet touhou.jpg", "likeit/465_16170978_2b89f5997bcff44.jpg", "likeit/wallpaper-616321.jpg", "likeit/wallpaper-343717.jpg", "likeit/wallpaper-1595016.jpg", "likeit/wallpaper-1952396.jpg", "likeit/wallpaper-2060096.jpg", "likeit/wallpaper-2315398.jpg", "likeit/wallpaper-2674370.jpg", "likeit/wallpaper-2838683.jpg", "likeit/wallpaper-2564028.png", "likeit/wallpaper-1382762.jpg", "likeit/wallpaper-1128042.jpg", "likeit/wallpaper-1396368.jpg", "likeit/wallpaper-1403569.png", "likeit/wallpaper-1593633.jpg", "likeit/wallpaper-1395408.jpg", "flandre/p539131_blonde_hair flandre_scarlet hat plastic_eraser red_eyes scenery short_hair solo touhou.jpg", "flandre/p555228_flandre_scarlet hong_meiling izayoi_sakuya patchouli_knowledge remilia_scarlet shomon swimsuit touhou.jpg", "flandre/p556145_book flandre_scarlet flower hairband hakurei_reimu hat hitoto hong_meiling izayoi_sakuya kirisame_marisa koakuma patc~.jpg", "flandre/p561220_arikichi_gen blonde_hair blue_eyes blue_hair braid flandre_scarlet izayoi_sakuya ponytail red_eyes remilia_scarlet sh~.jpg", "flandre/p541363_blonde_hair flandre_scarlet hat laevatein magic_circle poncho_(pixiv) red_eyes side_ponytail touhou wings.jpg",  ];
-        
-    $(function() {
-        // page-id...
-        var pageId = "2015/08/10/mysql-binlog-try/";
-        pageId = pageId.substr(0, pageId.indexOf("/"));
-        if(pageId === "") pageId = "index";
-        
-        $("#nav-" + pageId).addClass("active");
-    });
-    </script>
-
-    <article class="post container">
-    <div class="well post-body first-post last-post">
-        <h1>初探 MySQL 的 Binlog</h1>
-        
-        <div class="time-info">
-发表于:<time datetime="2015-08-10T03:39:53.000Z" itemprop="datePublished">2015年08月10日</time>，更新于:<time datetime="2016-07-12T11:26:19.000Z" itemprop="dateModified">2016年07月12日</time>，By <a href="http://xcoder.in" title="小鳥遊死月">小鳥遊死月</a>
-        </div>
-        
-        <div class="post-body-inner">
-            <div id="toc" class="toc-article well">
-                <strong class="toc-title">大纲</strong>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#準備工作"><span class="toc-number">1.</span> <span class="toc-text">準備工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什麼是_Binlog"><span class="toc-number">1.1.</span> <span class="toc-text">什麼是 Binlog</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#啓用_Binlog"><span class="toc-number">1.2.</span> <span class="toc-text">啓用 Binlog</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#隨便玩玩"><span class="toc-number">1.3.</span> <span class="toc-text">隨便玩玩</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#結構解析"><span class="toc-number">2.</span> <span class="toc-text">結構解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#索引文件"><span class="toc-number">2.1.</span> <span class="toc-text">索引文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Binlog_文件"><span class="toc-number">2.2.</span> <span class="toc-text">Binlog 文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#文件頭"><span class="toc-number">2.2.1.</span> <span class="toc-text">文件頭</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#事件"><span class="toc-number">2.2.2.</span> <span class="toc-text">事件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#事件頭"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">事件頭</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#事件體"><span class="toc-number">2.2.2.2.</span> <span class="toc-text">事件體</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#格式描述事件"><span class="toc-number">2.2.2.3.</span> <span class="toc-text">格式描述事件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#跳轉事件"><span class="toc-number">2.2.2.4.</span> <span class="toc-text">跳轉事件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#各種不同的事件體"><span class="toc-number">2.2.2.5.</span> <span class="toc-text">各種不同的事件體</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小結"><span class="toc-number">3.</span> <span class="toc-text">小結</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#參考"><span class="toc-number">4.</span> <span class="toc-text">參考</span></a></li></ol>
-            </div>
-            
-            <p>　　花瓣網的搜索架構需要重構，尤其是在索引建立或者更新層面。</p>
-<p>　　目前的一個架構導致的結果就是時間越久，數據本體與搜索引擎索引中的數據越不同步，相差甚大。</p>
-<p>　　新的一個架構打算從 MySQL 的 Binlog 中讀取數據更新、刪除、新增等歷史記錄，並把相應信息提取出來丟到隊列中慢慢去同步。</p>
-<p>　　所以我就在這裏小小去了解一下 Binlog。</p>
-<h2 id="準備工作">準備工作</h2><h3 id="什麼是_Binlog">什麼是 Binlog</h3><p>　　MySQL Server 有四種類型的日誌——Error Log、General Query Log、Binary Log 和 Slow Query Log。</p>
-<p>　　第一個是錯誤日誌，記錄 mysqld 的一些錯誤。第二個是一般查詢日誌，記錄 mysqld 正在做的事情，比如客戶端的連接和斷開、來自客戶端每條 Sql Statement 記錄信息；如果你想準確知道客戶端到底傳了什麼瞎 [嗶嗶] 玩意兒給服務端，這個日誌就非常管用了，不過它非常影響性能。第四個是慢查詢日誌，記錄一些查詢比較慢的 SQL 語句——這種日誌非常常用，主要是給開發者調優用的。</p>
-<p>　　剩下的第三種就是 Binlog 了，包含了一些事件，這些事件描述了數據庫的改動，如建表、數據改動等，也包括一些潛在改動，比如 <code>DELETE FROM ran WHERE bing = luan</code>，然而一條數據都沒被刪掉的這種情況。除非使用 Row-based logging，否則會包含所有改動數據的 SQL Statement。</p>
-<p>　　那麼 Binlog 就有了兩個重要的用途——複製和恢復。比如主從表的複製，和備份恢復什麼的。</p>
-<h3 id="啓用_Binlog">啓用 Binlog</h3><p>　　通常情況 MySQL 是默認關閉 Binlog 的，所以你得配置一下以啓用它。</p>
-<p>　　啓用的過程就是修改配置文件 <code>my.cnf</code> 了。</p>
-<p>　　至於 <code>my.cnf</code> 位置請自行尋找。例如通過 OSX 的 <code>brew</code> 安裝的 <code>mysql</code> 默認配置目錄通常在</p>
+<!DOCTYPE html><html class="han-init" lang="zh-Hans"><head><meta name="author" content="死月·吃圡蕾特"><meta name="description" itemprop="description" content="花瓣网的搜索架构需要重构，尤其是在索引建立或者更新层面。
+　　目前的一个架构导致的结果就是时间越久，数据本体与搜索引擎索引中的数据越不同步，相差甚大。
+　　新的一个架构打算从 MySQL 的 Binlog 中读取数据更新、删除、新增等历史记录，并把相应信息提取出来丢到队列中慢慢去同步。
+　　所以我就"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>初探 MySQL 的 Binlog · 一个伪宅级别的码畜。</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="艾克斯の编码者" title="艾克斯の编码者"></a><h1><a href="/" alt="艾克斯の编码者" title="艾克斯の编码者">艾克斯の编码者</a></h1><p>一个伪宅级别的码畜。</p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/curriculumvitae" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="https://xcoder.in/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/XadillaX" style="position: relative; top: -2px">&#xe735;</a><a target="_blank" href="https://www.zhihu.com/people/xadillax">&#xe63f;</a><a target="_blank" href="https://weibo.com/xadillax" style="position: relative; top: -2px">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="full"><h1>初探 MySQL 的 Binlog</h1><span class="post-meta">写于<time> 2015 年 08 月 10 日 11 时 39 分</time><br>更新于<time> 2016 年 12 月 27 日 15 时 54 分</time></span><div class="article-toc"><strong>大纲</strong><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#准备工作"><span class="toc-number">1.</span> <span class="toc-text">准备工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是-Binlog"><span class="toc-number">1.1.</span> <span class="toc-text">什么是 Binlog</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启用-Binlog"><span class="toc-number">1.2.</span> <span class="toc-text">启用 Binlog</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#随便玩玩"><span class="toc-number">1.3.</span> <span class="toc-text">随便玩玩</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结构解析"><span class="toc-number">2.</span> <span class="toc-text">结构解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#索引文件"><span class="toc-number">2.1.</span> <span class="toc-text">索引文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Binlog-文件"><span class="toc-number">2.2.</span> <span class="toc-text">Binlog 文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#文件头"><span class="toc-number">2.2.1.</span> <span class="toc-text">文件头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#事件"><span class="toc-number">2.2.2.</span> <span class="toc-text">事件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#事件头"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">事件头</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#事件体"><span class="toc-number">2.2.2.2.</span> <span class="toc-text">事件体</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#格式描述事件"><span class="toc-number">2.2.2.3.</span> <span class="toc-text">格式描述事件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#跳转事件"><span class="toc-number">2.2.2.4.</span> <span class="toc-text">跳转事件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#各种不同的事件体"><span class="toc-number">2.2.2.5.</span> <span class="toc-text">各种不同的事件体</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">3.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol></div><p>　　花瓣网的搜索架构需要重构，尤其是在索引建立或者更新层面。</p>
+<p>　　目前的一个架构导致的结果就是时间越久，数据本体与搜索引擎索引中的数据越不同步，相差甚大。</p>
+<p>　　新的一个架构打算从 MySQL 的 Binlog 中读取数据更新、删除、新增等历史记录，并把相应信息提取出来丢到队列中慢慢去同步。</p>
+<p>　　所以我就在这里小小去了解一下 Binlog。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="什么是-Binlog"><a href="#什么是-Binlog" class="headerlink" title="什么是 Binlog"></a>什么是 Binlog</h3><p>　　MySQL Server 有四种类型的日志——Error Log、General Query Log、Binary Log 和 Slow Query Log。</p>
+<p>　　第一个是错误日志，记录 mysqld 的一些错误。第二个是一般查询日志，记录 mysqld 正在做的事情，比如客户端的连接和断开、来自客户端每条 Sql Statement 记录信息；如果你想准确知道客户端到底传了什么瞎 [哔哔] 玩意儿给服务端，这个日志就非常管用了，不过它非常影响性能。第四个是慢查询日志，记录一些查询比较慢的 SQL 语句——这种日志非常常用，主要是给开发者调优用的。</p>
+<p>　　剩下的第三种就是 Binlog 了，包含了一些事件，这些事件描述了数据库的改动，如建表、数据改动等，也包括一些潜在改动，比如 <code>DELETE FROM ran WHERE bing = luan</code>，然而一条数据都没被删掉的这种情况。除非使用 Row-based logging，否则会包含所有改动数据的 SQL Statement。</p>
+<p>　　那么 Binlog 就有了两个重要的用途——复制和恢复。比如主从表的复制，和备份恢复什么的。</p>
+<h3 id="启用-Binlog"><a href="#启用-Binlog" class="headerlink" title="启用 Binlog"></a>启用 Binlog</h3><p>　　通常情况 MySQL 是默认关闭 Binlog 的，所以你得配置一下以启用它。</p>
+<p>　　启用的过程就是修改配置文件 <code>my.cnf</code> 了。</p>
+<p>　　至于 <code>my.cnf</code> 位置请自行寻找。例如通过 OSX 的 <code>brew</code> 安装的 <code>mysql</code> 默认配置目录通常在</p>
 <blockquote>
 <p>/usr/local/Cellar/mysql/$VERSION/support-files/my-default.cnf</p>
 </blockquote>
-<p>　　這個時候需要將它拷貝到 <code>/etc/my.cnf</code> 下面。</p>
+<p>　　这个时候需要将它拷贝到 <code>/etc/my.cnf</code> 下面。</p>
 <blockquote>
-<p>詳見 &lt;<a href="http://stackoverflow.com/questions/10757169/mysql-my-cnf-location" target="_blank" rel="external">StackOverflow - MySQL ‘my.cnf’ location?</a>&gt;。</p>
+<p>详见 &lt;<a href="http://stackoverflow.com/questions/10757169/mysql-my-cnf-location" target="_blank" rel="external">StackOverflow - MySQL ‘my.cnf’ location?</a>&gt;。</p>
 </blockquote>
-<p>　　緊接着配置 <code>log-bin</code> 和 <code>log-bin-index</code> 的值，如果沒有則自行加上去。</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">log-bin=<span class="value">master-bin</span></span></span><br><span class="line"><span class="setting">log-bin-index=<span class="value">master-bin.index</span></span></span><br></pre></td></tr></table></figure>
-<p>　　這裏的 <code>log-bin</code> 是指以後生成各 Binlog 文件的前綴，比如上述使用 <code>master-bin</code>，那麼文件就將會是 <code>master-bin.000001</code>、<code>master-bin.000002</code> 等。而這裏的 <code>log-bin-index</code> 則指 binlog index 文件的名稱，這裏我們設置爲 <code>master-bin.index</code>。</p>
-<p>　　如果上述工作做完之後重啓 MySQL 服務，你可以進入你的 MySQL CLI 驗證一下是否真的啓用了。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mysql -u <span class="variable">$USERNAME</span> ...</span><br></pre></td></tr></table></figure>
-<p>　　然後在終端裏面輸入下面一句 SQL 語句：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'%log_bin%'</span>;</span></span><br></pre></td></tr></table></figure>
-<p>　　如果結果裏面出來這樣類似的話就表示成功了：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">+---------------------------------+---------------------------------------+</span><br><span class="line">| Variable_name                   | Value                                 |</span><br><span class="line">+---------------------------------+---------------------------------------+</span><br><span class="line">| <span class="built_in">log</span>_bin                         | ON                                    |</span><br><span class="line">| <span class="built_in">log</span>_bin_basename                | /usr/<span class="built_in">local</span>/var/mysql/master-bin       |</span><br><span class="line">| <span class="built_in">log</span>_bin_index                   | /usr/<span class="built_in">local</span>/var/mysql/master-bin.index |</span><br><span class="line">| <span class="built_in">log</span>_bin_trust_<span class="keyword">function</span>_creators | OFF                                   |</span><br><span class="line">| <span class="built_in">log</span>_bin_use_v1_row_events       | OFF                                   |</span><br><span class="line">| sql_<span class="built_in">log</span>_bin                     | ON                                    |</span><br><span class="line">+---------------------------------+---------------------------------------+</span><br><span class="line"><span class="number">6</span> rows <span class="keyword">in</span> <span class="built_in">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
-<p>　　更多的一些相關配置可以參考這篇《<a href="http://blog.csdn.net/jolly10/article/details/13998761" target="_blank" rel="external">MySQL 的 binary log 初探</a>》。</p>
-<h3 id="隨便玩玩">隨便玩玩</h3><p>　　然後你就可以隨便去執行一些數據變動的 SQL 語句了。當你執行了一堆語句之後就可以看到你的 Binlog 裏面有內容了。</p>
-<p>　　如上表所示，<code>log_bin_basename</code> 的值是 <code>/usr/local/var/mysql/master-bin</code> 就是 Binlog 的基礎文件名了。</p>
-<p>　　那我們進去看，比如我的這邊就有這麼幾個文件：</p>
+<p>　　紧接着配置 <code>log-bin</code> 和 <code>log-bin-index</code> 的值，如果没有则自行加上去。</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">log-bin</span>=master-bin</span><br><span class="line"><span class="attr">log-bin-index</span>=master-bin.index</span><br></pre></td></tr></table></figure>
+<p>　　这里的 <code>log-bin</code> 是指以后生成各 Binlog 文件的前缀，比如上述使用 <code>master-bin</code>，那么文件就将会是 <code>master-bin.000001</code>、<code>master-bin.000002</code> 等。而这里的 <code>log-bin-index</code> 则指 binlog index 文件的名称，这里我们设置为 <code>master-bin.index</code>。</p>
+<p>　　如果上述工作做完之后重启 MySQL 服务，你可以进入你的 MySQL CLI 验证一下是否真的启用了。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ mysql -u <span class="variable">$USERNAME</span> ...</span><br></pre></td></tr></table></figure>
+<p>　　然后在终端里面输入下面一句 SQL 语句：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'%log_bin%'</span>;</span><br></pre></td></tr></table></figure>
+<p>　　如果结果里面出来这样类似的话就表示成功了：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">+---------------------------------+---------------------------------------+</span><br><span class="line">| Variable_name                   | Value                                 |</span><br><span class="line">+---------------------------------+---------------------------------------+</span><br><span class="line">| log_bin                         | ON                                    |</span><br><span class="line">| log_bin_basename                | /usr/<span class="built_in">local</span>/var/mysql/master-bin       |</span><br><span class="line">| log_bin_index                   | /usr/<span class="built_in">local</span>/var/mysql/master-bin.index |</span><br><span class="line">| log_bin_trust_function_creators | OFF                                   |</span><br><span class="line">| log_bin_use_v1_row_events       | OFF                                   |</span><br><span class="line">| sql_log_bin                     | ON                                    |</span><br><span class="line">+---------------------------------+---------------------------------------+</span><br><span class="line">6 rows <span class="keyword">in</span> <span class="built_in">set</span> (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>　　更多的一些相关配置可以参考这篇《<a href="http://blog.csdn.net/jolly10/article/details/13998761" target="_blank" rel="external">MySQL 的 binary log 初探</a>》。</p>
+<h3 id="随便玩玩"><a href="#随便玩玩" class="headerlink" title="随便玩玩"></a>随便玩玩</h3><p>　　然后你就可以随便去执行一些数据变动的 SQL 语句了。当你执行了一堆语句之后就可以看到你的 Binlog 里面有内容了。</p>
+<p>　　如上表所示，<code>log_bin_basename</code> 的值是 <code>/usr/local/var/mysql/master-bin</code> 就是 Binlog 的基础文件名了。</p>
+<p>　　那我们进去看，比如我的这边就有这么几个文件：</p>
 <p><img src="binlog-files.jpg" alt="Binlog 文件"></p>
-<p>　　很容易發現，裏面有 <code>master-bin.index</code> 和 <code>master-bin.000001</code> 兩個文件，這兩個文件在上文中有提到過了。</p>
-<p>　　我們打開那個 <code>master-bin.index</code> 文件，會發現這個索引文件就是一個普通的文本文件，然後列舉了各 binlog 的文件名。而 <code>master-bin.000001</code> 文件就是一堆亂碼了——畢竟人家是二進制文件。</p>
-<h2 id="結構解析">結構解析</h2><h3 id="索引文件">索引文件</h3><p>　　索引文件就是上文中的 <code>master-bin.index</code> 文件，是一個普通的文本文件，以換行爲間隔，一行一個文件名。比如它可能是：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">master-bin<span class="number">.000001</span></span><br><span class="line">master-bin<span class="number">.000002</span></span><br><span class="line">master-bin<span class="number">.000003</span></span><br></pre></td></tr></table></figure>
-<p>　　然後對應的每行文件就是一個 Binlog 實體文件了。</p>
-<h3 id="Binlog_文件">Binlog 文件</h3><p>　　Binlog 的文件結構大致由如下幾個方面組成。</p>
-<h4 id="文件頭">文件頭</h4><p>　　文件頭由一個四字節 Magic Number，其值爲 <code>1852400382</code>，在內存中就是 <code>&quot;\xfe\x62\x69\x6e&quot;</code>，參考 MySQL 源碼的 <a href="://github.com/mysql/mysql-server/blob/a2757a60a7527407d08115e44e889a25f22c96c6/sql/log_event.h#L187">log_event.h</a>，也就是 <code>&#39;\0xfe&#39; &#39;b&#39; &#39;i&#39; &#39;n&#39;</code>。</p>
-<p>　　與平常二進制一樣，通常都有一個 Magic Number 進行文件識別，如果 Magic Number 不吻合上述的值那麼這個文件就不是一個正常的 Binlog。</p>
-<h4 id="事件">事件</h4><p>　　在文件頭之後，跟隨的是一個一個事件依次排列。每個事件都由一個事件頭和事件體組成。</p>
-<p>　　事件頭裏面的內容包含了這個事件的類型（如新增、刪除等）、事件執行時間以及是哪個服務器執行的事件等信息。</p>
-<p>　　第一個事件是一個事件描述符，描述了這個 Binlog 文件格式的版本。接下去的一堆事件將會按照第一個事件描述符所描述的結構版本進行解讀。最後一個事件是一個銜接事件，指定了下一個 Binlog 文件名——有點類似於鏈表裏面的 <code>next</code> 指針。</p>
-<p>　　根據《<a href="High-Level Binary Log Structure and Contents">High-Level Binary Log Structure and Contents</a>》所述，不同版本的 Binlog 格式不一定一樣，所以也沒有一個定性。在我寫這篇文章的時候，目前有三種版本的格式。</p>
+<p>　　很容易发现，里面有 <code>master-bin.index</code> 和 <code>master-bin.000001</code> 两个文件，这两个文件在上文中有提到过了。</p>
+<p>　　我们打开那个 <code>master-bin.index</code> 文件，会发现这个索引文件就是一个普通的文本文件，然后列举了各 binlog 的文件名。而 <code>master-bin.000001</code> 文件就是一堆乱码了——毕竟人家是二进制文件。</p>
+<h2 id="结构解析"><a href="#结构解析" class="headerlink" title="结构解析"></a>结构解析</h2><h3 id="索引文件"><a href="#索引文件" class="headerlink" title="索引文件"></a>索引文件</h3><p>　　索引文件就是上文中的 <code>master-bin.index</code> 文件，是一个普通的文本文件，以换行为间隔，一行一个文件名。比如它可能是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">master-bin.000001</span><br><span class="line">master-bin.000002</span><br><span class="line">master-bin.000003</span><br></pre></td></tr></table></figure>
+<p>　　然后对应的每行文件就是一个 Binlog 实体文件了。</p>
+<h3 id="Binlog-文件"><a href="#Binlog-文件" class="headerlink" title="Binlog 文件"></a>Binlog 文件</h3><p>　　Binlog 的文件结构大致由如下几个方面组成。</p>
+<h4 id="文件头"><a href="#文件头" class="headerlink" title="文件头"></a>文件头</h4><p>　　文件头由一个四字节 Magic Number，其值为 <code>1852400382</code>，在内存中就是 <code>&quot;\xfe\x62\x69\x6e&quot;</code>，参考 MySQL 源码的 <a href="://github.com/mysql/mysql-server/blob/a2757a60a7527407d08115e44e889a25f22c96c6/sql/log_event.h#L187">log_event.h</a>，也就是 <code>&#39;\0xfe&#39; &#39;b&#39; &#39;i&#39; &#39;n&#39;</code>。</p>
+<p>　　与平常二进制一样，通常都有一个 Magic Number 进行文件识别，如果 Magic Number 不吻合上述的值那么这个文件就不是一个正常的 Binlog。</p>
+<h4 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h4><p>　　在文件头之后，跟随的是一个一个事件依次排列。每个事件都由一个事件头和事件体组成。</p>
+<p>　　事件头里面的内容包含了这个事件的类型（如新增、删除等）、事件执行时间以及是哪个服务器执行的事件等信息。</p>
+<p>　　第一个事件是一个事件描述符，描述了这个 Binlog 文件格式的版本。接下去的一堆事件将会按照第一个事件描述符所描述的结构版本进行解读。最后一个事件是一个衔接事件，指定了下一个 Binlog 文件名——有点类似于链表里面的 <code>next</code> 指针。</p>
+<p>　　根据《<a href="High-Level Binary Log Structure and Contents">High-Level Binary Log Structure and Contents</a>》所述，不同版本的 Binlog 格式不一定一样，所以也没有一个定性。在我写这篇文章的时候，目前有三种版本的格式。</p>
 <ul>
-<li>v1，用於 MySQL 3.2.3</li>
-<li>v3，用於 MySQL 4.0.2 以及 4.1.0</li>
-<li>v4，用於 MySQL 5.0 以及更高版本</li>
+<li>v1，用于 MySQL 3.2.3</li>
+<li>v3，用于 MySQL 4.0.2 以及 4.1.0</li>
+<li>v4，用于 MySQL 5.0 以及更高版本</li>
 </ul>
-<p>　　實際上還有一個 v2 版本，不過只在早期 4.0.x 的 MySQL 版本中使用過，但是 v2 已經過於陳舊並且不再被 MySQL 官方支持了。</p>
+<p>　　实际上还有一个 v2 版本，不过只在早期 4.0.x 的 MySQL 版本中使用过，但是 v2 已经过于陈旧并且不再被 MySQL 官方支持了。</p>
 <blockquote>
-<p><strong>通常我們現在用的 MySQL 都是在 5.0 以上的了，所以就略過 v1 ~ v3 版本的 Binlog，如果需要了解 v1 ~ v3 版本的 Binlog 可以自行前往上述的《High-level…》文章查看。</strong></p>
+<p><strong>通常我们现在用的 MySQL 都是在 5.0 以上的了，所以就略过 v1 ~ v3 版本的 Binlog，如果需要了解 v1 ~ v3 版本的 Binlog 可以自行前往上述的《High-level…》文章查看。</strong></p>
 </blockquote>
-<h5 id="事件頭">事件頭</h5><p>　　一個事件頭有 19 字節，依次排列爲四字節的時間戳、一字節的當前事件類型、四字節的服務端 ID、四字節的當前事件長度描述、四字節的下個事件位置（方便跳轉）以及兩字節的標識。</p>
+<h5 id="事件头"><a href="#事件头" class="headerlink" title="事件头"></a>事件头</h5><p>　　一个事件头有 19 字节，依次排列为四字节的时间戳、一字节的当前事件类型、四字节的服务端 ID、四字节的当前事件长度描述、四字节的下个事件位置（方便跳转）以及两字节的标识。</p>
 <p>　　用 ASCII Diagram 表示如下：</p>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">+---------+---------+---------+------------+-------------+-------+</span><br><span class="line">|<span class="string">timestamp</span>|<span class="string">type code</span>|<span class="string">server_id</span>|<span class="string">event_length</span>|<span class="string">next_position</span>|<span class="string">flags  </span>|</span><br><span class="line">|<span class="string">4 bytes  </span>|<span class="string">1 byte   </span>|<span class="string">4 bytes  </span>|<span class="string">4 bytes     </span>|<span class="string">4 bytes      </span>|<span class="string">2 bytes</span>|</span><br><span class="line">+---------+---------+---------+------------+-------------+-------+</span><br></pre></td></tr></table></figure>
-<p>　　也可以字節編造一個結構體來解讀這個頭：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> BinlogEventHeader</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span>   timestamp;</span><br><span class="line">    <span class="keyword">char</span>  type_code;</span><br><span class="line">    <span class="keyword">int</span>   server_id;</span><br><span class="line">    <span class="keyword">int</span>   event_length;</span><br><span class="line">    <span class="keyword">int</span>   next_position;</span><br><span class="line">    <span class="keyword">char</span>  flags[<span class="number">2</span>];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+---------+---------+---------+------------+-------------+-------+</span><br><span class="line">|timestamp|type code|server_id|event_length|next_position|flags  |</span><br><span class="line">|4 bytes  |1 byte   |4 bytes  |4 bytes     |4 bytes      |2 bytes|</span><br><span class="line">+---------+---------+---------+------------+-------------+-------+</span><br></pre></td></tr></table></figure>
+<p>　　也可以字节编造一个结构体来解读这个头：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> BinlogEventHeader</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span>   timestamp;</span><br><span class="line">    <span class="keyword">char</span>  type_code;</span><br><span class="line">    <span class="keyword">int</span>   server_id;</span><br><span class="line">    <span class="keyword">int</span>   event_length;</span><br><span class="line">    <span class="keyword">int</span>   next_position;</span><br><span class="line">    <span class="keyword">char</span>  flags[<span class="number">2</span>];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>如果你要直接用這個結構體來讀取數據的話，需要加點手腳。</p>
-<p>因爲默認情況下 GCC 或者 G++ 編譯器會對結構體進行字節對齊，這樣讀進來的數據就不對了，因爲 Binlog 並不是對齊的。爲了統一我們需要取消這個結構體的字節對齊，一個方法是使用 <code>#pragma pack(n)</code>，一個方法是使用 <code>__attribute__((__packed__))</code>，還有一種情況是在編譯器編譯的時候強制把所有的結構體對其取消，即在編譯的時候使用 <code>fpack-struct</code> 參數，如：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ temp.cpp -o a -fpack-struct=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>如果你要直接用这个结构体来读取数据的话，需要加点手脚。</p>
+<p>因为默认情况下 GCC 或者 G++ 编译器会对结构体进行字节对齐，这样读进来的数据就不对了，因为 Binlog 并不是对齐的。为了统一我们需要取消这个结构体的字节对齐，一个方法是使用 <code>#pragma pack(n)</code>，一个方法是使用 <code>__attribute__((__packed__))</code>，还有一种情况是在编译器编译的时候强制把所有的结构体对其取消，即在编译的时候使用 <code>fpack-struct</code> 参数，如：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ g++ temp.cpp -o a -fpack-struct=1</span><br></pre></td></tr></table></figure>
 </blockquote>
-<p>　　根據上述的結構我們可以明確得到各變量在結構體裏面的偏移量，所以在 MySQL 源碼裏面（<a href="https://github.com/mysql/mysql-server/blob/5.7/libbinlogevents/include/binlog_event.h#L353" target="_blank" rel="external">libbinlogevents/include/binlog_event.h</a>）有下面幾個常量以快速標記偏移：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EVENT_TYPE_OFFSET    <span class="number">4</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> SERVER_ID_OFFSET     <span class="number">5</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EVENT_LEN_OFFSET     <span class="number">9</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> LOG_POS_OFFSET       <span class="number">13</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> FLAGS_OFFSET         <span class="number">17</span></span></span><br></pre></td></tr></table></figure>
-<p>　　而具體有哪些事件則在 <a href="https://github.com/mysql/mysql-server/blob/5.7/libbinlogevents/include/binlog_event.h#L245" target="_blank" rel="external">libbinlogevents/include/binlog_event.h#L245</a> 裏面被定義。如有個 <code>FORMAT_DESCRIPTION_EVENT</code> 事件的 <code>type_code</code> 是 15、<code>UPDATE_ROWS_EVENT</code> 的 <code>type_code</code> 是 31。</p>
-<p>　　還有那個 <code>next_position</code>，在 v4 版本中代表從 Binlog 一開始到下一個事件開始的偏移量，比如到第一個事件的 <code>next_position</code> 就是 4，因爲文件頭有一個字節的長度。然後接下去對於事件 n 和事件 n + 1 來說，他們有這樣的關係：</p>
+<p>　　根据上述的结构我们可以明确得到各变量在结构体里面的偏移量，所以在 MySQL 源码里面（<a href="https://github.com/mysql/mysql-server/blob/5.7/libbinlogevents/include/binlog_event.h#L353" target="_blank" rel="external">libbinlogevents/include/binlog_event.h</a>）有下面几个常量以快速标记偏移：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> EVENT_TYPE_OFFSET    4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SERVER_ID_OFFSET     5</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> EVENT_LEN_OFFSET     9</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOG_POS_OFFSET       13</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FLAGS_OFFSET         17</span></span><br></pre></td></tr></table></figure>
+<p>　　而具体有哪些事件则在 <a href="https://github.com/mysql/mysql-server/blob/5.7/libbinlogevents/include/binlog_event.h#L245" target="_blank" rel="external">libbinlogevents/include/binlog_event.h#L245</a> 里面被定义。如有个 <code>FORMAT_DESCRIPTION_EVENT</code> 事件的 <code>type_code</code> 是 15、<code>UPDATE_ROWS_EVENT</code> 的 <code>type_code</code> 是 31。</p>
+<p>　　还有那个 <code>next_position</code>，在 v4 版本中代表从 Binlog 一开始到下一个事件开始的偏移量，比如到第一个事件的 <code>next_position</code> 就是 4，因为文件头有一个字节的长度。然后接下去对于事件 n 和事件 n + 1 来说，他们有这样的关系：</p>
 <blockquote>
 <p>next_position(n + 1) = next_position(n) + event_length(n)</p>
 </blockquote>
-<p>　　關於 flags 暫時不需要了解太多，如果真的想了解的話可以看看 MySQL 的<a href="http://dev.mysql.com/doc/internals/en/event-flags.html" target="_blank" rel="external">相關官方文檔</a>。</p>
-<h5 id="事件體">事件體</h5><p>　　事實上在 Binlog 事件中應該是有三個部分組成，<code>header</code>、<code>post-header</code> 和 <code>payload</code>，不過通常情況下我們把 <code>post-header</code> 和 <code>payload</code> 都歸結爲事件體，實際上這個 <code>post-header</code> 裏面放的是一些定長的數據，只不過有時候我們不需要特別地關心。想要深入瞭解可以去查看 MySQL 的官方文檔。</p>
-<p>　　所以實際上一個真正的事件體由兩部分組成，用 ASCII Diagram 表示就像這樣：</p>
-<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+=====================================+</span></span><br><span class="line">| event  | fixed part (post-header)   |</span><br><span class="line">| data   <span class="code">+----------------------------+</span></span><br><span class="line"><span class="header">|        | variable part (payload)    |</span><br><span class="line">+=====================================+</span></span><br></pre></td></tr></table></figure>
-<p>　　而這個 <code>post-header</code> 對於不同類型的事件來說長度是不一樣的，同種類型來說是一樣的，而這個長度的預先規定將會在一個“格式描述事件”中定好。</p>
-<h5 id="格式描述事件">格式描述事件</h5><p>　　在上文我們有提到過，在 Magic Number 之後跟着的是一個格式描述事件（Format Description Event），其實這只是在 v4 版本中的稱呼，在以前的版本里面叫起始事件（Start Event）。</p>
-<p>　　在 v4 版本中這個事件的結構如下面的 ASCII Diagram 所示。</p>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">+=====================================+</span><br><span class="line">|<span class="string"> event  </span>|<span class="string"> timestamp         0 : 4    </span>|</span><br><span class="line">|<span class="string"> header +----------------------------+</span><br><span class="line"></span>|<span class="string">        </span>|<span class="string"> type_code         4 : 1    </span>|<span class="string"> = FORMAT_DESCRIPTION_EVENT = 15</span><br><span class="line"></span>|<span class="string">        +----------------------------+</span><br><span class="line"></span>|<span class="string">        </span>|<span class="string"> server_id         5 : 4    </span>|</span><br><span class="line">|<span class="string">        +----------------------------+</span><br><span class="line"></span>|<span class="string">        </span>|<span class="string"> event_length      9 : 4    </span>|<span class="string"> &gt;= 91</span><br><span class="line"></span>|<span class="string">        +----------------------------+</span><br><span class="line"></span>|<span class="string">        </span>|<span class="string"> next_position    13 : 4    </span>|</span><br><span class="line">|<span class="string">        +----------------------------+</span><br><span class="line"></span>|<span class="string">        </span>|<span class="string"> flags            17 : 2    </span>|</span><br><span class="line">+=====================================+</span><br><span class="line">|<span class="string"> event  </span>|<span class="string"> binlog_version   19 : 2    </span>|<span class="string"> = 4</span><br><span class="line"></span>|<span class="string"> data   +----------------------------+</span><br><span class="line"></span>|<span class="string">        </span>|<span class="string"> server_version   21 : 50   </span>|</span><br><span class="line">|<span class="string">        +----------------------------+</span><br><span class="line"></span>|<span class="string">        </span>|<span class="string"> create_timestamp 71 : 4    </span>|</span><br><span class="line">|<span class="string">        +----------------------------+</span><br><span class="line"></span>|<span class="string">        </span>|<span class="string"> header_length    75 : 1    </span>|</span><br><span class="line">|<span class="string">        +----------------------------+</span><br><span class="line"></span>|<span class="string">        </span>|<span class="string"> post-header      76 : n    </span>|<span class="string"> = array of n bytes, one byte per event</span><br><span class="line"></span>|<span class="string">        </span>|<span class="string"> lengths for all            </span>|<span class="string">   type that the server knows about</span><br><span class="line"></span>|<span class="string">        </span>|<span class="string"> event types                </span>|</span><br><span class="line">+=====================================+</span><br></pre></td></tr></table></figure>
-<p>　　這個事件的 <code>type_code</code> 是 15，然後 <code>event_length</code> 是大於等於 91 的值的，這個主要取決於所有事件類型數。</p>
-<p>　　因爲從第 76 字節開始後面的二進制就代表一個字節類型的數組了，一個字節代表一個事件類型的 <code>post-header</code> 長度，即每個事件類型固定數據的長度。</p>
-<p>　　那麼按照上述的一些線索來看，我們能非常快地寫出一個簡單的解讀 Binlog 格式描述事件的代碼。</p>
+<p>　　关于 flags 暂时不需要了解太多，如果真的想了解的话可以看看 MySQL 的<a href="http://dev.mysql.com/doc/internals/en/event-flags.html" target="_blank" rel="external">相关官方文档</a>。</p>
+<h5 id="事件体"><a href="#事件体" class="headerlink" title="事件体"></a>事件体</h5><p>　　事实上在 Binlog 事件中应该是有三个部分组成，<code>header</code>、<code>post-header</code> 和 <code>payload</code>，不过通常情况下我们把 <code>post-header</code> 和 <code>payload</code> 都归结为事件体，实际上这个 <code>post-header</code> 里面放的是一些定长的数据，只不过有时候我们不需要特别地关心。想要深入了解可以去查看 MySQL 的官方文档。</p>
+<p>　　所以实际上一个真正的事件体由两部分组成，用 ASCII Diagram 表示就像这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+=====================================+</span><br><span class="line">| event  | fixed part (post-header)   |</span><br><span class="line">| data   +----------------------------+</span><br><span class="line">|        | variable part (payload)    |</span><br><span class="line">+=====================================+</span><br></pre></td></tr></table></figure>
+<p>　　而这个 <code>post-header</code> 对于不同类型的事件来说长度是不一样的，同种类型来说是一样的，而这个长度的预先规定将会在一个“格式描述事件”中定好。</p>
+<h5 id="格式描述事件"><a href="#格式描述事件" class="headerlink" title="格式描述事件"></a>格式描述事件</h5><p>　　在上文我们有提到过，在 Magic Number 之后跟着的是一个格式描述事件（Format Description Event），其实这只是在 v4 版本中的称呼，在以前的版本里面叫起始事件（Start Event）。</p>
+<p>　　在 v4 版本中这个事件的结构如下面的 ASCII Diagram 所示。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+=====================================+</span><br><span class="line">| event  | timestamp         0 : 4    |</span><br><span class="line">| header +----------------------------+</span><br><span class="line">|        | type_code         4 : 1    | = FORMAT_DESCRIPTION_EVENT = 15</span><br><span class="line">|        +----------------------------+</span><br><span class="line">|        | server_id         5 : 4    |</span><br><span class="line">|        +----------------------------+</span><br><span class="line">|        | event_length      9 : 4    | &gt;= 91</span><br><span class="line">|        +----------------------------+</span><br><span class="line">|        | next_position    13 : 4    |</span><br><span class="line">|        +----------------------------+</span><br><span class="line">|        | flags            17 : 2    |</span><br><span class="line">+=====================================+</span><br><span class="line">| event  | binlog_version   19 : 2    | = 4</span><br><span class="line">| data   +----------------------------+</span><br><span class="line">|        | server_version   21 : 50   |</span><br><span class="line">|        +----------------------------+</span><br><span class="line">|        | create_timestamp 71 : 4    |</span><br><span class="line">|        +----------------------------+</span><br><span class="line">|        | header_length    75 : 1    |</span><br><span class="line">|        +----------------------------+</span><br><span class="line">|        | post-header      76 : n    | = array of n bytes, one byte per event</span><br><span class="line">|        | lengths for all            |   type that the server knows about</span><br><span class="line">|        | event types                |</span><br><span class="line">+=====================================+</span><br></pre></td></tr></table></figure>
+<p>　　这个事件的 <code>type_code</code> 是 15，然后 <code>event_length</code> 是大于等于 91 的值的，这个主要取决于所有事件类型数。</p>
+<p>　　因为从第 76 字节开始后面的二进制就代表一个字节类型的数组了，一个字节代表一个事件类型的 <code>post-header</code> 长度，即每个事件类型固定数据的长度。</p>
+<p>　　那么按照上述的一些线索来看，我们能非常快地写出一个简单的解读 Binlog 格式描述事件的代码。</p>
 <blockquote>
-<p>如上文所述，如果需要正常解讀 Binlog 文件的話，下面的代碼編譯時候需要加上 <code>-fpack-struct=1</code> 這個參數。</p>
+<p>如上文所述，如果需要正常解读 Binlog 文件的话，下面的代码编译时候需要加上 <code>-fpack-struct=1</code> 这个参数。</p>
 </blockquote>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> BinlogEventHeader</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span>  timestamp;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> type_code;</span><br><span class="line">    <span class="keyword">int</span>  server_id;</span><br><span class="line">    <span class="keyword">int</span>  event_length;</span><br><span class="line">    <span class="keyword">int</span>  next_position;</span><br><span class="line">    <span class="keyword">short</span> flags;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    FILE* fp = fopen(<span class="string">"/usr/local/var/mysql/master-bin.000001"</span>, <span class="string">"rb"</span>);</span><br><span class="line">    <span class="keyword">int</span> magic_number;</span><br><span class="line">    fread(&amp;magic_number, <span class="number">4</span>, <span class="number">1</span>, fp);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d - %s\n"</span>, magic_number, (<span class="keyword">char</span>*)(&amp;magic_number));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">struct</span> BinlogEventHeader format_description_event_header;</span><br><span class="line">    fread(&amp;format_description_event_header, <span class="number">19</span>, <span class="number">1</span>, fp);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"BinlogEventHeader\n&#123;\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"    timestamp: %d\n"</span>, format_description_event_header.timestamp);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"    type_code: %d\n"</span>, format_description_event_header.type_code);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"    server_id: %d\n"</span>, format_description_event_header.server_id);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"    event_length: %d\n"</span>, format_description_event_header.event_length);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"    next_position: %d\n"</span>, format_description_event_header.next_position);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"    flags[]: %d\n&#125;\n"</span>, format_description_event_header.flags);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">short</span> binlog_version;</span><br><span class="line">    fread(&amp;binlog_version, <span class="number">2</span>, <span class="number">1</span>, fp);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"binlog_version: %d\n"</span>, binlog_version);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span> server_version[<span class="number">51</span>];</span><br><span class="line">    fread(server_version, <span class="number">50</span>, <span class="number">1</span>, fp);</span><br><span class="line">    server_version[<span class="number">50</span>] = <span class="string">'\0'</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"server_version: %s\n"</span>, server_version);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> create_timestamp;</span><br><span class="line">    fread(&amp;create_timestamp, <span class="number">4</span>, <span class="number">1</span>, fp);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"create_timestamp: %d\n"</span>, create_timestamp);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span> header_length;</span><br><span class="line">    fread(&amp;header_length, <span class="number">1</span>, <span class="number">1</span>, fp);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"header_length: %d\n"</span>, header_length);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> type_count = format_description_event_header.event_length - <span class="number">76</span>;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> post_header_length[type_count];</span><br><span class="line">    fread(post_header_length, <span class="number">1</span>, type_count, fp);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; type_count; i++) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"  - type %d: %d\n"</span>, i + <span class="number">1</span>, post_header_length[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>　　這個時候你得到的結果有可能就是這樣的了：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1852400382</span> - �binpz�</span><br><span class="line">BinlogEventHeader</span><br><span class="line">&#123;</span><br><span class="line">    timestamp: <span class="number">1439186734</span></span><br><span class="line">    type_code: <span class="number">15</span></span><br><span class="line">    server_id: <span class="number">1</span></span><br><span class="line">    event_length: <span class="number">116</span></span><br><span class="line">    next_position: <span class="number">120</span></span><br><span class="line">    flags[]: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line">binlog_version: <span class="number">4</span></span><br><span class="line">server_version: <span class="number">5.6</span><span class="number">.24</span>-<span class="built_in">log</span></span><br><span class="line">create_timestamp: <span class="number">1439186734</span></span><br><span class="line">header_length: <span class="number">19</span></span><br><span class="line">  - type <span class="number">1</span>: <span class="number">56</span></span><br><span class="line">  - type <span class="number">2</span>: <span class="number">13</span></span><br><span class="line">  - type <span class="number">3</span>: <span class="number">0</span></span><br><span class="line">  - type <span class="number">4</span>: <span class="number">8</span></span><br><span class="line">  - type <span class="number">5</span>: <span class="number">0</span></span><br><span class="line">  - type <span class="number">6</span>: <span class="number">18</span></span><br><span class="line">  - ...</span><br></pre></td></tr></table></figure>
-<p>　　一共會輸出 40 種類型（從 1 到 40），如官方文檔所說，這個數組從 <code>START_EVENT_V3</code> 事件開始（<code>type_code</code> 是 1）。</p>
-<h5 id="跳轉事件">跳轉事件</h5><p>　　跳轉事件即 <code>ROTATE_EVENT</code>，其 <code>type_code</code> 是 4，其 <code>post-header</code> 長度爲 8。</p>
-<p>　　當一個 Binlog 文件大小已經差不多要分割了，它就會在末尾被寫入一個 <code>ROTATE_EVENT</code>——用於指出這個 Binlog 的下一個文件。</p>
-<p>　　它的 <code>post-header</code> 是 8 字節的一個東西，內容通常就是一個整數 <code>4</code>，用於表示下一個 Binlog 文件中的第一個事件起始偏移量。我們從上文就能得出在一般情況下這個數字只可能是四，就偏移了一個魔法數字。當然我們講的是在 v4 這個 Binlog 版本下的情況。</p>
-<p>　　然後在 <code>payload</code> 位置是一個字符串，即下一個 Binlog 文件的文件名。</p>
-<h5 id="各種不同的事件體">各種不同的事件體</h5><p>　　由於篇幅原因這裏就不詳細舉例其它普通的不同事件體了，具體的詳解在 <a href="http://dev.mysql.com/doc/internals/en/event-data-for-specific-event-types.html" target="_blank" rel="external">MySQL 文檔</a>中一樣有介紹，用到什麼類型的事件體就可以自己去查詢。</p>
-<h2 id="小結">小結</h2><p>　　本文大概介紹了 Binlog 的一些情況，以及 Binlog 的內部二進制解析結構。方便大家造輪子用——不然老用別人的輪子，只知其然而不知其所以然多沒勁。</p>
-<p>　　好了要下班了，就寫到這裏過吧。</p>
-<h2 id="參考">參考</h2><ol>
-<li><a href="http://my.oschina.net/leejun2005/blog/75273" target="_blank" rel="external">MySQL’s binary log 結構簡介</a>，目測原文在 <a href="http://www.taobaodba.com/html/474_mysqls-binary-log_details.html" target="_blank" rel="external">TaobaoDBA</a>（已無法訪問）</li>
-<li><a href="http://www.linuxidc.com/Linux/2014-09/107095.htm" target="_blank" rel="external">MySQL Binlog 的介紹</a></li>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> BinlogEventHeader</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span>  timestamp;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> type_code;</span><br><span class="line">    <span class="keyword">int</span>  server_id;</span><br><span class="line">    <span class="keyword">int</span>  event_length;</span><br><span class="line">    <span class="keyword">int</span>  next_position;</span><br><span class="line">    <span class="keyword">short</span> flags;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    FILE* fp = fopen(<span class="string">"/usr/local/var/mysql/master-bin.000001"</span>, <span class="string">"rb"</span>);</span><br><span class="line">    <span class="keyword">int</span> magic_number;</span><br><span class="line">    fread(&amp;magic_number, <span class="number">4</span>, <span class="number">1</span>, fp);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d - %s\n"</span>, magic_number, (<span class="keyword">char</span>*)(&amp;magic_number));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">struct</span> BinlogEventHeader format_description_event_header;</span><br><span class="line">    fread(&amp;format_description_event_header, <span class="number">19</span>, <span class="number">1</span>, fp);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"BinlogEventHeader\n&#123;\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"    timestamp: %d\n"</span>, format_description_event_header.timestamp);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"    type_code: %d\n"</span>, format_description_event_header.type_code);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"    server_id: %d\n"</span>, format_description_event_header.server_id);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"    event_length: %d\n"</span>, format_description_event_header.event_length);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"    next_position: %d\n"</span>, format_description_event_header.next_position);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"    flags[]: %d\n&#125;\n"</span>, format_description_event_header.flags);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">short</span> binlog_version;</span><br><span class="line">    fread(&amp;binlog_version, <span class="number">2</span>, <span class="number">1</span>, fp);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"binlog_version: %d\n"</span>, binlog_version);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span> server_version[<span class="number">51</span>];</span><br><span class="line">    fread(server_version, <span class="number">50</span>, <span class="number">1</span>, fp);</span><br><span class="line">    server_version[<span class="number">50</span>] = <span class="string">'\0'</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"server_version: %s\n"</span>, server_version);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> create_timestamp;</span><br><span class="line">    fread(&amp;create_timestamp, <span class="number">4</span>, <span class="number">1</span>, fp);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"create_timestamp: %d\n"</span>, create_timestamp);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span> header_length;</span><br><span class="line">    fread(&amp;header_length, <span class="number">1</span>, <span class="number">1</span>, fp);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"header_length: %d\n"</span>, header_length);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> type_count = format_description_event_header.event_length - <span class="number">76</span>;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> post_header_length[type_count];</span><br><span class="line">    fread(post_header_length, <span class="number">1</span>, type_count, fp);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; type_count; i++) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"  - type %d: %d\n"</span>, i + <span class="number">1</span>, post_header_length[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>　　这个时候你得到的结果有可能就是这样的了：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1852400382 - �binpz�</span><br><span class="line">BinlogEventHeader</span><br><span class="line">&#123;</span><br><span class="line">    timestamp: 1439186734</span><br><span class="line">    type_code: 15</span><br><span class="line">    server_id: 1</span><br><span class="line">    event_length: 116</span><br><span class="line">    next_position: 120</span><br><span class="line">    flags[]: 1</span><br><span class="line">&#125;</span><br><span class="line">binlog_version: 4</span><br><span class="line">server_version: 5.6.24-log</span><br><span class="line">create_timestamp: 1439186734</span><br><span class="line">header_length: 19</span><br><span class="line">  - type 1: 56</span><br><span class="line">  - type 2: 13</span><br><span class="line">  - type 3: 0</span><br><span class="line">  - type 4: 8</span><br><span class="line">  - type 5: 0</span><br><span class="line">  - type 6: 18</span><br><span class="line">  - ...</span><br></pre></td></tr></table></figure>
+<p>　　一共会输出 40 种类型（从 1 到 40），如官方文档所说，这个数组从 <code>START_EVENT_V3</code> 事件开始（<code>type_code</code> 是 1）。</p>
+<h5 id="跳转事件"><a href="#跳转事件" class="headerlink" title="跳转事件"></a>跳转事件</h5><p>　　跳转事件即 <code>ROTATE_EVENT</code>，其 <code>type_code</code> 是 4，其 <code>post-header</code> 长度为 8。</p>
+<p>　　当一个 Binlog 文件大小已经差不多要分割了，它就会在末尾被写入一个 <code>ROTATE_EVENT</code>——用于指出这个 Binlog 的下一个文件。</p>
+<p>　　它的 <code>post-header</code> 是 8 字节的一个东西，内容通常就是一个整数 <code>4</code>，用于表示下一个 Binlog 文件中的第一个事件起始偏移量。我们从上文就能得出在一般情况下这个数字只可能是四，就偏移了一个魔法数字。当然我们讲的是在 v4 这个 Binlog 版本下的情况。</p>
+<p>　　然后在 <code>payload</code> 位置是一个字符串，即下一个 Binlog 文件的文件名。</p>
+<h5 id="各种不同的事件体"><a href="#各种不同的事件体" class="headerlink" title="各种不同的事件体"></a>各种不同的事件体</h5><p>　　由于篇幅原因这里就不详细举例其它普通的不同事件体了，具体的详解在 <a href="http://dev.mysql.com/doc/internals/en/event-data-for-specific-event-types.html" target="_blank" rel="external">MySQL 文档</a>中一样有介绍，用到什么类型的事件体就可以自己去查询。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>　　本文大概介绍了 Binlog 的一些情况，以及 Binlog 的内部二进制解析结构。方便大家造轮子用——不然老用别人的轮子，只知其然而不知其所以然多没劲。</p>
+<p>　　好了要下班了，就写到这里过吧。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="http://my.oschina.net/leejun2005/blog/75273" target="_blank" rel="external">MySQL’s binary log 结构简介</a>，目测原文在 <a href="http://www.taobaodba.com/html/474_mysqls-binary-log_details.html" target="_blank" rel="external">TaobaoDBA</a>（已无法访问）</li>
+<li><a href="http://www.linuxidc.com/Linux/2014-09/107095.htm" target="_blank" rel="external">MySQL Binlog 的介绍</a></li>
 <li><a href="http://blog.csdn.net/jolly10/article/details/13998761" target="_blank" rel="external">MySQL 的 binary log 初探</a></li>
 <li><a href="http://dev.mysql.com/doc/internals/en/binary-log-structure-and-contents.html" target="_blank" rel="external">High-Level Binary Log Structure and Contents</a> and related official documents</li>
 <li><a href="http://stackoverflow.com/questions/21912098/pragma-pack-vs-fpack-struct-for-intel-c" target="_blank" rel="external">#pragma pack vs -fpack-struct for Intel C</a></li>
 </ol>
+<hr><section class="comment"><div class="ds-thread" data-thread-key="/2015/08/10/mysql-binlog-try/" data-title="初探 MySQL 的 Binlog" data-url="https://xcoder.in/2015/08/10/mysql-binlog-try/"></div></section><script>var _shortName = "xcoder-ghost";</script><script>var duoshuoQuery = {};
+duoshuoQuery["short_name"] = _shortName;
+(function() {
+    var ds = document.createElement("script");
+    ds.type = "text/javascript";
+    ds.async = true;
+    ds.src = (document.location.protocol === "https:" ? "https:" : "http:") + "//static.duoshuo.com/embed.js";
+    ds.charset = "utf-8";
+    (document.getElementsByTagName("head")[0] ||
+        document.getElementsByTagName("body")[0]).appendChild(ds);
+})();</script><footer><section class="copyright">&copy; 2016 - 2016<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="//cdn.bootcss.com/highlight.js/9.9.0/highlight.min.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
 
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : $(block).attr("class")) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
+    });
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
 
-			
-            <section class="comment">
-<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="/2015/08/10/mysql-binlog-try/" data-title="初探 MySQL 的 Binlog" data-url="http://xcoder.in/2015/08/10/mysql-binlog-try/"></div>
-<!-- 多说评论框 end -->
-<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
-var duoshuoQuery = {short_name:"xcoder-ghost"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0]
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-<!-- 多说公共JS代码 end -->
-</section>
-        </div>
-    </div>
-</article>
-
-    <footer id="footer">
-    <div id="bottom-tip">
-        艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
-    </div>
-        <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 小鳥遊死月</small>
-    </footer>
-
-    
-    <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?d4417d158ec17db3ca549b508c2e5e07";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-    </script>
-
-
-
-</body>
-</html>
-
+    $("article.full img").each(function() {
+      $(this).parent().css("text-align", "center");
+    });
+});</script></body></html>

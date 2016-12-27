@@ -1,15 +1,15 @@
-title: 搭建 VIM 下的 Hexo 編輯環境 
+title: 搭建 VIM 下的 Hexo 编辑环境 
 date: 2014-06-02 04:52:30
 tags: [ vim, hexo ]
 ---
 
-　　本文只講兩個函數，對於 `markdown` 如何高亮之類的問題還請自行谷歌。
+　　本文只讲两个函数，对于 `markdown` 如何高亮之类的问题还请自行谷歌。
 
-　　然後請打開你自己的 `.vimrc` 文件。
+　　然后请打开你自己的 `.vimrc` 文件。
 
-## 預備工作
+## 预备工作
 
-　　首先定義一個變量——你自己的 `hexo` 目錄，如果要跨平臺可以做個判斷之類的，如下：
+　　首先定义一个变量——你自己的 `hexo` 目录，如果要跨平台可以做个判断之类的，如下：
 
 ```vimrc
 if has("win32")
@@ -19,11 +19,11 @@ else
 endif
 ```
 
-## 幾個函數
+## 几个函数
 
-### 進入 Hexo 目錄
+### 进入 Hexo 目录
 
-　　這個函數大致就是讓你進入你自己的 `Hexo` 路徑：
+　　这个函数大致就是让你进入你自己的 `Hexo` 路径：
 
 ```vimrc
 fun! OpenHexoProjPath()
@@ -31,9 +31,9 @@ fun! OpenHexoProjPath()
 endfun
 ```
 
-### 打開一篇 Post
+### 打开一篇 Post
 
-　　接下去就是一個打開 `Post` 的函數了：
+　　接下去就是一个打开 `Post` 的函数了：
 
 ```vimrc
 function! OpenHexoPost(...)
@@ -44,11 +44,11 @@ function! OpenHexoPost(...)
 endfunction
 ```
 
-> 解析：上面的代碼大意就是進入 Hexo 路徑，然後設定好文件名，最後執行 `:e filename` 即可打開文件了。
+> 解析：上面的代码大意就是进入 Hexo 路径，然后设定好文件名，最后执行 `:e filename` 即可打开文件了。
 
 ### 新建一篇 Post
 
-　　新建的流程跟打開相似，只不過首先要在 `Hexo` 目錄下執行一遍 `hexo new FOO` 的命令而已，命令執行完畢之後再打開即可。
+　　新建的流程跟打开相似，只不过首先要在 `Hexo` 目录下执行一遍 `hexo new FOO` 的命令而已，命令执行完毕之后再打开即可。
 
 ```vimrc
 function! NewHexoPost(...)
@@ -63,11 +63,11 @@ endfunction
 
 ## 指令映射
 
-　　函數寫好後我們最後把函數映射成類似於 `:e`, `:w` 之類的後面能跟着參數的指令即可。
+　　函数写好后我们最后把函数映射成类似于 `:e`, `:w` 之类的后面能跟着参数的指令即可。
 
-　　以前木有接觸過的同學可以參考一下[這裏](http://vimdoc.sourceforge.net/htmldoc/usr_40.html#40.2)的文檔。
+　　以前木有接触过的同学可以参考一下[这里](http://vimdoc.sourceforge.net/htmldoc/usr_40.html#40.2)的文档。
 
-### 打開指令
+### 打开指令
 
 ```vimrc
 command -nargs=+ HexoOpen :call OpenHexoPost("<args>")
@@ -81,21 +81,21 @@ command -nargs=+ HexoNew :call NewHexoPost("<args>")
 
 ## 使用方法
 
-　　當你做完以上步驟的時候，你就可以無論在什麼目錄下在 VIM 裏面通過下面的指令進行新建一篇日誌了：
+　　当你做完以上步骤的时候，你就可以无论在什么目录下在 VIM 里面通过下面的指令进行新建一篇日志了：
 
 ```vim
 :HexoNew artical-name
 ```
 
-　　以及下面的指令來打開一篇已存在的日誌：
+　　以及下面的指令来打开一篇已存在的日志：
 
 ```vim
 :HexoOpen artical-name
 ```
 
-## 遺留問題
+## 遗留问题
 
-　　相信看到這裏之後，大家也能自己寫出一個生成的指令了，這裏就不累述了，無非就是：
+　　相信看到这里之后，大家也能自己写出一个生成的指令了，这里就不累述了，无非就是：
 
 ```vim
 :!hexo generate

@@ -1,16 +1,16 @@
-title: 讓Node.js和C++一起搞基 —— 2
+title: 让Node.js和C++一起搞基 —— 2
 date: 2014-04-03 22:37:15
 tags: [ Node.js, C++ ]
 category: NodeJS
 ---
 
-　　好，今天讓我們更深入地搞基吧！
+　　好，今天让我们更深入地搞基吧！
   
-## 溫故而知新，可以爲溼矣
+## 温故而知新，可以为湿矣
 
-　　首先請大家記住這個 V8 的在線手冊——[http://izs.me/v8-docs/main.html](http://izs.me/v8-docs/main.html)。
+　　首先请大家记住这个 V8 的在线手册——[http://izs.me/v8-docs/main.html](http://izs.me/v8-docs/main.html)。
 
-　　還記得上次的 `building.gyp` 文件嗎？
+　　还记得上次的 `building.gyp` 文件吗？
 
 ```json
 {
@@ -23,31 +23,31 @@ category: NodeJS
 }
 ```
 
-　　就像這樣，舉一反三，如果多幾個 `*.cc` 文件的話就是這樣的：
+　　就像这样，举一反三，如果多几个 `*.cc` 文件的话就是这样的：
 
 ```json
 "sources": [ "addon.cc", "myexample.cc" ]
 ```
 
-　　上次我們把倆步驟分開了，實際上配置和編譯可以放在一起的：
+　　上次我们把俩步骤分开了，实际上配置和编译可以放在一起的：
 
 ```sh
 $ node-gyp configure build
 ```
 
-　　複習完了嗎？沒？！
+　　复习完了吗？没？！
 
 ![啪](mama.jpg)
 
-　　好的，那我們繼續吧。
+　　好的，那我们继续吧。
   
 ## 表番
 
-### 函數參數
+### 函数参数
 
-　　現在我們終於要講參數了呢。
+　　现在我们终于要讲参数了呢。
 
-　　讓我們設想有這樣一個函數 `add(a, b)` 代表把 `a` 和 `b` 相加返回結果，所以先把函數外框寫好：
+　　让我们设想有这样一个函数 `add(a, b)` 代表把 `a` 和 `b` 相加返回结果，所以先把函数外框写好：
 
 ```cpp
 #include <node.h>
@@ -57,22 +57,22 @@ Handle<Value> Add(const Arguments& args)
 {
     HandleScope scope;
 
-    //... 又來！
+    //... 又来！
 }
 ```
 
 #### Arguments
 
-　　這個就是函數的參數了。我們不妨先看看 v8 的[官方手冊參考](http://izs.me/v8-docs/classv8_1_1Arguments.html)。
+　　这个就是函数的参数了。我们不妨先看看 v8 的[官方手册参考](http://izs.me/v8-docs/classv8_1_1Arguments.html)。
   
 + `int Length() const`
 + `Local<Value> operator[](int i) const`
 
-　　其它的我們咱不關心，這兩個可重要了！一個代表傳入函數的參數個數，另一箇中括號就是通過下標索引來訪問第 `n` 個參數的。
+　　其它的我们咱不关心，这两个可重要了！一个代表传入函数的参数个数，另一个中括号就是通过下标索引来访问第 `n` 个参数的。
 
-　　所以如上的需求，我們大致就可以理解爲 `args.Length()` 爲 `2`，`args[0]` 代表 `a` 以及 `args[1]` 代表 `b` 了。並且我們要判斷這兩個數的類型必須得是 `Number`。
+　　所以如上的需求，我们大致就可以理解为 `args.Length()` 为 `2`，`args[0]` 代表 `a` 以及 `args[1]` 代表 `b` 了。并且我们要判断这两个数的类型必须得是 `Number`。
 
-　　注意到沒，中括號的索引操作符返回結果是一個 `Local<Value>` 也就是 `Node.js` 的所有類型基類。所以傳進來的參數類型不定的，我們必須得自己判斷是什麼參數。這就關係到了這個 `Value` 類型的一些[函數](http://izs.me/v8-docs/classv8_1_1Value.html)了。
+　　注意到没，中括号的索引操作符返回结果是一个 `Local<Value>` 也就是 `Node.js` 的所有类型基类。所以传进来的参数类型不定的，我们必须得自己判断是什么参数。这就关系到了这个 `Value` 类型的一些[函数](http://izs.me/v8-docs/classv8_1_1Value.html)了。
 
 + `IsArray()`
 + `IsBoolean()`
@@ -86,19 +86,19 @@ Handle<Value> Add(const Arguments& args)
 + `IsString()`
 + ...
 
-　　我就不一一列舉了，剩下的自己看文檔。｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡
+　　我就不一一列举了，剩下的自己看文档。｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡
 
 #### ThrowException
 
-　　這個是我們等下要用到的一個函數。具體在 [v8 文檔](http://izs.me/v8-docs/namespacev8.html#a2469af0ac719d39f77f20cf68dd9200e)中可以找到。
+　　这个是我们等下要用到的一个函数。具体在 [v8 文档](http://izs.me/v8-docs/namespacev8.html#a2469af0ac719d39f77f20cf68dd9200e)中可以找到。
 
-　　顧名思義，就是拋出錯誤啦。執行這個語句之後，相當於在 `Node.js` 本地文件中執行了一條 `throw()` 語句一樣。比如說：
+　　顾名思义，就是抛出错误啦。执行这个语句之后，相当于在 `Node.js` 本地文件中执行了一条 `throw()` 语句一样。比如说：
 
 ```cpp
 ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
 ```
 
-　　就相當於執行了一條 `Node.js` 的：
+　　就相当于执行了一条 `Node.js` 的：
 
 ```javascript
 throw new TypeError("Wrong number of arguments");
@@ -106,13 +106,13 @@ throw new TypeError("Wrong number of arguments");
 
 #### Undefined()
 
-　　這個函數呢也在[文檔](http://izs.me/v8-docs/namespacev8.html#ad39cfade81e77137fc11ff3a24284340)裏面。
+　　这个函数呢也在[文档](http://izs.me/v8-docs/namespacev8.html#ad39cfade81e77137fc11ff3a24284340)里面。
 
-　　具體就是一個空值，因爲有些函數並不需要返回什麼具體的值，或者說沒有返回值，這個時候就需要用 `Undefined()` 來代替了。
+　　具体就是一个空值，因为有些函数并不需要返回什么具体的值，或者说没有返回值，这个时候就需要用 `Undefined()` 来代替了。
 
-#### 動手吧騷年！
+#### 动手吧骚年！
 
-　　在理解了以上的幾個要點之後，我相信你們很快就能寫出 `a + b` 的邏輯了，我就把 `Node.js` 官方手冊的代碼抄過來給你們過一遍就算完事了：
+　　在理解了以上的几个要点之后，我相信你们很快就能写出 `a + b` 的逻辑了，我就把 `Node.js` 官方手册的代码抄过来给你们过一遍就算完事了：
 
 ```cpp
 #include <node.h>
@@ -122,36 +122,36 @@ Handle<Value> Add(const Arguments& args)
 {
     HandleScope scope;
     
-    // 代表了可以傳入 2 個以上的參數，但實際上我們只用前兩個
+    // 代表了可以传入 2 个以上的参数，但实际上我们只用前两个
     if(args.Length() < 2)
     {
-        // 拋出錯誤
+        // 抛出错误
         ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
         
         // 返回空值
         return scope.Close(Undefined());
     }
     
-    // 若前兩個參數其中一個不是數字的話
+    // 若前两个参数其中一个不是数字的话
     if(!args[0]->IsNumber() || !args[1]->IsNumber())
     {
-        // 拋出錯誤並返回空值
+        // 抛出错误并返回空值
         ThrowException(Exception::TypeError(String::New("Wrong arguments")));
         return scope.Close(Undefined());
     }
     
-    // 具體參考 v8 文檔
+    // 具体参考 v8 文档
     //     http://izs.me/v8-docs/classv8_1_1Value.html#a6eac2b07dced58f1761bbfd53bf0e366)
-    // 的 `NumberValue` 函數
+    // 的 `NumberValue` 函数
     Local<Number> num = Number::New(args[0]->NumberValue() + args[1]->NumberValue());
     
     return scope.Close(num);
 }
 ```
 
-　　函數大功告成！
+　　函数大功告成！
 
-　　最後把尾部的導出函數給寫好就 OK 了。
+　　最后把尾部的导出函数给写好就 OK 了。
 
 ```cpp
 void Init(Handle<Object> exports)
@@ -163,20 +163,20 @@ void Init(Handle<Object> exports)
 NODE_MODULE(addon, Init)
 ```
 
-　　等你編譯好之後，我們就能這樣用了：
+　　等你编译好之后，我们就能这样用了：
 
 ```javascript
 var addon = require('./build/Release/addon');
 console.log(addon.add(1, 1) + "b");
 ```
 
-　　你會看到一個 `2b` ！✧*｡٩(ˊᗜˋ*)و✧*｡
+　　你会看到一个 `2b` ！✧*｡٩(ˊᗜˋ*)و✧*｡
   
-### 回調函數
+### 回调函数
 
-　　上一章我們只講了個 `Hello world`，這一章阿婆主就良心發現一下，再來個回調函數的寫法。
+　　上一章我们只讲了个 `Hello world`，这一章阿婆主就良心发现一下，再来个回调函数的写法。
 
-　　慣例我們先寫好框架：
+　　惯例我们先写好框架：
 
 ```cpp
 #include <node.h>
@@ -186,13 +186,13 @@ Handle<Value> RunCallback(const Arguments& args)
 {
   HandleScope scope;
 
-  // ... 噼裏啪啦噼裏啪啦
+  // ... 噼里啪啦噼里啪啦
 
   return scope.Close(Undefined());
 }
 ```
 
-　　然後我們決定它的用法是這樣的：
+　　然后我们决定它的用法是这样的：
 
 ```javascript
 func(function(msg) {
@@ -200,31 +200,31 @@ func(function(msg) {
 });
 ```
 
-　　即它會給回調函數傳入一個參數，我們設想它是一個字符串，然後我們可以 `console.log()` 出來看。
+　　即它会给回调函数传入一个参数，我们设想它是一个字符串，然后我们可以 `console.log()` 出来看。
 
-#### 首先你要有一個字符串系列
+#### 首先你要有一个字符串系列
 
-　　廢話不多說，先給它一個字符串餵飽了再說吧。_(√ ζ ε:)_
+　　废话不多说，先给它一个字符串喂饱了再说吧。_(√ ζ ε:)_
 
-　　不過我們得讓這個字符串是通用類型的，因爲 `Node.js` 代碼是弱類型的。
+　　不过我们得让这个字符串是通用类型的，因为 `Node.js` 代码是弱类型的。
 
 ```cpp
 Local<Value>::New(String::New("hello world"));
 ```
 
-　　什麼？你問我什麼是 `Local<Value>`？
+　　什么？你问我什么是 `Local<Value>`？
 
-　　那我稍稍講一下吧，參考自[這裏](http://cnodejs.org/topic/4f16442ccae1f4aa270010c5)和[V8參考文檔](http://izs.me/v8-docs/classv8_1_1Local.html)。
+　　那我稍稍讲一下吧，参考自[这里](http://cnodejs.org/topic/4f16442ccae1f4aa270010c5)和[V8参考文档](http://izs.me/v8-docs/classv8_1_1Local.html)。
 
-　　如文檔所示，`Local<T>` 實際上繼承自 `Handle<T>`，我記得[上一章](/2014/04/02/nodejs-cpp-addons-1/#Handle<Value>)已經講過 `Handle<T>` 這個東西了。
+　　如文档所示，`Local<T>` 实际上继承自 `Handle<T>`，我记得[上一章](/2014/04/02/nodejs-cpp-addons-1/#Handle<Value>)已经讲过 `Handle<T>` 这个东西了。
 
-　　然後下面就是講 Local 了。
+　　然后下面就是讲 Local 了。
 
-> Handle 有兩種類型， Local Handle 和 Persistent Handle ，類型分別是 `Local<T> : Handle<T>` 和 `Persistent<T> : Handle<T>` ，前者和 `Handle<T>` 沒有區別生存週期都在 scope 內。而後者的生命週期脫離 scope ，你需要手動調用 `Persistent::Dispose` 結束其生命週期。也就是說 Local Handle 相當於在 C++`在棧上分配對象而 Persistent Handle 相當於 C++ 在堆上分配對象。
+> Handle 有两种类型， Local Handle 和 Persistent Handle ，类型分别是 `Local<T> : Handle<T>` 和 `Persistent<T> : Handle<T>` ，前者和 `Handle<T>` 没有区别生存周期都在 scope 内。而后者的生命周期脱离 scope ，你需要手动调用 `Persistent::Dispose` 结束其生命周期。也就是说 Local Handle 相当于在 C++`在栈上分配对象而 Persistent Handle 相当于 C++ 在堆上分配对象。
 
-#### 然後你要有個參數表系列
+#### 然后你要有个参数表系列
 
-　　終端命令行調用 C/C++ 之後怎麼取命令行參數？
+　　终端命令行调用 C/C++ 之后怎么取命令行参数？
 
 ```cpp
 #include <stdio.h>
@@ -235,7 +235,7 @@ void main(int argc, char* argv[])
 }
 ```
 
-　　對了，這裏的 `argc` 就是命令行參數個數，`argv[]` 就是各個參數了。那麼調用 `Node.js` 的回調函數，`v8` 也採用了類似的[方法](http://izs.me/v8-docs/classv8_1_1Function.html#ac61877494d2d8bb81fcef96003ec4059)：
+　　对了，这里的 `argc` 就是命令行参数个数，`argv[]` 就是各个参数了。那么调用 `Node.js` 的回调函数，`v8` 也采用了类似的[方法](http://izs.me/v8-docs/classv8_1_1Function.html#ac61877494d2d8bb81fcef96003ec4059)：
 
 ```cpp
 V8EXPORT Local<Value> v8::Function::Call(Handle<Object>recv,
@@ -244,13 +244,13 @@ V8EXPORT Local<Value> v8::Function::Call(Handle<Object>recv,
 );
 ```
 
-> ~~QAQ 卡在了 `Handle<Object> recv` 了！！！明天繼續寫。~~
+> ~~QAQ 卡在了 `Handle<Object> recv` 了！！！明天继续写。~~
 
-　　好吧，新的一天開始了我感覺我充滿了力量。(∩^o^)⊃━☆ﾟ.*･｡
+　　好吧，新的一天开始了我感觉我充满了力量。(∩^o^)⊃━☆ﾟ.*･｡
   
-　　經過我多方面求證（[SegmentFault](http://segmentfault.com/q/1010000000456217)和[StackOverflow](http://stackoverflow.com/questions/22842908/what-does-the-first-argument-of-functioncall-in-v8-engine-mean/22848601?noredirect=1#22848601)以及一個扣扣羣），終於解決了上面這個函數仨參數的意思。
+　　经过我多方面求证（[SegmentFault](http://segmentfault.com/q/1010000000456217)和[StackOverflow](http://stackoverflow.com/questions/22842908/what-does-the-first-argument-of-functioncall-in-v8-engine-mean/22848601?noredirect=1#22848601)以及一个扣扣群），终于解决了上面这个函数仨参数的意思。
 
-　　後面兩個參數就不多說了，一個是參數個數，另一個就是一個參數的數組了。至於第一個參數 `Handle<Object> recv`，StackOverflow 仁兄的解釋是這樣的：
+　　后面两个参数就不多说了，一个是参数个数，另一个就是一个参数的数组了。至于第一个参数 `Handle<Object> recv`，StackOverflow 仁兄的解释是这样的：
 
 > It is the same as apply in JS. In JS, you do
 >
@@ -262,37 +262,37 @@ cb.apply(context, [ ...args...]);
 >
 > <p style="text-align: right;">—— 摘自 [StackOverflow](http://stackoverflow.com/questions/22842908/what-does-the-first-argument-of-functioncall-in-v8-engine-mean/22848601?noredirect=1#22848601)</p>
 
-　　總之其作用就是指定了被調用函數的 `this` 指針。這個 `Call` 的用法就跟 JavaScript 中的 `bind()`、`call()`、`apply()` 類似。
+　　总之其作用就是指定了被调用函数的 `this` 指针。这个 `Call` 的用法就跟 JavaScript 中的 `bind()`、`call()`、`apply()` 类似。
 
-　　所以我們要做的事情就是先把參數表建好，然後傳入這個 `Call` 函數供其執行。
+　　所以我们要做的事情就是先把参数表建好，然后传入这个 `Call` 函数供其执行。
 
-　　第一步，顯示轉換函數，因爲本來是 `Object` 類型：
+　　第一步，显示转换函数，因为本来是 `Object` 类型：
 
 ```cpp
 Local<Function> cb = Local<Function>::Cast(args[0]);
 ```
 
-　　第二步，建立參數表（數組）：
+　　第二步，建立参数表（数组）：
 
 ```cpp
 Local<Value> argv[argc] = { Local<Value>::New(String::New("hello world")) };
 ```
 
-#### 最後調用函數系列
+#### 最后调用函数系列
 
-　　調用 `cb` ，把參數傳進去：
+　　调用 `cb` ，把参数传进去：
 
 ```cpp
 cb->Call(Context::GetCurrent()->Global(), 1, argv);
 ```
 
-　　這裏第一個參數 `Context::GetCurrent()->Global()` 所代表的意思就是獲取全局上下文作爲函數的 `this`；第二個參數就是參數表中的個數（畢竟雖然 `Node.js` 的數組是有長度屬性的，但是 `C++` 裏面數組的長度實際上系統是不知道的，還得你自己傳進一個數來說明數組長度）；最後一個參數就是剛纔我們建立好的參數表了。
+　　这里第一个参数 `Context::GetCurrent()->Global()` 所代表的意思就是获取全局上下文作为函数的 `this`；第二个参数就是参数表中的个数（毕竟虽然 `Node.js` 的数组是有长度属性的，但是 `C++` 里面数组的长度实际上系统是不知道的，还得你自己传进一个数来说明数组长度）；最后一个参数就是刚才我们建立好的参数表了。
   
-#### 終章之結束文件系列
+#### 终章之结束文件系列
 
-　　相信這一步大家已經輕車熟路了吧，就是把函數寫好，然後放進導出函數裏面，最後申明一下。
+　　相信这一步大家已经轻车熟路了吧，就是把函数写好，然后放进导出函数里面，最后申明一下。
 
-　　我就直接放出代碼吧，或者直接跑去 `Node.js` 的[文檔](http://nodejs.org/api/addons.html#addons_callbacks)看也行。
+　　我就直接放出代码吧，或者直接跑去 `Node.js` 的[文档](http://nodejs.org/api/addons.html#addons_callbacks)看也行。
   
 ```cpp
 #include <node.h>
@@ -318,12 +318,12 @@ void Init(Handle<Object> exports, Handle<Object> module)
 NODE_MODULE(addon, Init)
 ```
 
-　　Well done! 最後剩下的步驟就自己去吧。至於 `Js` 裏面這麼調用這個函數，我在[之前](#回調函數)已經提到過了。
+　　Well done! 最后剩下的步骤就自己去吧。至于 `Js` 里面这么调用这个函数，我在[之前](#回调函数)已经提到过了。
   
 ## 番外
 
-　　嘛嘛，我感覺我的學習筆記寫得越來越奔放了求破～
+　　嘛嘛，我感觉我的学习笔记写得越来越奔放了求破～
   
-　　今天就先寫到這裏吧，寫學習筆記的過程中我又漲姿勢了，比如說那個 `Call` 函數的參數意義。
+　　今天就先写到这里吧，写学习笔记的过程中我又涨姿势了，比如说那个 `Call` 函数的参数意义。
   
-　　如果你們覺得本系列學習筆記對你們還有幫助的話，就來和我一起搞基吧麼麼噠～Σ>―(〃°ω°〃)♡→
+　　如果你们觉得本系列学习笔记对你们还有帮助的话，就来和我一起搞基吧么么哒～Σ>―(〃°ω°〃)♡→

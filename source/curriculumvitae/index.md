@@ -1,4 +1,4 @@
-title       : Curriculum Vitae
+title       : 关于
 ---
 
 # ZHU, Kaidi (XadillaX)

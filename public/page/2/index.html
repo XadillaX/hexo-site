@@ -1,312 +1,39 @@
+<!DOCTYPE html><html class="han-init" lang="zh-Hans"><head><meta name="author" content="死月·吃圡蕾特"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>艾克斯の编码者 · 一个伪宅级别的码畜。</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="艾克斯の编码者" title="艾克斯の编码者"></a><h1><a href="/" alt="艾克斯の编码者" title="艾克斯の编码者">艾克斯の编码者</a></h1><p>一个伪宅级别的码畜。</p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/curriculumvitae" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="https://xcoder.in/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/XadillaX" style="position: relative; top: -2px">&#xe735;</a><a target="_blank" href="https://www.zhihu.com/people/xadillax">&#xe63f;</a><a target="_blank" href="https://weibo.com/xadillax" style="position: relative; top: -2px">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="item"><a class="article" href="/2014/12/10/link-c-on-gpp/"><h2 class="home-title">在 C++ 中链接 C 的 文件</h2></a><span class="post-meta">写于<time> 2014 年 12 月 10 日 15 时 30 分</time></span><p class="post-excerpt">原因由于某些原因，我写了个很搓的内存池（C 版本的）。
+然后我想到了把之前写的一个 Node.js 包 thmclrx 的更挫的“伪·内存池”用新写的内存池去替换掉。(❛◡❛✿)
+然后问题就来了，我貌似不能控制 node-gyp 去用 G++ 编译 *.c 文件，这样的话所有文件</p></article><article class="item"><a class="article" href="/2014/10/16/generate-color-space/"><h2 class="home-title">如何生成一个覆盖广的色板</h2></a><span class="post-meta">写于<time> 2014 年 10 月 16 日 11 时 00 分</time></span><p class="post-excerpt">用途　　在主题色提取的过程中，要把颜色加入搜索引擎。但是如果是真彩色任意值加进去的话，对于搜索的时候来说无疑是一个复杂的操作。搜索条件要各种计算距离什么的。
+　　于是一个妥协的做法就是提供一套调色板，保证所有颜色都被吸纳到调色板中的某一色值当中。
+　　那么这个时候调色板的覆盖率以</p></article><article class="item"><a class="article" href="/2014/10/08/brainf**k/"><h2 class="home-title">用 Javascript 实现一个简易 BrainF**k 解释器</h2></a><span class="post-meta">写于<time> 2014 年 10 月 08 日 11 时 42 分</time></span><p class="post-excerpt">首先祝贺自己在 CodeWars 升级到 3 Kyu，以及感谢 @Bolt_白衣苍狗 童鞋让我知道有 CodeWars 这么个好玩的东西。
+　　虽然里面水题居多，不过在上班比较空闲的档口 #带薪刷题# 的感觉还是蛮不错的。
+话唠一下　　高中的时候就跟 @MatRush 发现了一个</p></article><article class="item"><a class="article" href="/2014/09/30/javascript-singleton/"><h2 class="home-title">用 Node.js 实现一个 Singleton</h2></a><span class="post-meta">写于<time> 2014 年 09 月 30 日 15 时 21 分</time></span><p class="post-excerpt">今天随便玩了一道 CodeWar 的题。
+　　题意大致就是你需要实现一个 Singleton 也就是单件模式的类，让其下面代码执行成功：
+var obj1 = new Singleton();var obj2 = new Singleton();obj1 === obj2; //</p></article><article class="item"><a class="article" href="/2014/09/20/lets-build-ourselves-ddns/"><h2 class="home-title">让我们用 Node.js 写自己的 DDNS 动态域名程序</h2></a><span class="post-meta">写于<time> 2014 年 09 月 20 日 15 时 51 分</time></span><p class="post-excerpt">起因　　一开始我在移动的宽带中。那个时候虽然还不是完全的局域网，但是电信网络访问不了我的外网 IP。又因为我需要一个 DDNS 服务来维持我的 kacaka.ca（目前暂失效）。
+　　为了解决让电信网络也能访问我的 Web，于是我想到了免费 CDN 当中比较有名的 CloudFl</p></article><article class="item"><a class="article" href="/2014/09/17/theme-color-extract/"><h2 class="home-title">图片主题色提取算法小结</h2></a><span class="post-meta">写于<time> 2014 年 09 月 17 日 11 时 34 分</time></span><p class="post-excerpt">所谓主题色提取，就是对于一张图片，近似地提取出一个调色板，使得调色板里面的颜色能组成这张图片的主色调。
 
+　　以上定义为我个人胡诌的。
+　　大家不要太把我的东西当成严谨的文章来看，很多东西什么的都是我用我自己的理解去做，并没有做多少考证。
+　　解析中都会以 Node.js 来写一</p></article><article class="item"><a class="article" href="/2014/09/01/how-i-made-chinese-random-x/"><h2 class="home-title">我是如何实现简单的随机中文名生成器的（Node 版）</h2></a><span class="post-meta">写于<time> 2014 年 09 月 01 日 20 时 36 分</time></span><p class="post-excerpt">序最近闲着蛋疼实现了两个库。
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    
-    <meta name="author" content="小鳥遊死月">
-    
-    
+随机生成中文名字
+随机生成中文技能名
 
-    
-    <link rel="alternative" href="http://xcoder.in/atom.xml" title="艾克斯の編碼者" type="application/atom+xml">
-    
-    
-    
+我当然不会说去用各种人工智能去实现一个强大的的解析器然后生成，也不会说用一个非常庞大如搜狗拼音的姓名库来随机获取——我只是偶然间知道蘑菇街小侠节一个混战 PK 的 Demo 编写比赛，闲来无聊随便写写，然而这</p></article><article class="item"><a class="article" href="/2014/08/04/storm-clojure-prepare-bolt/"><h2 class="home-title">Storm 中 Clojure 的 Prepare Bolt 实现</h2></a><span class="post-meta">写于<time> 2014 年 08 月 04 日 11 时 50 分</time></span><p class="post-excerpt">起因　　Storm 中的 Bolt 都是通过 Nimbus 这个服务将序列化好的 Bolt 断章取义地发到各个 worker 中。所以，任何在 bolt 之外你自认为加载期间初始化计算好的上下文环境并不会被打包上去，Java 我不懂也不知道，但是至少在 Clojure 这个类的概</p></article><article class="item"><a class="article" href="/2014/07/30/kafka-ui-sender-mikasa/"><h2 class="home-title">开发测试时给 Kafka 发消息的 UI 发送器——Mikasa</h2></a><span class="post-meta">写于<time> 2014 年 07 月 30 日 10 时 14 分</time></span><p class="post-excerpt">起 (灬ºωº灬)　　说来话长，自从入了花瓣，整个人就掉进连环坑了。
+　　后端元数据采集是用 Storm 来走拓扑流程的，又因为 @Zola 不是很喜欢 Java，所以退而求其次选择了 Clojure，所以正在苦逼地学习 Clojure 和 Storm 中。
+　　目前来说外面的 </p></article><article class="item"><a class="article" href="/2014/06/12/untrusted-solution/"><h2 class="home-title">Untrusted - 游戏题解</h2></a><span class="post-meta">写于<time> 2014 年 06 月 12 日 11 时 08 分</time></span><p class="post-excerpt">Trusted 是一个代码解谜游戏，用 Javascript 来过关的。
+　　昨天凌晨花了仨小时通关了这个游戏，在这里就粗粗做一下题解吧，好几题都是 Hack 过去的。（不要脸，( ﾟДﾟ)σ
+Ceil Block A　　这有点像教学关吧，总之先拿到那台电脑你就能操作了。拿到电脑</p></article><div class="pagination"><a class="extend prev" rel="prev" href="/">«</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">»</a></div><footer><section class="copyright">&copy; 2016 - 2016<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="//cdn.bootcss.com/highlight.js/9.9.0/highlight.min.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>艾克斯の編碼者 · 一個偽宅级别的蒟蒻碼畜。</title>
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
-
-    <!-- Javascript -->
-    <script src="/js/jquery-2.1.0.min.js"></script>
-    <script src="/js/jquery.backstretch.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/js/headroom.min.js"></script>
-    <script src="/js/jquery.headroom.min.js"></script> 
-    <script src="/js/common.js"></script>
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-</head>
-<body>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="banner">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="http://xcoder.in" title="艾克斯の編碼者">艾克斯の編碼者</a>
-            </div>
-
-            <div role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
-                <p class="navbar-text pull-right">一個偽宅级别的蒟蒻碼畜。</p>
-
-                <ul class="nav navbar-nav">
-                    
-                    <li id="nav-index"><a href="/">首页</a></li>
-                    
-                    <li id="nav-archives"><a href="/archives">归档</a></li>
-                    
-                    <li id="nav-tags"><a href="/tags">标签</a></li>
-                    
-                    <li id="nav-categories"><a href="/categories">分类</a></li>
-                    
-                    <li id="nav-curriculumvitae"><a href="/curriculumvitae">关于</a></li>
-                    
-                    <li id="nav-links"><a href="/links">链接</a></li>
-                    
-                    
-                    <li><a href="https://github.com/XadillaX" target="_blank">GitHub</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    
-    <script>
-    var backRoot = "/images/background/";
-    var backArray = [ "1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "6.jpeg", "img/iPad_Photo_20140328181354FGPM.JPG", "img/iPad_Photo_20140328181218SLUY.JPG", "img/iPad_Photo_20140328181239ME9E.JPG", "img/iPad_Photo_20140328175718BF7T.JPG", "likeit/465_16170978_35afb62980c6d1a.jpg", "likeit/wallpaper-86487.jpg", "likeit/wallpaper-651939.jpg", "likeit/wallpaper-648634.jpg", "likeit/wallpaper-657798.jpg", "likeit/wallpaper-1479749.jpg", "likeit/wallpaper-1961179.jpg", "likeit/wallpaper-1947874.jpg", "likeit/wallpaper-2055407.jpg", "likeit/wallpaper-2060090.png", "likeit/wallpaper-2142870.jpg", "likeit/wallpaper-2078006.jpg", "likeit/wallpaper-2127699.jpg", "likeit/wallpaper-2211066.jpg", "likeit/wallpaper-2588686.jpg", "likeit/wallpaper-2639031.jpg", "likeit/wallpaper-2430341.jpg", "likeit/wallpaper-2294985.jpg", "likeit/wallpaper-2705897.jpg", "likeit/wallpaper-2063319.jpg", "likeit/wallpaper-2060101.jpg", "likeit/wallpaper-1970791.jpg", "img/iPad_Photo_20140328174508AZ11.JPG", "img/new/iPad_Photo_201403281903078UKK.JPG", "img/iPad_Photo_20140328175639RA5N.JPG", "img/iPad_Photo_20140328175820DYAC.JPG", "img/iPad_Photo_201403281806230195.JPG", "img/new/iPad_Photo_201403281919292STQ.JPG", "img/new/iPad_Photo_20140328190703781D.JPG", "flandre/p541758_2girls barefoot bat_wings bed blonde_hair blue_hair feet fetal_position flandre_scarlet flat_chest hat nude red_eyes ~.jpg", "flandre/p575023_blonde_hair flandre_scarlet hat horumon multiple_persona ponytail red_eyes side_ponytail touhou wings.jpg", "flandre/p569665_2girls barefoot blonde_hair blue_hair flandre_scarlet hat highres kinoko red_eyes remilia_scarlet siblings sisters to~.jpg", "flandre/p566082_blonde_hair flandre_scarlet hat mitsuki_(artist) ponytail red_eyes short_hair side_ponytail touhou wings.jpg", "flandre/p548132_2girls bat_wings blonde_hair blue_eyes blue_hair flandre_scarlet hat kaedena_akino mask moon red_eyes red_moon remili~.jpg", "flandre/p552906_flandre_scarlet gusutafu hong_meiling izayoi_sakuya koakuma patchouli_knowledge remilia_scarlet swimsuit touhou.jpg", "flandre/p551605_flandre_scarlet kona-ta touhou.jpg", "flandre/p551983_asuka_roze danmaku flandre_scarlet remilia_scarlet touhou.jpg", "likeit/465_16170978_2b89f5997bcff44.jpg", "likeit/wallpaper-616321.jpg", "likeit/wallpaper-343717.jpg", "likeit/wallpaper-1595016.jpg", "likeit/wallpaper-1952396.jpg", "likeit/wallpaper-2060096.jpg", "likeit/wallpaper-2315398.jpg", "likeit/wallpaper-2674370.jpg", "likeit/wallpaper-2838683.jpg", "likeit/wallpaper-2564028.png", "likeit/wallpaper-1382762.jpg", "likeit/wallpaper-1128042.jpg", "likeit/wallpaper-1396368.jpg", "likeit/wallpaper-1403569.png", "likeit/wallpaper-1593633.jpg", "likeit/wallpaper-1395408.jpg", "flandre/p539131_blonde_hair flandre_scarlet hat plastic_eraser red_eyes scenery short_hair solo touhou.jpg", "flandre/p555228_flandre_scarlet hong_meiling izayoi_sakuya patchouli_knowledge remilia_scarlet shomon swimsuit touhou.jpg", "flandre/p556145_book flandre_scarlet flower hairband hakurei_reimu hat hitoto hong_meiling izayoi_sakuya kirisame_marisa koakuma patc~.jpg", "flandre/p561220_arikichi_gen blonde_hair blue_eyes blue_hair braid flandre_scarlet izayoi_sakuya ponytail red_eyes remilia_scarlet sh~.jpg", "flandre/p541363_blonde_hair flandre_scarlet hat laevatein magic_circle poncho_(pixiv) red_eyes side_ponytail touhou wings.jpg",  ];
-        
-    $(function() {
-        // page-id...
-        var pageId = "page/2/index.html";
-        pageId = pageId.substr(0, pageId.indexOf("/"));
-        if(pageId === "") pageId = "index";
-        
-        $("#nav-" + pageId).addClass("active");
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : $(block).attr("class")) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
     });
-    </script>
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
 
-    
-<article class="post container">
-    <div class="jumbotron">
-        <h1><a href="/2014/12/10/link-c-on-gpp/" title="在 C++ 中鏈接 C 的 文件">在 C++ 中鏈接 C 的 文件</a></h1>
-
-        
-            <p>原因由於某些原因，我寫了個很搓的內存池（C 版本的）。
-然後我想到了把之前寫的一個 Node.js 包 thmclrx 的更挫的“僞·內存池”用新寫的內存池去替換掉。(❛◡❛✿)
-然後問題就來了，我貌似不能控制 node-gyp 去用 G++ 編譯 *.c 文件，這樣的話所有文件</p>
-        
-
-        <p class="say-title">
-            —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
-            <a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-            于2014年12月10日自豪地以 <a class="article-tag-link" href="/tags/C/">C++</a> 唠嗑
-        </p>
-    </div>
-</article>
-
-<article class="post container">
-    <div class="jumbotron">
-        <h1><a href="/2014/10/16/generate-color-space/" title="如何生成一個覆蓋廣的色板">如何生成一個覆蓋廣的色板</a></h1>
-
-        
-            <p>用途　　在主題色提取的過程中，要把顏色加入搜索引擎。但是如果是真彩色任意值加進去的話，對於搜索的時候來說無疑是一個複雜的操作。搜索條件要各種計算距離什麼的。
-　　於是一個妥協的做法就是提供一套調色板，保證所有顏色都被吸納到調色板中的某一色值當中。
-　　那麼這個時候調色板的覆蓋率以</p>
-        
-
-        <p class="say-title">
-            —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
-            <a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-            于2014年10月16日自豪地以 <a class="article-tag-link" href="/tags/Color-Space/">Color Space</a>, <a class="article-tag-link" href="/tags/HSL/">HSL</a>, <a class="article-tag-link" href="/tags/Palette/">Palette</a>, <a class="article-tag-link" href="/tags/RGB/">RGB</a>, <a class="article-tag-link" href="/tags/色彩空間/">色彩空間</a>, <a class="article-tag-link" href="/tags/色板/">色板</a> 唠嗑
-        </p>
-    </div>
-</article>
-
-<article class="post container">
-    <div class="jumbotron">
-        <h1><a href="/2014/10/08/brainf**k/" title="用 Javascript 實現一個簡易 BrainF**k 解釋器">用 Javascript 實現一個簡易 BrainF**k 解釋器</a></h1>
-
-        
-            <p>首先祝賀自己在 CodeWars 升級到 3 Kyu，以及感謝 @Bolt_白衣蒼狗 童鞋讓我知道有 CodeWars 這麼個好玩的東西。
-　　雖然裏面水題居多，不過在上班比較空閒的檔口 #帶薪刷題# 的感覺還是蠻不錯的。
-話嘮一下　　高中的時候就跟 @MatRush 發現了一個</p>
-        
-
-        <p class="say-title">
-            —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
-            <a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-            于2014年10月08日自豪地以 <a class="article-tag-link" href="/tags/BrainFuck/">BrainFuck</a>, <a class="article-tag-link" href="/tags/Javascript/">Javascript</a>, <a class="article-tag-link" href="/tags/解釋器/">解釋器</a> 唠嗑
-        </p>
-    </div>
-</article>
-
-<article class="post container">
-    <div class="jumbotron">
-        <h1><a href="/2014/09/30/javascript-singleton/" title="用 Node.js 實現一個 Singleton">用 Node.js 實現一個 Singleton</a></h1>
-
-        
-            <p>今天隨便玩了一道 CodeWar 的題。
-　　題意大致就是你需要實現一個 Singleton 也就是單件模式的類，讓其下面代碼執行成功：
-12345var obj1 = new Singleton();var obj2 = new Singleton();obj1 === obj</p>
-        
-
-        <p class="say-title">
-            —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
-            <a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-            于2014年09月30日自豪地以 <a class="article-tag-link" href="/tags/Node-js/">Node.js</a>, <a class="article-tag-link" href="/tags/設計模式/">設計模式</a> 唠嗑
-        </p>
-    </div>
-</article>
-
-<article class="post container">
-    <div class="jumbotron">
-        <h1><a href="/2014/09/20/lets-build-ourselves-ddns/" title="讓我們用 Node.js 寫自己的 DDNS 動態域名程序">讓我們用 Node.js 寫自己的 DDNS 動態域名程序</a></h1>
-
-        
-            <p>起因　　一開始我在移動的寬帶中。那個時候雖然還不是完全的局域網，但是電信網絡訪問不了我的外網 IP。又因爲我需要一個 DDNS 服務來維持我的 kacaka.ca（目前暫失效）。
-　　爲了解決讓電信網絡也能訪問我的 Web，於是我想到了免費 CDN 當中比較有名的 CloudFl</p>
-        
-
-        <p class="say-title">
-            —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
-            <a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-            于2014年09月20日自豪地以 <a class="article-tag-link" href="/tags/DDNS/">DDNS</a>, <a class="article-tag-link" href="/tags/Node-js/">Node.js</a>, <a class="article-tag-link" href="/tags/動態域名/">動態域名</a> 唠嗑
-        </p>
-    </div>
-</article>
-
-<article class="post container">
-    <div class="jumbotron">
-        <h1><a href="/2014/09/17/theme-color-extract/" title="圖片主題色提取算法小結">圖片主題色提取算法小結</a></h1>
-
-        
-            <p>所謂主題色提取，就是對於一張圖片，近似地提取出一個調色板，使得調色板裏面的顏色能組成這張圖片的主色調。
-
-　　以上定義爲我個人胡謅的。
-　　大家不要太把我的東西當成嚴謹的文章來看，很多東西什麼的都是我用我自己的理解去做，並沒有做多少考證。
-　　解析中都會以 Node.js 來寫一</p>
-        
-
-        <p class="say-title">
-            —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
-            <a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-            于2014年09月17日自豪地以 <a class="article-tag-link" href="/tags/Algorithm/">Algorithm</a>, <a class="article-tag-link" href="/tags/Theme-Color/">Theme Color</a> 唠嗑
-        </p>
-    </div>
-</article>
-
-<article class="post container">
-    <div class="jumbotron">
-        <h1><a href="/2014/09/01/how-i-made-chinese-random-x/" title="我是如何實現簡單的隨機中文名生成器的（Node 版）">我是如何實現簡單的隨機中文名生成器的（Node 版）</a></h1>
-
-        
-            <p>序最近閒着蛋疼實現了兩個庫。
-
-隨機生成中文名字
-隨機生成中文技能名
-
-我當然不會說去用各種人工智能去實現一個強大的的解析器然後生成，也不會說用一個非常龐大如搜狗拼音的姓名庫來隨機獲取——我只是偶然間知道蘑菇街小俠節一個混戰 PK 的 Demo 編寫比賽，閒來無聊隨便寫寫，然而這</p>
-        
-
-        <p class="say-title">
-            —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
-            <a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-            于2014年09月01日自豪地以 <a class="article-tag-link" href="/tags/NodeJS/">NodeJS</a>, <a class="article-tag-link" href="/tags/中文名/">中文名</a>, <a class="article-tag-link" href="/tags/中文技能/">中文技能</a> 唠嗑
-        </p>
-    </div>
-</article>
-
-<article class="post container">
-    <div class="jumbotron">
-        <h1><a href="/2014/08/04/storm-clojure-prepare-bolt/" title="Storm 中 Clojure 的 Prepare Bolt 實現">Storm 中 Clojure 的 Prepare Bolt 實現</a></h1>
-
-        
-            <p>起因　　Storm 中的 Bolt 都是通過 Nimbus 這個服務將序列化好的 Bolt 斷章取義地發到各個 worker 中。所以，任何在 bolt 之外你自認爲加載期間初始化計算好的上下文環境並不會被打包上去，Java 我不懂也不知道，但是至少在 Clojure 這個類的概</p>
-        
-
-        <p class="say-title">
-            —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
-            <a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-            于2014年08月04日自豪地以 <a class="article-tag-link" href="/tags/Clojure/">Clojure</a>, <a class="article-tag-link" href="/tags/Huaban/">Huaban</a>, <a class="article-tag-link" href="/tags/Storm/">Storm</a> 唠嗑
-        </p>
-    </div>
-</article>
-
-<article class="post container">
-    <div class="jumbotron">
-        <h1><a href="/2014/07/30/kafka-ui-sender-mikasa/" title="開發測試時給 Kafka 發消息的 UI 發送器——Mikasa">開發測試時給 Kafka 發消息的 UI 發送器——Mikasa</a></h1>
-
-        
-            <p>起 (灬ºωº灬)　　說來話長，自從入了花瓣，整個人就掉進連環坑了。
-　　後端元數據採集是用 Storm 來走拓撲流程的，又因爲 @Zola 不是很喜歡 Java，所以退而求其次選擇了 Clojure，所以正在苦逼地學習 Clojure 和 Storm 中。
-　　目前來說外面的 </p>
-        
-
-        <p class="say-title">
-            —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
-            <a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-            于2014年07月30日自豪地以 <a class="article-tag-link" href="/tags/Kafka/">Kafka</a>, <a class="article-tag-link" href="/tags/Mikasa/">Mikasa</a>, <a class="article-tag-link" href="/tags/花瓣/">花瓣</a> 唠嗑
-        </p>
-    </div>
-</article>
-
-<article class="post container">
-    <div class="jumbotron">
-        <h1><a href="/2014/06/12/untrusted-solution/" title="Untrusted - 遊戲題解">Untrusted - 遊戲題解</a></h1>
-
-        
-            <p>Trusted 是一個代碼解謎遊戲，用 Javascript 來過關的。
-　　昨天凌晨花了仨小時通關了這個遊戲，在這裏就粗粗做一下題解吧，好幾題都是 Hack 過去的。（不要臉，( ﾟДﾟ)σ
-Ceil Block A　　這有點像教學關吧，總之先拿到那臺電腦你就能操作了。拿到電腦</p>
-        
-
-        <p class="say-title">
-            —— <img src="/images/avatar.gif" class="img-circle index-post-avatar" />
-            <a href="http://xcoder.in" target="_blank" title="小鳥遊死月">小鳥遊死月</a>
-            于2014年06月12日自豪地以 <a class="article-tag-link" href="/tags/Javascript/">Javascript</a>, <a class="article-tag-link" href="/tags/untrusted/">untrusted</a>, <a class="article-tag-link" href="/tags/遊戲/">遊戲</a> 唠嗑
-        </p>
-    </div>
-</article>
-
-
-
-<div class="container pagination-div">
-    <div class="well">
-    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
-    </div>
-</div>
-
-
-<script>
-$(function() {
-    $("article:first").addClass("first-post");
-});
-</script>
-    <footer id="footer">
-    <div id="bottom-tip">
-        艾克斯の編碼者 —— <small>一個偽宅级别的蒟蒻碼畜。</small>
-    </div>
-        <small>该博客由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动，搭载 <a href="https://github.com/XadillaX/hexadillax" target="_blank">Hexadillax</a> 主题</small><br />
-        <small>&copy; 2014 小鳥遊死月</small>
-    </footer>
-
-    
-    <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?d4417d158ec17db3ca549b508c2e5e07";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-    </script>
-
-
-
-</body>
-</html>
-
+    $("article.full img").each(function() {
+      $(this).parent().css("text-align", "center");
+    });
+});</script></body></html>

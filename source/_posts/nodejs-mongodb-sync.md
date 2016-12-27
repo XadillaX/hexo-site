@@ -1,20 +1,20 @@
-title: 關於Node.js下的MongoDB阻塞模式實現
+title: 关于Node.js下的MongoDB阻塞模式实现
 date: 2013-03-29 09:31:38
-tags: [ 老博客備份歸檔, Node.JS, MongoDB ]
-category: 老博客備份歸檔
+tags: [ 老博客备份归档, Node.JS, MongoDB ]
+category: 老博客备份归档
 ---
 
-　　***注：本文僅爲我初學 Node.JS 的時候的稚嫩筆記。是從 [http://web.archive.org/](http://web.archive.org/) 扒回來的。現在看來已無多大參考價值，各位可以略過。我只是把它扒回來紀念一下而已，以記錄我的歷程。而那個相對應的 `SevenzJS` 也已經被遺棄***
+　　***注：本文仅为我初学 Node.JS 的时候的稚嫩笔记。是从 [http://web.archive.org/](http://web.archive.org/) 扒回来的。现在看来已无多大参考价值，各位可以略过。我只是把它扒回来纪念一下而已，以记录我的历程。而那个相对应的 `SevenzJS` 也已经被遗弃***
 
 ## 背景
 
-　　最近在做公司項目的一個模塊，主要用於 **JSON Api** 的傳輸，所以開發環境的目標就鎖定在了 **Node.js**。而這一塊的登陸用戶又是存在 **MongoDB** 裏面的，所以就有瞭如下的問題。
+　　最近在做公司项目的一个模块，主要用于 **JSON Api** 的传输，所以开发环境的目标就锁定在了 **Node.js**。而这一块的登陆用户又是存在 **MongoDB** 里面的，所以就有了如下的问题。
 
-+ 網上的 Node.JS 框架都比較重型或者臃腫的，學了 Node 之後還需要學額外的東西。
-+ 所以我就打算自己寫一個專注於 JSON Api 的快速開發框架，於是有了 SevenJS。
-+ 問題出現了，雖然 Node.JS 極度推崇異步非阻塞模式，但是阻塞模式在平常開發中還是太常用了。
++ 网上的 Node.JS 框架都比较重型或者臃肿的，学了 Node 之后还需要学额外的东西。
++ 所以我就打算自己写一个专注于 JSON Api 的快速开发框架，于是有了 SevenJS。
++ 问题出现了，虽然 Node.JS 极度推崇异步非阻塞模式，但是阻塞模式在平常开发中还是太常用了。
 
-　　我們試想一下，如果我們有幾句MongoDB的查詢之類的，用node-mongodb-native來寫的話是這樣的：
+　　我们试想一下，如果我们有几句MongoDB的查询之类的，用node-mongodb-native来写的话是这样的：
 
 ```javascript
 var client = new Db('test', new Server("127.0.0.1", 27017, {}));
@@ -39,9 +39,9 @@ client.open(function(err, client) {
 });
 ```
 
-　　各種嵌套回調有木有！這不是我們想要的，尤其是我的那個框架，因爲我的框架是流式的。
+　　各种嵌套回调有木有！这不是我们想要的，尤其是我的那个框架，因为我的框架是流式的。
 
-　　所以我就想有這樣的一種方案：
+　　所以我就想有这样的一种方案：
 
 ```javascript
 var client = mongodb.connect();
@@ -49,25 +49,25 @@ var collection = mongodb.getCollection(client, "dbname");
 var result = mongodb.find({ "foo" : "bar" });
 ```
 
-　　使得這樣就能找出dbname表下的foo爲bar值的記錄了。
+　　使得这样就能找出dbname表下的foo为bar值的记录了。
 
-## 正題
+## 正题
 
-　　出於這樣的想法，我在網上找遍了大江南北，除了 CNode 社區有人問到了類似的問題以外，再也找不到音信了，而且那裏也沒有一個好的回答。
+　　出于这样的想法，我在网上找遍了大江南北，除了 CNode 社区有人问到了类似的问题以外，再也找不到音信了，而且那里也没有一个好的回答。
 
-　　不過這也正常，因爲 Node.js 官方本身就不推薦這麼做——他們認爲異步非阻塞是非常優雅的一件事情。
+　　不过这也正常，因为 Node.js 官方本身就不推荐这么做——他们认为异步非阻塞是非常优雅的一件事情。
 
-　　包括我在 Node.js 的 IRC 聊天室裏面問了這個問題，也有人是這麼回答我的：
+　　包括我在 Node.js 的 IRC 聊天室里面问了这个问题，也有人是这么回答我的：
 
 > You can’t use a car as a boat. If you want a boat, use a boat.
 
-　　言簡意賅，直截了當地說明 Node.js 是不支持這樣的，如果你想這樣做，就用 python 或者 ruby 去吧。
+　　言简意赅，直截了当地说明 Node.js 是不支持这样的，如果你想这样做，就用 python 或者 ruby 去吧。
 
-　　不過好在後來 IRC 裏面有人推薦了我一個模塊：[fibers](https://github.com/laverdet/node-fibers)。
+　　不过好在后来 IRC 里面有人推荐了我一个模块：[fibers](https://github.com/laverdet/node-fibers)。
 
-　　有了這個模塊好啊，直接能用了有木有！
+　　有了这个模块好啊，直接能用了有木有！
 
-　　接下來就來講一下如何使用吧：
+　　接下来就来讲一下如何使用吧：
 
 ```javascript
 function find(collection, selector, callback) {
@@ -81,16 +81,16 @@ var wait = Future.wait;
 Fiber(function(){
     var wrapper = Future.wrap(fund);
 
-    /** 這裏就是正題了，我們假設已經獲取一個collection了 */
+    /** 这里就是正题了，我们假设已经获取一个collection了 */
     var result = wrapper(collection, { "foo" : "bar" }).wait();
     console.log(JSON.stringify(result));
 }).run();
 ```
 
-　　這就是一個非常簡單的同步查詢 MongoDB 的例子了，實際上本質還是一個異步，注意到沒有，其實 `Fiber()` 內部的那個 `function` 本質上還是一個回調函數，只不過在這個回調函數裏面，裏面的所有 `callback` 都可以被同步了。不過我們只需要小動一些手腳就能加上這個外殼了。具體請參見 [sRouter.js](https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/sevenz/sRouter.js) 約 121 行的外殼以及 [sMongoSync.js](https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/sevenz/sMongoSync.js) 的實現，加上 [index.js](http://web.archive.org/web/20130726042859/https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/actions/index.js) 中的查詢 demo。
+　　这就是一个非常简单的同步查询 MongoDB 的例子了，实际上本质还是一个异步，注意到没有，其实 `Fiber()` 内部的那个 `function` 本质上还是一个回调函数，只不过在这个回调函数里面，里面的所有 `callback` 都可以被同步了。不过我们只需要小动一些手脚就能加上这个外壳了。具体请参见 [sRouter.js](https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/sevenz/sRouter.js) 约 121 行的外壳以及 [sMongoSync.js](https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/sevenz/sMongoSync.js) 的实现，加上 [index.js](http://web.archive.org/web/20130726042859/https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/actions/index.js) 中的查询 demo。
 
-## 結尾
+## 结尾
 
-　　所以說當我們做不到某件事的時候，多去IRC看看，多去社區混混，也多去找找模塊，要真沒有的話就只能自己豐衣足食了（我還沒到那水平，笑）。總之這次Fibers幫了我一個大忙。
+　　所以说当我们做不到某件事的时候，多去IRC看看，多去社区混混，也多去找找模块，要真没有的话就只能自己丰衣足食了（我还没到那水平，笑）。总之这次Fibers帮了我一个大忙。
 
-　　最後，SevenzJS 歡迎 [Fork](https://github.com/XadillaX/SevenzJS)。
+　　最后，SevenzJS 欢迎 [Fork](https://github.com/XadillaX/SevenzJS)。
