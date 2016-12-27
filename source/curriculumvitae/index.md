@@ -1,108 +1,86 @@
-title       : 关于
+title: 关于
 ---
 
-# ZHU, Kaidi (XadillaX)
+> *「<ruby>伪<rt>wěi</rt>宅<rt>zhái</rt>码<rt>mǎ</rt>畜<rt>chù</rt>一<rt>yī</rt>枚<rt>méi</rt>。</ruby>」*
+>
+> <p style="text-align: right">——死月·吃*<ruby>圡<rt>tǔ</rt></ruby>*蕾特</p>
 
-## LINKS & CONTACT
+## I Am
 
-+ **Blog**: [http://xcoder.in/](http://xcoder.in/)
-+ **GitHub**: [XadillaX](https://github.com/XadillaX/)
-+ **Email**: [broken@letme.repair](mailto:broken@letme.repair)
-+ **QQ**: 8644325
-+ **Mobile**: (+86)1525○○○○599
+死月（XadillaX），90 后。高级后端研发工程师；游戏手残党，重度 VIMer 及 OSXer；主属性为 Node.js，副手为 C++，爱玩算法；前端渣，且*不会* Java；退役已久 ACMer。
 
-## INTRODUCE
++ **GitHub:** [XadillaX](https://github.com/xadillax)
++ **Email:** `YnJva2VuQGxldG1lLnJlcGFpcg==`
 
-I dived into programming because I want to create a game of my own world at first. I went to ACM/ICPC programming contest for several times, and for this, I believe in my algorithm level.
+## 教育
 
-I built the ACM/ICPC training team for my alma mater, and I have several mentees that trained by me. What's more, I wrote the [Online Judge System](http://acm.nbut.edu.cn/) for my alma mater.
+### Zhejiang University
 
-I created many independent games during my Bachelor time, almost of them were based on a game engine, HGE or a game engine built by myself called XAE.
+2013-09 - 2015-11 移动互联网与游戏开发 **硕士**学位
 
-When I went to Zhejiang University, I came across with `Node.js` and then I fell in love with her. I think she's so elegant and beautiful.
+### Ningbo University of Technology
 
-**On 25th, November 2013, I received en email from a Google England Talent Scout. He invited me to discuss if I was fit for their engineering/research teams.** But what a pity, after I've discussed with him, I knew that they were hiring full-time employees but not intern students.
+2009-09 - 2013-06 计算机科学与技术 **学士**学位
 
-![Google Talent Scout](gibran.png)
+## 工作
 
-## Education
+### 大搜车
 
-Sep 2013 - Jun 2015, Zhejiang University
+高级后端研发工程师，从事 Node.js 在公司的架构工作，前后端分离架构在公司的落地，底层 SDK 的研发和维护，以及业务的日常迭代。先后支持了[车牛](https://d.souche.com/)、[弹个车](https://tangeche.com/)的研发。
 
-+ Master
-+ Backend leader of "XPlan Team"
+### 花瓣网
 
-Sep 2009 - Jun 2013, Ningbo University of Technology
+后端研发工程师，负责[花瓣网](https://huaban.com/)的日常迭代，以及底层若干系统的开发工作。
 
-+ Bachelor in Computer Science and Technology degree (CST).
-+ Founder and student coach of **NBUT ACM/ICPC TEAM**. And be the NBUT ACM/ICPC Contest examiner for three years.
-+ The only developer and the first operations staff of [NBUT Online Judge System](http://acm.nbut.edu.cn/).
+## 近期项目
 
-## SKILLS
+### Vanille（渲染系统）
 
-+ **Language**: C/C++ > Node.js > PHP > (HTML, CSS) > C# > ASP, etc.
-+ **OS**: MacOS, Linux and Windows
-+ **Editor & IDE**: WebStorm, Visual Studio, VIM, Sublime Text, etc.
-+ **Database**: MongoDB > MySQL
+2016 年 12 月起，Vanille 是大搜车前端渲染系统。让前端工程师更专注于前端逻辑开发，后端工程师更专注于接口开发，并且在 Vanille 层面将数据整合并渲染，使用户、搜索引擎在访问时得到的是通过 Vanille 渲染好数据的 HTML 代码，以此达到开发前后端分离、访问渲染好的完整数据的效果。
 
-## WORK
+### Yuuka（大搜车商学院）
 
-### Ningbo ONUOO Network Technology Co., Ltd
+2015 年 12 月起，大搜车商学院是公司旗下多款 App 下共用的商学院系统，主要模块有文章新闻、直播教学、线下商学院培训支付等，打通了多款 App 中的用户系统。其技术选型大致为 Node.js / MySQL / Redis / Memcached / Vue 等。
 
-**2011-03 ~ 2012-12**
+### Youmu（CPU 密集型任务集中处理系统）
 
-I am the developer of that company (remote work). The main work was to developer the card game based on FoxUC. I also took part in a project called **New World** which will be metioned below.
+2015 年 10 月起，集中处理公司业务中一些 CPU 密集型的任务，并以 HTTP 协议与调用方进行交互和回调。承接了诸如检测报告 PDF 生成、车辆检测打点图生成、图片相似度检测等任务。选型大致为 Node.js / MySQL / Redis / Phantomjs / GraphicsMagick 等。
 
-### aquaMobile, Madrid, Spain
+### Feime（飞秘）
 
-**2011-07 ~ 2011-09**
+2014 年起，一款民航专用的半匿名社交及工具型 App，可以半匿名发表状态、查询民航词典、机场报文、雷达拼图等。选型大致为 Node.js / MySQL / Memcached / Riak 等。
 
-I had a three-month-internship in Spain. During that time, I was responsible for the new version of its official website.
+## 开源
 
-### Ningbo TrananX Network Technology Co., Ltd
+### Toshihiko
 
-**2012-12 ~ 2013-07**
+Yet another simple ORM for Node.js.
 
-I was the only technical staff in that company. So all of the developing work including systemg architecture and server are my work. It will be mentioned below.
+> https://github.com/XadillaX/toshihiko
 
-## AWARDS
+### Thmclrx
 
-+ The First Prize and 100, 000 CNY Bonus. The 1st Tarena "Catch Cup" Software Contest Final Round (NATIONAL).
-+ Gold. The 8th Zhejiang Provincial Collegiate Programming Contest. (Teammate: HU, Jixiang; ZHANG, Cong)
-+ The Second Class Prize. The 3rd "Blue Bridge" Software Contest C/C++ Group (NATIONAL).
-+ The First Class Prize. The 3rd "Blue Bridge" Software Contest C/C++ Group (ZHEJIANG).
-+ Silver. The 9th Zhejiang Provincial Collegiate Programming Contest. (Teammate: HU, Jixiang; ZHANG, Cong)
-+ Silver. The 10th Zhejiang Provincial Collegiate Programming Contest. (Teammate: WU, Duanduan; SHEN, Zhiqi)
-+ Bronze. 2010 Unitop Cup ACM-ICPC China Hangzhou Invitational Programming Contest. (Teamate: HU, Jixiang; YE, Jianjing)
-+ Bronze. Google Cup 2011 ACM-ICPC China Shanghai Fudan Invitational Programming Contest. (Teammate: HU, Jixiang; BAO, Xianghong)
-+ NBUT Top 10 College Students.
+A theme color extractor module for Node.js.
 
-## PROJECT
+> https://github.com/XadillaX/thmclrx
 
-### Ningbo University of Technology Online Judge System
+### Aliyun ONS SDK
 
-This system is designed for the ACMers. It is known as "**MOE**est" UI so far in China. The website of this system is written in `ThinkPHP` framework and running in `CentOS 6.3`. The database is `MySQL`. And what's more, the ***judge-end*** is written in `C++` and running in `Windows 7` which the computer is connected directly with the server via wires.
+SDK of Node.js for Aliyun ONS.
 
-What's more, it is this project that I won the first prize and 100, 000 CNY bonus in the Catch Cup.
+> https://github.com/XadillaX/aliyun-ons
 
-> Enter: [http://acm.nbut.edu.cn/](http://acm.nbut.edu.cn/)
+### Xmempool
 
-### New World (Game)
+A memory pool implemented by C.
 
-It's a online game like a slot machine of Korea. The project is outsourced and I am responsible for the client rendering and logic. To be honest, the game is origin in **single game**, the engine is a wrapper for HGE (Haaf's Game Engine). Though it's not developing from zero, it also is a not small project.
+> https://github.com/XadillaX/xmempool
 
-By the way, this project is written in `C++`.
+## 更多
 
-> PS: Due to the conflict between developers and customers, this game is no longer operational.
-
-### 7zcar
-
-This is a Groupon Website for cars. It's my first work after graduated. I am the only developer of that company. So something like `System Architecture`, `Develop (Frontend, backend)`, `Server Configuration`, `Operation`, `Software Implementation` are all be done by myself. The operation system of server is `CentOS 6.3` and the server software is **Tengine** (An open-source server software by TAOBAO, modified from **Nginx**). The database is using `MySQL` and `MongoDB`, and the website is using `ThinkPHP` framework. `PHP-CLI` is used for the process of sending email and SMS queue. `SevenzJS` (An open-source NODE.JS framework by me) is used for the server of `4S Shop client` and that client is written in `C#`.
-
-> PS: Aha, I said that I am the only developer. As a result, all of my superiors don't know any IT knowledge. This project beyond their budget. I am **fired** after I finishing this project and this project is canceled.
-
-### Yogar Life
-
-I was the backend developer of this project and I used "Node.js". It's an O2O mobile app that maks goods cheaper.
-
-> You can download it from [https://itunes.apple.com/us/app/you-jia-sheng-huo/id845032701](https://itunes.apple.com/us/app/you-jia-sheng-huo/id845032701)
+```rust
+fn main() {
+    // QQ: ODY0NDMyNQ==
+    println!("请我吃大餐以了解更多。");
+}
+```
