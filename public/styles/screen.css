@@ -248,11 +248,14 @@ main div.pagination a:hover {
   color: #ca314d;
 }
 main .article-toc {
+  box-sizing: border-box;
+  max-width: 100%;
   float: right;
   border-radius: 15px;
   border: 1px solid #d3d3d3;
   padding: 2rem;
   margin-left: 20px;
+  display: none;
 }
 main .article-toc ol {
   list-style: none;
@@ -290,6 +293,9 @@ main footer .intro {
   body main {
     flex: 2;
     padding: 40px;
+  }
+  body main .article-toc {
+    display: block;
   }
 }
 article.full a {
@@ -367,7 +373,8 @@ article.full img {
 article.full code {
   font-family: "Fantasque Sans Mono";
 }
-article.full p > code {
+article.full p > code,
+article.full li > code {
   background: #282828;
   border-radius: 2px;
   color: #ebdbb2;
