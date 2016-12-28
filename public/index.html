@@ -35,12 +35,12 @@ var a = 2;function foo()&amp;#123;    console.log(this.a);&amp;#125;foo();
 设计得不好，纯属做归档。
 其中 SanaeHDCS 是另一套系统，给 RemiliaHDPS 提供数据的。
 Data Layer主要分为 Bathtub，Dryer，Vampire 三个部分。
-Bat</p></article><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">»</a></div><footer><section class="copyright">&copy; 2016 - 2016<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="//cdn.bootcss.com/highlight.js/9.9.0/highlight.min.js"></script><script>$(function() {
+Bat</p></article><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">»</a></div><footer><section class="copyright">&copy; 2016 - 2016<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
     $("header").backstretch("/images/header.jpeg");
 
     $("figure.highlight").each(function(i, block) {
         $(block).removeClass("highlight");
-        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : $(block).attr("class")) + "'></code></pre>").insertAfter($(block));
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : ("lang-" + $(block).attr("class"))) + "'></code></pre>").insertAfter($(block));
         $(block).next().find("code").text((block.innerText || block.textContent));
         $(block).remove();
     });
