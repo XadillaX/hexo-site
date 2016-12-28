@@ -202,7 +202,6 @@ main .post-meta {
 main article.item {
   border-bottom: 1px solid rgba(0,0,0,0.15);
   color: #222;
-  padding: 40px;
 }
 main article.item h2 {
   break-word: normal;
@@ -227,7 +226,7 @@ main article.item:after {
   height: 7px;
   border: #ddd8d4 1px solid;
   position: relative;
-  top: 45px;
+  top: 5px;
   left: 50%;
   margin-left: -5px;
   background: #d6d1cc;
@@ -293,6 +292,12 @@ main footer .intro {
   body main {
     flex: 2;
     padding: 40px;
+  }
+  body main article.item {
+    padding: 40px;
+  }
+  body main article.item:after {
+    top: 45px;
   }
   body main .article-toc {
     display: block;
@@ -383,6 +388,9 @@ article.full li > code {
   padding-top: 3px;
   padding-bottom: 3px;
   opacity: 0.8;
+}
+article.full li {
+  text-align: left;
 }
 article.full .hljs {
   line-height: 1.2em;

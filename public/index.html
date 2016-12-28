@@ -49,6 +49,10 @@ Bat</p></article><div class="pagination"><span class="page-number current">1</sp
     });
 
     $("article.full img").each(function() {
-      $(this).parent().css("text-align", "center");
+        $(this).parent().css("text-align", "center");
     });
+
+    if($(".article-toc").children().length < 2) {
+        $(".article-toc").css("display", "none");
+    }
 });</script></body></html>
