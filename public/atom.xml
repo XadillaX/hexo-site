@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://xcoder.in/"/>
-  <updated>2016-12-31T09:35:11.000Z</updated>
+  <updated>2017-01-04T03:01:33.000Z</updated>
   <id>https://xcoder.in/</id>
   
   <author>
@@ -16,13 +16,35 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>二零一六总结</title>
+    <title>死月的二零一六总结</title>
     <link href="https://xcoder.in/2016/12/31/my-2016/"/>
     <id>https://xcoder.in/2016/12/31/my-2016/</id>
     <published>2016-12-31T07:43:08.000Z</published>
-    <updated>2016-12-31T09:35:11.000Z</updated>
+    <updated>2017-01-04T03:01:33.000Z</updated>
     
     <content type="html"><![CDATA[<p>看了那么多总结，自己也总结一回吧，回顾一下这个即将过去的二零一六。</p>
+<h2 id="生活"><a href="#生活" class="headerlink" title="生活"></a>生活</h2><h3 id="足迹"><a href="#足迹" class="headerlink" title="足迹"></a>足迹</h3><ul>
+<li>千岛湖</li>
+<li>良渚文化村</li>
+<li>南京</li>
+<li>湖州</li>
+<li>黄山</li>
+</ul>
+<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><ul>
+<li>拿老爸的车练手，并习得一定的实战驾车经验；</li>
+<li>买了个房，欠下一笔巨款，并开始吃圡；</li>
+<li>玩了一段时间的守望屁股；</li>
+<li>被入手一个定焦人像头；</li>
+<li>尝试了几次租车 App，也算尝试过了力帆电动车和别克；</li>
+<li>拿了个本子；</li>
+<li>被入手 PS4；</li>
+<li>减肥失败；</li>
+<li>被我妈影响，一段时间沉迷唱歌，在某 K 歌 App 上有好多难听的作品；</li>
+<li>一段时间沉迷乌克丽丽，后来不了了之；</li>
+<li>一段时间沉迷配音，在某 App 上也有难听的作品；</li>
+<li>周末基本上就是<strong><em>出去吃饭 + 看电视</em></strong>，单调而重复；</li>
+<li>失去了以前追番的热情，写文章也少了以前卖萌的动力——果然老了么。</li>
+</ul>
 <h2 id="工作-amp-技术"><a href="#工作-amp-技术" class="headerlink" title="工作 &amp; 技术"></a>工作 &amp; 技术</h2><p>从 2015 年 9 月入职现东家大搜车已经一年多了，经历了公司 C 轮亿级刀的融资和新产品的发布，在今年也有几件令自己比较自豪和挫败的事。</p>
 <h3 id="前后端分离"><a href="#前后端分离" class="headerlink" title="前后端分离"></a>前后端分离</h3><p>这一块是在年底借着公司新产品「<a href="https://tangeche.com" target="_blank" rel="external">弹个车</a>」的东风才开始真正落地开来。其实这一块已经落后大厂好多个年代了——2014 年淘宝的中途岛方案以及 2015 年死马分享的天猫 Wormhole 方案。</p>
 <p>一是因为在未分离的阶段我们公司前端还是以传统的 <strong>Java</strong> 方式开发，二是在分离的阶段直接上了 <strong>Vue</strong> 等框架，所以直接就跳过那一步了。</p>
@@ -45,7 +67,12 @@
 <blockquote>
 <p><a href="https://github.com/XadillaX/aliyun-ons" target="_blank" rel="external">Repo 地址</a></p>
 </blockquote>
-<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><ul>
+<h4 id="Hua"><a href="#Hua" class="headerlink" title="Hua"></a>Hua</h4><p>这个项目是为了当时即将去「蘑菇鸡」的小龙童鞋写的，虽然他由于身体原因最后没去成。</p>
+<p>主要用法就是能根据你的一些设定（比如金木水火土）然后随机一堆花名，供你在阿里等厂用——面向各种起名困难户。</p>
+<blockquote>
+<p><a href="https://github.com/BoogeeDoo/hua" target="_blank" rel="external">Repo 地址</a></p>
+</blockquote>
+<h3 id="其它-1"><a href="#其它-1" class="headerlink" title="其它"></a>其它</h3><ul>
 <li>冒着冲撞头哥的风险，不厌其烦在团队推行规范化（Git 和 Eslint 等），终于出了一些成效；</li>
 <li>去 <a href="http://2016.jsconf.cn/" target="_blank" rel="external">NingJS</a> 转了一圈；</li>
 <li>推行并维护了公司内部的 NPM 仓库；</li>
@@ -58,28 +85,6 @@
 </ul>
 <p>除了上述的一些事情外，还收获了最重要的一点——<strong><em>不再像以前一样只无脑关心技术本身，而是更多地去思考技术之外的事，对待旧的代码更宽容了。</em></strong></p>
 <p>不过纯技术方面来说，感觉还是到达一定瓶颈了。</p>
-<h2 id="生活"><a href="#生活" class="headerlink" title="生活"></a>生活</h2><h3 id="足迹"><a href="#足迹" class="headerlink" title="足迹"></a>足迹</h3><ul>
-<li>千岛湖</li>
-<li>良渚文化村</li>
-<li>南京</li>
-<li>湖州</li>
-<li>黄山</li>
-</ul>
-<h3 id="其它-1"><a href="#其它-1" class="headerlink" title="其它"></a>其它</h3><ul>
-<li>拿老爸的车练手，并习得一定的实战驾车经验；</li>
-<li>买了个房，欠下一笔巨款，并开始吃圡；</li>
-<li>玩了一段时间的守望屁股；</li>
-<li>被入手一个定焦人像头；</li>
-<li>尝试了几次租车 App，也算尝试过了力帆电动车和别克；</li>
-<li>拿了个本子；</li>
-<li>被入手 PS4；</li>
-<li>减肥失败；</li>
-<li>被我妈影响，一段时间沉迷唱歌，在某 K 歌 App 上有好多难听的作品；</li>
-<li>一段时间沉迷乌克丽丽，后来不了了之；</li>
-<li>一段时间沉迷配音，在某 App 上也有难听的作品；</li>
-<li>周末基本上就是<strong><em>出去吃饭 + 看电视</em></strong>，单调而重复；</li>
-<li>失去了以前追番的热情，写文章也少了以前卖萌的动力——果然老了么。</li>
-</ul>
 <h2 id="展望二〇一七"><a href="#展望二〇一七" class="headerlink" title="展望二〇一七"></a>展望二〇一七</h2><p>最后列出一些明年想做的事情。</p>
 <ol>
 <li>至少出境游玩一次；</li>
@@ -88,14 +93,16 @@
 <li>想写一本书，并付诸实践；</li>
 <li>通关更多的游戏；</li>
 <li>再还一部分首付；</li>
+<li>苦练摄影技术；</li>
 <li>赚更多钱，不要像现在一样花得憋屈；</li>
 </ol>
+<p><img src="flandre.jpeg" alt="芙兰"></p>
 ]]></content>
     
     <summary type="html">
     
       &lt;p&gt;看了那么多总结，自己也总结一回吧，回顾一下这个即将过去的二零一六。&lt;/p&gt;
-&lt;h2 id=&quot;工作-amp-技术&quot;&gt;&lt;a href=&quot;#工作-amp-技术&quot; class=&quot;headerlink&quot; title=&quot;工作 &amp;amp; 技术&quot;&gt;&lt;/a&gt;工作 &amp;amp; 技术&lt;/h2&gt;
+&lt;h2 id=&quot;生活&quot;&gt;&lt;a href=&quot;#生活&quot; class=&quot;headerlink&quot; title=&quot;生活&quot;&gt;&lt;/a&gt;生活&lt;/h2&gt;&lt;h3 id=&quot;足迹&quot;&gt;&lt;a href=&quot;#足迹&quot; class=
     
     </summary>
     
