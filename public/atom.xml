@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://xcoder.in/"/>
-  <updated>2017-03-03T10:33:00.000Z</updated>
+  <updated>2017-03-03T10:36:01.000Z</updated>
   <id>https://xcoder.in/</id>
   
   <author>
@@ -20,10 +20,11 @@
     <link href="https://xcoder.in/2017/03/03/byakuren/"/>
     <id>https://xcoder.in/2017/03/03/byakuren/</id>
     <published>2017-03-03T10:14:35.000Z</published>
-    <updated>2017-03-03T10:33:00.000Z</updated>
+    <updated>2017-03-03T10:36:01.000Z</updated>
     
     <content type="html"><![CDATA[<p>好久没发文章了，借着 Byakuren 开源的档口炒炒冷饭吧。</p>
-<p>先上 <a href="https://github.com/XadillaX/byakuren" target="_blank" rel="external">Repo 地址</a>。</p>
+<p><img src="byakuren.png" alt="byakuren"></p>
+<p>先上 Repo 地址：<a href="https://github.com/XadillaX/byakuren" target="_blank" rel="external">https://github.com/XadillaX/byakuren</a>。</p>
 <h2 id="主题色"><a href="#主题色" class="headerlink" title="主题色"></a>主题色</h2><p>图像主题色是从一张图像中提取出来最能代表这张图片主色调的多种颜色。 也就是说在一幅色彩斑斓的图片里面，各种不同颜色的数量就对应着该颜色在图 片中的比例，程序可以通过计算图片中不同颜色的像素数来算出主题色。</p>
 <h3 id="主题色提取算法"><a href="#主题色提取算法" class="headerlink" title="主题色提取算法"></a>主题色提取算法</h3><p>提取的算法在我之前的博客中有说明。在 Byakuren 中其实用的就是之前博客中讲的一些算法。</p>
 <ul>
@@ -79,8 +80,8 @@
     <summary type="html">
     
       &lt;p&gt;好久没发文章了，借着 Byakuren 开源的档口炒炒冷饭吧。&lt;/p&gt;
-&lt;p&gt;先上 &lt;a href=&quot;https://github.com/XadillaX/byakuren&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Repo 地址&lt;/a&gt;。&lt;/p&gt;
-
+&lt;p&gt;&lt;img src=&quot;byakuren.png&quot; alt=&quot;byakuren&quot;&gt;&lt;/p&gt;
+&lt;p&gt;先上 Repo 地址：&lt;a href=&quot;https://github.com/XadillaX/bya
     
     </summary>
     

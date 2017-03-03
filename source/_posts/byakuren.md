@@ -7,7 +7,7 @@ tags: [ "主题色", "C" ]
 
 ![byakuren](byakuren.png)
 
-先上 [Repo 地址](https://github.com/XadillaX/byakuren)。
+先上 Repo 地址：[https://github.com/XadillaX/byakuren](https://github.com/XadillaX/byakuren)。
 
 ## 主题色
 
