@@ -114,6 +114,14 @@ int colors = bkr_mix_calculate_color_stats(rgb, color_count, 256, &param, stats)
 
 > `colors` 和 `stats` 如上所述。
 
+### 预览一下
+
+可能有人想看看效果，我这里就放个效果图给大家看看吧。
+
+其中 Octree 和 Mix 两个算法的主题色最大数量参数传的都是 16。
+
+![效果预览](result.png)
+
 ### 能做什么？
 
 你可以拿它来写一些主题色提取的东西。
