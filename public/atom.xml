@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://xcoder.in/"/>
-  <updated>2017-01-04T06:18:58.000Z</updated>
+  <updated>2017-03-03T10:33:00.000Z</updated>
   <id>https://xcoder.in/</id>
   
   <author>
@@ -16,11 +16,87 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Byakuren：一个 C 实现的主题色提取库</title>
+    <link href="https://xcoder.in/2017/03/03/byakuren/"/>
+    <id>https://xcoder.in/2017/03/03/byakuren/</id>
+    <published>2017-03-03T10:14:35.000Z</published>
+    <updated>2017-03-03T10:33:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>好久没发文章了，借着 Byakuren 开源的档口炒炒冷饭吧。</p>
+<p>先上 <a href="https://github.com/XadillaX/byakuren" target="_blank" rel="external">Repo 地址</a>。</p>
+<h2 id="主题色"><a href="#主题色" class="headerlink" title="主题色"></a>主题色</h2><p>图像主题色是从一张图像中提取出来最能代表这张图片主色调的多种颜色。 也就是说在一幅色彩斑斓的图片里面，各种不同颜色的数量就对应着该颜色在图 片中的比例，程序可以通过计算图片中不同颜色的像素数来算出主题色。</p>
+<h3 id="主题色提取算法"><a href="#主题色提取算法" class="headerlink" title="主题色提取算法"></a>主题色提取算法</h3><p>提取的算法在我之前的博客中有说明。在 Byakuren 中其实用的就是之前博客中讲的一些算法。</p>
+<ul>
+<li><a href="https://xcoder.in/2014/09/17/theme-color-extract/#八叉树提取法">八叉树提取法</a></li>
+<li><a href="https://xcoder.in/2014/09/17/theme-color-extract/#最小差值法">最小差值法</a></li>
+</ul>
+<p>除去上面两种算法，Byakuren 还提供了将这两种算法结合起来的 Mix 算法。</p>
+<h2 id="Byakuren"><a href="#Byakuren" class="headerlink" title="Byakuren"></a>Byakuren</h2><p>Byakuren 是我前两年写的一个主题色提取库，也是继 <a href="https://github.com/XadillaX/thmclrx/tree/e302b61b4cc70b24efa35c612899cc0b79d271f9" target="_blank" rel="external">thmclrx</a> 之后的 C 版实现，个人认为代码质量比旧版的 thmclrx 要高。并且它实际上经过了企业级的验证，在某相关的公司已经欢快跑了有些年头了。</p>
+<blockquote>
+<p>在经过相关人员的同意下，我也算把这雪藏了好久的代码给开源出来了。</p>
+</blockquote>
+<h3 id="伪·Byakuren-是什么？"><a href="#伪·Byakuren-是什么？" class="headerlink" title="伪·Byakuren 是什么？"></a>伪·Byakuren 是什么？</h3><blockquote>
+<p>聖 白蓮（ひじり びゃくれん，Hiziri Byakuren）是系列作品《东方 project》中的角色，首次登场于《东方星莲船》。</p>
+<ul>
+<li>种族：魔法使</li>
+<li>能力：使用魔法程度的能力（酣畅增强身体能力的）</li>
+<li>危险度：不明</li>
+<li>人类友好度：中</li>
+<li>主要活动场所：命莲寺之类</li>
+<li>命莲寺的住持。虽然原本是人类，不过由于常年的修行已经完全超越了人类。现在已经属于人们常说的魔法使了。</li>
+</ul>
+<p>虽然已经入了佛门，但是不知道什么原因却被妖怪敬仰着。她从来没有像童话故事中的魔法使那样，念诵着咒语治退妖怪。使用的力量完全是邪恶的，一点都不像是圣人，虽然并没有人目击到她与人类为敌，但其实已彻底成为妖怪的同伴了。</p>
+</blockquote>
+<p>好吧，总之本人是个东方控，所以基本上项目名都跟东方有关。</p>
+<h3 id="真·Byakuren-是什么？"><a href="#真·Byakuren-是什么？" class="headerlink" title="真·Byakuren 是什么？"></a>真·Byakuren 是什么？</h3><p>如文章题目所说，它是一个 C 实现的开源主题色提取的库，大家可以把它编译成链接库使用。</p>
+<p>不过目前暂时只支持 Makefile 的形式来编译，大家如果有兴趣也可以自己建个 Windows 下的 Visual Studio 项目等，也欢迎提类似于 CMake 之类的 PR。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>其实详细的使用方法在<a href="https://github.com/XadillaX/byakuren#byakuren" target="_blank" rel="external">文档</a>中就有说明。</p>
+<p>不过这里还是简单介绍一下吧。</p>
+<h4 id="Clone"><a href="#Clone" class="headerlink" title="Clone"></a>Clone</h4><p>先把代码给下下来，你也可以把它 Clone 下来。总之仓库地址是：<a href="https://github.com/XadillaX/byakuren" target="_blank" rel="external">https://github.com/XadillaX/byakuren</a>。</p>
+<h4 id="make"><a href="#make" class="headerlink" title="make"></a>make</h4><p>然后跑到目录下执行 <code>make</code>。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ make byakuren</span><br></pre></td></tr></table></figure>
+<p>你将得到一个 <code>byakuren.a</code> 的静态链接库。</p>
+<p>这个时候你只要拿着这个静态链接库，然后顺便在你的项目中把头文件引进来就可以了。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"byakuren.h"</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="API"><a href="#API" class="headerlink" title="API"></a>API</h4><p>我们假设你有 <code>bkr_rgb* rgb</code> 的图片像素信息，以及 <code>uint32_t color_count</code> 的图片像素总数两个变量，下面分别给出三个样例。具体的 API 解析还请去文档观摩。</p>
+<h5 id="Octree"><a href="#Octree" class="headerlink" title="Octree"></a>Octree</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">bkr_color_stats stats[<span class="number">256</span>];</span><br><span class="line">bkr_octree_node* root = bkr_build_octree(rgb, color_count, <span class="number">256</span>);</span><br><span class="line"><span class="keyword">int</span> colors = bkr_octree_calculate_color_stats(root, stats);</span><br><span class="line">bkr_release_octree(root);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>colors</code> 就是主题色数量了，传进去的 <code>stats</code> 就会接收到主题色的具体信息了。</p>
+</blockquote>
+<h5 id="Min-diff"><a href="#Min-diff" class="headerlink" title="Min-diff"></a>Min-diff</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">bkr_color_stats stats[<span class="number">256</span>];</span><br><span class="line">bkr_mindiff_parameter param;</span><br><span class="line">param.gray_offset = <span class="number">5</span>;</span><br><span class="line">param.palette = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">int</span> colors = bkr_mindiff_calculate_color_stats(rgb, color_count, stats, &amp;param);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>colors</code> 和 <code>stats</code> 如上所述。</p>
+</blockquote>
+<h5 id="Mix"><a href="#Mix" class="headerlink" title="Mix"></a>Mix</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">bkr_color_stats stats[<span class="number">256</span>];</span><br><span class="line">bkr_mindiff_parameter param;</span><br><span class="line">param.gray_offset = <span class="number">-1</span>;</span><br><span class="line">param.palette = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">int</span> colors = bkr_mix_calculate_color_stats(rgb, color_count, <span class="number">256</span>, &amp;param, stats);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>colors</code> 和 <code>stats</code> 如上所述。</p>
+</blockquote>
+<h3 id="能做什么？"><a href="#能做什么？" class="headerlink" title="能做什么？"></a>能做什么？</h3><p>你可以拿它来写一些主题色提取的东西。</p>
+<p>你也可以拿它来完成其它语言的主题色提取库的封装，如 Python、Lua 等等。欢迎反馈给我。</p>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>把一份自己觉得还不错的代码开源出来的感觉特爽，尤其是这种重见天日的感觉。ﾍ|･∀･|ﾉ*~●</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;好久没发文章了，借着 Byakuren 开源的档口炒炒冷饭吧。&lt;/p&gt;
+&lt;p&gt;先上 &lt;a href=&quot;https://github.com/XadillaX/byakuren&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Repo 地址&lt;/a&gt;。&lt;/p&gt;
+
+    
+    </summary>
+    
+    
+      <category term="C" scheme="https://xcoder.in/tags/C/"/>
+    
+      <category term="主题色" scheme="https://xcoder.in/tags/%E4%B8%BB%E9%A2%98%E8%89%B2/"/>
+    
+  </entry>
+  
+  <entry>
     <title>死月的二零一六总结</title>
     <link href="https://xcoder.in/2016/12/31/my-2016/"/>
     <id>https://xcoder.in/2016/12/31/my-2016/</id>
     <published>2016-12-31T07:43:08.000Z</published>
-    <updated>2017-01-04T06:18:58.000Z</updated>
+    <updated>2017-01-09T03:47:48.000Z</updated>
     
     <content type="html"><![CDATA[<p>看了那么多总结，自己也总结一回吧，回顾一下这个即将过去的二零一六。</p>
 <h2 id="生活"><a href="#生活" class="headerlink" title="生活"></a>生活</h2><h3 id="足迹"><a href="#足迹" class="headerlink" title="足迹"></a>足迹</h3><ul>
@@ -2555,9 +2631,9 @@ $(function()
       <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
     
-      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
-    
       <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
     
       <category term="HGE" scheme="https://xcoder.in/tags/HGE/"/>
     
@@ -3814,9 +3890,9 @@ $(function()
       <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
     
-      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
-    
       <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
     
       <category term="ScopeLock" scheme="https://xcoder.in/tags/ScopeLock/"/>
     
@@ -3909,9 +3985,9 @@ $(function()
       <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
     
-      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
-    
       <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
     
       <category term="HGE" scheme="https://xcoder.in/tags/HGE/"/>
     
@@ -3942,9 +4018,9 @@ $(function()
       <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
     
-      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
-    
       <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
     
       <category term="HGE" scheme="https://xcoder.in/tags/HGE/"/>
     
@@ -3986,9 +4062,9 @@ $(function()
       <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
     
-      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
-    
       <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
     
       <category term="二进制文件" scheme="https://xcoder.in/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6/"/>
     
@@ -4048,9 +4124,9 @@ $(function()
       <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
     
-      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
-    
       <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
     
       <category term="HGE" scheme="https://xcoder.in/tags/HGE/"/>
     
@@ -4124,9 +4200,9 @@ $(function()
       <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
     
-      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
-    
       <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
     
       <category term="设计模式" scheme="https://xcoder.in/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
@@ -4172,9 +4248,9 @@ $(function()
       <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
     
-      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
-    
       <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+      <category term="C++" scheme="https://xcoder.in/tags/C/"/>
     
       <category term="设计模式" scheme="https://xcoder.in/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
