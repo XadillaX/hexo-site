@@ -5,8 +5,6 @@ tags: [ "主题色", "C" ]
 
 好久没发文章了，借着 Byakuren 开源的档口炒炒冷饭吧。
 
-![byakuren](byakuren.png)
-
 先上 Repo 地址：[https://github.com/XadillaX/byakuren](https://github.com/XadillaX/byakuren)。
 
 ## 主题色
@@ -29,6 +27,8 @@ Byakuren 是我前两年写的一个主题色提取库，也是继 [thmclrx](htt
 > 在经过相关人员的同意下，我也算把这雪藏了好久的代码给开源出来了。
 
 ### 伪·Byakuren 是什么？
+
+![byakuren](byakuren.png)
 
 > 聖 白蓮（ひじり びゃくれん，Hiziri Byakuren）是系列作品《东方 project》中的角色，首次登场于《东方星莲船》。
 > 
