@@ -10,6 +10,7 @@ title: 关于
 死月（XadillaX），90 后。高级后端研发工程师；游戏手残党，重度 VIMer 及 OSXer；主属性为 Node.js，副手为 C++，爱玩算法；前端渣，且*不会* Java；退役已久 ACMer。
 
 + **GitHub:** [XadillaX](https://github.com/xadillax)
++ **Me:** [XadillaX](https://github.com/xadillax/me)
 + **Email:** `YnJva2VuQGxldG1lLnJlcGFpcg==`
 
 ## 教育
@@ -30,13 +31,21 @@ title: 关于
 
 ### 大搜车 Souche
 
-高级后端研发工程师，从事 Node.js 在公司的架构工作，前后端分离架构在公司的落地，底层 SDK 的研发和维护，以及业务的日常迭代。先后支持了[车牛](https://d.souche.com/)、[弹个车](https://tangeche.com/)的研发。
+无线架构组中间件团队 Tech Leader，从事 Node.js 在公司的架构工作，包括公司动态网关、开放平台、前后端分离架构在公司的落地，底层 SDK 的研发和维护，以及业务的日常迭代。先后支持了[车牛](https://d.souche.com/)、[弹个车](https://tangeche.com/)的研发。
 
 ### 花瓣网 Huaban
 
 后端研发工程师，负责[花瓣网](https://huaban.com/)的日常迭代，以及底层若干系统的开发工作。
 
 ## 近期项目
+
+### Izayoi（开放平台）
+
+大搜车的开放平台，负责公司内部业务与外部合作方进行对接，以及公司外部合作方与公司内部进行对接的一个双向对接平台，这是大搜车平台化的一个重要入口。
+
+### Patchouli（动态网关）
+
+大搜车的一个高可用动态流量网关系统，基于 Node.js + OpenResty 开发。在 Izayoi 上进行动态的一个网关路由和上游配置，在请求进来的时候能根据不同的规则将请求转发到后端不同的节点上。
 
 ### Vanille（渲染系统）
 
