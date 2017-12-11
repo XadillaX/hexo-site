@@ -24,11 +24,15 @@ title: 关于
 
 ## 工作
 
-### 大搜车
+### 蚂蚁金服 Ant Financial
+
+高级研发工程师，负责集团 Node.js 中间件、基础框架（如 [Egg.js](https://eggjs.org/)）的研发及落地，以及一些基础的平台的研发。
+
+### 大搜车 Souche
 
 高级后端研发工程师，从事 Node.js 在公司的架构工作，前后端分离架构在公司的落地，底层 SDK 的研发和维护，以及业务的日常迭代。先后支持了[车牛](https://d.souche.com/)、[弹个车](https://tangeche.com/)的研发。
 
-### 花瓣网
+### 花瓣网 Huaban
 
 后端研发工程师，负责[花瓣网](https://huaban.com/)的日常迭代，以及底层若干系统的开发工作。
 
