@@ -73,7 +73,17 @@
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>　　其实这个需求在我们项目目前就是给用户定时发提醒短信用的。如果没有发现 Redis 的这个妙用，我还是会去用<a href="#最初的设想">第二节</a>里面的方法来写的。其实这期间也有考虑过用 RabbitMQ，不过貌似它的定时消息需要做一些 Hack，比较麻烦，最后就放弃了。</p>
 <p>　　Redis 的这个方法其实是我在谷歌搜出来的，别人在 StackOverflow 回答的答案。我参考了之后用我自己的方法实现了出来，并且把代码的关键部分提取出来整理成这篇小文，还希望能给各位看官一些用吧，望打赏。</p>
 <p>　　如果没有什么用也憋喷我，毕竟我是个蒟蒻。有更好的方法希望留个言，望告知。谢谢。(´,,•ω•,,)♡</p>
-<hr><footer><section class="copyright">&copy; 2016 - 2017<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2015/06/05/scheduled-task-using-redis/";</script><script>var DISQUS_IDENTIFIER = "scheduled-task-using-redis";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2017<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
     $("header").backstretch("/images/header.jpeg");
 
     $("figure.highlight").each(function(i, block) {

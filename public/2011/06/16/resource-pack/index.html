@@ -16,7 +16,17 @@
 <p>　　想到以后这个资源包类要用到以后的一些项目，于是我自己也写了一个Cache机制。就是在一个包中，当加载某个资源的时候，顺便把这个资源的Buffer加到一个Cache中，当下次再需要用到这个资源的时候就直接从Cache中取就好了，实际上这就还是之前的代码实现的功能，只不过我自己在这基础上精简了一下。最后写一个ClearCache的函数能清除Cache，我这个资源包类就算完成了。</p>
 <p>　　还有在获取资源的时候，为了防止内存突增，我的Buffer是一段一段获取的，类似于Socket中的获取消息一直到消息结束为止。当然，每一段Buffer的大小是可以自己传进去的。我这种以时间换空间的做法还没自己实际测试过效果如何，只不过是自己想想可能会比较优罢了，因为最近实在是太慢，这篇日志还是考完了概率然后摸着黑地写的。</p>
 <p>　　我对文件系统本身不是非常了解，操作系统还没考呢。所以我现在仅仅做到的是云风九年前的一种设计，然后加上了原先代码有的Cache机制而已。不过写下这篇日志来记录我自己成长的足迹罢了。</p>
-<hr><footer><section class="copyright">&copy; 2016 - 2017<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2011/06/16/resource-pack/";</script><script>var DISQUS_IDENTIFIER = "resource-pack";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2017<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
     $("header").backstretch("/images/header.jpeg");
 
     $("figure.highlight").each(function(i, block) {

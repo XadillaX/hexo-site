@@ -22,7 +22,17 @@
 <p>　　然后下面的代码就是例子了：</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> simpleIni = <span class="built_in">require</span>(<span class="string">"simpleini"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(simpleIni.open(<span class="string">"./node_modules/simpleini/src/miniini-0.9/test/test.ini"</span>));</span><br><span class="line"><span class="built_in">console</span>.log(simpleIni.read(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>));</span><br><span class="line"><span class="built_in">console</span>.log(simpleIni.read(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"d"</span>));</span><br><span class="line"><span class="built_in">console</span>.log(simpleIni.read(<span class="string">"SETTINGS"</span>, <span class="string">"sections"</span>));</span><br><span class="line"><span class="built_in">console</span>.log(simpleIni.read(<span class="string">"vals"</span>, <span class="string">"float"</span>));</span><br></pre></td></tr></table></figure>
 <p>　　读取配置的时候第一个参数是 <code>Section</code>，第二个参数是 <code>Key</code>，第三个参数是取不到该值时的默认值。</p>
-<hr><footer><section class="copyright">&copy; 2016 - 2017<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2014/04/05/cpp-class-inline-keng/";</script><script>var DISQUS_IDENTIFIER = "cpp-class-inline-keng";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2017<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
     $("header").backstretch("/images/header.jpeg");
 
     $("figure.highlight").each(function(i, block) {
