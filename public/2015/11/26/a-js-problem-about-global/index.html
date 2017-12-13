@@ -114,7 +114,7 @@ var a = 2;function foo()&amp;#123;    console.log(this.a);&amp;#125;foo();
 </blockquote>
 <p>　　于是有了上面写的那段代码。</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> vm = <span class="built_in">require</span>(<span class="string">"vm"</span>);</span><br><span class="line"><span class="keyword">var</span> sandbox = &#123;</span><br><span class="line">    <span class="attr">console</span>: <span class="built_in">console</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">vm.createContext(sandbox);</span><br><span class="line">vm.runInContext(<span class="string">"var a = 2;function foo()&#123;console.log(this.a);&#125;foo();"</span>, sandbox);</span><br></pre></td></tr></table></figure>
-<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2015/11/26/a-js-problem-about-global/";</script><script>var DISQUS_IDENTIFIER = "a-js-problem-about-global";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2015/11/26/a-js-problem-about-global/";</script><script>var DISQUS_IDENTIFIER = "2015/11/26/a-js-problem-about-global/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
   this.page.url = DISQUS_PAGE_URL;
   this.page.identifier = DISQUS_IDENTIFIER;
 };

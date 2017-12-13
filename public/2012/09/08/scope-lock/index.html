@@ -12,7 +12,7 @@
 <p>　　其实无论 <code>ScopeLockTest</code> 这个函数怎么写，哪怕是中间有一些 <code>if</code> 判断直接 <code>return</code> 掉，只要是 <code>ScopeLockTest</code> 这个函数执行完毕，<code>oLock</code> 就会自动析构，从而达到了解锁过程。那么不管粗心还是细心的童鞋们都不用为忘记退出临界区而烦恼了。</p>
 <p>　　而且 <code>ScopeLock</code> 模式只是一种思想，并不是对于 <strong>M$</strong> 的临界区的一种专用性物品。例如在QT里，我们一样可以用 <code>ScopeLock</code> 来对线程的一些 <code>MutexLock</code> 之类的东西进行操作。</p>
 <p>　　上面所写的例子只是思路的一种形成，并不是一个完整的ScopeLock类（结构体），虽然说它现在已经可以用了。你可以在上面完善，加上自己的东西，使其能确确实实在项目中使用。由于代码的关联性，我单单发出我的 <code>ScopeLock</code> 的话会缺少很多关联的东西，所以咱就不发了，思路在这里，相信谁都能写出自己的一个 <code>ScopeLock</code> 吧。</p>
-<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2012/09/08/scope-lock/";</script><script>var DISQUS_IDENTIFIER = "scope-lock";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2012/09/08/scope-lock/";</script><script>var DISQUS_IDENTIFIER = "2012/09/08/scope-lock/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
   this.page.url = DISQUS_PAGE_URL;
   this.page.identifier = DISQUS_IDENTIFIER;
 };

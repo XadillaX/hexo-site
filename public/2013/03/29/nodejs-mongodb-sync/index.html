@@ -26,7 +26,7 @@
 <p>　　这就是一个非常简单的同步查询 MongoDB 的例子了，实际上本质还是一个异步，注意到没有，其实 <code>Fiber()</code> 内部的那个 <code>function</code> 本质上还是一个回调函数，只不过在这个回调函数里面，里面的所有 <code>callback</code> 都可以被同步了。不过我们只需要小动一些手脚就能加上这个外壳了。具体请参见 <a href="https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/sevenz/sRouter.js" target="_blank" rel="external">sRouter.js</a> 约 121 行的外壳以及 <a href="https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/sevenz/sMongoSync.js" target="_blank" rel="external">sMongoSync.js</a> 的实现，加上 <a href="http://web.archive.org/web/20130726042859/https://github.com/XadillaX/SevenzJS/blob/a0a0476000c492dd8e70c062cfa432f559edbd16/actions/index.js" target="_blank" rel="external">index.js</a> 中的查询 demo。</p>
 <h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>　　所以说当我们做不到某件事的时候，多去IRC看看，多去社区混混，也多去找找模块，要真没有的话就只能自己丰衣足食了（我还没到那水平，笑）。总之这次Fibers帮了我一个大忙。</p>
 <p>　　最后，SevenzJS 欢迎 <a href="https://github.com/XadillaX/SevenzJS" target="_blank" rel="external">Fork</a>。</p>
-<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2013/03/29/nodejs-mongodb-sync/";</script><script>var DISQUS_IDENTIFIER = "nodejs-mongodb-sync";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2013/03/29/nodejs-mongodb-sync/";</script><script>var DISQUS_IDENTIFIER = "2013/03/29/nodejs-mongodb-sync/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
   this.page.url = DISQUS_PAGE_URL;
   this.page.identifier = DISQUS_IDENTIFIER;
 };
