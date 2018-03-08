@@ -7,7 +7,7 @@ title: 关于
 
 ## I Am
 
-死月（XadillaX），90 后。高级后端研发工程师；游戏手残党，重度 VIMer 及 OSXer；主属性为 Node.js，副手为 C++，爱玩算法；前端渣，且*不会* Java；退役已久 ACMer。
+死月（XadillaX），90 后，[Node.js Collaborator](https://github.com/nodejs/node#collaborators)。高级后端研发工程师；游戏手残党，重度 VIMer 及 OSXer；主属性为 Node.js，副手为 C++，爱玩算法；前端渣，且*不会* Java；退役已久 ACMer。
 
 + **GitHub:** [XadillaX](https://github.com/xadillax)
 + **Me:** [XadillaX](https://github.com/xadillax/me)
