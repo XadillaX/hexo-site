@@ -1,0 +1,346 @@
+<!DOCTYPE html><html class="han-init" lang="zh-Hant"><head><meta name="author" content="死月·吃圡蕾特"><meta name="description" itemprop="description" content="最近在知乎上看到一个问题，「随机生成指定面积单连通区域？」，感觉还挺有意思的，于是整理一下写一篇新文章。
+问题阐述如下图所示，在 10x10 的区域中，随机生成面积为 6 的单连通区域，该「随机」包括「位置随机」以及「形状随机」。
+
+注意：
+
+单连通区域定义是该区域每一个区块上下左右至少连着另一个区"><link rel="alternative" href="/atom.xml" title="艾克斯の编码者" type="application/atom+xml"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>随机生成指定面积单连通区域 · 一个伪宅级别的码畜。</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="艾克斯の编码者" title="艾克斯の编码者"></a><h1><a href="/" alt="艾克斯の编码者" title="艾克斯の编码者">艾克斯の编码者</a></h1><p>一个伪宅级别的码畜。</p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/curriculumvitae" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="https://xcoder.in/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/XadillaX" style="position: relative; top: -2px;">&#xe735;</a><a target="_blank" href="https://www.zhihu.com/people/xadillax">&#xe63f;</a><a target="_blank" href="https://weibo.com/xadillax" style="position: relative; top: -2px;">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="full"><h1>随机生成指定面积单连通区域</h1><span class="post-meta">写于<time> 2018 年 04 月 01 日 17 时 54 分</time><br>更新于<time> 2018 年 04 月 01 日 17 时 40 分</time></span><div class="article-toc"><strong>大纲</strong><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题阐述"><span class="toc-number">1.</span> <span class="toc-text">问题阐述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随便说说"><span class="toc-number">2.</span> <span class="toc-text">随便说说</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决一下"><span class="toc-number">3.</span> <span class="toc-text">解决一下</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DFS"><span class="toc-number">3.1.</span> <span class="toc-text">DFS</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#实现外壳"><span class="toc-number">3.1.1.</span> <span class="toc-text">实现外壳</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#非周期性实现"><span class="toc-number">3.1.2.</span> <span class="toc-text">非周期性实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#周期性实现"><span class="toc-number">3.1.3.</span> <span class="toc-text">周期性实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#抛弃状态还原"><span class="toc-number">3.1.4.</span> <span class="toc-text">抛弃状态还原</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生成「胖胖的」区域"><span class="toc-number">3.2.</span> <span class="toc-text">生成「胖胖的」区域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结合一下？"><span class="toc-number">3.3.</span> <span class="toc-text">结合一下？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#还能更丧心病狂吗？"><span class="toc-number">3.4.</span> <span class="toc-text">还能更丧心病狂吗？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#几张效果对比图"><span class="toc-number">4.</span> <span class="toc-text">几张效果对比图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">5.</span> <span class="toc-text">小结</span></a></li></ol></div><p>最近在知乎上看到一个问题，「<a href="https://www.zhihu.com/question/269483551/answer/354477009" target="_blank" rel="external">随机生成指定面积单连通区域？</a>」，感觉还挺有意思的，于是整理一下写一篇新文章。</p>
+<h2 id="问题阐述"><a href="#问题阐述" class="headerlink" title="问题阐述"></a>问题阐述</h2><p>如下图所示，在 10x10 的区域中，随机生成面积为 6 的单连通区域，该「随机」包括「位置随机」以及「形状随机」。</p>
+<p><img src="example.jpg" alt="示意图"></p>
+<p>注意：</p>
+<ol>
+<li>单连通区域定义是该区域每一个区块上下左右至少连着另一个区块；</li>
+<li>采用周期性结构，超出右边移到最左边，以此类推。</li>
+</ol>
+<blockquote>
+<p>其中点 2 可以分采用和不采用周期性结构分别讨论。</p>
+</blockquote>
+<h2 id="随便说说"><a href="#随便说说" class="headerlink" title="随便说说"></a>随便说说</h2><p>这个问题，我不知道原题提问者想要做什么事。但是就这题本身而言，我们可以拿它去生成一个随机地图，例如：</p>
+<blockquote>
+<p>建造、等待的沙盒类手游，游戏中有一个空岛，玩家能在上面建造自己的建筑然后等待各种事件完成。<strong>空岛形状随机生成，并且都联通且面积一定，这样每个玩家进去的时候就能得到不同地形</strong>。</p>
+</blockquote>
+<h2 id="解决一下"><a href="#解决一下" class="headerlink" title="解决一下"></a>解决一下</h2><p>在得知了问题原题之后，我们就可以照着题目的意思开始解决了。</p>
+<h3 id="DFS"><a href="#DFS" class="headerlink" title="DFS"></a>DFS</h3><p>其实这么一个问题一出现，脑子里面就瞬间涌出几个词汇：<a href="https://en.wikipedia.org/wiki/Depth-first_search" target="_blank" rel="external">DFS</a>、<a href="https://en.wikipedia.org/wiki/Flood_fill" target="_blank" rel="external">Flood fill</a>、<a href="https://zh.wikipedia.org/wiki/%E5%B9%B6%E6%9F%A5%E9%9B%86" target="_blank" rel="external">并查集</a>等等。</p>
+<p>那么其实这最粗暴的办法相当于你假想有一个连通区域，然后你去 Flood fill 它——至于墙在哪，在递归的每一个节点的时候<strong>随机一下搜索方向的顺序就可以了</strong>。</p>
+<h4 id="实现外壳"><a href="#实现外壳" class="headerlink" title="实现外壳"></a>实现外壳</h4><p>我们先实现一个类的框架吧（我是 Node.js 开发者，自然用 JavaScript 进行 Demo 的输出）。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> INIT = <span class="built_in">Symbol</span>(<span class="string">"init"</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Filler</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Filler 构造函数</span><br><span class="line">     * @constructor</span><br><span class="line">     * @param &#123;Number&#125; length 地图总宽高</span><br><span class="line">     * @param &#123;Number&#125; needArea 需要填充的区域面积</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">constructor</span>(length, needArea) &#123;</span><br><span class="line">        <span class="keyword">this</span>.length = length;</span><br><span class="line">        <span class="keyword">this</span>.needArea = needArea;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 初始化地图</span><br><span class="line">     */</span></span><br><span class="line">    [INIT]() &#123;</span><br><span class="line">        <span class="comment">/**</span><br><span class="line">         * 为了方便，地图就用一个二维字符数组表示</span><br><span class="line">         *</span><br><span class="line">         *   + . 代表空地</span><br><span class="line">         *   + x 代表填充</span><br><span class="line">         */</span></span><br><span class="line">        <span class="keyword">this</span>.map = [];</span><br><span class="line">        <span class="keyword">this</span>.count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.length; i++) &#123;</span><br><span class="line">            <span class="keyword">let</span> row = [];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="keyword">this</span>.length; j++) row.push(<span class="string">"."</span>);</span><br><span class="line">            <span class="keyword">this</span>.map.push(row);</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="comment">/**</span><br><span class="line">      * 填充递归函数</span><br><span class="line">      * @param &#123;Number&#125; x 坐标 X 轴的值</span><br><span class="line">      * @param &#123;Number&#125; y 坐标 Y 轴的值</span><br><span class="line">      * @return 填充好的地图二维数组</span><br><span class="line">      */</span></span><br><span class="line">     fill(x, y) &#123;</span><br><span class="line">        <span class="comment">// 待实现</span></span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="非周期性实现"><a href="#非周期性实现" class="headerlink" title="非周期性实现"></a>非周期性实现</h4><p>有了架子之后，我们就可以实现递归函数 <code>fill</code> 了，整理一下流程如下：</p>
+<ol>
+<li>随机一个起点位置，并以此开始递归搜索；</li>
+<li><code>fill(x, y)</code> 进入递归搜索：<ol>
+<li>如果需要初始化地图就调用 <code>this[INIT]()</code>；</li>
+<li><code>this.count++</code>，表示填充区域面积加了 <code>1</code>，并在数组中将该位置填充为 <code>x</code>；</li>
+<li><code>this.count</code> 是否等于所需要的面积：<ol>
+<li>若等于，则返回当前的地图状态；</li>
+<li>若不等于，则继续 2.4；</li>
+</ol>
+</li>
+<li>随机四个方向的顺序；</li>
+<li>对四个方向进行循环：<ol>
+<li><code>x</code>、<code>y</code> 轴的值按当前方向走一个算出新的坐标值 <code>newX</code> 和 <code>newY</code>；</li>
+<li>判断坐标是否合法（越界算非法）：<ol>
+<li>若非法则回 2.5 继续下一个方向；</li>
+<li>若合法则继续 2.5.3；</li>
+</ol>
+</li>
+<li>递归 <code>fill(newX, newY)</code> 得到结果，若有结果则返回；</li>
+</ol>
+</li>
+<li>若循环完四个方向都还没返回结果则会跳到这一步来，这个时候进行状态还原，递归跳回上一层进行下一个状态的搜索。</li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>在这里「状态还原」表示把 <code>this.count--</code> 还原回当前坐标填充前的状态，并且把当前填充的 <code>&#39;x&#39;</code> 给还原回 <code>&#39;.&#39;</code>。</p>
+</blockquote>
+<p>照着上面的流程很快就能得出代码结论：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> _ = <span class="built_in">require</span>(<span class="string">"lodash"</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Filler</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    fill(x, y) &#123;</span><br><span class="line">        <span class="comment">// 初始化地图</span></span><br><span class="line">        <span class="keyword">const</span> needInit = !<span class="built_in">arguments</span>[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">if</span>(needInit) <span class="keyword">this</span>[INIT]();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果当前坐标已被填充，则返回空</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.map[x][y] === <span class="string">"x"</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 填充当前坐标</span></span><br><span class="line">        <span class="keyword">this</span>.count++;</span><br><span class="line">        <span class="keyword">this</span>.map[x][y] = <span class="string">"x"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 填充满了则返回当前地图</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.count === <span class="keyword">this</span>.needArea) <span class="keyword">return</span> <span class="built_in">Object</span>.assign([], <span class="keyword">this</span>.map);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 随机四个方向的顺序</span></span><br><span class="line">        <span class="keyword">const</span> dirs = _.shuffle([ [ <span class="number">0</span>, <span class="number">1</span> ], [ <span class="number">0</span>, <span class="number">-1</span> ], [ <span class="number">1</span>, <span class="number">0</span> ], [ <span class="number">-1</span>, <span class="number">0</span> ] ]);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 循环四个方向</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">const</span> dir = dirs[i];</span><br><span class="line">            <span class="keyword">let</span> newX = x + dir[<span class="number">0</span>];</span><br><span class="line">            <span class="keyword">let</span> newY = y + dir[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 判断边界</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span>(newX &lt; <span class="number">0</span> || newX &gt;= <span class="keyword">this</span>.length || newY &lt; <span class="number">0</span> || newY &gt;= <span class="keyword">this</span>.length) <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 进入下一层递归并得到结果</span></span><br><span class="line">            <span class="keyword">const</span> ret = <span class="keyword">this</span>.fill(newX, newY, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 若结果非空则返回结果</span></span><br><span class="line">            <span class="keyword">if</span>(ret) <span class="keyword">return</span> ret;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 状态还原</span></span><br><span class="line">        <span class="keyword">this</span>.count--;</span><br><span class="line">        <span class="keyword">this</span>.map[x][y] = <span class="string">"."</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这么一来，类就写好了。接下去我们只要实现一些交互的代码，就可以看效果了。</p>
+<blockquote>
+<p><a href="https://jsfiddle.net/XadillaX/x2ur8kvj/" target="_blank" rel="external">点我</a>进入 JSFiddle 看效果。</p>
+</blockquote>
+<p>如果懒得进入 JSFiddle 看，也可以看看下面的几个截图：</p>
+<p><img src="10x10-1.png" alt=""><br><small>10x10 填 50 效果图</small></p>
+<p><img src="10x10-2.png" alt=""><br><small>10x10 填 6 效果图</small></p>
+<p><img src="50x50-1.png" alt=""><br><small>50x50 填 50 效果图</small></p>
+<h4 id="周期性实现"><a href="#周期性实现" class="headerlink" title="周期性实现"></a>周期性实现</h4><p>其实原题说了一个条件，那就是<strong>采用周期性结构，超出右边移到最左边，以此类推</strong>。</p>
+<p>而我们前文的代码其实是照着非周期性结构来实现的。不过如果我们要将其改成周期性实现也很简单，只需要把前文代码中边界判断的那一句代码改为周期性计算的代码即可，也就是说要把这段代码：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 判断边界</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(newX &lt; <span class="number">0</span> || newX &gt;= <span class="keyword">this</span>.length || newY &lt; <span class="number">0</span> || newY &gt;= <span class="keyword">this</span>.length) <span class="keyword">continue</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>改为：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 周期性计算</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(newX &lt; <span class="number">0</span>) newX = <span class="keyword">this</span>.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(newX &gt;= <span class="keyword">this</span>.length) newX = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(newY &lt; <span class="number">0</span>) newY = <span class="keyword">this</span>.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(newY &gt;= <span class="keyword">this</span>.length) newY = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个时候出来的效果就是这样的了：</p>
+<p><img src="10x10-zqx-1.png" alt=""><br><small>10x10 填 50 周期性效果图</small></p>
+<h4 id="抛弃状态还原"><a href="#抛弃状态还原" class="headerlink" title="抛弃状态还原"></a>抛弃状态还原</h4><p>至此为止 DFS 的代码基本上完成了。不过目前来说，当然这个算法的一个缺陷就是，当需要面积与总面积比例比较大的时候，有可能陷入搜索的死循环（或者说效率特别低），因为要不断复盘。</p>
+<p>所以我们可以做点改造——由于我们不是真的为了搜索到某个状态，而只是为了填充我们的小点点，那么 DFS 中比较经典的「状态还原」就不需要了，也就是说：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">this</span>.count--;</span><br><span class="line"><span class="keyword">this</span>.mat[x][y] = <span class="string">"."</span>;</span><br></pre></td></tr></table></figure>
+<p>这两行代码可以删掉了，用删掉上面两行代码的代码跑一下，我用 50x50 填充 800 格子的效果：</p>
+<table>
+<thead>
+<tr>
+<th><img src="800-1.png" alt=""></th>
+<th><img src="800-2.png" alt=""></th>
+<th><img src="800-3.png" alt=""></th>
+<th><img src="800-4.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>继续之前的 50x50 填充 50：</p>
+<table>
+<thead>
+<tr>
+<th><img src="50-1.png" alt=""></th>
+<th><img src="50-2.png" alt=""></th>
+<th><img src="50-3.png" alt=""></th>
+<th><img src="50-4.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="生成「胖胖的」区域"><a href="#生成「胖胖的」区域" class="headerlink" title="生成「胖胖的」区域"></a>生成「胖胖的」区域</h3><p>上面 DFS 的方法，由于每次都要走完一条路，虽然会转弯导致黏连，但在填充区域很小的情况下，很容易生成“瘦瘦的区域”。</p>
+<p>这里再给出另一个方法，一个 <code>for</code> 搞定的，思路如下：</p>
+<ol>
+<li>先随机一个起始点，并将该点加入边界池；</li>
+<li>循环 N - 1 次（N 为所需要填充的面积）：<ol>
+<li>从边界池中随机取出一个边界；</li>
+<li>算出与其接壤的四个点，取出还未被填充的点；</li>
+<li>在取出的点中随机一个将其填充；</li>
+<li>填充后计算改点接壤的四个点是否有全都是已经填充了的，若不是，则将该坐标加入边界池；</li>
+<li>拿着刚才计算的接壤的四个点，分别判断其是否周边四个点都已被填充，若是且该点在边界池中，则从边界池拿走；</li>
+<li>回到第二大步继续循环；</li>
+</ol>
+</li>
+<li>返回填充好的结果。</li>
+</ol>
+<p>给出代码 Demo：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">random</span>(<span class="params">max</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Math</span>.round(<span class="built_in">Math</span>.random() * max);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Filler2</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(length, needArea) &#123;</span><br><span class="line">        <span class="keyword">this</span>.length = length;</span><br><span class="line">        <span class="keyword">this</span>.needArea = needArea;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    _getContiguous(frontier) &#123;</span><br><span class="line">        <span class="keyword">return</span> Filler2.DIRS.map(<span class="function"><span class="params">dir</span> =&gt;</span> (&#123;</span><br><span class="line">            <span class="attr">x</span>: frontier.x + dir[<span class="number">0</span>],</span><br><span class="line">            <span class="attr">y</span>: frontier.y + dir[<span class="number">1</span>]</span><br><span class="line">        &#125;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fill() &#123;</span><br><span class="line">        <span class="keyword">const</span> mat = [];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.length; i++) &#123;</span><br><span class="line">            <span class="keyword">let</span> row = [];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="keyword">this</span>.length; j++) row.push(<span class="string">"."</span>);</span><br><span class="line">            mat.push(row);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">const</span> start = &#123;</span><br><span class="line">            <span class="attr">x</span>: random(<span class="keyword">this</span>.length - <span class="number">1</span>),</span><br><span class="line">            <span class="attr">y</span>: random(<span class="keyword">this</span>.length - <span class="number">1</span>)</span><br><span class="line">        &#125;;</span><br><span class="line">        mat[start.x][start.y] = <span class="string">"x"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> frontierCount = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">const</span> frontiers = &#123;</span><br><span class="line">            [<span class="string">`<span class="subst">$&#123;start.x&#125;</span>:<span class="subst">$&#123;start.y&#125;</span>`</span>]: <span class="literal">true</span></span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; <span class="keyword">this</span>.needArea; i++) &#123;</span><br><span class="line">            <span class="comment">// 取出一个边界</span></span><br><span class="line">            <span class="keyword">const</span> randIdx = random(frontierCount - <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">const</span> frontier = <span class="built_in">Object</span>.keys(frontiers)[randIdx].split(<span class="string">":"</span>).map(<span class="function"><span class="params">n</span> =&gt;</span> <span class="built_in">parseInt</span>(n));</span><br><span class="line"></span><br><span class="line">            <span class="comment">// _getContiguous 算出接壤坐标，filter 去除无用坐标</span></span><br><span class="line">            <span class="keyword">const</span> newCoors = <span class="keyword">this</span>._getContiguous(&#123;</span><br><span class="line">                <span class="attr">x</span>: frontier[<span class="number">0</span>],</span><br><span class="line">                <span class="attr">y</span>: frontier[<span class="number">1</span>]</span><br><span class="line">            &#125;).filter(<span class="function"><span class="params">coor</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (coor.x &lt; <span class="number">0</span> || coor.y &lt; <span class="number">0</span> || coor.x &gt;= <span class="keyword">this</span>.length || coor.y &gt;= <span class="keyword">this</span>.length) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">if</span> (mat[coor.x][coor.y] === <span class="string">"x"</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 随机取一个坐标</span></span><br><span class="line">            <span class="keyword">const</span> newCoor = newCoors[random(<span class="number">0</span>, newCoors.length - <span class="number">1</span>)];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 填充进去</span></span><br><span class="line">            mat[newCoor.x][newCoor.y] = <span class="string">"x"</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取接壤坐标</span></span><br><span class="line">            <span class="keyword">const</span> contiguousOfNewCoor = <span class="keyword">this</span>._getContiguous(newCoor).filter(<span class="function"><span class="params">coor</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (coor.x &lt; <span class="number">0</span> || coor.y &lt; <span class="number">0</span> || coor.x &gt;= <span class="keyword">this</span>.length || coor.y &gt;= <span class="keyword">this</span>.length) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 若有一个接壤点为空，就认为当前坐标是边界，若是边界则把当前坐标加入对象</span></span><br><span class="line">            <span class="keyword">if</span> (contiguousOfNewCoor.reduce(<span class="function">(<span class="params">ret, coor</span>) =&gt;</span> &#123;</span><br><span class="line">                    <span class="keyword">if</span> (mat[coor.x][coor.y] === <span class="string">"x"</span>) <span class="keyword">return</span> ret;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;, <span class="literal">false</span>)) &#123;</span><br><span class="line">                frontiers[<span class="string">`<span class="subst">$&#123;newCoor.x&#125;</span>:<span class="subst">$&#123;newCoor.y&#125;</span>`</span>] = <span class="literal">true</span>;</span><br><span class="line">                frontierCount++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 再检查接壤的坐标是否继续为边界</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; contiguousOfNewCoor.length; i++) &#123;</span><br><span class="line">                <span class="keyword">const</span> cur = contiguousOfNewCoor[i];</span><br><span class="line"></span><br><span class="line">                <span class="keyword">const</span> isFrontier = <span class="keyword">this</span>._getContiguous(cur).filter(<span class="function"><span class="params">coor</span> =&gt;</span> &#123;</span><br><span class="line">                    <span class="keyword">if</span> (coor.x &lt; <span class="number">0</span> || coor.y &lt; <span class="number">0</span> || coor.x &gt;= <span class="keyword">this</span>.length || coor.y &gt;= <span class="keyword">this</span>.length) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;).reduce(<span class="function">(<span class="params">ret, coor</span>) =&gt;</span> &#123;</span><br><span class="line">                    <span class="keyword">if</span> (mat[coor.x][coor.y] === <span class="string">"x"</span>) <span class="keyword">return</span> ret;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 若不是边界的话，只管删除</span></span><br><span class="line">                <span class="keyword">if</span> (!isFrontier &amp;&amp; frontiers[<span class="string">`<span class="subst">$&#123;cur.x&#125;</span>:<span class="subst">$&#123;cur.y&#125;</span>`</span>]) &#123;</span><br><span class="line">                    <span class="keyword">delete</span> frontiers[<span class="string">`<span class="subst">$&#123;cur.x&#125;</span>:<span class="subst">$&#123;cur.y&#125;</span>`</span>];</span><br><span class="line">                    frontierCount--;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 一圈下来，就出结果了</span></span><br><span class="line">        <span class="keyword">return</span> mat;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Filler2.DIRS = [ [ <span class="number">0</span>, <span class="number">1</span> ], [ <span class="number">0</span>, <span class="number">-1</span> ], [ <span class="number">1</span>, <span class="number">0</span> ], [ <span class="number">-1</span>, <span class="number">0</span> ] ];</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>注意：</strong>上面的代码是我一溜烟写出来的，所以并没有后续优化代码简洁度，其实很多地方的代码可以抽象并复用的，懒得改了，能看就好了。用的时候就跟之前 DFS 代码一样 <code>new</code> 一个 <code>Filler2</code> 出来并 <code>fill</code> 就好了。</p>
+<p>效果依然可以去 <a href="https://jsfiddle.net/XadillaX/36f6obca/" target="_blank" rel="external">JSFiddle</a> 看。</p>
+</blockquote>
+<p>或者也可以直接看效果图：</p>
+<table>
+<thead>
+<tr>
+<th><img src="fat-800-1.png" alt=""></th>
+<th><img src="fat-800-2.png" alt=""></th>
+<th><img src="fat-800-3.png" alt=""></th>
+<th><img src="fat-800-4.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<center><small>50x50 填充 800 胖胖的区域</small></center>
+
+<table>
+<thead>
+<tr>
+<th><img src="fat-50-1.png" alt=""></th>
+<th><img src="fat-50-2.png" alt=""></th>
+<th><img src="fat-50-3.png" alt=""></th>
+<th><img src="fat-50-4.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<center><small>50x50 填充 50 胖胖的区域</small></center>
+
+<p>显而易见，跟之前 DFS 生成出来的奇形怪状相比，这种算法生成的连通区域更像是一块 Mainland，而前者则更像是一个洼地沼泽或者丛林。</p>
+<h3 id="结合一下？"><a href="#结合一下？" class="headerlink" title="结合一下？"></a>结合一下？</h3><p>前面两种算法，一个是生成瘦瘦的稀奇古怪的面积，一个是生成胖胖的区域。有没有办法说在生成胖胖的区域的情况下允许一定的稀奇古怪的形状呢？</p>
+<p>其实将两种算法结合一下就好了。结合的做法有很多，这里举一个例子，大家可以自己再去想一些出来。</p>
+<ol>
+<li>首先将需要的区域对半分（即配比 1 : 1），例如如果需要 800，就分为 400 跟 400。（为了长得好看，其实这个比例可以自行调配）</li>
+<li>将前一半的区域用 <code>for</code> 生成胖胖的区域；</li>
+<li>将剩下的区域随机几次，每次随机一个剩下所需要的面积以内的数，将这个数字作为 DFS 所需要生成的面积量，并从边界数组中随机取一个边界坐标并计算其合法接壤坐标开始进行 DFS 得到结果；</li>
+<li>循环第 3 步知道所需区域面积符合要求为止。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong>为了保证每次 DFS 一开始的时候都能取到最新的边界坐标，在 DFS 流程中的时候每标一个区域填充也必须走一遍边界坐标更新的逻辑。</p>
+</blockquote>
+<p>具体代码就不放文章里面解析了，大家也可以到 <a href="https://jsfiddle.net/XadillaX/0bnzpw8d/" target="_blank" rel="external">JSFiddle</a> 中去观看。</p>
+<p>或者也可以直接看效果图：</p>
+<table>
+<thead>
+<tr>
+<th><img src="mix-800-1.png" alt=""></th>
+<th><img src="mix-800-2.png" alt=""></th>
+<th><img src="mix-800-3.png" alt=""></th>
+<th><img src="mix-800-4.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<center><small>50x50 填充 800 混合区域（配比 3 : 1）</small></center>
+
+<table>
+<thead>
+<tr>
+<th><img src="mix-50-1.png" alt=""></th>
+<th><img src="mix-50-2.png" alt=""></th>
+<th><img src="mix-50-3.png" alt=""></th>
+<th><img src="mix-50-4.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<center><small>50x50 填充 50 胖胖的区域（配比 4 : 1）</small></center>
+
+<h3 id="还能更丧心病狂吗？"><a href="#还能更丧心病狂吗？" class="headerlink" title="还能更丧心病狂吗？"></a>还能更丧心病狂吗？</h3><p>结合了两种算法，我们得到了一个我认为可能会更好看一点的区域。</p>
+<p>此外，我们还能继续「丧心病狂」一点，例如两种方式交替出现，流程如下：</p>
+<ol>
+<li>指定特定方法和面积，奇数次用 <code>for</code>，偶数次用 DFS；<ol>
+<li>如果是 <code>for</code> 则随机一个 <code>Math.min(剩余面积, 总面积 / 4)</code> 的数字；</li>
+<li>如果是 DFS 则随机一个 <code>Math.min(剩余面积, 总面积 / 10)</code> 的数字；</li>
+</ol>
+</li>
+<li>从边界数组中取一个坐标，并从合法接壤坐标中取一个坐标出来；</li>
+<li>以第 2 步取出的坐标为起点，使用第 1 步指定的方法生成第 1 步指定的面积的单连通区域；</li>
+<li>如果生成面积仍小于指定面积，则回到第 1 步继续循环，否则返回当前结果。</li>
+</ol>
+<p>依旧是给出 <a href="https://jsfiddle.net/XadillaX/5rx7vdzL/" target="_blank" rel="external">JSFiddle 的预览</a>。</p>
+<p>或者也可以直接看效果图：</p>
+<table>
+<thead>
+<tr>
+<th><img src="frenzied-800-1.png" alt=""></th>
+<th><img src="frenzied-800-2.png" alt=""></th>
+<th><img src="frenzied-800-3.png" alt=""></th>
+<th><img src="frenzied-800-4.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<center><small>50x50 填充 800 丧病区域</small></center>
+
+<table>
+<thead>
+<tr>
+<th><img src="frenzied-50-1.png" alt=""></th>
+<th><img src="frenzied-50-2.png" alt=""></th>
+<th><img src="frenzied-50-3.png" alt=""></th>
+<th><img src="frenzied-50-4.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<center><small>50x50 填充 800 丧病区域</small></center>
+
+<blockquote>
+<p><strong>注意：</strong>这里只给出思路，具体配比和详细流程大家可以继续优化。</p>
+</blockquote>
+<h2 id="几张效果对比图"><a href="#几张效果对比图" class="headerlink" title="几张效果对比图"></a>几张效果对比图</h2><p>最后，这里给出几张 10x10 填 50 的效果图放一起对比一下。</p>
+<table>
+<thead>
+<tr>
+<th><img src="f-50-dfs.png" alt=""></th>
+<th><img src="f-50-cycle.png" alt=""></th>
+<th><img src="f-50-dfs-without-back.png" alt=""></th>
+<th><img src="f-50-cycle-without-back.png" alt=""></th>
+<th><img src="f-50-fat.png" alt=""></th>
+<th><img src="f-50-mix.png" alt=""></th>
+<th><img src="f-50-frenzied.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center><small>DFS</small></center></td>
+<td><center><small>周期性 DFS</small></center></td>
+<td><center><small>非还原 DFS</small></center></td>
+<td><center><small>非还原周期性 DFS</small></center></td>
+<td><center><small>胖胖的</small></center></td>
+<td><center><small>结合</small></center></td>
+<td><center><small>更丧病</small></center></td>
+</tr>
+</tbody>
+</table>
+<p>以及，几张 50x50 填充 800 面积的效果图对比。</p>
+<table>
+<thead>
+<tr>
+<th><img src="too-slow.png" alt=""></th>
+<th><img src="too-slow.png" alt=""></th>
+<th><img src="f-800-dfs-without-back.png" alt=""></th>
+<th><img src="f-800-cycle-without-back.png" alt=""></th>
+<th><img src="f-800-fat.png" alt=""></th>
+<th><img src="f-800-mix.png" alt=""></th>
+<th><img src="f-800-frenzied.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center><small>DFS</small></center></td>
+<td><center><small>周期性 DFS</small></center></td>
+<td><center><small>非还原 DFS</small></center></td>
+<td><center><small>非还原周期性 DFS</small></center></td>
+<td><center><small>胖胖的</small></center></td>
+<td><center><small>结合</small></center></td>
+<td><center><small>更丧病</small></center></td>
+</tr>
+</tbody>
+</table>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本文主要还是讲了，如何随机生成一个指定面积的单连通区域。从一开始拍脑袋就能想到 DFS 开始，延伸到胖胖的区域，然后从个人认为「图不好看」开始，想办法如何结合一下两种算法使其变得更自然。</p>
+<p>针对同一件事的算法们并非一成不变或者不可结合的。不是说该 DFS 就只能 DFS，该 <code>for</code> 就只能 <code>for</code>，稍微结合一下也许食用效果更佳哦。</p>
+<p>哦对了，在这之前还有一个例子就是我在三年多前写的主题色提取的文章《<a href="https://xcoder.in/2014/09/17/theme-color-extract/#%E6%88%91%E6%98%AF%E6%80%8E%E4%B9%88%E5%81%9A%E7%9A%84">图片主题色提取算法小结</a>》，其中就讲到我最后的方法就是结合了八叉树算法和最小差值法，使其在提取比较贴近的颜色同时又能够规范化提取出来的颜色。</p>
+<p>总之就是多想想，与诸君共勉。</p>
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2018/04/01/random-connected-area/";</script><script>var DISQUS_IDENTIFIER = "2018/04/01/random-connected-area/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2018<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
+
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : ("lang-" + $(block).attr("class"))) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
+    });
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
+
+    $("article.full img").each(function() {
+        $(this).parent().css("text-align", "center");
+    });
+
+    if($(".article-toc").children().length < 2) {
+        $(".article-toc").css("display", "none");
+    }
+});</script></body></html>
