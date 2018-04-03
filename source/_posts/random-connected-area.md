@@ -1,6 +1,6 @@
 title: 随机生成指定面积单连通区域
 date: 2018-04-01 17:54:45
-tags: [ 算法 ]
+tags: [ 算法, JavaScript ]
 category: 算法
 ---
 
