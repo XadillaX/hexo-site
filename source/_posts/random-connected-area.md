@@ -425,6 +425,128 @@ Filler2.DIRS = [ [ 0, 1 ], [ 0, -1 ], [ 1, 0 ], [ -1, 0 ] ];
 |----------------|----------------|----------------|----------------|-|-|-|
 | <center><small>DFS</small></center> | <center><small>周期性 DFS</small></center> | <center><small>非还原 DFS</small></center> | <center><small>非还原周期性 DFS</small></center> | <center><small>胖胖的</small></center> | <center><small>结合</small></center> | <center><small>更丧病</small></center> |
 
+## 我错了之『真·单连通区域』
+
+**之所以多出一节来，是因为我在写回答以及这篇文章的时候脑抽了一下，迷迷糊糊想成了连通区域，感谢评论区童鞋的提醒。实际上单连通区域要稍微复杂一些。**
+
+> 在拓扑学中，单连通是拓扑空间的一种性质。直观地说，单连通空间中所有闭曲线都能连续地搜索至一点。此性质可以由空间的基本群刻画。
+>
+> ![连通区域](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Runge_theorem.svg/440px-Runge_theorem.svg.png)
+>
+> <center><small>这个空间不是单连通的，它有三个洞</small></center>
+>
+> ——[单连通@Wikipedia](https://zh.wikipedia.org/wiki/%E5%96%AE%E9%80%A3%E9%80%9A)
+
+**对于非周期性的区域来说**，生成一个单连通区域只要在上面的方法里面加点料就可以了。即在一个位置填充的时候，判断一下将它填充进去之后是否会出现所谓的「洞」。而这一点在非周期性区域中，由于在填充当前坐标前，已存在的区域已经是一个单连通区域，所以枚举一下几种情况即可排除非单连通区域的情况：
+
+1. 新加的坐标其上下都有填充，但其左右为空；或者左右都有填充，但其上下为空；
+2. 新加的坐标只有一面相邻有填充，但该面对面的边所对应的两个角对过去至少有一个角与其它坐标共享顶点；
+3. 新加的坐标同一个顶点的两条边有接壤，且其对角顶点对过去的坐标与其共享顶点。
+
+> 而对于周期性的区域来说，暂时我还没想到很好的办法。
+
+对于情况一而言，如果处于对面的两接壤坐标都有填充，且再多一个接壤面的话，原小区域内只有可能是「**匚**」型，那么填充进去只会形成一个 2x3 的实心区域，而如果只有处于对面的两个接壤坐标有填充的话，说明原小区域有两个面对面隔空的区域，它们形成单连通区域的大前提就是从其它地方绕出去将它们连起来，若这个时候将它们闭合的话，势必会形成一个空洞，如下图所示：
+
+![情况一](http://ww2.sinaimg.cn/large/005zWjpngy1fq7nxajherj306c05s75s)
+
+对于情况二而言，如果只有一面有填充，但是对面的顶点有共享的话，可以类比为情况一，举例如下：
+
+![情况二](http://ww2.sinaimg.cn/large/005zWjpngy1fq7nzv46v1j305w075dhp)
+
+对于情况三而言，其实就是情况二加一条边有填充，如果在情况二的情况下，在上图“原”的区域下方的空若已有填充，那么在“新”的位置填充进去，就形不成空洞了。毕竟如果“空”的位置已有填充的话，若先前状态生成没有洞的连通区域，则“空”下方也必定不是一个空洞的区域。
+
+在解析完三种情况后，算法就明朗起来——在上面的 DFS 算法每次执行填充操作的时候，都判断一下当前填充是否符合刚才列举的三种情况，若符合，则不填充该点。
+
+所以只需对 DFS 的那个代码做一下修改就好了，首先把状态还原两行代码删掉，然后在之前
+
+```javascript
+if (newX < 0 || newX >= this.length || newY < 0 || newY >= this.length) continue;
+```
+
+这句代码之下加一个条件判断就好了：
+
+```javascript
+if(this.willBreak(newX, newY)) {
+    continue;
+}
+```
+
+剩下的就是去实现 `this.willBreak()` 函数：
+
+```javascript
+class Filler {
+    ...
+    
+    willBreak(x, y) {
+        // 九宫格除自己以外的其它格状态
+        let u = false, d = false, l = false, r = false;
+        let lu = false, ld = false, ru = false, rd = false;
+        if(x - 1 >= 0 && this.map[x - 1][y] === 'x') u = true;
+        if(x + 1 < this.length && this.map[x + 1][y] === 'x') d = true;
+        if(y - 1 >= 0 && this.map[x][y - 1] === 'x') l = true;
+        if(y + 1 < this.length && this.map[x][y + 1] === 'x') r = true;
+        if(x - 1 >= 0 && y - 1 >= 0 && this.map[x - 1][y - 1] === 'x') lu = true;
+        if(x - 1 >= 0 && y + 1 < this.length && this.map[x - 1][y + 1] === 'x') ru = true;
+        if(x + 1 < this.length && y - 1 >= 0 && this.map[x + 1][y - 1] === 'x') ld = true;
+        if(x + 1 < this.length && y + 1 < this.length && this.map[x + 1][y + 1] === 'x') rd = true;
+        
+        // 情况 1
+        if((l & r) ^ (u & d)) return true;
+        
+        // 情况 2
+        if(l + r + u + d === 1) {
+            if(l && (ru || rd)) return true;
+            if(r && (lu || ld)) return true;
+            if(u && (ld || rd)) return true;
+            if(d && (lu || ru)) return true;
+        }
+        
+        // 情况 3
+        if(l + r + u + d === 2) {
+            // 情况 1 已经被 return 了，所以相加为 2 的肯定是共享顶点
+            if(l && u && rd) return true;
+            if(l && d && ru) return true;
+            if(r && u && ld) return true;
+            if(r && d && lu) return true;
+        }
+        
+        return false;
+    }
+}
+```
+
+> 进 [JSFiddle](https://jsfiddle.net/XadillaX/yxjmdvh7/) 看完整代码。
+
+然后是 50x50 填充 800 的效果：
+
+![](http://ww2.sinaimg.cn/large/005zWjpngy1fq7oygxbowj30m80m80ul)
+
+以及 10x10 填充 50：
+
+![](http://ww2.sinaimg.cn/large/005zWjpngy1fq7ozzqqhhj304g04gt8j)
+
+> **注意：**左下角的洞看起来是洞，实际上是处于边界了，而填充区域无法与边界合成闭合区域，实际上将地图往外想想空一格就可以知道它并不是一个洞了。当然如果读者执意不允许这种情况发生，那么只需要在 `willBreak()` 函数判断的时候做点手脚就可以了，至于怎么做手脚大家自己想吧。
+
+这种情况生成的地图比较像迷宫，哪怕是针对「胖胖的区域」做这个改进，[JSFiddle](https://jsfiddle.net/XadillaX/qswaevtL/) 出来的也是下面的效果：
+
+![](http://ww2.sinaimg.cn/large/005zWjpngy1fq7rudhiixj30m80m8wfy)
+
+所以呢，继续优化——我们知道有三种情况是会生成非单连通区域的，所以当我们探测到这种情况的时候，去 BFS 它内外区域，看看究竟是哪个区域被封闭出一个空洞来，探测出来之后再看看我们目前还需要填充的区域面积跟这个空洞的面积是否够用，若够用则将空洞补起来，不够用则当前一步重新来过——即再随机一个坐标看看行不行。
+
+思想说出来了，具体的实现还是看看我写在 [JSFiddle](https://jsfiddle.net/XadillaX/2mkce52a/) 里面的代码吧。
+
+50x50 填充 800 的效果如下：
+
+![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8lhurxufj30m80m8jsj)
+
+这么一来，我们很容易能跟 DFS 的算法结合起来，即之前说过的更丧病的算法。结合方法很简单，分别把改进过的 DFS 和胖胖区域的算法一起融合进之前丧病算法的代码中就好了。老样子我还是把代码更新到了 [JSFiddle](https://jsfiddle.net/XadillaX/5rx7vdzL/) 里面。大家看看 50x50 填充 800 的效果吧： 
+
+| ![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8nlny31cj30m80m875i) | ![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8nlpp42kj30m80m875i) | ![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8nlrfbgpj30m80m8t9u) | ![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8nltk6ycj30m80m8wfo) |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+|                             图 1                             |                             图 2                             |                             图 3                             |                             图 4                             |
+
+最后，由于一开始文章写的概念性错误给大家带来的不变表示非常抱歉，好在最后我还是补全了一下文章。
+
 ## 小结
 
 本文主要还是讲了，如何随机生成一个指定面积的单连通区域。从一开始拍脑袋就能想到 DFS 开始，延伸到胖胖的区域，然后从个人认为「图不好看」开始，想办法如何结合一下两种算法使其变得更自然。
