@@ -541,7 +541,7 @@ class Filler {
 
 这么一来，我们很容易能跟 DFS 的算法结合起来，即之前说过的更丧病的算法。结合方法很简单，分别把改进过的 DFS 和胖胖区域的算法一起融合进之前丧病算法的代码中就好了。老样子我还是把代码更新到了 [JSFiddle](https://jsfiddle.net/XadillaX/5rx7vdzL/) 里面。大家看看 50x50 填充 800 的效果吧： 
 
-| ![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8nlny31cj30m80m875i) | ![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8nlpp42kj30m80m875i) | ![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8nlrfbgpj30m80m8t9u) | ![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8nltk6ycj30m80m8wfo) |
+| ![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8qtl7yapj30m80m875m) | ![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8nlpp42kj30m80m875i) | ![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8nlrfbgpj30m80m8t9u) | ![](http://ww2.sinaimg.cn/large/005zWjpngy1fq8nltk6ycj30m80m8wfo) |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 
 最后，由于一开始文章写的概念性错误给大家带来的不变表示非常抱歉，好在最后我还是补全了一下文章。
