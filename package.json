@@ -18,6 +18,12 @@
     "hexo-server": "^0.2.0",
     "opencc": "git://github.com/byvoid/opencc.git#master",
     "sync-runner": "^0.1.5",
-    "walk": "^2.3.9"
-  }
+    "walk": "^2.3.9",
+    "snyk": "^1.83.0"
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
