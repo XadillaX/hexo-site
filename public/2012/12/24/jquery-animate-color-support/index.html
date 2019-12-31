@@ -11,7 +11,6 @@ $(&quot;#yourid&quot;).stop().animate(&amp;#123; &quot;backgroundColor&quot; "><
 <blockquote>
 <p>All animated properties should be animated to <strong><em>a single numeric value</em></strong>, except as noted below; most properties that are non-numeric cannot be animated using basic jQuery functionality (For example, width, height, or left can be animated but background-color cannot be, unless the <a href="https://github.com/jquery/jquery-color" target="_blank" rel="external">jQuery.Color()</a> plugin is used). Property values are treated as a number of pixels unless otherwise specified. The units em and % can be specified where applicable.</p>
 <p style="text-align: right">—— <a href="http://api.jquery.com/animate/" target="_blank" rel="external">jQuery官方文档 .animate()</a></p>
-
 </blockquote>
 <p>　　大致的意思就是说所有动画属性都必须是一个单数字值，所以说大多数非数字的属性是不能被动画化的。例如高度、宽度等可以被动画化，但是背景色就不信了。<span style="color: red;"><strong><em>除非你用了jQuery.Color()插件</em></strong></span>。</p>
 <p>　　所以说问题找到了，我们必须得用一个jQuery.Color()插件来对一些颜色进行动画操作。</p>
@@ -26,7 +25,7 @@ $(&quot;#yourid&quot;).stop().animate(&amp;#123; &quot;backgroundColor&quot; "><
   s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
   s.setAttribute("data-timestamp", +new Date());
   (d.head || d.body).appendChild(s);
-})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2018<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2020<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
     $("header").backstretch("/images/header.jpeg");
 
     $("figure.highlight").each(function(i, block) {

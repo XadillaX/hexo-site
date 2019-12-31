@@ -36,17 +36,17 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ make byakuren</span><br></pre></td></tr></table></figure>
 <p>你将得到一个 <code>byakuren.a</code> 的静态链接库。</p>
 <p>这个时候你只要拿着这个静态链接库，然后顺便在你的项目中把头文件引进来就可以了。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"byakuren.h"</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">#include &quot;byakuren.h&quot;</span><br></pre></td></tr></table></figure>
 <h4 id="API"><a href="#API" class="headerlink" title="API"></a>API</h4><p>我们假设你有 <code>bkr_rgb* rgb</code> 的图片像素信息，以及 <code>uint32_t color_count</code> 的图片像素总数两个变量，下面分别给出三个样例。具体的 API 解析还请去文档观摩。</p>
-<h5 id="Octree"><a href="#Octree" class="headerlink" title="Octree"></a>Octree</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">bkr_color_stats stats[<span class="number">256</span>];</span><br><span class="line">bkr_octree_node* root = bkr_build_octree(rgb, color_count, <span class="number">256</span>);</span><br><span class="line"><span class="keyword">int</span> colors = bkr_octree_calculate_color_stats(root, stats);</span><br><span class="line">bkr_release_octree(root);</span><br></pre></td></tr></table></figure>
+<h5 id="Octree"><a href="#Octree" class="headerlink" title="Octree"></a>Octree</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">bkr_color_stats stats[256];</span><br><span class="line">bkr_octree_node* root = bkr_build_octree(rgb, color_count, 256);</span><br><span class="line">int colors = bkr_octree_calculate_color_stats(root, stats);</span><br><span class="line">bkr_release_octree(root);</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><code>colors</code> 就是主题色数量了，传进去的 <code>stats</code> 就会接收到主题色的具体信息了。</p>
 </blockquote>
-<h5 id="Min-diff"><a href="#Min-diff" class="headerlink" title="Min-diff"></a>Min-diff</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">bkr_color_stats stats[<span class="number">256</span>];</span><br><span class="line">bkr_mindiff_parameter param;</span><br><span class="line">param.gray_offset = <span class="number">5</span>;</span><br><span class="line">param.palette = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">int</span> colors = bkr_mindiff_calculate_color_stats(rgb, color_count, stats, &amp;param);</span><br></pre></td></tr></table></figure>
+<h5 id="Min-diff"><a href="#Min-diff" class="headerlink" title="Min-diff"></a>Min-diff</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">bkr_color_stats stats[256];</span><br><span class="line">bkr_mindiff_parameter param;</span><br><span class="line">param.gray_offset = 5;</span><br><span class="line">param.palette = NULL;</span><br><span class="line">int colors = bkr_mindiff_calculate_color_stats(rgb, color_count, stats, &amp;param);</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><code>colors</code> 和 <code>stats</code> 如上所述。</p>
 </blockquote>
-<h5 id="Mix"><a href="#Mix" class="headerlink" title="Mix"></a>Mix</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">bkr_color_stats stats[<span class="number">256</span>];</span><br><span class="line">bkr_mindiff_parameter param;</span><br><span class="line">param.gray_offset = <span class="number">-1</span>;</span><br><span class="line">param.palette = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">int</span> colors = bkr_mix_calculate_color_stats(rgb, color_count, <span class="number">256</span>, &amp;param, stats);</span><br></pre></td></tr></table></figure>
+<h5 id="Mix"><a href="#Mix" class="headerlink" title="Mix"></a>Mix</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">bkr_color_stats stats[256];</span><br><span class="line">bkr_mindiff_parameter param;</span><br><span class="line">param.gray_offset = -1;</span><br><span class="line">param.palette = NULL;</span><br><span class="line">int colors = bkr_mix_calculate_color_stats(rgb, color_count, 256, &amp;param, stats);</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><code>colors</code> 和 <code>stats</code> 如上所述。</p>
 </blockquote>
@@ -66,7 +66,7 @@
   s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
   s.setAttribute("data-timestamp", +new Date());
   (d.head || d.body).appendChild(s);
-})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2018<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2020<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
     $("header").backstretch("/images/header.jpeg");
 
     $("figure.highlight").each(function(i, block) {

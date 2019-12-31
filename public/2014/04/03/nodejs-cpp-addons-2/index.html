@@ -81,9 +81,10 @@
 <blockquote>
 <p>It is the same as apply in JS. In JS, you do</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> context = ...;</span><br><span class="line">cb.apply(context, [ ...args...]);</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
 <p>The object passed as the first argument becomes this within the function scope. More documentation on <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply" target="_blank" rel="external">MDN</a>. If you don’t know JS well, you can read more about JS’s this here: <a href="http://unschooled.org/2012/03/understanding-javascript-this/" target="_blank" rel="external">http://unschooled.org/2012/03/understanding-javascript-this/</a></p>
 <p style="text-align: right;">—— 摘自 <a href="http://stackoverflow.com/questions/22842908/what-does-the-first-argument-of-functioncall-in-v8-engine-mean/22848601?noredirect=1#22848601" target="_blank" rel="external">StackOverflow</a></p>
-
 </blockquote>
 <p>　　总之其作用就是指定了被调用函数的 <code>this</code> 指针。这个 <code>Call</code> 的用法就跟 JavaScript 中的 <code>bind()</code>、<code>call()</code>、<code>apply()</code> 类似。</p>
 <p>　　所以我们要做的事情就是先把参数表建好，然后传入这个 <code>Call</code> 函数供其执行。</p>
@@ -111,7 +112,7 @@
   s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
   s.setAttribute("data-timestamp", +new Date());
   (d.head || d.body).appendChild(s);
-})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2018<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2020<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
     $("header").backstretch("/images/header.jpeg");
 
     $("figure.highlight").each(function(i, block) {
