@@ -1,2 +1,2 @@
 #!/bin/bash
-hexo generate
+./node_modules/.bin/hexo generate

@@ -83,7 +83,6 @@
 <blockquote>
 <p>To indicate that you’d like to use HTML5 pushState support in your application, use Backbone.history.start({pushState: true}). If you’d like to use pushState, but have browsers that don’t support it natively use full page refreshes instead, you can add {hashChange: false} to the options.</p>
 <p style="text-align: right">——摘自 <a href="http://backbonejs.org/#History-start" target="_blank" rel="external">backbonejs.org</a></p>
-
 </blockquote>
 <p>　　然后这个 <code>Workspace</code> 即这个 <code>SPA</code> 的本体了。</p>
 <h4 id="public-backbone-router-workspace-js"><a href="#public-backbone-router-workspace-js" class="headerlink" title="public/backbone/router/workspace.js"></a>public/backbone/router/workspace.js</h4><p>　　这里定义了几个路由，即什么路由要用哪个类去处理。这样才能在 <code>URL</code> 当中各种跳转。其实无非就是把待渲染元素渲染成页内模板，然后把页面的各种事件响应逻辑改掉即可。对于 <code>Backbone</code> 我其实只用过两次，现在也忘不大多了，怕误人子弟，所以一些具体的函数啊用法啊还是去参考下官网比较好来着。</p>
@@ -140,7 +139,7 @@
   s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
   s.setAttribute("data-timestamp", +new Date());
   (d.head || d.body).appendChild(s);
-})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2018<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2020<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
     $("header").backstretch("/images/header.jpeg");
 
     $("figure.highlight").each(function(i, block) {

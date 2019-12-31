@@ -10,7 +10,7 @@
 <p>　　也解压到一个地方不用管它。</p>
 <h3 id="Ant"><a href="#Ant" class="headerlink" title="Ant"></a>Ant</h3><p>　　据说这货是阿帕奇出的？总之下载地址在<a href="http://ant.apache.org/bindownload.cgi" target="_blank" rel="external">这里</a>。</p>
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>　　哦对了你还得有个 Python 路径，这里就不累述了。接下去在命令行里面执行 Cocos2d 的 <code>setup.py</code> 文件即可：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/&gt; py setup.py</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">/&gt;</span><span class="bash"> py setup.py</span></span><br></pre></td></tr></table></figure>
 <p>　　接下去终端会停在下面一行：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Please enter the path of NDK_ROOT (or press Enter to skip):</span><br></pre></td></tr></table></figure>
 <p>　　在后面输入你放好的 NDK 目录即可。</p>
@@ -24,7 +24,7 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Please restart the terminal or restart computer to make added system variables take effect</span><br></pre></td></tr></table></figure>
 <p>　　然后你把终端关了再开一个就好了。至此，大致就安装完毕了。</p>
 <h2 id="新建一个-Demo-项目"><a href="#新建一个-Demo-项目" class="headerlink" title="新建一个 Demo 项目"></a>新建一个 Demo 项目</h2><p>　　随意跑到一个目录下面执行下面的命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/&gt; cocos new FirstGame -p in.xcoder.firstgame -l cpp -d FirstGame</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">/&gt;</span><span class="bash"> cocos new FirstGame -p in.xcoder.firstgame -l cpp -d FirstGame</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>大致意思就是说创建一个新的项目路径，叫 <code>FirstGame</code>，其包名叫 <code>in.xcoder.firstgame</code>，然后语言是 <code>cpp</code>，最后 <code>-d</code> 是路径。</p>
 </blockquote>
@@ -34,14 +34,14 @@
 <p>　　如何？跑起来了吧？</p>
 <h3 id="打包-Demo"><a href="#打包-Demo" class="headerlink" title="打包 Demo"></a>打包 Demo</h3><p>　　这里就讲讲如何打包安卓的版本吧：</p>
 <h4 id="Debug-版本"><a href="#Debug-版本" class="headerlink" title="Debug 版本"></a>Debug 版本</h4><p>　　跑到你的项目目录下面（即有 <code>.cocos-project.json</code> 文件的目录），然后执行下面的命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/&gt; cocos run -p android</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">/&gt;</span><span class="bash"> cocos run -p android</span></span><br></pre></td></tr></table></figure>
 <p>　　等工具编译打包完成就 OK 了。（记得要查安卓手机并且调试模式哦～）</p>
 <h4 id="Release-版本"><a href="#Release-版本" class="headerlink" title="Release 版本"></a>Release 版本</h4><p>　　如果要上传到 Google Play 之类的地方，需要有签名。所以发布 Release 版本之前，你先得搞好自己的签名。</p>
 <h5 id="Keytool"><a href="#Keytool" class="headerlink" title="Keytool"></a>Keytool</h5><p>　　在终端跑到你的项目路径下面，然后执行：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/&gt; keytool -genkey -v -keystore FirstGame.keystore -alias FirstGame -keyalg RSA -keysize 2048 -validaty 10000</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">/&gt;</span><span class="bash"> keytool -genkey -v -keystore FirstGame.keystore -<span class="built_in">alias</span> FirstGame -keyalg RSA -keysize 2048 -validaty 10000</span></span><br></pre></td></tr></table></figure>
 <p>　　照着命令行给的提示完成创建密钥即可。</p>
 <h5 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h5><p>　　生成之后啊就直接执行编译命令了：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/&gt; cocos run -p android -m release</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">/&gt;</span><span class="bash"> cocos run -p android -m release</span></span><br></pre></td></tr></table></figure>
 <p>　　在里面呢最后会让你输入 <code>.keystore</code> 文件的路径。</p>
 <p>　　我们输入相对路径，由于我们刚才把这个文件搞在项目根目录，所以我们只需要输入 <code>../FirstGame.keystore</code> 即可。接下去他会让你输入密码、别名和别名信息的密码。你都正确输入一遍他就会安安分分跑在你的手机里面了。</p>
 <h4 id="仨版本的文件路径"><a href="#仨版本的文件路径" class="headerlink" title="仨版本的文件路径"></a>仨版本的文件路径</h4><p>　　上面都弄好之后，你的仨版本 <code>*.apk</code> 文件也就生成了。很多人可能很困惑，为什么是仨版本。因为其中 Release 版本还分带签名和没签名版本。</p>
@@ -57,7 +57,7 @@
   s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
   s.setAttribute("data-timestamp", +new Date());
   (d.head || d.body).appendChild(s);
-})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2018<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2020<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
     $("header").backstretch("/images/header.jpeg");
 
     $("figure.highlight").each(function(i, block) {

@@ -22,7 +22,7 @@
 <h3 id="DFS"><a href="#DFS" class="headerlink" title="DFS"></a>DFS</h3><p>其实这么一个问题一出现，脑子里面就瞬间涌出几个词汇：<a href="https://en.wikipedia.org/wiki/Depth-first_search" target="_blank" rel="external">DFS</a>、<a href="https://en.wikipedia.org/wiki/Flood_fill" target="_blank" rel="external">Flood fill</a>、<a href="https://zh.wikipedia.org/wiki/%E5%B9%B6%E6%9F%A5%E9%9B%86" target="_blank" rel="external">并查集</a>等等。</p>
 <p>那么其实这最粗暴的办法相当于你假想有一个连通区域，然后你去 Flood fill 它——至于墙在哪，在递归的每一个节点的时候<strong>随机一下搜索方向的顺序就可以了</strong>。</p>
 <h4 id="实现外壳"><a href="#实现外壳" class="headerlink" title="实现外壳"></a>实现外壳</h4><p>我们先实现一个类的框架吧（我是 Node.js 开发者，自然用 JavaScript 进行 Demo 的输出）。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> INIT = <span class="built_in">Symbol</span>(<span class="string">"init"</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Filler</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Filler 构造函数</span><br><span class="line">     * @constructor</span><br><span class="line">     * @param &#123;Number&#125; length 地图总宽高</span><br><span class="line">     * @param &#123;Number&#125; needArea 需要填充的区域面积</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">constructor</span>(length, needArea) &#123;</span><br><span class="line">        <span class="keyword">this</span>.length = length;</span><br><span class="line">        <span class="keyword">this</span>.needArea = needArea;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 初始化地图</span><br><span class="line">     */</span></span><br><span class="line">    [INIT]() &#123;</span><br><span class="line">        <span class="comment">/**</span><br><span class="line">         * 为了方便，地图就用一个二维字符数组表示</span><br><span class="line">         *</span><br><span class="line">         *   + . 代表空地</span><br><span class="line">         *   + x 代表填充</span><br><span class="line">         */</span></span><br><span class="line">        <span class="keyword">this</span>.map = [];</span><br><span class="line">        <span class="keyword">this</span>.count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.length; i++) &#123;</span><br><span class="line">            <span class="keyword">let</span> row = [];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="keyword">this</span>.length; j++) row.push(<span class="string">"."</span>);</span><br><span class="line">            <span class="keyword">this</span>.map.push(row);</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="comment">/**</span><br><span class="line">      * 填充递归函数</span><br><span class="line">      * @param &#123;Number&#125; x 坐标 X 轴的值</span><br><span class="line">      * @param &#123;Number&#125; y 坐标 Y 轴的值</span><br><span class="line">      * @return 填充好的地图二维数组</span><br><span class="line">      */</span></span><br><span class="line">     fill(x, y) &#123;</span><br><span class="line">        <span class="comment">// 待实现</span></span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> INIT = <span class="built_in">Symbol</span>(<span class="string">"init"</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Filler</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Filler 构造函数</span><br><span class="line">     * <span class="doctag">@constructor</span></span><br><span class="line">     * <span class="doctag">@param <span class="type">&#123;Number&#125;</span> </span>length 地图总宽高</span><br><span class="line">     * <span class="doctag">@param <span class="type">&#123;Number&#125;</span> </span>needArea 需要填充的区域面积</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">constructor</span>(length, needArea) &#123;</span><br><span class="line">        <span class="keyword">this</span>.length = length;</span><br><span class="line">        <span class="keyword">this</span>.needArea = needArea;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 初始化地图</span><br><span class="line">     */</span></span><br><span class="line">    [INIT]() &#123;</span><br><span class="line">        <span class="comment">/**</span><br><span class="line">         * 为了方便，地图就用一个二维字符数组表示</span><br><span class="line">         *</span><br><span class="line">         *   + . 代表空地</span><br><span class="line">         *   + x 代表填充</span><br><span class="line">         */</span></span><br><span class="line">        <span class="keyword">this</span>.map = [];</span><br><span class="line">        <span class="keyword">this</span>.count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.length; i++) &#123;</span><br><span class="line">            <span class="keyword">let</span> row = [];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="keyword">this</span>.length; j++) row.push(<span class="string">"."</span>);</span><br><span class="line">            <span class="keyword">this</span>.map.push(row);</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="comment">/**</span><br><span class="line">      * 填充递归函数</span><br><span class="line">      * <span class="doctag">@param <span class="type">&#123;Number&#125;</span> </span>x 坐标 X 轴的值</span><br><span class="line">      * <span class="doctag">@param <span class="type">&#123;Number&#125;</span> </span>y 坐标 Y 轴的值</span><br><span class="line">      * <span class="doctag">@return </span>填充好的地图二维数组</span><br><span class="line">      */</span></span><br><span class="line">     fill(x, y) &#123;</span><br><span class="line">        <span class="comment">// 待实现</span></span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="非周期性实现"><a href="#非周期性实现" class="headerlink" title="非周期性实现"></a>非周期性实现</h4><p>有了架子之后，我们就可以实现递归函数 <code>fill</code> 了，整理一下流程如下：</p>
 <ol>
 <li>随机一个起点位置，并以此开始递归搜索；</li>
@@ -59,16 +59,16 @@
 <p><a href="https://jsfiddle.net/XadillaX/x2ur8kvj/" target="_blank" rel="external">点我</a>进入 JSFiddle 看效果。</p>
 </blockquote>
 <p>如果懒得进入 JSFiddle 看，也可以看看下面的几个截图：</p>
-<p><img src="10x10-1.png" alt=""><br><small>10x10 填 50 效果图</small></p>
-<p><img src="10x10-2.png" alt=""><br><small>10x10 填 6 效果图</small></p>
-<p><img src="50x50-1.png" alt=""><br><small>50x50 填 50 效果图</small></p>
+<p><img src="10x10-1.png" alt><br><small>10x10 填 50 效果图</small></p>
+<p><img src="10x10-2.png" alt><br><small>10x10 填 6 效果图</small></p>
+<p><img src="50x50-1.png" alt><br><small>50x50 填 50 效果图</small></p>
 <h4 id="周期性实现"><a href="#周期性实现" class="headerlink" title="周期性实现"></a>周期性实现</h4><p>其实原题说了一个条件，那就是<strong>采用周期性结构，超出右边移到最左边，以此类推</strong>。</p>
 <p>而我们前文的代码其实是照着非周期性结构来实现的。不过如果我们要将其改成周期性实现也很简单，只需要把前文代码中边界判断的那一句代码改为周期性计算的代码即可，也就是说要把这段代码：</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 判断边界</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(newX &lt; <span class="number">0</span> || newX &gt;= <span class="keyword">this</span>.length || newY &lt; <span class="number">0</span> || newY &gt;= <span class="keyword">this</span>.length) <span class="keyword">continue</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>改为：</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 周期性计算</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(newX &lt; <span class="number">0</span>) newX = <span class="keyword">this</span>.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(newX &gt;= <span class="keyword">this</span>.length) newX = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(newY &lt; <span class="number">0</span>) newY = <span class="keyword">this</span>.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(newY &gt;= <span class="keyword">this</span>.length) newY = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这个时候出来的效果就是这样的了：</p>
-<p><img src="10x10-zqx-1.png" alt=""><br><small>10x10 填 50 周期性效果图</small></p>
+<p><img src="10x10-zqx-1.png" alt><br><small>10x10 填 50 周期性效果图</small></p>
 <h4 id="抛弃状态还原"><a href="#抛弃状态还原" class="headerlink" title="抛弃状态还原"></a>抛弃状态还原</h4><p>至此为止 DFS 的代码基本上完成了。不过目前来说，当然这个算法的一个缺陷就是，当需要面积与总面积比例比较大的时候，有可能陷入搜索的死循环（或者说效率特别低），因为要不断复盘。</p>
 <p>所以我们可以做点改造——由于我们不是真的为了搜索到某个状态，而只是为了填充我们的小点点，那么 DFS 中比较经典的「状态还原」就不需要了，也就是说：</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">this</span>.count--;</span><br><span class="line"><span class="keyword">this</span>.mat[x][y] = <span class="string">"."</span>;</span><br></pre></td></tr></table></figure>
@@ -76,10 +76,10 @@
 <table>
 <thead>
 <tr>
-<th><img src="800-1.png" alt=""></th>
-<th><img src="800-2.png" alt=""></th>
-<th><img src="800-3.png" alt=""></th>
-<th><img src="800-4.png" alt=""></th>
+<th><img src="800-1.png" alt></th>
+<th><img src="800-2.png" alt></th>
+<th><img src="800-3.png" alt></th>
+<th><img src="800-4.png" alt></th>
 </tr>
 </thead>
 <tbody>
@@ -92,10 +92,10 @@
 <table>
 <thead>
 <tr>
-<th><img src="50-1.png" alt=""></th>
-<th><img src="50-2.png" alt=""></th>
-<th><img src="50-3.png" alt=""></th>
-<th><img src="50-4.png" alt=""></th>
+<th><img src="50-1.png" alt></th>
+<th><img src="50-2.png" alt></th>
+<th><img src="50-3.png" alt></th>
+<th><img src="50-4.png" alt></th>
 </tr>
 </thead>
 <tbody>
@@ -129,10 +129,10 @@
 <table>
 <thead>
 <tr>
-<th><img src="fat-800-1.png" alt=""></th>
-<th><img src="fat-800-2.png" alt=""></th>
-<th><img src="fat-800-3.png" alt=""></th>
-<th><img src="fat-800-4.png" alt=""></th>
+<th><img src="fat-800-1.png" alt></th>
+<th><img src="fat-800-2.png" alt></th>
+<th><img src="fat-800-3.png" alt></th>
+<th><img src="fat-800-4.png" alt></th>
 </tr>
 </thead>
 <tbody>
@@ -146,10 +146,10 @@
 <table>
 <thead>
 <tr>
-<th><img src="fat-50-1.png" alt=""></th>
-<th><img src="fat-50-2.png" alt=""></th>
-<th><img src="fat-50-3.png" alt=""></th>
-<th><img src="fat-50-4.png" alt=""></th>
+<th><img src="fat-50-1.png" alt></th>
+<th><img src="fat-50-2.png" alt></th>
+<th><img src="fat-50-3.png" alt></th>
+<th><img src="fat-50-4.png" alt></th>
 </tr>
 </thead>
 <tbody>
@@ -177,10 +177,10 @@
 <table>
 <thead>
 <tr>
-<th><img src="mix-800-1.png" alt=""></th>
-<th><img src="mix-800-2.png" alt=""></th>
-<th><img src="mix-800-3.png" alt=""></th>
-<th><img src="mix-800-4.png" alt=""></th>
+<th><img src="mix-800-1.png" alt></th>
+<th><img src="mix-800-2.png" alt></th>
+<th><img src="mix-800-3.png" alt></th>
+<th><img src="mix-800-4.png" alt></th>
 </tr>
 </thead>
 <tbody>
@@ -194,10 +194,10 @@
 <table>
 <thead>
 <tr>
-<th><img src="mix-50-1.png" alt=""></th>
-<th><img src="mix-50-2.png" alt=""></th>
-<th><img src="mix-50-3.png" alt=""></th>
-<th><img src="mix-50-4.png" alt=""></th>
+<th><img src="mix-50-1.png" alt></th>
+<th><img src="mix-50-2.png" alt></th>
+<th><img src="mix-50-3.png" alt></th>
+<th><img src="mix-50-4.png" alt></th>
 </tr>
 </thead>
 <tbody>
@@ -211,7 +211,7 @@
 <h3 id="还能更丧心病狂吗？"><a href="#还能更丧心病狂吗？" class="headerlink" title="还能更丧心病狂吗？"></a>还能更丧心病狂吗？</h3><p>结合了两种算法，我们得到了一个我认为可能会更好看一点的区域。</p>
 <p>此外，我们还能继续「丧心病狂」一点，例如两种方式交替出现，流程如下：</p>
 <ol>
-<li>指定特定方法和面积，奇数次用 <code>for</code>，偶数次用 DFS；<ol>
+<li>指定特定方法和面积，奇数次用 <code>for</code>，偶数次用 DFS；<ol start="2">
 <li>如果是 <code>for</code> 则随机一个 <code>Math.min(剩余面积, 总面积 / 4)</code> 的数字；</li>
 <li>如果是 DFS 则随机一个 <code>Math.min(剩余面积, 总面积 / 10)</code> 的数字；</li>
 </ol>
@@ -225,10 +225,10 @@
 <table>
 <thead>
 <tr>
-<th><img src="frenzied-800-1.png" alt=""></th>
-<th><img src="frenzied-800-2.png" alt=""></th>
-<th><img src="frenzied-800-3.png" alt=""></th>
-<th><img src="frenzied-800-4.png" alt=""></th>
+<th><img src="frenzied-800-1.png" alt></th>
+<th><img src="frenzied-800-2.png" alt></th>
+<th><img src="frenzied-800-3.png" alt></th>
+<th><img src="frenzied-800-4.png" alt></th>
 </tr>
 </thead>
 <tbody>
@@ -242,10 +242,10 @@
 <table>
 <thead>
 <tr>
-<th><img src="frenzied-50-1.png" alt=""></th>
-<th><img src="frenzied-50-2.png" alt=""></th>
-<th><img src="frenzied-50-3.png" alt=""></th>
-<th><img src="frenzied-50-4.png" alt=""></th>
+<th><img src="frenzied-50-1.png" alt></th>
+<th><img src="frenzied-50-2.png" alt></th>
+<th><img src="frenzied-50-3.png" alt></th>
+<th><img src="frenzied-50-4.png" alt></th>
 </tr>
 </thead>
 <tbody>
@@ -263,13 +263,13 @@
 <table>
 <thead>
 <tr>
-<th><img src="f-50-dfs.png" alt=""></th>
-<th><img src="f-50-cycle.png" alt=""></th>
-<th><img src="f-50-dfs-without-back.png" alt=""></th>
-<th><img src="f-50-cycle-without-back.png" alt=""></th>
-<th><img src="f-50-fat.png" alt=""></th>
-<th><img src="f-50-mix.png" alt=""></th>
-<th><img src="f-50-frenzied.png" alt=""></th>
+<th><img src="f-50-dfs.png" alt></th>
+<th><img src="f-50-cycle.png" alt></th>
+<th><img src="f-50-dfs-without-back.png" alt></th>
+<th><img src="f-50-cycle-without-back.png" alt></th>
+<th><img src="f-50-fat.png" alt></th>
+<th><img src="f-50-mix.png" alt></th>
+<th><img src="f-50-frenzied.png" alt></th>
 </tr>
 </thead>
 <tbody>
@@ -288,13 +288,13 @@
 <table>
 <thead>
 <tr>
-<th><img src="too-slow.png" alt=""></th>
-<th><img src="too-slow.png" alt=""></th>
-<th><img src="f-800-dfs-without-back.png" alt=""></th>
-<th><img src="f-800-cycle-without-back.png" alt=""></th>
-<th><img src="f-800-fat.png" alt=""></th>
-<th><img src="f-800-mix.png" alt=""></th>
-<th><img src="f-800-frenzied.png" alt=""></th>
+<th><img src="too-slow.png" alt></th>
+<th><img src="too-slow.png" alt></th>
+<th><img src="f-800-dfs-without-back.png" alt></th>
+<th><img src="f-800-cycle-without-back.png" alt></th>
+<th><img src="f-800-fat.png" alt></th>
+<th><img src="f-800-mix.png" alt></th>
+<th><img src="f-800-frenzied.png" alt></th>
 </tr>
 </thead>
 <tbody>
@@ -342,26 +342,26 @@
 <p>进 <a href="https://jsfiddle.net/XadillaX/yxjmdvh7/" target="_blank" rel="external">JSFiddle</a> 看完整代码。</p>
 </blockquote>
 <p>然后是 50x50 填充 800 的效果：</p>
-<p><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq7oygxbowj30m80m80ul" alt=""></p>
+<p><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq7oygxbowj30m80m80ul" alt></p>
 <p>以及 10x10 填充 50：</p>
-<p><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq7ozzqqhhj304g04gt8j" alt=""></p>
+<p><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq7ozzqqhhj304g04gt8j" alt></p>
 <blockquote>
 <p><strong>注意：</strong>左下角的洞看起来是洞，实际上是处于边界了，而填充区域无法与边界合成闭合区域，实际上将地图往外想想空一格就可以知道它并不是一个洞了。当然如果读者执意不允许这种情况发生，那么只需要在 <code>willBreak()</code> 函数判断的时候做点手脚就可以了，至于怎么做手脚大家自己想吧。</p>
 </blockquote>
 <p>这种情况生成的地图比较像迷宫，哪怕是针对「胖胖的区域」做这个改进，<a href="https://jsfiddle.net/XadillaX/qswaevtL/" target="_blank" rel="external">JSFiddle</a> 出来的也是下面的效果：</p>
-<p><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq7rudhiixj30m80m8wfy" alt=""></p>
+<p><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq7rudhiixj30m80m8wfy" alt></p>
 <p>所以呢，继续优化——我们知道有三种情况是会生成非单连通区域的，所以当我们探测到这种情况的时候，去 BFS 它内外区域，看看究竟是哪个区域被封闭出一个空洞来，探测出来之后再看看我们目前还需要填充的区域面积跟这个空洞的面积是否够用，若够用则将空洞补起来，不够用则当前一步重新来过——即再随机一个坐标看看行不行。</p>
 <p>思想说出来了，具体的实现还是看看我写在 <a href="https://jsfiddle.net/XadillaX/2mkce52a/" target="_blank" rel="external">JSFiddle</a> 里面的代码吧。</p>
 <p>50x50 填充 800 的效果如下：</p>
-<p><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq8lhurxufj30m80m8jsj" alt=""></p>
+<p><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq8lhurxufj30m80m8jsj" alt></p>
 <p>这么一来，我们很容易能跟 DFS 的算法结合起来，即之前说过的更丧病的算法。结合方法很简单，分别把改进过的 DFS 和胖胖区域的算法一起融合进之前丧病算法的代码中就好了。老样子我还是把代码更新到了 <a href="https://jsfiddle.net/XadillaX/5rx7vdzL/" target="_blank" rel="external">JSFiddle</a> 里面。大家看看 50x50 填充 800 的效果吧： </p>
 <table>
 <thead>
 <tr>
-<th style="text-align:center"><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq8qtl7yapj30m80m875m" alt=""></th>
-<th style="text-align:center"><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq8nlpp42kj30m80m875i" alt=""></th>
-<th style="text-align:center"><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq8nlrfbgpj30m80m8t9u" alt=""></th>
-<th style="text-align:center"><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq8nltk6ycj30m80m8wfo" alt=""></th>
+<th style="text-align:center"><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq8qtl7yapj30m80m875m" alt></th>
+<th style="text-align:center"><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq8nlpp42kj30m80m875i" alt></th>
+<th style="text-align:center"><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq8nlrfbgpj30m80m8t9u" alt></th>
+<th style="text-align:center"><img src="http://ww2.sinaimg.cn/large/005zWjpngy1fq8nltk6ycj30m80m8wfo" alt></th>
 </tr>
 </thead>
 <tbody>
@@ -385,7 +385,7 @@
   s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
   s.setAttribute("data-timestamp", +new Date());
   (d.head || d.body).appendChild(s);
-})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2018<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2020<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
     $("header").backstretch("/images/header.jpeg");
 
     $("figure.highlight").each(function(i, block) {

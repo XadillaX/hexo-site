@@ -27,7 +27,7 @@
 <figure class="highlight plain"><figcaption><span>javascript</span></figcaption><table><tr><td class="code"><pre><span class="line">foo[&lt;当前键名&gt;]</span><br></pre></td></tr></table></figure>
 <p>的形式来获取。这个跟 <strong>PHP</strong> 的 <code>foreach</code> 还是有一定区别的。</p>
 <h4 id="while…do-do…while"><a href="#while…do-do…while" class="headerlink" title="while…do, do…while"></a>while…do, do…while</h4><p>这个就不多做解释了，跟其它语言没什么大的区别，无非就是如果有变量声明的话，需要用 <code>var</code> 就够了。</p>
-<h3 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h3><h4 id=""><a href="#" class="headerlink" title="+, -, *, /"></a>+, -, *, /</h4><p>这几个运算符也就这样，要注意的是 <code>+</code>。它既可以作用于字符串，也可以作用于数值运算。弱类型语言虽然说类型是弱的，数字有时候可以以字符串的形态出现，字符串有时候可以用数值的形态出现，但是在必要的时候也还是要说一下它是什么类型的，我们可以用下面的代码去看看结果：</p>
+<h3 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h3><h4 id><a href="#" class="headerlink" title="+, -, *, /"></a>+, -, *, /</h4><p>这几个运算符也就这样，要注意的是 <code>+</code>。它既可以作用于字符串，也可以作用于数值运算。弱类型语言虽然说类型是弱的，数字有时候可以以字符串的形态出现，字符串有时候可以用数值的形态出现，但是在必要的时候也还是要说一下它是什么类型的，我们可以用下面的代码去看看结果：</p>
 <figure class="highlight plain"><figcaption><span>javascript</span></figcaption><table><tr><td class="code"><pre><span class="line">var a = &quot;1&quot;;</span><br><span class="line">var b = 2;</span><br><span class="line">console.log(a + b);</span><br><span class="line">console.log(parseInt(a) + b);</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>这里的 <code>parseInt</code> 是 <strong>Node.js</strong> 的一个内置函数，作用是将一个字符串解析成 <code>int</code> 类型的变量。</p>
@@ -188,7 +188,7 @@
   s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
   s.setAttribute("data-timestamp", +new Date());
   (d.head || d.body).appendChild(s);
-})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2018<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2020<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
     $("header").backstretch("/images/header.jpeg");
 
     $("figure.highlight").each(function(i, block) {
