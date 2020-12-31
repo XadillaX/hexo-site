@@ -17,7 +17,7 @@
     "hexo-renderer-stylus": "^0.3.1",
     "hexo-server": "^0.2.0",
     "opencc": "git://github.com/byvoid/opencc.git#master",
-    "sync-runner": "^0.1.5",
+    "sync-runner": "^1.0.0",
     "walk": "^2.3.9"
   }
 }
