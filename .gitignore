@@ -3,9 +3,5 @@ Thumbs.db
 db.json
 *.log
 node_modules/
+public/
 .deploy*/
-
-*.swp
-public.bak
-_config.bak.yml
-hexadillax.bak

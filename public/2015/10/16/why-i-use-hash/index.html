@@ -1,0 +1,154 @@
+<!DOCTYPE html><html class="han-init" lang="zh-Hant"><head><meta name="author" content="死月·吃圡蕾特"><meta name="description" itemprop="description" content="什么是哈希（Hash）本来这里不应该出现这一节的，因为实际上大家应该都知道什么是哈希。不过有时候为了文章的完整性，我这里就稍微教条性地说明一下吧。ヽ(́◕◞౪◟◕‵)ﾉ
+
+散列（英语：Hashing），通常音译作哈希，是电脑科学中一种对资料的处理方法，通过某种特定的函数、算法将要检索的项与用来检索的"><link rel="alternative" href="/atom.xml" title="艾克斯の编码者" type="application/atom+xml"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>我为什么要使用哈希 · 一个伪宅级别的码畜。</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"><meta name="generator" content="Hexo 5.3.0"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="艾克斯の编码者" title="艾克斯の编码者"></a><h1><a href="/" alt="艾克斯の编码者" title="艾克斯の编码者">艾克斯の编码者</a></h1><p>一个伪宅级别的码畜。</p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/curriculumvitae" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="https://xcoder.in/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/XadillaX" style="position: relative; top: -2px;">&#xe735;</a><a target="_blank" href="https://www.zhihu.com/people/xadillax">&#xe63f;</a><a target="_blank" href="https://weibo.com/xadillax" style="position: relative; top: -2px;">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="full"><h1>我为什么要使用哈希</h1><span class="post-meta">写于<time> 2015 年 10 月 16 日 14 时 52 分</time><br>更新于<time> 2021 年 01 月 01 日 20 时 57 分</time></span><div class="article-toc"><strong>大纲</strong><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%93%88%E5%B8%8C%EF%BC%88Hash%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">什么是哈希（Hash）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E5%AD%90%E2%80%94%E2%80%94%E5%AD%90%E6%A0%91%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">引子——子树问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">2.1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%91%E7%9A%84%E5%81%9A%E6%B3%95"><span class="toc-number">2.2.</span> <span class="toc-text">我的做法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%89%AA%E6%9E%9D"><span class="toc-number">2.2.1.</span> <span class="toc-text">剪枝</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E5%AD%90%E7%9A%84%E5%B0%8F%E7%BB%93"><span class="toc-number">2.3.</span> <span class="toc-text">引子的小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E5%91%8A%E5%9B%BE%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">报告图问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-1"><span class="toc-number">3.1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">优化方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%A5%E5%91%8A%E5%9B%BE%E7%9A%84%E5%B0%8F%E7%BB%93"><span class="toc-number">3.3.</span> <span class="toc-text">报告图的小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%94%AF%E4%B8%80%E4%B8%BB%E9%94%AE%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">唯一主键问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-2"><span class="toc-number">4.1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">4.2.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E9%94%AE%E7%9A%84%E5%B0%8F%E7%BB%93"><span class="toc-number">4.3.</span> <span class="toc-text">主键的小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9C%9F%C2%B7%E5%B0%8F%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">真·小结</span></a></li></ol></div><h2 id="什么是哈希（Hash）"><a href="#什么是哈希（Hash）" class="headerlink" title="什么是哈希（Hash）"></a>什么是哈希（Hash）</h2><p>本来这里不应该出现这一节的，因为实际上大家应该都知道什么是哈希。不过有时候为了文章的完整性，我这里就稍微教条性地说明一下吧。ヽ(́◕◞౪◟◕‵)ﾉ</p>
+<blockquote>
+<p>散列（英语：Hashing），通常音译作哈希，是电脑科学中一种对资料的处理方法，通过某种特定的函数、算法将要检索的项与用来检索的索引关联起来，生成一种便于搜索的数据结构。也译为散列。</p>
+<p style="text-align: right;">-- From <a href="https://zh.wikipedia.org/wiki/%E6%95%A3%E5%88%97" target="_blank">散列</a>, Wikipedia</p>
+</blockquote>
+<p>实际上通俗的说法就是把某种状态或者资料给映射到某个值上的操作。</p>
+<p>本酱大概就解释到这里了，至于哈希的进一步认知包括冲突的产生和解决等，如果米娜桑不了解的话还请自行学习咕。థ౪థ</p>
+<h2 id="引子——子树问题"><a href="#引子——子树问题" class="headerlink" title="引子——子树问题"></a>引子——子树问题</h2><p>这个不是我在实践中遇到的问题，而是当年去某不作恶的大厂面试时候遇到的问题，觉得比较经典，所以就拿出来了。ᕙ༼ຈل͜ຈ༽ᕗ</p>
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定一棵二叉树，假设每个节点的数据只有左右子节点，自身并不存储数据。请找出两两完全相等的子树们。</p>
+<blockquote>
+<p>有兴趣的童鞋可以自己先思考一下。₍₍◝(･’ω’･)◟⁾⁾ </p>
+</blockquote>
+<h3 id="我的做法"><a href="#我的做法" class="headerlink" title="我的做法"></a>我的做法</h3><p>实际上我也不知道自己的做法是不是正确做法，不过既然通过了那一轮面试，想来也不会偏差到哪去喵。ლ（╹ε╹ლ）</p>
+<p>做法大概如下：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86#.E5.90.8E.E5.BA.8F.E9.81.8D.E5.8E.86">后序遍历</a>一遍整棵树。</li>
+<li>对于遍历到每一个节点，都获取到左右子节点的哈希值，然后将其拼接重新计算出自身的哈希值，并返回给父亲节点。</li>
+</ol>
+<p>至于哈希值怎么算，方法有很多。最简单的就是设叶子节点一个哈希值，比如是 <code>md5(&quot;&quot;)</code>，然后每次非叶子节点的哈希值就用 <code>md5(LEFT_HASH + RIGHT_HASH)</code> 来计算。大家也可以自己随便想一种方法来做就好了。</p>
+<p>很多人可能不解了，明明是用 <code>md5</code>，这篇文章是讲哈希，有毛线关系。(╯°O°)╯┻━┻</p>
+<p>实际上 <code>md5</code> 就是一种哈希算法，而且是非常经典的哈希算法。</p>
+<blockquote>
+<p>典型的哈希算法包括 MD2、MD4、MD5 和 SHA-1 等。当然不局限于这些，对于数字来说，取模也算是哈希算法，对于字符串状态转整数状态哈希来说还有诸如 <a target="_blank" rel="noopener" href="http://www.partow.net/programming/hashfunctions/#BKDRHashFunction">BKDR</a>、<a target="_blank" rel="noopener" href="http://www.partow.net/programming/hashfunctions/#ELFHashFunction">ELF</a> 等等。</p>
+</blockquote>
+<p>如果大家想多了解一些字符串转数字哈希的算法，可以参考一下 BYVoid 的这篇《<a target="_blank" rel="noopener" href="https://www.byvoid.com/blog/string-hash-compare/">各种字符串Hash函数比较</a>》，或者想直接在 Node.js 里面使用的小伙伴们可以光顾下这个包——<a target="_blank" rel="noopener" href="https://github.com/XadillaX/bling_hashes">bling-hashes</a>。</p>
+<p>初步的轮廓已经明晰了，说白了就是将每个节点的哈希全算出来，如果是父亲节点就用子节点的哈希拼接起来再哈希一遍。σ`∀´)σ</p>
+<p>把这些哈希算出来之后放在一个散列表里面待查。如果一个算出来的哈希跟之前已有的哈希值相等，那么就是说这个节点跟那个节点为根节点的子树有可能完全相等。</p>
+<blockquote>
+<p>注意：<strong>有可能</strong>完全相等。</p>
+<p>注意：只是<strong>有可能</strong>完全相等。</p>
+<p>注意：重要的事情说三遍，只是<strong>有可能</strong>完全相等。</p>
+</blockquote>
+<p>哈希是存在着一定的冲突概率的，所以说两个相等的哈希所检索到的源不一定一样，所以我们根据这些计算到的哈希建立哈希表，然后把表中同哈希值的子树再两两同时遍历一遍以检验是否相等。</p>
+<ol>
+<li>同时递归，取两个子树的根节点。</li>
+<li>后序遍历，看看每个节点是不是都一样存在（或者不存在）左子节点以及存在（或者不存在）右子节点。</li>
+<li>循环往复一直到两两遍历完整棵树得到验证结果。如果半路有一个节点的左右子节点状态不一样就可以直接跳出递归返回 <code>false</code>。</li>
+</ol>
+<p>至此为止，我们可以看出大概是两大步——<strong>计算各子树的哈希值</strong>和<strong>验证各同哈希子树的相等性</strong>。不过稍微变通一下，我们就可以在计算出哈希值的时候就去跟以前的对比了。</p>
+<h4 id="剪枝"><a href="#剪枝" class="headerlink" title="剪枝"></a>剪枝</h4><p>实际上上面的做法还有一个优化的方案，不过跟哈希相关性已经基本上很小了。不过还是跟<strong>解决冲突</strong>有一丢丢的关系的，没兴趣的童鞋也可以直接跳过了。(๑•́ ₃ •̀๑)</p>
+<p>由于子树哈希值是存在一定的冲突概率的，所以两个同哈希的子树不一定相同。那么我们如果能一眼看出这样的两棵子树是不相等的，就可以省略验证这一个递归的步骤了。</p>
+<p>这里有一种最显而易见的情况我们是可以忽略省略步骤的，那就是深度。</p>
+<p>如果两棵子树两两完全相等，那么说明这俩基佬的深度（或者说高度）是一样的，如果连深度都不一样了还如何愉快搞基——所以说如果有两个相等哈希值的子树的深度不一样的话可以直接略过验证步骤了。</p>
+<p>那么就可以这么做：</p>
+<ol>
+<li>设所有叶子节点的深度为 <code>0</code>，然后每往上一层加一。</li>
+<li>遇到左右子节点深度不一样的父节点时，取深度大的那个子节点深度去加一。</li>
+</ol>
+<p>以上步骤在遍历计算哈希的时候顺便也做了，这样就多了一个验证标记了。</p>
+<p>所以差不多就这样了，浅尝辄止。( ˘･з･)</p>
+<h3 id="引子的小结"><a href="#引子的小结" class="headerlink" title="引子的小结"></a>引子的小结</h3><p>就上述的场景来说，哈希非常好地将一个非常复杂的状态转化成一个可以检索的状态。本来毫无头绪的一个问题使用了哈希之后就完全变成了一个检索加验证的过程了。</p>
+<h2 id="报告图问题"><a href="#报告图问题" class="headerlink" title="报告图问题"></a>报告图问题</h2><p>这个问题就是我在大搜车中确实遇到的场景了。大家也不需要知道什么是报告图，就当它是一个代号了。</p>
+<h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><blockquote>
+<p>要做的事情大概就是说给定一个报告，我们根据报告的各个细节选定各种图层然后揉成一团叠加在一起形成最后一个结果图。</p>
+</blockquote>
+<p>其实本来就有个系统在做这件事情的——每来一个报告就生成一张图，然后存储好之后给前端使用。</p>
+<p>我做的事情是将逻辑迁移到另一套计算密集型任务集中处理系统中去。(<em>´艸`</em>)</p>
+<p>其实生成这样一张图片的逻辑是 CPU 计算密集型的逻辑，所以比较耗费资源和时间的，那么我们就能在这上面做点手脚优化一下。</p>
+<h3 id="优化方法"><a href="#优化方法" class="headerlink" title="优化方法"></a>优化方法</h3><p>首先我们要知道的是，有哪些图层是固定的，所以其实这算半个排列组合的问题了。</p>
+<p>不过我们也知道排列组合的增长性非常快，更何况我这里有约 100 个图层选择，所以可能性非常多，一下子全生成好不可能。</p>
+<p>那么就可以用哈希和懒惰的思想来实现了。(<em>ˇωˇ</em>人)</p>
+<p>虽然报告是有无限种可能的，但是把报告转成图层数据之后，拥有完全一样的图层数据的报告就可以用同一张图片了，这样就可以大大节省空间和时间了。</p>
+<p>其实大概的步骤非常简单：</p>
+<ol>
+<li>把图层数据计算成哈希。（比如把所有图层文件路径用某种符号拼接，再用 <code>md5</code> 计算一下）</li>
+<li>去数据库查找这个哈希主键存不存在。<ul>
+<li>如果存在则验证源图层数据域当前图层数据是否吻合。</li>
+</ul>
+<ul>
+<li>如果不吻合则按某种算法重新计算哈希，继续步骤 2。</li>
+<li><strong>如果吻合则可以直接拿着这个数据返回了，跳出计算。</strong></li>
+</ul>
+<ul>
+<li>如果不存在就说明当前数据库还没有这个图层情况的报告图生成，那么就执行生成报告图逻辑。</li>
+</ul>
+</li>
+<li>报告图生成之后，将其存入数据库中。<ul>
+<li>计算出这个报告图图层数据的哈希，去数据库查存不存在。</li>
+</ul>
+<ul>
+<li>如果不存在则说明哈希不冲突，能用，直接用这个哈希存进去。</li>
+<li>如果存在则说明哈希冲突，那么按某种算法重新计算哈希，继续上面的步骤直到不冲突为止。</li>
+</ul>
+</li>
+</ol>
+<p>如果大家想知道“按某种算法重新生成哈希”里面“某种算法”的话可以看看下面的瞎狗眼的说明了。(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</p>
+<blockquote>
+<p>其实很简单，把图层数据的这个字符串加某个固定字符当小尾巴，如果哈希还是冲突则继续加这个小尾巴，直到计算出来的哈希不冲突为止。</p>
+<p>比如我就用了这字符当小尾巴——<strong>🀣</strong>（麻将牌中的兰）。(♛‿♛)</p>
+</blockquote>
+<h3 id="报告图的小结"><a href="#报告图的小结" class="headerlink" title="报告图的小结"></a>报告图的小结</h3><p>在这种场景中，我把哈希拿来作检索某种报告图是否已经生成的用途。如果没有生成则生成一张，如果已经生成则直接拿已有的报告图去用。</p>
+<p>至少比原来的来一张报告就生成一张图片来得快，并且省空间——相当于作冗余处理了。</p>
+<p>事实上在很多的网盘系统中也有作冗余处理的。你以为你有多少多少 T 的空间，实际上相同的文件最终在网盘系统里面只存一份（不过排除备份的那些），而我相信做这些冗余判断的原理就是哈希了，SHA-1 也好 MD5 也好，反正就是这样。</p>
+<blockquote>
+<p>上面网盘的冗余处理原理也只是我的猜测，我没在那些厂子里面工作过所以不能说就是就是这样子的。欢迎指正。｡ﾟヽ(ﾟ´Д`)ﾉﾟ｡</p>
+</blockquote>
+<h2 id="唯一主键问题"><a href="#唯一主键问题" class="headerlink" title="唯一主键问题"></a>唯一主键问题</h2><p>这是我来这边工作后的另一个小插曲了，遇到一个主键生成的小需求。</p>
+<h3 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h3><p>有一个数据要插入到数据库，所以要给它生成一个主键，但是需求比较奇葩，可能是历史遗留问题吧。(눈‸눈)</p>
+<ul>
+<li>非自增。</li>
+<li>是一个全是数字的字符串。</li>
+<li>不同类型的这个表的数据用不同的前缀，比如 <code>10</code>、<code>11</code>、<code>12</code> 等。</li>
+<li>位数在十几位左右（不过在我这里就固定了）。</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>如果是 <code>前缀 + 随机数</code> 的冲突概率会比较大的，所以还是用哈希来搞。</p>
+<p>非常简单。首先前缀是固定的，我们就不管了，然后我根据这次进来的数据拼接成字符串（数据不会完全一样的），加上一点随机盐，然后用字符串哈希计算一遍，加上前导零，加上当前时间戳的后几位拼接起来，最后接上前缀就好了。</p>
+<p>这个 <code>generate</code> 函数看起来就像这样子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> bling = <span class="built_in">require</span>(<span class="string">&quot;bling-hashes&quot;</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">generate</span>(<span class="params">type, bodyParamStr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> basePrefix;</span><br><span class="line">    <span class="keyword">switch</span>(type) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;foo&#x27;</span>: basePrefix = <span class="string">&#x27;10&#x27;</span>; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;bar&#x27;</span>: basePrefix = <span class="string">&#x27;11&#x27;</span>; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>: base_prefix = <span class="string">&#x27;00&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> date = moment();</span><br><span class="line">    <span class="keyword">var</span> hash = bling.bkdr(bodyParamStr + date.valueOf()).pad(<span class="number">10</span>);</span><br><span class="line">    hash = date.millisecond().pad(<span class="number">3</span>) + hash;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> basePrefix + hash;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>注意：</strong>这里的 <code>bling</code> 就是上面提到过的那个 <a target="_blank" rel="noopener" href="https://github.com/XadillaX/bling_hashes">bling-hashes</a>，采用了 <code>BKDR</code> 算法来计算哈希。以及 <code>Number.prototype.pad</code> 函数是我邪恶得使用了 <a target="_blank" rel="noopener" href="http://sugarjs.com/api/Number/pad">SugarJs</a> 里面的函数，就是加上前导零的意思。如果受“千万不要修改原型链”影响较深地童鞋别学我哦。<code>bodyParamStr</code> 是前端传过来的 <strong>Raw Form Data</strong>，它看起来像 <code>&quot;data1=1&amp;data2=2&amp;...&quot;</code>。</p>
+</blockquote>
+<p>最后得到的这个字符串是我们所要的主键了。｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡</p>
+<p>不过要注意的是，这个主键仍然又冲突的可能性，所以一旦冲突了（无论是自己检测到的还是插入数据库的时候疼了）就需要再生产一遍。就目前来说再生成的时候毫秒时间戳后三位会不一样，所以问题不大，允许存在的误差——毕竟不是那种分分钟集千万条的数据，肯定在 <code>int</code> 范围内。如果到时候真出问题了再改进。</p>
+<h3 id="主键的小结"><a href="#主键的小结" class="headerlink" title="主键的小结"></a>主键的小结</h3><p>这里的哈希是用在生成基本上没有碰撞的主键身上，感觉效果也是非常不错的——前提是你也有这种奇葩需求。</p>
+<h2 id="真·小结"><a href="#真·小结" class="headerlink" title="真·小结"></a>真·小结</h2><p>本文大致介绍了哈希的几种用途，有可能是大家熟知的用途，也有可能是巧用，总之就是说了为什么我要用哈希。</p>
+<p>在编程中，无论是实际用途还是自己玩玩的题目，多动动脑子就会出来一些“奇技淫巧”。哈希也好，别的东西也罢，反正都是为了解决问题的——千万别因为实际开发中通常性的“并没有什么卵用”而去忽视它们，虽然哈希已经是够常用的了。(๑•ૅω•´๑)</p>
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2015/10/16/why-i-use-hash/";</script><script>var DISQUS_IDENTIFIER = "2015/10/16/why-i-use-hash/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2021<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a target="_blank" rel="noopener" href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
+
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $(block).find("td.gutter").remove();
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : ("lang-" + $(block).attr("class"))) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
+    });
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
+
+    $("article.full img").each(function() {
+        if($(this).parent().is("article")) {
+            $(this).wrap("<p style='text-align: center;'></p>");
+        } else {
+            $(this).parent().css("text-align", "center");
+        }
+    });
+
+    if($(".article-toc").children().length < 2) {
+        $(".article-toc").css("display", "none");
+    }
+});</script></body></html>
