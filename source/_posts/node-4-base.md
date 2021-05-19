@@ -1,7 +1,7 @@
-title       : 一起撸Node.JS（壹）——基本语法和类型
+title       : 一起撸Node.js（壹）——基本语法和类型
 date        : 2013-08-16
 category    : NodeJS
-tags        : [ Node.js, JavaScript, 一起撸Node.JS ]
+tags        : [ Node.js, JavaScript, 一起撸Node.js ]
 ---
 
 **Node.js** 的基础是 **JavaScript** 这门 ***脚本语言***。而大多数的脚本语言一个共同的特点就是“[弱类型](http://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1#.E5.BC.B7.E5.9E.8B.E5.88.A5.E5.92.8C.E5.BC.B1.E5.9E.8B.E5.88.A5)”。

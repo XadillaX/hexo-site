@@ -1,6 +1,6 @@
 title: 关于Node.js下的MongoDB阻塞模式实现
 date: 2013-03-29 09:31:38
-tags: [ 老博客备份归档, Node.JS, MongoDB ]
+tags: [ 老博客备份归档, Node.js, MongoDB ]
 category: 老博客备份归档
 ---
 

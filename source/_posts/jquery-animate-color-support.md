@@ -1,6 +1,6 @@
 title: 关于jQuery中“animate()”函数对颜色变化的支持
 date: 2012-12-24 09:20:16
-tags: [ 老博客备份归档, Javascript, jQuery ]
+tags: [ 老博客备份归档, JavaScript, jQuery ]
 category: 老博客备份归档
 ---
 

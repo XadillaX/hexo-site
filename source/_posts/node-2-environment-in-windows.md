@@ -1,7 +1,7 @@
 title       : 一起撸Node.JS（负贰）——环境
 category    : NodeJS
 date        : 2013-08-15
-tags        : [ Node.js, JavaScript, 一起撸Node.JS ]
+tags        : [ Node.js, JavaScript, 一起撸Node.js ]
 ---
 
 　　由于[Linux]({{ page.url }}#linux-环境)中的环境搭建比较简单，所以草草略过。

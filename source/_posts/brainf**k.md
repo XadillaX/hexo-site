@@ -1,6 +1,6 @@
 title: 用 Javascript 实现一个简易 BrainF**k 解释器
 date: 2014-10-08 11:42:32
-tags: [ Javascript, 解释器, BrainFuck ]
+tags: [ JavaScript, 解释器, BrainFuck ]
 category: Programming
 ---
 

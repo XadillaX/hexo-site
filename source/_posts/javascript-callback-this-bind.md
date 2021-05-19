@@ -1,6 +1,6 @@
 title: 关于JavaScript中callback函数的this指针重定义
 date: 2013-07-15 14:20:29
-tags: [ 老博客备份归档, Javascript ]
+tags: [ 老博客备份归档, JavaScript ]
 category: 老博客备份归档
 ---
 

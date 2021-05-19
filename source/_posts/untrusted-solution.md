@@ -1,6 +1,6 @@
 title: Untrusted - 游戏题解
 date: 2014-06-12 11:08:34
-tags: [ Javascript, untrusted, 游戏 ]
+tags: [ JavaScript, untrusted, 游戏 ]
 ---
 
 　　[Trusted](http://alexnisnevich.github.io/untrusted/) 是一个代码解谜游戏，用 Javascript 来过关的。
