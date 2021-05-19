@@ -50,6 +50,8 @@ header a {
   color: #35101a;
 }
 header h1 {
+  font-family: '喜鹊招牌体', -apple-system, "Helvetica Neue", Arial, "PingFang SC", "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  font-weight: normal;
   font-size: 3.5em;
   margin-top: 20px;
   line-height: 1em;
@@ -61,6 +63,7 @@ header h1 a {
 }
 header p {
   color: #fdf2e4;
+  font-family: '喜鹊万人造字体', -apple-system, "Helvetica Neue", Arial, "PingFang SC", "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
   letter-spacing: 0;
   margin: 0;
   text-shadow: 0 1px 3px rgba(0,0,0,0.35);
@@ -72,6 +75,7 @@ header nav ul {
   padding: 0;
 }
 header nav ul li {
+  font-family: '喜鹊聚珍体', -apple-system, "Helvetica Neue", Arial, "PingFang SC", "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
   color: #35101a;
   display: inline-block;
   padding: 12px 0 12px 12px;
@@ -199,6 +203,31 @@ main .post-meta {
   margin: 0;
   font-size: 0.6em;
 }
+main article.item p,
+main article.full p,
+main article.item li,
+main article.full li,
+main article.item blockquote,
+main article.full blockquote {
+  font-family: '喜鹊聚珍体', -apple-system, "Helvetica Neue", Arial, "PingFang SC", "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+main article.item strong,
+main article.full strong {
+  font-family: '喜鹊聚珍体', -apple-system, "Helvetica Neue", Arial, "PingFang SC", "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif !important;
+}
+main article h1,
+main article h2,
+main article h3,
+main article h4,
+main article h5,
+main article h6,
+main article h7 {
+  font-family: '喜鹊招牌体', -apple-system, "Helvetica Neue", Arial, "PingFang SC", "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  font-weight: normal;
+}
+main article blockquote {
+  font-family: '喜鹊聚珍体', -apple-system, "Helvetica Neue", Arial, "PingFang SC", "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
 main article.item {
   border-bottom: 1px solid rgba(0,0,0,0.15);
   color: #222;
@@ -287,6 +316,7 @@ main footer .copyright {
 }
 main footer .intro {
   font-size: 0.7em;
+  font-family: '喜鹊聚珍体', -apple-system, "Helvetica Neue", Arial, "PingFang SC", "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 @media (min-width: 720px) {
   body main {
@@ -306,7 +336,17 @@ main footer .intro {
 @font-face {
 /* font-properties */
   font-family: '喜鹊招牌体';
-  src: url("http://77g1nn.com1.z0.glb.clouddn.com/%E5%96%9C%E9%B9%8A%E6%8B%9B%E7%89%8C%E4%BD%93.ttf");
+  src: url("https://dm.nbut.ac.cn/xcoder/%E5%96%9C%E9%B9%8A%E6%8B%9B%E7%89%8C%E4%BD%93(%E7%AE%80%20%E7%B9%81%E4%BD%93).ttf");
+}
+@font-face {
+/* font-properties */
+  font-family: '喜鹊聚珍体';
+  src: url("https://dm.nbut.ac.cn/xcoder/喜鹊聚珍体.ttf");
+}
+@font-face {
+/* font-properties */
+  font-family: '喜鹊万人造字体';
+  src: url("https://dm.nbut.ac.cn/xcoder/%E5%96%9C%E9%B9%8A%E4%B8%87%E4%BA%BA%E9%80%A0%E5%AD%97%E4%BD%93.ttf");
 }
 article.full a {
   color: #919191;

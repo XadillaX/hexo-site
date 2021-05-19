@@ -35,16 +35,18 @@
 结合之前妹纸『弍纾』在起花名的时候也遇到了同样的困扰，于是决定用 Node.js 写个『一本正经乱起花名』的程序。
 准备Chinese Random Name首先起花</p></article><article class="item"><a class="article" href="/2015/11/27/a-js-problem-about-global-continued/"><h2 class="home-title">Node.js 启动方式：一道关于全局变量的题目引发的思考·续</h2></a><span class="post-meta">写于<time> 2015 年 11 月 27 日 14 时 36 分</time></span><p class="post-excerpt">本文是上文《Node.js 启动方式：一道关于全局变量的题目引发的思考》的续章。
 原题回顾我们还是先回顾下原题吧。
-var a = 2;  function foo()&amp;#123;      console.log(this.a);&amp;#125;foo();
+var a = 2;  function foo()&amp;#123;      console.log(this.a);&amp;#125;foo();  
 
-上题由我们亲爱的小龙</p></article><article class="item"><a class="article" href="/2015/11/26/a-js-problem-about-global/"><h2 class="home-title">Node.js 启动方式：一道关于全局变量的题目引发的思考</h2></a><span class="post-meta">写于<time> 2015 年 11 月 26 日 21 时 51 分</time></span><p class="post-excerpt">原题　　题目是这样的。
+
+上题由我们亲爱</p></article><article class="item"><a class="article" href="/2015/11/26/a-js-problem-about-global/"><h2 class="home-title">Node.js 启动方式：一道关于全局变量的题目引发的思考</h2></a><span class="post-meta">写于<time> 2015 年 11 月 26 日 21 时 51 分</time></span><p class="post-excerpt">原题　　题目是这样的。
 var a = 2;function foo()&amp;#123;    console.log(this.a);&amp;#125;foo();
+
 
 上题由我们亲爱的小龙童鞋发现并在我们的 901 群里提问的。
 
 经过　　然后有下面的小对话。
 
-小龙：你们猜这个输出什么</p></article><article class="item"><a class="article" href="/2015/10/16/why-i-use-hash/"><h2 class="home-title">我为什么要使用哈希</h2></a><span class="post-meta">写于<time> 2015 年 10 月 16 日 14 时 52 分</time></span><p class="post-excerpt">什么是哈希（Hash）本来这里不应该出现这一节的，因为实际上大家应该都知道什么是哈希。不过有时候为了文章的完整性，我这里就稍微教条性地说明一下吧。ヽ(́◕◞౪◟◕‵)ﾉ
+小龙：你们猜这个输出什</p></article><article class="item"><a class="article" href="/2015/10/16/why-i-use-hash/"><h2 class="home-title">我为什么要使用哈希</h2></a><span class="post-meta">写于<time> 2015 年 10 月 16 日 14 时 52 分</time></span><p class="post-excerpt">什么是哈希（Hash）本来这里不应该出现这一节的，因为实际上大家应该都知道什么是哈希。不过有时候为了文章的完整性，我这里就稍微教条性地说明一下吧。ヽ(́◕◞౪◟◕‵)ﾉ
 
 散列（英语：Hashing），通常音译作哈希，是电脑科学中一种对资料的处理方法，通过某种特定的函数、算法将要</p></article><div class="pagination"><a class="extend prev" rel="prev" href="/">«</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/">»</a></div><footer><section class="copyright">&copy; 2016 - 2021<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a target="_blank" rel="noopener" href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
     $("header").backstretch("/images/header.jpeg");
