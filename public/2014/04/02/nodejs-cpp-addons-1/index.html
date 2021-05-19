@@ -1,0 +1,150 @@
+<!DOCTYPE html><html class="han-init" lang="zh-Hant"><head><meta name="author" content="死月·吃圡蕾特"><meta name="description" itemprop="description" content="N久之前的一个坑——用 Node.js 来重构 NBUT 的 Online Judge，包括评测端也得重构一遍。（至于什么时候完成大家就不要关心了，(／‵Д′)／~ ╧╧
+　　总之我们现在要做的其实简而言之就是——用C/C++来实现 Node.js 的模块。
+准备工作　　工欲善其事，必先耍流氓利其器"><link rel="alternative" href="/atom.xml" title="艾克斯の编码者" type="application/atom+xml"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>让Node.js和C++一起搞基 —— 1 · 一个伪宅级别的码畜。</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="艾克斯の编码者" title="艾克斯の编码者"></a><h1><a href="/" alt="艾克斯の编码者" title="艾克斯の编码者">艾克斯の编码者</a></h1><p>一个伪宅级别的码畜。</p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/curriculumvitae" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="https://xcoder.in/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/XadillaX" style="position: relative; top: -2px;">&#xe735;</a><a target="_blank" href="https://www.zhihu.com/people/xadillax">&#xe63f;</a><a target="_blank" href="https://weibo.com/xadillax" style="position: relative; top: -2px;">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="full"><h1>让Node.js和C++一起搞基 —— 1</h1><span class="post-meta">写于<time> 2014 年 04 月 02 日 00 时 53 分</time><br>更新于<time> 2021 年 05 月 19 日 15 时 15 分</time></span><div class="article-toc"><strong>大纲</strong><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">准备工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#node-gyp"><span class="toc-number">1.1.</span> <span class="toc-text">node-gyp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python"><span class="toc-number">1.2.</span> <span class="toc-text">Python</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83"><span class="toc-number">1.3.</span> <span class="toc-text">编译环境</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A5%E9%97%A8"><span class="toc-number">2.</span> <span class="toc-text">入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hello-World"><span class="toc-number">2.1.</span> <span class="toc-text">Hello World</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%87%BD%E6%95%B0"><span class="toc-number">2.1.1.</span> <span class="toc-text">主要函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Handle-lt-Value-gt"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">Handle&lt;Value&gt;</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Arguments"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">Arguments</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%BB%E7%A0%96%E5%8A%A0%E7%93%A6"><span class="toc-number">2.1.2.</span> <span class="toc-text">添砖加瓦</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#HandleScope"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">HandleScope</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#String-New"><span class="toc-number">2.1.2.2.</span> <span class="toc-text">String::New</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%BC%E5%87%BA%E5%AF%B9%E8%B1%A1"><span class="toc-number">2.1.3.</span> <span class="toc-text">导出对象</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%87%BD%E6%95%B0"><span class="toc-number">2.1.3.1.</span> <span class="toc-text">初始化函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%9C%9F%C2%B7%E5%AF%BC%E5%87%BA"><span class="toc-number">2.1.3.2.</span> <span class="toc-text">真·导出</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91-%E0%B9%91%E2%80%A2%CC%81-%E2%82%83-%E2%80%A2%CC%80%E0%B9%91"><span class="toc-number">2.2.</span> <span class="toc-text">编译 (๑•́ ₃ •̀๑)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#configure"><span class="toc-number">2.2.1.</span> <span class="toc-text">configure</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#build"><span class="toc-number">2.2.2.</span> <span class="toc-text">build</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%9E%E5%9F%BA%E5%90%A7%EF%BC%81Node-%E3%83%BD-%E2%9C%BF%EF%BE%9F%E2%96%BD%EF%BE%9F-%E3%83%8E-C"><span class="toc-number">2.3.</span> <span class="toc-text">搞基吧！Node ヽ(✿ﾟ▽ﾟ)ノ C++</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B4%97%E6%B4%97%E7%9D%A1%E5%90%A7%EF%BC%8C%E4%B8%8B%E8%8A%82%E6%9B%B4%E6%B7%B1%E5%85%A5"><span class="toc-number">3.</span> <span class="toc-text">洗洗睡吧，下节更深入</span></a></li></ol></div><p>　　N久之前的一个坑——用 <strong>Node.js</strong> 来重构 NBUT 的 <strong>Online Judge</strong>，包括评测端也得重构一遍。（至于什么时候完成大家就不要关心了，(／‵Д′)／~ ╧╧</p>
+<p>　　总之我们现在要做的其实简而言之就是——用C/C++来实现 <strong>Node.js</strong> 的模块。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>　　工欲善其事，必先<del>耍流氓</del>利其器。</p>
+<h3 id="node-gyp"><a href="#node-gyp" class="headerlink" title="node-gyp"></a>node-gyp</h3><p>　　首先你需要一个 <code>node-gyp</code> 模块。</p>
+<p>　　在任意角落，执行：</p>
+<figure class="highlight plaintext"><figcaption><span>shell</span></figcaption><table><tr><td class="code"><pre><span class="line">$ npm install node-gyp -g</span><br></pre></td></tr></table></figure>
+
+<p>　　在进行一系列的 <code>blahblah</code> 之后，你就安装好了。</p>
+<h3 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h3><p>　　然后你需要有个 <code>python</code> 环境。</p>
+<p>　　自己去<a target="_blank" rel="noopener" href="http://python.org/">官网</a>搞一个来。</p>
+<blockquote>
+<p><strong>注意：</strong> 根据 <code>node-gyp</code> 的<a target="_blank" rel="noopener" href="https://github.com/TooTallNate/node-gyp#installation">GitHub</a>显示，请务必保证你的 <code>python</code> 版本介于 <code>2.5.0</code> 和 <code>3.0.0</code> 之间。</p>
+</blockquote>
+<h3 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h3><p>　　嘛嘛，我就偷懒点不细写了，还请自己移步到 <a target="_blank" rel="noopener" href="https://github.com/TooTallNate/node-gyp#installation">node-gyp</a> 去看编译器的需求。并且倒腾好。</p>
+<h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h2><p>　　我就拿<a target="_blank" rel="noopener" href="http://nodejs.org/api/addons.html#addons_hello_world">官网的入门 Hello World</a>说事儿了。</p>
+<h3 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h3><p>　　请准备一个 <code>C++</code> 文件，比如就叫 <del>sb.cc</del> hello.cc。</p>
+<p>　　然后我们一步步来，先往里面搞出头文件和定义好命名空间：</p>
+<figure class="highlight plaintext"><figcaption><span>cpp</span></figcaption><table><tr><td class="code"><pre><span class="line">#include &lt;node.h&gt;</span><br><span class="line">#include &lt;v8.h&gt;</span><br><span class="line">using namespace v8;</span><br></pre></td></tr></table></figure>
+
+<h4 id="主要函数"><a href="#主要函数" class="headerlink" title="主要函数"></a>主要函数</h4><p>　　接下去我们写一个函数，其返回值是 <code>Handle&lt;Value&gt;</code>。</p>
+<figure class="highlight plaintext"><figcaption><span>cpp</span></figcaption><table><tr><td class="code"><pre><span class="line">Handle&lt;Value&gt; Hello(const Arguments&amp; args)</span><br><span class="line">&#123;</span><br><span class="line">    //... 嗷嗷待写</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　然后我来粗粗解析一下这些东西：</p>
+<h5 id="Handle-lt-Value-gt"><a href="#Handle-lt-Value-gt" class="headerlink" title="Handle&lt;Value&gt;"></a>Handle&lt;Value&gt;</h5><p>　　做人要有节操，我事先申明我是从<a target="_blank" rel="noopener" href="http://cnodejs.org/topic/4f16442ccae1f4aa270010c5">这里</a>(<a target="_blank" rel="noopener" href="http://cnodejs.org/user/fool">@fool</a>)参考的。</p>
+<blockquote>
+<p>V8 里使用 Handle 类型来托管 JavaScript 对象，与 C++ 的 std::sharedpointer 类似，Handle 类型间的赋值均是直接传递对象引用，但不同的是，V8 使用自己的 GC 来管理对象生命周期，而不是智能指针常用的引用计数。</p>
+<p>JavaScript 类型在 C++ 中均有对应的自定义类型，如 String 、 Integer 、 Object 、 Date 、 Array 等，严格遵守在 JavaScript 中的继承关系。 C++ 中使用这些类型时，必须使用 Handle 托管，以使用 GC 来管理它们的生命周期，而不使用原生栈和堆。</p>
+</blockquote>
+<p>　　而这个所谓的 <strong>Value</strong> ，从 V8 引擎的头文件 <a target="_blank" rel="noopener" href="http://code.google.com/p/v8/source/browse/trunk/include/v8.h#1417">v8.h</a> 中的各种继承关系中可以看出来，其实就是 JavaScript 中各种对象的基类。</p>
+<p>　　在了解了这件事之后，我们大致能明白上面那段函数的申明的意思就是说，我们写一个 <code>Hello</code> 函数，其返回的是一个不定类型的值。</p>
+<blockquote>
+<p><strong>注意：</strong> 我们只能返回特定的类型，即在 Handle 托管下的 String 啊 Integer 啊等等等等。</p>
+</blockquote>
+<h5 id="Arguments"><a href="#Arguments" class="headerlink" title="Arguments"></a>Arguments</h5><p>　　这个就是传入这个函数的参数了。我们都知道在 <code>Node.js</code> 中，参数个数是乱来的。而这些参数传进去到 <code>C++</code> 中的时候，就转变成了这个 <code>Arguments</code> 类型的对象了。</p>
+<p>　　具体的用法我们在后面再说，在这里只需要明白这个是个什么东西就好。（为毛要卖关子？因为 <code>Node.js</code> 官方文档中的<a target="_blank" rel="noopener" href="https://github.com/rvagg/node-addon-examples">例子</a>就是分开来讲的，我现在只是讲第一个 <code>Hello World</code> 的例子而已( ´థ౪థ）σ</p>
+<h4 id="添砖加瓦"><a href="#添砖加瓦" class="headerlink" title="添砖加瓦"></a>添砖加瓦</h4><p>　　接下去我们就开始添砖加瓦了。就最简单的两句话：</p>
+<figure class="highlight plaintext"><figcaption><span>cpp</span></figcaption><table><tr><td class="code"><pre><span class="line">Handle&lt;Value&gt; Hello(const Arguments&amp; args)</span><br><span class="line">&#123;</span><br><span class="line">    HandleScope scope;</span><br><span class="line">    return scope.Close(String::New(&quot;world&quot;));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　这两句话是什么意思呢？大致的意思就是返回一个 <code>Node.js</code> 中的字符串 <code>&quot;world&quot;</code>。</p>
+<h5 id="HandleScope"><a href="#HandleScope" class="headerlink" title="HandleScope"></a>HandleScope</h5><p>　　同参考自<a target="_blank" rel="noopener" href="http://cnodejs.org/topic/4f16442ccae1f4aa270010c5">这里</a>。</p>
+<blockquote>
+<p>Handle 的生命周期和 C++ 智能指针不同，并不是在 C++ 语义的 scope 内生存（即{} 包围的部分），而需要通过 HandleScope 手动指定。HandleScope 只能分配在栈上，HandleScope 对象声明后，其后建立的 Handle 都由 HandleScope 来管理生命周期，HandleScope 对象析构后，其管理的 Handle 将由 GC 判断是否回收。</p>
+</blockquote>
+<p>　　所以呢，我们得在需要管理他的生命周期的时候申明这个 <code>Scope</code> 。好的，那么为什么我们的代码不这么写呢？</p>
+<figure class="highlight plaintext"><figcaption><span>cpp</span></figcaption><table><tr><td class="code"><pre><span class="line">Handle&lt;Value&gt; Hello(const Arguments&amp; args)</span><br><span class="line">&#123;</span><br><span class="line">    HandleScope scope;</span><br><span class="line">    return String::New(&quot;world&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　因为当函数返回时，<code>scope</code> 会被析构，其管理的Handle也都将被回收，所以这个 <code>String</code> 就会变得没有意义。</p>
+<p>　　所以呢 V8 就想出了个神奇的点子——<code>HandleScope::Close(Handle&lt;T&gt; Value)</code> 函数！这个函数的用处就是关闭这个 Scope 并且把里面的参数转交给上一个 Scope 管理，也就是进入这个函数前的 Scope。</p>
+<p>　　于是就有了我们之前的代码 <code>scope.Close(String::New(&quot;world&quot;));</code>。</p>
+<h5 id="String-New"><a href="#String-New" class="headerlink" title="String::New"></a>String::New</h5><p>　　这个 <code>String</code> 类所对应的就是 <code>Node.js</code> 中原生的字符串类。继承自 <code>Value</code> 类。与此类似，还有：</p>
+<ul>
+<li>Array</li>
+<li>Integer</li>
+<li>Boolean</li>
+<li>Object</li>
+<li>Date</li>
+<li>Number</li>
+<li>Function</li>
+<li>…</li>
+</ul>
+<p>　　这些东西有些是继承自 <code>Value</code>，有些是二次继承。我们这里就不多做研究，自己可以看看 V8 的代码（至少是头文件）研究研究或者看看这个<a target="_blank" rel="noopener" href="http://bespin.cz/~ondras/html/classv8_1_1Value.html#a70d4afaccc7903e6a01f40a46ad04188">手册</a>。</p>
+<p>　　而这个 <code>New</code> 呢？<a target="_blank" rel="noopener" href="http://bespin.cz/~ondras/html/classv8_1_1String.html">这里</a>可以看的。就是新建一个 <code>String</code> 对象。</p>
+<p>　　至此，这个主要函数我们就解析完毕了。</p>
+<h4 id="导出对象"><a href="#导出对象" class="headerlink" title="导出对象"></a>导出对象</h4><p>　　我们来温习一下，如果是在 <code>Node.js</code> 里面写的话，我们怎么导出函数或者对象什么的呢？</p>
+<figure class="highlight plaintext"><figcaption><span>javascript</span></figcaption><table><tr><td class="code"><pre><span class="line">exports.hello = function() &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　那么，在 <code>C++</code> 中我们该如何做到这一步呢？</p>
+<h5 id="初始化函数"><a href="#初始化函数" class="headerlink" title="初始化函数"></a>初始化函数</h5><p>　　首先，我们写个初始化函数：</p>
+<figure class="highlight plaintext"><figcaption><span>cpp</span></figcaption><table><tr><td class="code"><pre><span class="line">void init(Handle&lt;Object&gt; exports)</span><br><span class="line">&#123;</span><br><span class="line">    //... 嗷嗷待写你妹啊！#ﾟÅﾟ）⊂彡☆))ﾟДﾟ)･∵</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　这是龟腚！函数名什么的无所谓，但是传入的参数一定是一个 <code>Handle&amp;lt;Object&gt;</code>，代表我们下面将要在这货上导出东西。</p>
+<p>　　然后，我们就在这里面写上导出的东西了：</p>
+<figure class="highlight plaintext"><figcaption><span>cpp</span></figcaption><table><tr><td class="code"><pre><span class="line">void init(Handle&lt;Object&gt; exports)</span><br><span class="line">&#123;</span><br><span class="line">    exports-&gt;Set(String::NewSymbol(&quot;hello&quot;),</span><br><span class="line">        FunctionTemplate::New(Hello)-&gt;GetFunction());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　大致的意思就是说，为这个 <code>exports</code> 对象添加一个字段叫 <code>hello</code>，所对应的东西是一个<a target="_blank" rel="noopener" href="http://bespin.cz/~ondras/html/classv8_1_1FunctionTemplate.html">函数</a>，而这个函数就是我们亲爱的 <code>Hello</code> 函数了。</p>
+<p>　　用伪代码写直白点就是：</p>
+<figure class="highlight plaintext"><figcaption><span>cpp</span></figcaption><table><tr><td class="code"><pre><span class="line">void init(Handle&lt;Object&gt; exports)</span><br><span class="line">&#123;</span><br><span class="line">    exports.Set(&quot;hello&quot;, function hello);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　大功告成！</p>
+<p>　　（大功告成你妹啊！闭嘴( ‘д‘⊂彡☆))Д´)</p>
+<h5 id="真·导出"><a href="#真·导出" class="headerlink" title="真·导出"></a>真·导出</h5><p>　　这才是最后一步，我们最后要申明，这个就是导出的入口，所以我们在代码的末尾加上这一行：</p>
+<figure class="highlight plaintext"><figcaption><span>cpp</span></figcaption><table><tr><td class="code"><pre><span class="line">NODE_MODULE(hello, init)</span><br></pre></td></tr></table></figure>
+
+<p>　　纳了个尼？！这又是什么东西？</p>
+<p>　　别着急，这个 <code>NODE_MODULE</code> 是一个宏，它的意思呢就是说我们采用 <code>init</code> 这个初始化函数来把要导出的东西导出到 <code>hello</code> 中。那么这个 <code>hello</code> 哪来呢？</p>
+<p>　　<strong>它来自文件名！</strong>对，没错，它来自文件名。你并不需要事先申明它，你也不必担心不能用，总之你的这个最终编译好的二进制文件名叫什么，这里的 <code>hello</code> 你就填什么，当然要除去后缀名了。</p>
+<p>　　详见<a target="_blank" rel="noopener" href="http://nodejs.org/api/addons.html#addons_hello_world">官方文档</a>。</p>
+<blockquote>
+<p>Note that all Node addons must export an initialization function:</p>
+<figure class="highlight plaintext"><figcaption><span>cpp</span></figcaption><table><tr><td class="code"><pre><span class="line">void Initialize (Handle&lt;Object&gt; exports);</span><br><span class="line">NODE_MODULE(module_name, Initialize)</span><br></pre></td></tr></table></figure>
+<p>There is no semi-colon after NODE_MODULE as it’s not a function (see node.h).</p>
+<p>The module_name needs to match the filename of the final binary (minus the .node suffix).</p>
+</blockquote>
+<h3 id="编译-๑•́-₃-•̀๑"><a href="#编译-๑•́-₃-•̀๑" class="headerlink" title="编译 (๑•́ ₃ •̀๑)"></a>编译 (๑•́ ₃ •̀๑)</h3><p>　　来吧，让我们一起编译吧！</p>
+<p>　　我们再新建一个类似于 <code>Makefile</code> 的归档文件吧——<code>binding.gyp</code>。</p>
+<p>　　并且在里面添加这样的<a target="_blank" rel="noopener" href="https://github.com/TooTallNate/node-gyp#the-bindinggyp-file">代码</a>：</p>
+<figure class="highlight plaintext"><figcaption><span>json</span></figcaption><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;targets&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;target_name&quot;: &quot;hello&quot;,</span><br><span class="line">      &quot;sources&quot;: [ &quot;hello.cc&quot; ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　为什么这么写呢？可以参考 <code>node-gyp</code> 的<a target="_blank" rel="noopener" href="http://code.google.com/p/gyp/wiki/GypUserDocumentation#Skeleton_of_a_typical_Chromium_.gyp_file">官方文档</a>。</p>
+<h4 id="configure"><a href="#configure" class="headerlink" title="configure"></a>configure</h4><p>　　在文件搞好之后，我们要在这个目录下面执行这个命令了：</p>
+<figure class="highlight plaintext"><figcaption><span>shell</span></figcaption><table><tr><td class="code"><pre><span class="line">$ node-gyp configure</span><br></pre></td></tr></table></figure>
+
+<p>　　如果一切正常的话，应该会生成一个 <code>build</code> 的目录，然后里面有相关文件，也许是 <strong>M$ Visual Studio</strong> 的 <code>vcxproj</code> 文件等，也许是 <code>Makefile</code> ，视平台而定。</p>
+<h4 id="build"><a href="#build" class="headerlink" title="build"></a>build</h4><p>　　<code>Makefile</code> 也生成好之后，我们就开始构造编译了：</p>
+<figure class="highlight plaintext"><figcaption><span>shell</span></figcaption><table><tr><td class="code"><pre><span class="line">$ node-gyp build</span><br></pre></td></tr></table></figure>
+
+<p>　　等到一切编译完成，才算是真正的大功告成了！不信你去看看 <code>build/Release</code> 目录，下面是不是有一个 <code>hello.node</code> 文件了？没错，这个就是 C++ 等下要给 Node.js 捡的肥皂！</p>
+<h3 id="搞基吧！Node-ヽ-✿ﾟ▽ﾟ-ノ-C"><a href="#搞基吧！Node-ヽ-✿ﾟ▽ﾟ-ノ-C" class="headerlink" title="搞基吧！Node ヽ(✿ﾟ▽ﾟ)ノ C++"></a>搞基吧！Node ヽ(✿ﾟ▽ﾟ)ノ C++</h3><p>　　我们在刚才那个目录下新建一个文件 <code>jianfeizao.js</code>：</p>
+<figure class="highlight plaintext"><figcaption><span>javascript</span></figcaption><table><tr><td class="code"><pre><span class="line">var addon = require(&quot;./build/Release/hello&quot;);</span><br><span class="line">console.log(addon.hello());</span><br></pre></td></tr></table></figure>
+
+<p>　　看到没！看到没！出来了出来了！Node.js 和 C++ 搞基的结果！这个 <code>addon.hello()</code> 就是我们之前在 C++ 代码中写的 <code>Handle&lt;Value&gt; Hello(const Arguments&amp; args)</code> 了，我们现在就已经把它返回的值给输出了。</p>
+<h2 id="洗洗睡吧，下节更深入"><a href="#洗洗睡吧，下节更深入" class="headerlink" title="洗洗睡吧，下节更深入"></a>洗洗睡吧，下节更深入</h2><p>　　时间不早了，今天就写到这里了，至此为止大家都能搞出最基础的 <strong>Hello world</strong> 的 C++ 扩展了吧。下一次写的应该会更深入一点，至于下一次是什么时候，我也不知道啦其实。<br>　　（喂喂喂，撸主怎么可以这么不负责！(ｏﾟﾛﾟ)┌┛Σ(ﾉ´<em>ω</em>`)ﾉ</p>
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2014/04/02/nodejs-cpp-addons-1/";</script><script>var DISQUS_IDENTIFIER = "2014/04/02/nodejs-cpp-addons-1/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2021<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a target="_blank" rel="noopener" href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
+
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $(block).find("td.gutter").remove();
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : ("lang-" + $(block).attr("class"))) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
+    });
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
+
+    $("article.full img").each(function() {
+        if($(this).parent().is("article")) {
+            $(this).wrap("<p style='text-align: center;'></p>");
+        } else {
+            $(this).parent().css("text-align", "center");
+        }
+    });
+
+    if($(".article-toc").children().length < 2) {
+        $(".article-toc").css("display", "none");
+    }
+});</script></body></html>

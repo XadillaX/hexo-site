@@ -1,0 +1,156 @@
+<!DOCTYPE html><html class="han-init" lang="zh-Hant"><head><meta name="author" content="死月·吃圡蕾特"><meta name="description" itemprop="description" content="好，今天让我们更深入地搞基吧！
+温故而知新，可以为湿矣　　首先请大家记住这个 V8 的在线手册——http://izs.me/v8-docs/main.html。
+　　还记得上次的 building.gyp 文件吗？
+&amp;#123;  &amp;quot;targets&amp;quot;: [    &amp;#123; "><link rel="alternative" href="/atom.xml" title="艾克斯の编码者" type="application/atom+xml"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>让Node.js和C++一起搞基 —— 2 · 一个伪宅级别的码畜。</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="艾克斯の编码者" title="艾克斯の编码者"></a><h1><a href="/" alt="艾克斯の编码者" title="艾克斯の编码者">艾克斯の编码者</a></h1><p>一个伪宅级别的码畜。</p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/curriculumvitae" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="https://xcoder.in/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/XadillaX" style="position: relative; top: -2px;">&#xe735;</a><a target="_blank" href="https://www.zhihu.com/people/xadillax">&#xe63f;</a><a target="_blank" href="https://weibo.com/xadillax" style="position: relative; top: -2px;">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="full"><h1>让Node.js和C++一起搞基 —— 2</h1><span class="post-meta">写于<time> 2014 年 04 月 03 日 22 时 37 分</time><br>更新于<time> 2021 年 05 月 19 日 15 时 15 分</time></span><div class="article-toc"><strong>大纲</strong><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%A9%E6%95%85%E8%80%8C%E7%9F%A5%E6%96%B0%EF%BC%8C%E5%8F%AF%E4%BB%A5%E4%B8%BA%E6%B9%BF%E7%9F%A3"><span class="toc-number">1.</span> <span class="toc-text">温故而知新，可以为湿矣</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A8%E7%95%AA"><span class="toc-number">2.</span> <span class="toc-text">表番</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0"><span class="toc-number">2.1.</span> <span class="toc-text">函数参数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Arguments"><span class="toc-number">2.1.1.</span> <span class="toc-text">Arguments</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ThrowException"><span class="toc-number">2.1.2.</span> <span class="toc-text">ThrowException</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Undefined"><span class="toc-number">2.1.3.</span> <span class="toc-text">Undefined()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A8%E6%89%8B%E5%90%A7%E9%AA%9A%E5%B9%B4%EF%BC%81"><span class="toc-number">2.1.4.</span> <span class="toc-text">动手吧骚年！</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="toc-number">2.2.</span> <span class="toc-text">回调函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A6%96%E5%85%88%E4%BD%A0%E8%A6%81%E6%9C%89%E4%B8%80%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B3%BB%E5%88%97"><span class="toc-number">2.2.1.</span> <span class="toc-text">首先你要有一个字符串系列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%84%B6%E5%90%8E%E4%BD%A0%E8%A6%81%E6%9C%89%E4%B8%AA%E5%8F%82%E6%95%B0%E8%A1%A8%E7%B3%BB%E5%88%97"><span class="toc-number">2.2.2.</span> <span class="toc-text">然后你要有个参数表系列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0%E7%B3%BB%E5%88%97"><span class="toc-number">2.2.3.</span> <span class="toc-text">最后调用函数系列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%88%E7%AB%A0%E4%B9%8B%E7%BB%93%E6%9D%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E5%88%97"><span class="toc-number">2.2.4.</span> <span class="toc-text">终章之结束文件系列</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%95%AA%E5%A4%96"><span class="toc-number">3.</span> <span class="toc-text">番外</span></a></li></ol></div><p>　　好，今天让我们更深入地搞基吧！</p>
+<h2 id="温故而知新，可以为湿矣"><a href="#温故而知新，可以为湿矣" class="headerlink" title="温故而知新，可以为湿矣"></a>温故而知新，可以为湿矣</h2><p>　　首先请大家记住这个 V8 的在线手册——<a target="_blank" rel="noopener" href="http://izs.me/v8-docs/main.html">http://izs.me/v8-docs/main.html</a>。</p>
+<p>　　还记得上次的 <code>building.gyp</code> 文件吗？</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;targets&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">&quot;target_name&quot;</span>: <span class="string">&quot;addon&quot;</span>,</span><br><span class="line">      <span class="attr">&quot;sources&quot;</span>: [ <span class="string">&quot;addon.cc&quot;</span> ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　就像这样，举一反三，如果多几个 <code>*.cc</code> 文件的话就是这样的：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;sources&quot;</span>: [ <span class="string">&quot;addon.cc&quot;</span>, <span class="string">&quot;myexample.cc&quot;</span> ]</span><br></pre></td></tr></table></figure>
+
+<p>　　上次我们把俩步骤分开了，实际上配置和编译可以放在一起的：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ node-gyp configure build</span><br></pre></td></tr></table></figure>
+
+<p>　　复习完了吗？没？！</p>
+<p><img src="mama.jpg" alt="啪"></p>
+<p>　　好的，那我们继续吧。</p>
+<h2 id="表番"><a href="#表番" class="headerlink" title="表番"></a>表番</h2><h3 id="函数参数"><a href="#函数参数" class="headerlink" title="函数参数"></a>函数参数</h3><p>　　现在我们终于要讲参数了呢。</p>
+<p>　　让我们设想有这样一个函数 <code>add(a, b)</code> 代表把 <code>a</code> 和 <code>b</code> 相加返回结果，所以先把函数外框写好：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;node.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> v8;</span><br><span class="line"></span><br><span class="line"><span class="function">Handle&lt;Value&gt; <span class="title">Add</span><span class="params">(<span class="keyword">const</span> Arguments&amp; args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    HandleScope scope;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//... 又来！</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Arguments"><a href="#Arguments" class="headerlink" title="Arguments"></a>Arguments</h4><p>　　这个就是函数的参数了。我们不妨先看看 v8 的<a target="_blank" rel="noopener" href="http://izs.me/v8-docs/classv8_1_1Arguments.html">官方手册参考</a>。</p>
+<ul>
+<li><code>int Length() const</code></li>
+<li><code>Local&lt;Value&gt; operator[](int i) const</code></li>
+</ul>
+<p>　　其它的我们咱不关心，这两个可重要了！一个代表传入函数的参数个数，另一个中括号就是通过下标索引来访问第 <code>n</code> 个参数的。</p>
+<p>　　所以如上的需求，我们大致就可以理解为 <code>args.Length()</code> 为 <code>2</code>，<code>args[0]</code> 代表 <code>a</code> 以及 <code>args[1]</code> 代表 <code>b</code> 了。并且我们要判断这两个数的类型必须得是 <code>Number</code>。</p>
+<p>　　注意到没，中括号的索引操作符返回结果是一个 <code>Local&lt;Value&gt;</code> 也就是 <code>Node.js</code> 的所有类型基类。所以传进来的参数类型不定的，我们必须得自己判断是什么参数。这就关系到了这个 <code>Value</code> 类型的一些<a target="_blank" rel="noopener" href="http://izs.me/v8-docs/classv8_1_1Value.html">函数</a>了。</p>
+<ul>
+<li><code>IsArray()</code></li>
+<li><code>IsBoolean()</code></li>
+<li><code>IsDate()</code></li>
+<li><code>IsFunction()</code></li>
+<li><code>IsInt32()</code></li>
+<li><code>IsNativeError()</code></li>
+<li><code>IsNull()</code></li>
+<li><code>IsNumber()</code></li>
+<li><code>IsRegExp()</code></li>
+<li><code>IsString()</code></li>
+<li>…</li>
+</ul>
+<p>　　我就不一一列举了，剩下的自己看文档。｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡</p>
+<h4 id="ThrowException"><a href="#ThrowException" class="headerlink" title="ThrowException"></a>ThrowException</h4><p>　　这个是我们等下要用到的一个函数。具体在 <a target="_blank" rel="noopener" href="http://izs.me/v8-docs/namespacev8.html#a2469af0ac719d39f77f20cf68dd9200e">v8 文档</a>中可以找到。</p>
+<p>　　顾名思义，就是抛出错误啦。执行这个语句之后，相当于在 <code>Node.js</code> 本地文件中执行了一条 <code>throw()</code> 语句一样。比如说：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ThrowException</span>(Exception::<span class="built_in">TypeError</span>(String::<span class="built_in">New</span>(<span class="string">&quot;Wrong number of arguments&quot;</span>)));</span><br></pre></td></tr></table></figure>
+
+<p>　　就相当于执行了一条 <code>Node.js</code> 的：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">&quot;Wrong number of arguments&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="Undefined"><a href="#Undefined" class="headerlink" title="Undefined()"></a>Undefined()</h4><p>　　这个函数呢也在<a target="_blank" rel="noopener" href="http://izs.me/v8-docs/namespacev8.html#ad39cfade81e77137fc11ff3a24284340">文档</a>里面。</p>
+<p>　　具体就是一个空值，因为有些函数并不需要返回什么具体的值，或者说没有返回值，这个时候就需要用 <code>Undefined()</code> 来代替了。</p>
+<h4 id="动手吧骚年！"><a href="#动手吧骚年！" class="headerlink" title="动手吧骚年！"></a>动手吧骚年！</h4><p>　　在理解了以上的几个要点之后，我相信你们很快就能写出 <code>a + b</code> 的逻辑了，我就把 <code>Node.js</code> 官方手册的代码抄过来给你们过一遍就算完事了：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;node.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> v8;</span><br><span class="line"></span><br><span class="line"><span class="function">Handle&lt;Value&gt; <span class="title">Add</span><span class="params">(<span class="keyword">const</span> Arguments&amp; args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    HandleScope scope;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 代表了可以传入 2 个以上的参数，但实际上我们只用前两个</span></span><br><span class="line">    <span class="keyword">if</span>(args.<span class="built_in">Length</span>() &lt; <span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 抛出错误</span></span><br><span class="line">        <span class="built_in">ThrowException</span>(Exception::<span class="built_in">TypeError</span>(String::<span class="built_in">New</span>(<span class="string">&quot;Wrong number of arguments&quot;</span>)));</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 返回空值</span></span><br><span class="line">        <span class="keyword">return</span> scope.<span class="built_in">Close</span>(<span class="built_in">Undefined</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 若前两个参数其中一个不是数字的话</span></span><br><span class="line">    <span class="keyword">if</span>(!args[<span class="number">0</span>]-&gt;<span class="built_in">IsNumber</span>() || !args[<span class="number">1</span>]-&gt;<span class="built_in">IsNumber</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 抛出错误并返回空值</span></span><br><span class="line">        <span class="built_in">ThrowException</span>(Exception::<span class="built_in">TypeError</span>(String::<span class="built_in">New</span>(<span class="string">&quot;Wrong arguments&quot;</span>)));</span><br><span class="line">        <span class="keyword">return</span> scope.<span class="built_in">Close</span>(<span class="built_in">Undefined</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 具体参考 v8 文档</span></span><br><span class="line">    <span class="comment">//     http://izs.me/v8-docs/classv8_1_1Value.html#a6eac2b07dced58f1761bbfd53bf0e366)</span></span><br><span class="line">    <span class="comment">// 的 `NumberValue` 函数</span></span><br><span class="line">    Local&lt;Number&gt; num = Number::<span class="built_in">New</span>(args[<span class="number">0</span>]-&gt;<span class="built_in">NumberValue</span>() + args[<span class="number">1</span>]-&gt;<span class="built_in">NumberValue</span>());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> scope.<span class="built_in">Close</span>(num);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　函数大功告成！</p>
+<p>　　最后把尾部的导出函数给写好就 OK 了。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init</span><span class="params">(Handle&lt;Object&gt; exports)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    exports-&gt;<span class="built_in">Set</span>(String::<span class="built_in">NewSymbol</span>(<span class="string">&quot;add&quot;</span>),</span><br><span class="line">        FunctionTemplate::<span class="built_in">New</span>(Add)-&gt;<span class="built_in">GetFunction</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">NODE_MODULE</span>(addon, Init)</span><br></pre></td></tr></table></figure>
+
+<p>　　等你编译好之后，我们就能这样用了：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> addon = <span class="built_in">require</span>(<span class="string">&#x27;./build/Release/addon&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(addon.add(<span class="number">1</span>, <span class="number">1</span>) + <span class="string">&quot;b&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>　　你会看到一个 <code>2b</code> ！✧<em>｡٩(ˊᗜˋ</em>)و✧*｡</p>
+<h3 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h3><p>　　上一章我们只讲了个 <code>Hello world</code>，这一章阿婆主就良心发现一下，再来个回调函数的写法。</p>
+<p>　　惯例我们先写好框架：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;node.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> v8;</span><br><span class="line"></span><br><span class="line"><span class="function">Handle&lt;Value&gt; <span class="title">RunCallback</span><span class="params">(<span class="keyword">const</span> Arguments&amp; args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  HandleScope scope;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ... 噼里啪啦噼里啪啦</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> scope.<span class="built_in">Close</span>(<span class="built_in">Undefined</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　然后我们决定它的用法是这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">func(<span class="function"><span class="keyword">function</span>(<span class="params">msg</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(msg);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>　　即它会给回调函数传入一个参数，我们设想它是一个字符串，然后我们可以 <code>console.log()</code> 出来看。</p>
+<h4 id="首先你要有一个字符串系列"><a href="#首先你要有一个字符串系列" class="headerlink" title="首先你要有一个字符串系列"></a>首先你要有一个字符串系列</h4><p>　　废话不多说，先给它一个字符串喂饱了再说吧。<em>(√ ζ ε:)</em></p>
+<p>　　不过我们得让这个字符串是通用类型的，因为 <code>Node.js</code> 代码是弱类型的。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">Local&lt;Value&gt;::<span class="built_in">New</span>(String::<span class="built_in">New</span>(<span class="string">&quot;hello world&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>　　什么？你问我什么是 <code>Local&lt;Value&gt;</code>？</p>
+<p>　　那我稍稍讲一下吧，参考自<a target="_blank" rel="noopener" href="http://cnodejs.org/topic/4f16442ccae1f4aa270010c5">这里</a>和<a target="_blank" rel="noopener" href="http://izs.me/v8-docs/classv8_1_1Local.html">V8参考文档</a>。</p>
+<p>　　如文档所示，<code>Local&lt;T&gt;</code> 实际上继承自 <code>Handle&lt;T&gt;</code>，我记得<a href="/2014/04/02/nodejs-cpp-addons-1/#Handle%3CValue%3E">上一章</a>已经讲过 <code>Handle&lt;T&gt;</code> 这个东西了。</p>
+<p>　　然后下面就是讲 Local 了。</p>
+<blockquote>
+<p>Handle 有两种类型， Local Handle 和 Persistent Handle ，类型分别是 <code>Local&lt;T&gt; : Handle&lt;T&gt;</code> 和 <code>Persistent&lt;T&gt; : Handle&lt;T&gt;</code> ，前者和 <code>Handle&lt;T&gt;</code> 没有区别生存周期都在 scope 内。而后者的生命周期脱离 scope ，你需要手动调用 <code>Persistent::Dispose</code> 结束其生命周期。也就是说 Local Handle 相当于在 C++`在栈上分配对象而 Persistent Handle 相当于 C++ 在堆上分配对象。</p>
+</blockquote>
+<h4 id="然后你要有个参数表系列"><a href="#然后你要有个参数表系列" class="headerlink" title="然后你要有个参数表系列"></a>然后你要有个参数表系列</h4><p>　　终端命令行调用 C/C++ 之后怎么取命令行参数？</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　对了，这里的 <code>argc</code> 就是命令行参数个数，<code>argv[]</code> 就是各个参数了。那么调用 <code>Node.js</code> 的回调函数，<code>v8</code> 也采用了类似的<a target="_blank" rel="noopener" href="http://izs.me/v8-docs/classv8_1_1Function.html#ac61877494d2d8bb81fcef96003ec4059">方法</a>：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">V8EXPORT Local&lt;Value&gt; v8::Function::<span class="built_in">Call</span>(Handle&lt;Object&gt;recv,</span><br><span class="line">    <span class="keyword">int</span> argc,</span><br><span class="line">    Handle&lt;Value&gt; argv[]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><del>QAQ 卡在了 <code>Handle&lt;Object&gt; recv</code> 了！！！明天继续写。</del></p>
+</blockquote>
+<p>　　好吧，新的一天开始了我感觉我充满了力量。(∩^o^)⊃━☆ﾟ.*･｡</p>
+<p>　　经过我多方面求证（<a target="_blank" rel="noopener" href="http://segmentfault.com/q/1010000000456217">SegmentFault</a>和<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/22842908/what-does-the-first-argument-of-functioncall-in-v8-engine-mean/22848601?noredirect=1#22848601">StackOverflow</a>以及一个扣扣群），终于解决了上面这个函数仨参数的意思。</p>
+<p>　　后面两个参数就不多说了，一个是参数个数，另一个就是一个参数的数组了。至于第一个参数 <code>Handle&lt;Object&gt; recv</code>，StackOverflow 仁兄的解释是这样的：</p>
+<blockquote>
+<p>It is the same as apply in JS. In JS, you do</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> context = ...;</span><br><span class="line">cb.apply(context, [ ...args...]);</span><br></pre></td></tr></table></figure>
+<p>The object passed as the first argument becomes this within the function scope. More documentation on <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply">MDN</a>. If you don’t know JS well, you can read more about JS’s this here: <a target="_blank" rel="noopener" href="http://unschooled.org/2012/03/understanding-javascript-this/">http://unschooled.org/2012/03/understanding-javascript-this/</a></p>
+<p style="text-align: right;">—— 摘自 [StackOverflow](http://stackoverflow.com/questions/22842908/what-does-the-first-argument-of-functioncall-in-v8-engine-mean/22848601?noredirect=1#22848601)</p>
+</blockquote>
+<p>　　总之其作用就是指定了被调用函数的 <code>this</code> 指针。这个 <code>Call</code> 的用法就跟 JavaScript 中的 <code>bind()</code>、<code>call()</code>、<code>apply()</code> 类似。</p>
+<p>　　所以我们要做的事情就是先把参数表建好，然后传入这个 <code>Call</code> 函数供其执行。</p>
+<p>　　第一步，显示转换函数，因为本来是 <code>Object</code> 类型：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">Local&lt;Function&gt; cb = Local&lt;Function&gt;::<span class="built_in">Cast</span>(args[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>　　第二步，建立参数表（数组）：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">Local&lt;Value&gt; argv[argc] = &#123; Local&lt;Value&gt;::<span class="built_in">New</span>(String::<span class="built_in">New</span>(<span class="string">&quot;hello world&quot;</span>)) &#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="最后调用函数系列"><a href="#最后调用函数系列" class="headerlink" title="最后调用函数系列"></a>最后调用函数系列</h4><p>　　调用 <code>cb</code> ，把参数传进去：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">cb-&gt;<span class="built_in">Call</span>(Context::<span class="built_in">GetCurrent</span>()-&gt;<span class="built_in">Global</span>(), <span class="number">1</span>, argv);</span><br></pre></td></tr></table></figure>
+
+<p>　　这里第一个参数 <code>Context::GetCurrent()-&gt;Global()</code> 所代表的意思就是获取全局上下文作为函数的 <code>this</code>；第二个参数就是参数表中的个数（毕竟虽然 <code>Node.js</code> 的数组是有长度属性的，但是 <code>C++</code> 里面数组的长度实际上系统是不知道的，还得你自己传进一个数来说明数组长度）；最后一个参数就是刚才我们建立好的参数表了。</p>
+<h4 id="终章之结束文件系列"><a href="#终章之结束文件系列" class="headerlink" title="终章之结束文件系列"></a>终章之结束文件系列</h4><p>　　相信这一步大家已经轻车熟路了吧，就是把函数写好，然后放进导出函数里面，最后申明一下。</p>
+<p>　　我就直接放出代码吧，或者直接跑去 <code>Node.js</code> 的<a target="_blank" rel="noopener" href="http://nodejs.org/api/addons.html#addons_callbacks">文档</a>看也行。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;node.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> v8;</span><br><span class="line"></span><br><span class="line"><span class="function">Handle&lt;Value&gt; <span class="title">RunCallback</span><span class="params">(<span class="keyword">const</span> Arguments&amp; args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    HandleScope scope;</span><br><span class="line">    Local&lt;Function&gt; cb = Local&lt;Function&gt;::<span class="built_in">Cast</span>(args[<span class="number">0</span>]);</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">unsigned</span> argc = <span class="number">1</span>;</span><br><span class="line">    Local&lt;Value&gt; argv[argc] = &#123; Local&lt;Value&gt;::<span class="built_in">New</span>(String::<span class="built_in">New</span>(<span class="string">&quot;hello world&quot;</span>)) &#125;;</span><br><span class="line">    cb-&gt;<span class="built_in">Call</span>(Context::<span class="built_in">GetCurrent</span>()-&gt;<span class="built_in">Global</span>(), argc, argv);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> scope.<span class="built_in">Close</span>(<span class="built_in">Undefined</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init</span><span class="params">(Handle&lt;Object&gt; exports, Handle&lt;Object&gt; <span class="keyword">module</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">module</span>-&gt;<span class="built_in">Set</span>(String::<span class="built_in">NewSymbol</span>(<span class="string">&quot;exports&quot;</span>),</span><br><span class="line">        FunctionTemplate::<span class="built_in">New</span>(RunCallback)-&gt;<span class="built_in">GetFunction</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">NODE_MODULE</span>(addon, Init)</span><br></pre></td></tr></table></figure>
+
+<p>　　Well done! 最后剩下的步骤就自己去吧。至于 <code>Js</code> 里面这么调用这个函数，我在<a href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0">之前</a>已经提到过了。</p>
+<h2 id="番外"><a href="#番外" class="headerlink" title="番外"></a>番外</h2><p>　　嘛嘛，我感觉我的学习笔记写得越来越奔放了求破～</p>
+<p>　　今天就先写到这里吧，写学习笔记的过程中我又涨姿势了，比如说那个 <code>Call</code> 函数的参数意义。</p>
+<p>　　如果你们觉得本系列学习笔记对你们还有帮助的话，就来和我一起搞基吧么么哒～Σ&gt;―(〃°ω°〃)♡→</p>
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2014/04/03/nodejs-cpp-addons-2/";</script><script>var DISQUS_IDENTIFIER = "2014/04/03/nodejs-cpp-addons-2/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2021<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a target="_blank" rel="noopener" href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
+
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $(block).find("td.gutter").remove();
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : ("lang-" + $(block).attr("class"))) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
+    });
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
+
+    $("article.full img").each(function() {
+        if($(this).parent().is("article")) {
+            $(this).wrap("<p style='text-align: center;'></p>");
+        } else {
+            $(this).parent().css("text-align", "center");
+        }
+    });
+
+    if($(".article-toc").children().length < 2) {
+        $(".article-toc").css("display", "none");
+    }
+});</script></body></html>

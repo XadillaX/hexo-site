@@ -1,0 +1,54 @@
+<!DOCTYPE html><html class="han-init" lang="zh-Hant"><head><meta name="author" content="死月·吃圡蕾特"><meta name="description" itemprop="description" content="最近除了忙各种各样的期末考试、去西班牙的签证，就是公司的那个韩国项目了。
+　　我的任务基本完成——将原本单屏的游戏改成三屏，完善整个 GUI系统 以及“劫持”了原游戏中的一些逻辑，比如滚轴的排列可以任意控制等。由于原代码中的GUI系统没有文本编辑框，我还得自己写一个。然而我对于IME的操作、GDI和"><link rel="alternative" href="/atom.xml" title="艾克斯の编码者" type="application/atom+xml"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>关于游戏资源包的更新、删除 · 一个伪宅级别的码畜。</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="艾克斯の编码者" title="艾克斯の编码者"></a><h1><a href="/" alt="艾克斯の编码者" title="艾克斯の编码者">艾克斯の编码者</a></h1><p>一个伪宅级别的码畜。</p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/curriculumvitae" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="https://xcoder.in/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/XadillaX" style="position: relative; top: -2px;">&#xe735;</a><a target="_blank" href="https://www.zhihu.com/people/xadillax">&#xe63f;</a><a target="_blank" href="https://weibo.com/xadillax" style="position: relative; top: -2px;">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="full"><h1>关于游戏资源包的更新、删除</h1><span class="post-meta">写于<time> 2011 年 06 月 16 日 01 时 20 分</time><br>更新于<time> 2021 年 05 月 19 日 15 时 15 分</time></span><div class="article-toc"><strong>大纲</strong></div><p>　　最近除了忙各种各样的期末考试、去西班牙的签证，就是公司的那个韩国项目了。</p>
+<p>　　我的任务基本完成——将原本单屏的游戏改成三屏，完善整个 GUI系统 以及“劫持”了原游戏中的一些逻辑，比如滚轴的排列可以任意控制等。由于原代码中的GUI系统没有文本编辑框，我还得自己写一个。然而我对于IME的操作、GDI和DX的结合不是非常熟悉，所以还是参照了一下 <strong>ShowLong</strong> 所修改的微妙的平衡给HGE写的中文解决方案。</p>
+<p>　　完成了以上的任务之后，由于我的考试以及签证问题以及我本身的任务差不多了，就把这个摊子就扔回公司去了。在交接的时候，老大给我派了一个任务，让我来写这个游戏资源包的代码。</p>
+<p>　　原版游戏代码中有资源包代码，但是写得非常乱，于是需要我来写一个新的文件结构、新的加密算法，然后仍然是“劫持”掉原代码中的资源包加载函数。</p>
+<p>　　在此之前，我拜读了云风的《<a target="_blank" rel="noopener" href="http://blog.codingnow.com/2010/08/resource_pack.html">游戏资源的压缩、打包与补丁更新</a>》，有了点灵感。</p>
+<p>　　<strong>最主要的就是其删除这一块。为了让用户在更新的时候减少大量的文件IO操作，做法就是减少文件内容的大幅度移动。</strong></p>
+<p>　　而我便是参考了云风大大的这个思想来写我的文件包。首先因为在游戏中需要实时读取，所以文件没有压缩，只是做了两层加密处理，密钥也是通过哈希得到的，所以每个文件的密钥是不同的。</p>
+<p>　　然后在文件索引的时候，我这里是分了两种索引：<strong>文件索引</strong>以及<strong>空块索引</strong>。</p>
+<p>　　所谓空块索引就是：在文件包中删除某一个文件的时候，不把后面的文件内容全部往前挪以覆盖这一块的内容、导致整个文件包在删除文件之后的信息全部往前挪而产生的大量IO操作，而是对这一块内容不作任何处理、把这一块内容的索引从文件索引中移除并附加到空块索引中以供以后新文件加入时所用，<strong>这样就只产生了一点对于索引的文件IO更新</strong>，不过索引的更新充其量也就那么点，相对于文件的操作来说只是九牛一毛，当然前提是这个索引是在整个文件包的最后。而在有新文件插入的时候，先在空块索引中找有比新文件大的空块，如果有的话就直接把这个文件插入到那个空块中，然后更新一下文件索引以及空块索引即可，这里又少掉了一些IO操作。</p>
+<p>　　正如云风所说：</p>
+<blockquote>
+<p>如果新增加的文件较之小，就重复利用这个空间。如果利用不上，就浪费在那里。这有点像内存管理算法，<strong>时间久了，资源包内会有一些空洞，但也是可以接受的。</strong></p>
+</blockquote>
+<p>　　接着就是资源包在游戏中的使用了。在原先的游戏代码中是有判断重复加载的代码，也就是说把已加载的资源存到node里，在之后再次需要加载这个资源（通过文件名判断）就直接从node中去，这样就少了很多内存开销，尤其是当我把单屏改为三屏之后，这样的优化效果更为明显（否则相同的资源要加载三次，等于消耗了三倍的内存）。不得赞一下这05年开发的代码，虽然是棒子。不过原游戏代码中的高耦合度让我蛋疼。</p>
+<p>　　想到以后这个资源包类要用到以后的一些项目，于是我自己也写了一个Cache机制。就是在一个包中，当加载某个资源的时候，顺便把这个资源的Buffer加到一个Cache中，当下次再需要用到这个资源的时候就直接从Cache中取就好了，实际上这就还是之前的代码实现的功能，只不过我自己在这基础上精简了一下。最后写一个ClearCache的函数能清除Cache，我这个资源包类就算完成了。</p>
+<p>　　还有在获取资源的时候，为了防止内存突增，我的Buffer是一段一段获取的，类似于Socket中的获取消息一直到消息结束为止。当然，每一段Buffer的大小是可以自己传进去的。我这种以时间换空间的做法还没自己实际测试过效果如何，只不过是自己想想可能会比较优罢了，因为最近实在是太慢，这篇日志还是考完了概率然后摸着黑地写的。</p>
+<p>　　我对文件系统本身不是非常了解，操作系统还没考呢。所以我现在仅仅做到的是云风九年前的一种设计，然后加上了原先代码有的Cache机制而已。不过写下这篇日志来记录我自己成长的足迹罢了。</p>
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2011/06/16/resource-pack/";</script><script>var DISQUS_IDENTIFIER = "2011/06/16/resource-pack/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2021<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a target="_blank" rel="noopener" href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
+
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $(block).find("td.gutter").remove();
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : ("lang-" + $(block).attr("class"))) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
+    });
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
+
+    $("article.full img").each(function() {
+        if($(this).parent().is("article")) {
+            $(this).wrap("<p style='text-align: center;'></p>");
+        } else {
+            $(this).parent().css("text-align", "center");
+        }
+    });
+
+    if($(".article-toc").children().length < 2) {
+        $(".article-toc").css("display", "none");
+    }
+});</script></body></html>

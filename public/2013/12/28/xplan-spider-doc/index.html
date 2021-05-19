@@ -1,0 +1,121 @@
+<!DOCTYPE html><html class="han-init" lang="zh-Hant"><head><meta name="author" content="死月·吃圡蕾特"><meta name="description" itemprop="description" content="前言XPlan 是一个“基于校园强关系的社交应用”的开发代号。其中有一个功能是从学校网站上通过网络爬虫（Web Crawler）形式将学校新闻抓取到XPlan自身的数据库当中。
+而这里出现的一个问题就是学校网站上面的文章是通过类似于 KindEditor、UEditor这类在线富文本编辑器生成的代码"><link rel="alternative" href="/atom.xml" title="艾克斯の编码者" type="application/atom+xml"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>浙江大学XPlan项目新闻爬虫手机屏幕适配文档 · 一个伪宅级别的码畜。</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="艾克斯の编码者" title="艾克斯の编码者"></a><h1><a href="/" alt="艾克斯の编码者" title="艾克斯の编码者">艾克斯の编码者</a></h1><p>一个伪宅级别的码畜。</p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/curriculumvitae" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="https://xcoder.in/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/XadillaX" style="position: relative; top: -2px;">&#xe735;</a><a target="_blank" href="https://www.zhihu.com/people/xadillax">&#xe63f;</a><a target="_blank" href="https://weibo.com/xadillax" style="position: relative; top: -2px;">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="full"><h1>浙江大学XPlan项目新闻爬虫手机屏幕适配文档</h1><span class="post-meta">写于<time> 2013 年 12 月 28 日 00 时 00 分</time><br>更新于<time> 2021 年 05 月 19 日 15 时 15 分</time></span><div class="article-toc"><strong>大纲</strong><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">预处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Viewport"><span class="toc-number">2.1.</span> <span class="toc-text">Viewport</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#width"><span class="toc-number">2.1.1.</span> <span class="toc-text">width</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#height"><span class="toc-number">2.1.2.</span> <span class="toc-text">height</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#initial-scale"><span class="toc-number">2.1.3.</span> <span class="toc-text">initial-scale</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#maximum-scale"><span class="toc-number">2.1.4.</span> <span class="toc-text">maximum-scale</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#user-scaleble"><span class="toc-number">2.1.5.</span> <span class="toc-text">user-scaleble</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cheerio%E6%A8%A1%E5%9D%97"><span class="toc-number">3.</span> <span class="toc-text">Cheerio模块*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bootstrap"><span class="toc-number">4.</span> <span class="toc-text">Bootstrap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%86%E8%8A%82%E5%A4%84%E7%90%86"><span class="toc-number">5.</span> <span class="toc-text">细节处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#lt-img-gt"><span class="toc-number">5.1.</span> <span class="toc-text">&lt;img &#x2F;&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lt-table-gt-lt-table-gt"><span class="toc-number">5.2.</span> <span class="toc-text">&lt;table&gt;&lt;&#x2F;table&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lt-a-gt"><span class="toc-number">5.3.</span> <span class="toc-text">&lt;a &#x2F;&gt;</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F%E8%AF%AD"><span class="toc-number">6.</span> <span class="toc-text">结束语</span></a></li></ol></div><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong>XPlan</strong> 是一个“基于校园强关系的社交应用”的开发代号。其中有一个功能是从学校网站上通过网络爬虫（Web Crawler）形式将学校新闻抓取到XPlan自身的数据库当中。</p>
+<p>而这里出现的一个问题就是学校网站上面的文章是通过类似于 <a target="_blank" rel="noopener" href="http://kindeditor.net/"><code>KindEditor</code></a>、<a target="_blank" rel="noopener" href="http://ueditor.baidu.com/website/"><code>UEditor</code></a>这类<strong>在线富文本编辑器</strong>生成的代码。</p>
+<p>这类代码有几个共性：</p>
+<ol>
+<li><p>代码有大量冗余、多重无用嵌套。</p>
+</li>
+<li><p>非常低的代码可读性。</p>
+</li>
+<li><p>在PC浏览器中表现力不错，往往能以低效的代码实现预期排版。</p>
+<p>所以这些富文本编辑器可以在PC各大内核浏览器中表现良好，但是不便人工修改代码。</p>
+</li>
+</ol>
+<p>而 <strong>XPlan</strong> 确是一个由智能手机主导的应用，新闻将会通过一个 <strong>WebView</strong> 体现出来。所以就需要一定的方法将这些脏乱的代码适配成手机屏幕下表现力良好的代码。</p>
+<h2 id="预处理"><a href="#预处理" class="headerlink" title="预处理"></a>预处理</h2><p>在这里，我们将新闻的代码锁定在新闻内容排版，而排除了其它类似于新闻标题、新闻作者等其它信息。</p>
+<p>以我们浙江大学软件学院为例，我们爬取的新闻内容代码将如下：</p>
+<figure class="highlight plaintext"><figcaption><span>html</span></figcaption><table><tr><td class="code"><pre><span class="line">&lt;div class=&quot;vid_wz&quot;&gt;</span><br><span class="line">    ...</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>所有内容将被包括在这个类型为 <code>vid_wz</code> 的 <code>div</code> 当中。</p>
+<p>这时，我们将其包括在一个自己实现定义好的模板当中。该模板与新闻内容将会形成一个完整的网页，包括完整的 <code>html</code>、<code>head</code>、<code>body</code> 等标签。</p>
+<figure class="highlight plaintext"><figcaption><span>html</span></figcaption><table><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;新闻内页&lt;/title&gt;</span><br><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;</span><br><span class="line">    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">    </span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;article id=&quot;_xplan-wrapper&quot;&gt;</span><br><span class="line">        &lt;div class=&quot;vid_wz&quot;&gt;</span><br><span class="line">            ...</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/article&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意的一点的就是其中的一个 <code>meta</code> 标签：</p>
+<figure class="highlight plaintext"><figcaption><span>html</span></figcaption><table><tr><td class="code"><pre><span class="line">&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;</span><br></pre></td></tr></table></figure>
+
+<p>它的意思是定义 <code>viewport</code> 的一些属性，实现了初步的手机网页适配。</p>
+<h3 id="Viewport"><a href="#Viewport" class="headerlink" title="Viewport"></a>Viewport</h3><p>手机浏览器是把页面放在一个虚拟窗口（即 <code>viewport</code>）中，用户可以通过平移和缩放来看网页的不同部分。</p>
+<p>通过 <code>viewport</code> 我们能对页面的一些缩放进行手机适配。</p>
+<p>我们所需要做的仅是在 <code>head</code> 中插入一个 <code>meta</code> 标签，命名为 <code>viewport</code>，然后定义好其 <code>content</code>。</p>
+<p><code>content</code> 的语法如下：</p>
+<h4 id="width"><a href="#width" class="headerlink" title="width"></a>width</h4><p>控制 <code>viewport</code> 的宽度，可以指定一个值或者特殊的值，如 <code>device-width</code> 为设备宽度。</p>
+<h4 id="height"><a href="#height" class="headerlink" title="height"></a>height</h4><p>与 <code>width</code> 相对应，指定高度</p>
+<h4 id="initial-scale"><a href="#initial-scale" class="headerlink" title="initial-scale"></a>initial-scale</h4><p>初始缩放，即页面初始缩放程度。这是一个浮点值，是页面大小的一个乘数。例如，如果你设置初始缩放为 <code>1.0</code>，那么页面在展现的时候就会以分辨率的1:1来展现。如果你设置为<code>2.0</code>，那么这个页面就会放大为2倍。</p>
+<h4 id="maximum-scale"><a href="#maximum-scale" class="headerlink" title="maximum-scale"></a>maximum-scale</h4><p>最大放大倍数。</p>
+<h4 id="user-scaleble"><a href="#user-scaleble" class="headerlink" title="user-scaleble"></a>user-scaleble</h4><p>用户调整缩放，即用户是否能改变页面缩放程度。如果为 <code>yes</code> 即为可以， <code>no</code> 为不可以。</p>
+<h2 id="Cheerio模块"><a href="#Cheerio模块" class="headerlink" title="Cheerio模块*"></a>Cheerio模块*</h2><p>由于 <strong>XPlan</strong> 的后端是基于 <code>node.js</code> 构架的，所以 <strong>cheerio</strong> 模块是一个 <code>node.js</code> 专有的模块。</p>
+<p>它的作用是将一段HTML代码转换为一棵DOM元素树。</p>
+<p>在其官网上是这么诠释的：为服务端定制的快速、灵活、轻量级实现的 jQuery 内核。通常熟悉 jQuery 使用的开发者应该会对其使用方法比较熟悉。</p>
+<p>所以在我们做接下去适配修改的之前，我们需要将我们刚才生成的完整HTML代码 转换为一棵我们可以操作的DOM元素树。</p>
+<figure class="highlight plaintext"><figcaption><span>javascript</span></figcaption><table><tr><td class="code"><pre><span class="line">var cheerio = require(&quot;cheerio&quot;);</span><br><span class="line">$ = cheerio.load(...);</span><br></pre></td></tr></table></figure>
+
+<p>这时我们便能以熟悉的jQuery模式对其进行操作了，如：</p>
+<figure class="highlight plaintext"><figcaption><span>javascript</span></figcaption><table><tr><td class="code"><pre><span class="line">$(&quot;p&quot;).html(&quot;hello foo!&quot;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Bootstrap"><a href="#Bootstrap" class="headerlink" title="Bootstrap"></a>Bootstrap</h2><p>Bootstrap是Twitter推出的一个开源的用于前端开发的工具包。它有一个非常好的响应式的页面风格，使其在个尺寸屏幕上表现良好。</p>
+<p>为了能更好适应屏幕，我们决定采用其自带的栅格系统，于是刚才的页面模板就有了新的变化：</p>
+<figure class="highlight plaintext"><figcaption><span>html</span></figcaption><table><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;新闻内页&lt;/title&gt;</span><br><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;</span><br><span class="line">    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">    </span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;article class=&quot;container&quot; id=&quot;_xplan-wrapper&quot;&gt;</span><br><span class="line">        &lt;div class=&quot;row&quot;&gt;</span><br><span class="line">            &lt;div class=&quot;col-md-12&quot;&gt;</span><br><span class="line">                &lt;div class=&quot;vid_wz&quot;&gt;...&lt;/div&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/article&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>首先最外框的 <code>container</code>，用其包裹的元素将实现居中对齐。在不同的媒体查询阈值范围内都为 <code>container</code> 设置了 <code>width</code>，用以匹配栅格系统。</p>
+<p><code>row</code> 是一行栅格系统的外包元素。一行可以有12个栅格。</p>
+<p>以 <code>.col-md-</code> 开头的栅格的最大 <code>container</code> 宽度为970，最大列宽为78，并能自适应屏幕。</p>
+<h2 id="细节处理"><a href="#细节处理" class="headerlink" title="细节处理"></a>细节处理</h2><p>在完成了以上操作以后，我们将对各元素进行微调处理。</p>
+<p>好在在手机浏览器或者 <code>WebView</code> 中，对各种字体的设置不是非常敏感，所以我们仍然可以不处理一些关于字体变更的设置，以减轻开发量。</p>
+<p>这里距几个微调的例子。</p>
+<h3 id="lt-img-gt"><a href="#lt-img-gt" class="headerlink" title="&lt;img /&gt;"></a>&lt;img /&gt;</h3><p>在新闻当中，图片充当的基本上是新闻照片的角色，在手机当中以单行出现为佳。</p>
+<p>而 Bootstrap 当中本身就有元素类型来让图片元素响应屏幕宽度，并可以加上圆角边框。</p>
+<p>所以我们需要做的就是为所有图片加上响应的类型：</p>
+<figure class="highlight plaintext"><figcaption><span>javascript</span></figcaption><table><tr><td class="code"><pre><span class="line">$(&quot;img&quot;).addClass(&quot;img-thumbnail&quot;);</span><br><span class="line">$(&quot;img&quot;).addClass(&quot;img-responsive&quot;);</span><br><span class="line">$(&quot;img&quot;).removeAttr(&quot;style&quot;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意：</strong> 最后的一个移除 <code>img</code> 元素自带的 <code>style</code> 属性是因为在文章发布的时候，有可能会被富文本编辑器自动加上一些宽高、边框等信息。为了统一所有图片风格以及让响应式生效，需要将其 <code>style</code> 属性全部移除。</p>
+</blockquote>
+<p>下面是是适配前与适配后的对比：</p>
+<p><img src="./xplan-news-2.jpg" alt="适配前"><br><img src="./xplan-news-1.jpg" alt="适配后"></p>
+<h3 id="lt-table-gt-lt-table-gt"><a href="#lt-table-gt-lt-table-gt" class="headerlink" title="&lt;table&gt;&lt;/table&gt;"></a>&lt;table&gt;&lt;/table&gt;</h3><p>对于 <code>table</code> 元素也需要对它进行自适配，不然很有可能会溢出屏幕，使其多出了一个横向的滚动条。</p>
+<figure class="highlight plaintext"><figcaption><span>javascript</span></figcaption><table><tr><td class="code"><pre><span class="line">$(&quot;table&quot;).removeAttr(&quot;style&quot;);</span><br><span class="line">$(&quot;table&quot;).removeAttr(&quot;border&quot;);</span><br><span class="line"></span><br><span class="line">$(&quot;table&quot;).addClass(&quot;table&quot;);</span><br><span class="line">$(&quot;table&quot;).addClass(&quot;table-bordered&quot;);</span><br><span class="line">$(&quot;table&quot;).addClass(&quot;table-striped&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>上面两句是移除 <code>table</code> 的原有的一些风格信息以及属性。后面是为其加上 Bootstrap 特有的 <code>table</code> 类型。</p>
+<p>当然，更多的 <code>table</code> 元素还需要其它更多操作。不过就目前为止，<strong>XPlan</strong> 还没有着手关于 <code>table</code> 的更深一层容错处理。不过这里可以提供一个思路。</p>
+<p>比如说 <a target="_blank" rel="noopener" href="http://www.cst.zju.edu.cn/index.php?c=Index&a=detail&catid=72&id=1885">这篇文章中</a>，不知道是谁给的在线富文本编辑器勇气，使其下面几张图片都各自被一个 <code>table</code> 及其子元素所包含。更有甚者，有一篇文章的一个段落被一个 <code>table</code> 所包容，并且在其左侧还有一个看不见的 <code>td</code> 元素。</p>
+<p>我们可以提供的思路就是如果一个 <code>table</code> 只有一行一列就直接将其内容取出并删除该 <code>table</code> 。</p>
+<h3 id="lt-a-gt"><a href="#lt-a-gt" class="headerlink" title="&lt;a /&gt;"></a>&lt;a /&gt;</h3><p>超链接元素是一个新闻与用户互动的比较重要的元素之一。我们需要保持其美观性。</p>
+<p>举几个例子来说，我们可以将超链接以一个类按钮的形式出现：</p>
+<figure class="highlight plaintext"><figcaption><span>javascript</span></figcaption><table><tr><td class="code"><pre><span class="line">$(&quot;a&quot;).removeAttr(&quot;style&quot;);</span><br><span class="line">$(&quot;a&quot;).addClass(&quot;btn btn-default btn-xs btn-info&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>然后我们甚至可以对其做一些细微的词汇修改。</p>
+<p>比如当新闻发布者上传了一个附件然后不负责任地直接将文件名贴上的时候，我们可以贴心地将其显示文字改为“下载附件”。</p>
+<p>再比如发布者直接以URL形式显示一个超链接的时候，我们可以贴心地将其改变为“打开链接”等等。</p>
+<figure class="highlight plaintext"><figcaption><span>javascript</span></figcaption><table><tr><td class="code"><pre><span class="line">$(&quot;a&quot;).each(function(idx, elem) &#123;</span><br><span class="line">    if($(this).html().match(/.*\.(doc|xls|ppt|docx|xlsx|pptx)/)) &#123;</span><br><span class="line">        $(this).html(&quot;&lt;i class=&#x27;glyphicon glyphicon-paperclip&#x27;&gt;&lt;/i&gt; 下载附件&quot;);</span><br><span class="line">        $(this).removeClass(&quot;btn-info&quot;);</span><br><span class="line">        $(this).addClass(&quot;btn-warning&quot;);</span><br><span class="line">    &#125; else if($(this).html().match(/http.*\/\/.*/)) &#123;</span><br><span class="line">        $(this).html(&quot;&lt;i class=&#x27;glyphicon glyphicon-flag&#x27;&gt;&lt;/i&gt; 打开链接&quot;);</span><br><span class="line">        $(this).removeClass(&quot;btn-info&quot;);</span><br><span class="line">        $(this).addClass(&quot;btn-warning&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>然后我们再处理几个由于误操作而增加的错误链接，如在经上面操作后，还存在着url与显示内容相关的超链接可以直接取消，如这类：</p>
+<figure class="highlight plaintext"><figcaption><span>html</span></figcaption><table><tr><td class="code"><pre><span class="line">让我们荡&lt;a href=&quot;起双桨&quot;&gt;起双桨&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>至此，当下版本的 <strong>XPlan</strong> 的新闻爬虫手机屏幕适配基本完成。其中当然还存在着一些细节处理和显示错误处理的不足，但是已经定下了基本的适配思路。</p>
+<p>我们还在探索更好的适配方法，而当下的适配形式暂时已经可以满足了我们项目的需求。</p>
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2013/12/28/xplan-spider-doc/";</script><script>var DISQUS_IDENTIFIER = "2013/12/28/xplan-spider-doc/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2021<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a target="_blank" rel="noopener" href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
+
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $(block).find("td.gutter").remove();
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : ("lang-" + $(block).attr("class"))) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
+    });
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
+
+    $("article.full img").each(function() {
+        if($(this).parent().is("article")) {
+            $(this).wrap("<p style='text-align: center;'></p>");
+        } else {
+            $(this).parent().css("text-align", "center");
+        }
+    });
+
+    if($(".article-toc").children().length < 2) {
+        $(".article-toc").css("display", "none");
+    }
+});</script></body></html>

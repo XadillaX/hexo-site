@@ -1,0 +1,99 @@
+<!DOCTYPE html><html class="han-init" lang="zh-Hant"><head><meta name="author" content="死月·吃圡蕾特"><meta name="description" itemprop="description" content="好久没发文章了，借着 Byakuren 开源的档口炒炒冷饭吧。
+先上 Repo 地址：https://github.com/XadillaX/byakuren。
+主题色图像主题色是从一张图像中提取出来最能代表这张图片主色调的多种颜色。 也就是说在一幅色彩斑斓的图片里面，各种不同颜色的数量就对应着该颜"><link rel="alternative" href="/atom.xml" title="艾克斯の编码者" type="application/atom+xml"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Byakuren：一个 C 实现的主题色提取库 · 一个伪宅级别的码畜。</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="艾克斯の编码者" title="艾克斯の编码者"></a><h1><a href="/" alt="艾克斯の编码者" title="艾克斯の编码者">艾克斯の编码者</a></h1><p>一个伪宅级别的码畜。</p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/curriculumvitae" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="https://xcoder.in/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/XadillaX" style="position: relative; top: -2px;">&#xe735;</a><a target="_blank" href="https://www.zhihu.com/people/xadillax">&#xe63f;</a><a target="_blank" href="https://weibo.com/xadillax" style="position: relative; top: -2px;">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="full"><h1>Byakuren：一个 C 实现的主题色提取库</h1><span class="post-meta">写于<time> 2017 年 03 月 03 日 18 时 14 分</time><br>更新于<time> 2021 年 05 月 19 日 15 时 15 分</time></span><div class="article-toc"><strong>大纲</strong><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E9%A2%98%E8%89%B2"><span class="toc-number">1.</span> <span class="toc-text">主题色</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E9%A2%98%E8%89%B2%E6%8F%90%E5%8F%96%E7%AE%97%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">主题色提取算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Byakuren"><span class="toc-number">2.</span> <span class="toc-text">Byakuren</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%AA%C2%B7Byakuren-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">伪·Byakuren 是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9C%9F%C2%B7Byakuren-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">2.2.</span> <span class="toc-text">真·Byakuren 是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">2.3.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Clone"><span class="toc-number">2.3.1.</span> <span class="toc-text">Clone</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#make"><span class="toc-number">2.3.2.</span> <span class="toc-text">make</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#API"><span class="toc-number">2.3.3.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Octree"><span class="toc-number">2.3.3.1.</span> <span class="toc-text">Octree</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Min-diff"><span class="toc-number">2.3.3.2.</span> <span class="toc-text">Min-diff</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Mix"><span class="toc-number">2.3.3.3.</span> <span class="toc-text">Mix</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%84%E8%A7%88%E4%B8%80%E4%B8%8B"><span class="toc-number">2.4.</span> <span class="toc-text">预览一下</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">2.5.</span> <span class="toc-text">能做什么？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F%E8%AF%AD"><span class="toc-number">3.</span> <span class="toc-text">结束语</span></a></li></ol></div><p>好久没发文章了，借着 Byakuren 开源的档口炒炒冷饭吧。</p>
+<p>先上 Repo 地址：<a target="_blank" rel="noopener" href="https://github.com/XadillaX/byakuren">https://github.com/XadillaX/byakuren</a>。</p>
+<h2 id="主题色"><a href="#主题色" class="headerlink" title="主题色"></a>主题色</h2><p>图像主题色是从一张图像中提取出来最能代表这张图片主色调的多种颜色。 也就是说在一幅色彩斑斓的图片里面，各种不同颜色的数量就对应着该颜色在图 片中的比例，程序可以通过计算图片中不同颜色的像素数来算出主题色。</p>
+<h3 id="主题色提取算法"><a href="#主题色提取算法" class="headerlink" title="主题色提取算法"></a>主题色提取算法</h3><p>提取的算法在我之前的博客中有说明。在 Byakuren 中其实用的就是之前博客中讲的一些算法。</p>
+<ul>
+<li><a href="https://xcoder.in/2014/09/17/theme-color-extract/#%E5%85%AB%E5%8F%89%E6%A0%91%E6%8F%90%E5%8F%96%E6%B3%95">八叉树提取法</a></li>
+<li><a href="https://xcoder.in/2014/09/17/theme-color-extract/#%E6%9C%80%E5%B0%8F%E5%B7%AE%E5%80%BC%E6%B3%95">最小差值法</a></li>
+</ul>
+<p>除去上面两种算法，Byakuren 还提供了将这两种算法结合起来的 Mix 算法。</p>
+<h2 id="Byakuren"><a href="#Byakuren" class="headerlink" title="Byakuren"></a>Byakuren</h2><p>Byakuren 是我前两年写的一个主题色提取库，也是继 <a target="_blank" rel="noopener" href="https://github.com/XadillaX/thmclrx/tree/e302b61b4cc70b24efa35c612899cc0b79d271f9">thmclrx</a> 之后的 C 版实现，个人认为代码质量比旧版的 thmclrx 要高。并且它实际上经过了企业级的验证，在某相关的公司已经欢快跑了有些年头了。</p>
+<blockquote>
+<p>在经过相关人员的同意下，我也算把这雪藏了好久的代码给开源出来了。</p>
+</blockquote>
+<h3 id="伪·Byakuren-是什么？"><a href="#伪·Byakuren-是什么？" class="headerlink" title="伪·Byakuren 是什么？"></a>伪·Byakuren 是什么？</h3><p><img src="byakuren.png" alt="byakuren"></p>
+<blockquote>
+<p>聖 白蓮（ひじり びゃくれん，Hiziri Byakuren）是系列作品《东方 project》中的角色，首次登场于《东方星莲船》。</p>
+<ul>
+<li>种族：魔法使</li>
+<li>能力：使用魔法程度的能力（酣畅增强身体能力的）</li>
+<li>危险度：不明</li>
+<li>人类友好度：中</li>
+<li>主要活动场所：命莲寺之类</li>
+<li>命莲寺的住持。虽然原本是人类，不过由于常年的修行已经完全超越了人类。现在已经属于人们常说的魔法使了。</li>
+</ul>
+<p>虽然已经入了佛门，但是不知道什么原因却被妖怪敬仰着。她从来没有像童话故事中的魔法使那样，念诵着咒语治退妖怪。使用的力量完全是邪恶的，一点都不像是圣人，虽然并没有人目击到她与人类为敌，但其实已彻底成为妖怪的同伴了。</p>
+</blockquote>
+<p>好吧，总之本人是个东方控，所以基本上项目名都跟东方有关。</p>
+<h3 id="真·Byakuren-是什么？"><a href="#真·Byakuren-是什么？" class="headerlink" title="真·Byakuren 是什么？"></a>真·Byakuren 是什么？</h3><p>如文章题目所说，它是一个 C 实现的开源主题色提取的库，大家可以把它编译成链接库使用。</p>
+<p>不过目前暂时只支持 Makefile 的形式来编译，大家如果有兴趣也可以自己建个 Windows 下的 Visual Studio 项目等，也欢迎提类似于 CMake 之类的 PR。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>其实详细的使用方法在<a target="_blank" rel="noopener" href="https://github.com/XadillaX/byakuren#byakuren">文档</a>中就有说明。</p>
+<p>不过这里还是简单介绍一下吧。</p>
+<h4 id="Clone"><a href="#Clone" class="headerlink" title="Clone"></a>Clone</h4><p>先把代码给下下来，你也可以把它 Clone 下来。总之仓库地址是：<a target="_blank" rel="noopener" href="https://github.com/XadillaX/byakuren">https://github.com/XadillaX/byakuren</a>。</p>
+<h4 id="make"><a href="#make" class="headerlink" title="make"></a>make</h4><p>然后跑到目录下执行 <code>make</code>。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ make byakuren</span><br></pre></td></tr></table></figure>
+
+<p>你将得到一个 <code>byakuren.a</code> 的静态链接库。</p>
+<p>这个时候你只要拿着这个静态链接库，然后顺便在你的项目中把头文件引进来就可以了。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;byakuren.h&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="API"><a href="#API" class="headerlink" title="API"></a>API</h4><p>我们假设你有 <code>bkr_rgb* rgb</code> 的图片像素信息，以及 <code>uint32_t color_count</code> 的图片像素总数两个变量，下面分别给出三个样例。具体的 API 解析还请去文档观摩。</p>
+<h5 id="Octree"><a href="#Octree" class="headerlink" title="Octree"></a>Octree</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">bkr_color_stats stats[<span class="number">256</span>];</span><br><span class="line">bkr_octree_node* root = bkr_build_octree(rgb, color_count, <span class="number">256</span>);</span><br><span class="line"><span class="keyword">int</span> colors = bkr_octree_calculate_color_stats(root, stats);</span><br><span class="line">bkr_release_octree(root);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>colors</code> 就是主题色数量了，传进去的 <code>stats</code> 就会接收到主题色的具体信息了。</p>
+</blockquote>
+<h5 id="Min-diff"><a href="#Min-diff" class="headerlink" title="Min-diff"></a>Min-diff</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">bkr_color_stats stats[<span class="number">256</span>];</span><br><span class="line">bkr_mindiff_parameter param;</span><br><span class="line">param.gray_offset = <span class="number">5</span>;</span><br><span class="line">param.palette = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">int</span> colors = bkr_mindiff_calculate_color_stats(rgb, color_count, stats, &amp;param);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>colors</code> 和 <code>stats</code> 如上所述。</p>
+</blockquote>
+<h5 id="Mix"><a href="#Mix" class="headerlink" title="Mix"></a>Mix</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">bkr_color_stats stats[<span class="number">256</span>];</span><br><span class="line">bkr_mindiff_parameter param;</span><br><span class="line">param.gray_offset = <span class="number">-1</span>;</span><br><span class="line">param.palette = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">int</span> colors = bkr_mix_calculate_color_stats(rgb, color_count, <span class="number">256</span>, &amp;param, stats);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>colors</code> 和 <code>stats</code> 如上所述。</p>
+</blockquote>
+<h3 id="预览一下"><a href="#预览一下" class="headerlink" title="预览一下"></a>预览一下</h3><p>可能有人想看看效果，我这里就放个效果图给大家看看吧。</p>
+<p>其中 Octree 和 Mix 两个算法的主题色最大数量参数传的都是 16。</p>
+<p><img src="result.png" alt="效果预览"></p>
+<h3 id="能做什么？"><a href="#能做什么？" class="headerlink" title="能做什么？"></a>能做什么？</h3><p>你可以拿它来写一些主题色提取的东西。</p>
+<p>你也可以拿它来完成其它语言的主题色提取库的封装，如 Python、Lua 等等。欢迎反馈给我。</p>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>把一份自己觉得还不错的代码开源出来的感觉特爽，尤其是这种重见天日的感觉。ﾍ|･∀･|ﾉ*~●</p>
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2017/03/03/byakuren/";</script><script>var DISQUS_IDENTIFIER = "2017/03/03/byakuren/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2021<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a target="_blank" rel="noopener" href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
+
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $(block).find("td.gutter").remove();
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : ("lang-" + $(block).attr("class"))) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
+    });
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
+
+    $("article.full img").each(function() {
+        if($(this).parent().is("article")) {
+            $(this).wrap("<p style='text-align: center;'></p>");
+        } else {
+            $(this).parent().css("text-align", "center");
+        }
+    });
+
+    if($(".article-toc").children().length < 2) {
+        $(".article-toc").css("display", "none");
+    }
+});</script></body></html>
