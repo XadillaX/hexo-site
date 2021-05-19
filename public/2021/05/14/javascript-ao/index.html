@@ -1,0 +1,107 @@
+<!DOCTYPE html><html class="han-init" lang="zh-Hant"><head><meta name="author" content="死月·吃圡蕾特"><meta name="description" itemprop="description" content="目前市面上很多文章一大抄，在如今 ES202+ 的年代，还在摘抄着 ES3 的原文。
+
+Every execution context has associated with it a variable object. Variables and functions declared in the "><link rel="alternative" href="/atom.xml" title="艾克斯の编码者" type="application/atom+xml"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>JavaScript 中的活跃对象（AO）浅谈及导读 · 一个伪宅级别的码畜。</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"><meta name="generator" content="Hexo 5.3.0"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="艾克斯の编码者" title="艾克斯の编码者"></a><h1><a href="/" alt="艾克斯の编码者" title="艾克斯の编码者">艾克斯の编码者</a></h1><p>一个伪宅级别的码畜。</p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/curriculumvitae" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="https://xcoder.in/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/XadillaX" style="position: relative; top: -2px;">&#xe735;</a><a target="_blank" href="https://www.zhihu.com/people/xadillax">&#xe63f;</a><a target="_blank" href="https://weibo.com/xadillax" style="position: relative; top: -2px;">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="full"><h1>JavaScript 中的活跃对象（AO）浅谈及导读</h1><span class="post-meta">写于<time> 2021 年 05 月 14 日 15 时 49 分</time><br>更新于<time> 2021 年 05 月 19 日 12 时 16 分</time></span><div class="article-toc"><strong>大纲</strong><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ECMAScript-1-3"><span class="toc-number">1.</span> <span class="toc-text">ECMAScript 1 &#x2F; 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ECMAScript-5"><span class="toc-number">2.</span> <span class="toc-text">ECMAScript 5+</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%BF%E4%B9%89%E7%9A%84%E6%B4%BB%E8%B7%83%E5%AF%B9%E8%B1%A1"><span class="toc-number">3.</span> <span class="toc-text">广义的活跃对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AD%E5%8C%85"><span class="toc-number">4.</span> <span class="toc-text">闭包</span></a></li></ol></div><p>目前市面上很多文章一大抄，在如今 ES202+ 的年代，还在摘抄着 ES3 的原文。</p>
+<blockquote>
+<p>Every execution context has associated with it a variable object. Variables and functions declared in the source text are added as properties of the variable object. For function code, parameters are added as properties of the variable object.</p>
+</blockquote>
+<p>然后将其与“面试官”绑在一起。其实在书面理解上沿用活跃对象的概念没什么问题，但是照抄原文又不指明出处，就会让人误以为如今的规范中也还定义了活跃对象这一概念。其实上引文中包含了活跃对象（Activation Object, AO，有时也称活动对象、激活对象）与可变对象（Variable Object, VO，有时也称变量对象）的内容，摘抄自 ECMAScript 3 Spec 的两处并组装起来。</p>
+<p>今天，这里与大家一起浅尝一下 JavaScript 中的活跃对象。</p>
+<p><img src="https://dm.nbut.ac.cn/xcoder/2021/05/14/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E6%9D%BF.png"></p>
+<h2 id="ECMAScript-1-3"><a href="#ECMAScript-1-3" class="headerlink" title="ECMAScript 1 / 3"></a>ECMAScript 1 / 3</h2><p>在 ECMAScript 1 和 ECMAScript 3 中，的确是有着关于活跃对象的定义。</p>
+<blockquote>
+<p>当控制进入函数代码的执行上下文时，创建一个活动对象并将它与该执行上下文相关联， 并使用一个名为 <code>arguments</code>、特征为 <code>&#123; DontDelete &#125;</code> 的属性初始化该对象。该属性的初始值是稍后将要描述的一个参数对象。 </p>
+<p>接下来，这个活动对象将被用作变量初始化的可变对象。 </p>
+<p>活动对象纯粹是一种规范性机制，在 ECMAScript 访问它是不可能的。只能访问其成员而非该活动对象本身。对一个基对象为活动对象的引用值应用调用运算符时，这次调用的 <code>this</code> 值 为 <code>null</code>。</p>
+<p>——ECMAScript Language Specification 262 Edition 3 Final, 10.1.6 活跃对象</p>
+</blockquote>
+<p>但也仅限于 ECMAScript 1 和 3 了。我们现在在网上（尤其是中文搜索环境中）获取到的关于活跃对象和可变对象（Variable Object）的文章，大多都是为我们描述的 ECMAScript 1 和 3，早已过时。</p>
+<p>如果大家对这块内容仍然感兴趣（实际上我也建议大家感兴趣），可以参阅：</p>
+<ul>
+<li>ECMA-262-3 in detail. Chapter 2. Variable object.：<a target="_blank" rel="noopener" href="http://dmitrysoshnikov.com/ecmascript/chapter-2-variable-object/">http://dmitrysoshnikov.com/ecmascript/chapter-2-variable-object/</a></li>
+<li>ECMA-262-3 深入解析·第二章·变量对象（上一条的翻译）：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/justinw/archive/2010/04/23/1718733.html">https://www.cnblogs.com/justinw/archive/2010/04/23/1718733.html</a></li>
+</ul>
+<h2 id="ECMAScript-5"><a href="#ECMAScript-5" class="headerlink" title="ECMAScript 5+"></a>ECMAScript 5+</h2><p>在 ES5 及之后的 ES 版本，已经不存在活跃对象（AO）及一系列周边内容的概念了。取而代之，是一个叫词法环境（Lexical Environments）的定义。</p>
+<p>也就是说，严谨来讲，现代的 ECMAScript 早已没有了活跃对象这一概念，所以当网络上文章中“面试官跟你聊起 AO”这些内容出现的时候，其实就是“市面文章一大抄”的体现。他们还会有理有据地把 ECMAScript Spec 原文给你列出来（参照文首的摘抄）。</p>
+<p>关于词法环境，大家可以参阅：</p>
+<ul>
+<li>ECMA-262-5 in detail. Chapter 3.2. Lexical environments: ECMAScript implementation.：<a target="_blank" rel="noopener" href="http://dmitrysoshnikov.com/ecmascript/es5-chapter-3-2-lexical-environments-ecmascript-implementation/">http://dmitrysoshnikov.com/ecmascript/es5-chapter-3-2-lexical-environments-ecmascript-implementation/</a></li>
+<li>ECMA-262-5 词法环境：ECMA实现（上一条的翻译）：<a target="_blank" rel="noopener" href="https://blog.csdn.net/szengtal/article/details/78726143">https://blog.csdn.net/szengtal/article/details/78726143</a></li>
+</ul>
+<p>这里就不赘述了。</p>
+<h2 id="广义的活跃对象"><a href="#广义的活跃对象" class="headerlink" title="广义的活跃对象"></a>广义的活跃对象</h2><p>经过上面两节内容，我们可以知道，活跃对象是 ECMAScript 1 / 3 中的内容。后续的版本中，其就不复存在了。但是活跃对象这个概念就不能再被提起了吗？</p>
+<p><img src="https://dm.nbut.ac.cn/xcoder/2021/05/14/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E6%9D%BF%20(1).png"></p>
+<p>其实也不是，它对应的概念还是可以延续下来的。只不过不能让人误以为现代 ECMAScript 中还有其定义，我们现在再聊起活跃对象时，应该知道它只是广义的抽象，而不再是狭义的定义了。广义的活跃对象在不同的场景下也可以有不同的名字，如活跃记录（Activation Record）、栈帧（Stack Frame）等。</p>
+<p>每当函数被调用的时候，其都会创建一个活跃对象。该对象对开发者不可见，是一个隐藏的数据结构，其中包含了一些函数在执行时必要的信息和绑定，以及返回值的地址等等。</p>
+<p>在 C 语言中，这个对象会在一个栈中被分配生成。当函数返回的时候，该对象会被销毁（或者出栈）。</p>
+<blockquote>
+<p>你看，此处“活跃对象”被引申到 C 语言了。它指的是一个抽象的存在，意为栈帧（Stack Frame）。</p>
+</blockquote>
+<p>JavaScript 与 C 语言不同，它是从堆中分配该对象。且这个活跃对象并不会在函数返回时被自动销毁，它的生命周期与普通对象的垃圾回收机制类似，是根据引用数量决定的。</p>
+<p>一个活跃对象包含：</p>
+<ul>
+<li>对应函数对象的引用；</li>
+<li>调用者对应的活跃对象，用于 <code>return</code> 之后的控制权转移；</li>
+<li>调用完毕之后用于继续执行后续逻辑的恢复信息，它通常是一个将在函数调用完毕之后立即要执行的指令的地址；</li>
+<li>函数对应的形参，从实参初始化而来；</li>
+<li>函数中的变量，以 <code>undefined</code> 进行初始化；</li>
+<li>函数用于计算复杂表达式的临时变量；</li>
+<li><code>this</code>，如果函数作为一个方法被调用，那么 <code>this</code> 通常就是它的宿主对象。</li>
+</ul>
+<p>其实 ES5+ 之后的广义“活跃对象”就是对于 ES 1 / 3 定义的活跃对象的一个扩展，并将其应用到了词法环境中。</p>
+<p>至此为止，关于“活跃对象”的浅析就足矣。当下环境中，我们不是不能再谈论“活跃对象”，而是不能乱谈，还谈得有鼻子有眼的。现如今的“活跃对象”是一个类似于活跃记录和栈帧的广义抽象概念。</p>
+<p>不然，仍旧用老旧的文章去回答所谓“面试官”的问题，很有可能被刷掉哦。</p>
+<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><p>闭包也是老生常谈的一个概念。为什么在这篇文章中要提起这么个看起来八竿子打不着的概念呢？</p>
+<p>闭包一直没有一个非常严谨的定义。如：</p>
+<blockquote>
+<p>闭包就是能够读取其他函数内部变量的函数。</p>
+<p>闭包就是能够读取外层函数变量的函数。</p>
+</blockquote>
+<p>等等等等。</p>
+<p>再例如：</p>
+<blockquote>
+<p>「函数」和「函数内部能访问到的变量」（也叫环境）的总和，就是一个闭包。</p>
+</blockquote>
+<p>上述的解释也都是我从网上的各文章中摘抄出来的。其实理解起来很容易，但是语言描述出来并不那么严谨。大家知道那么回事就好了。</p>
+<p>不过，在我们有了广义活跃对象之后，我们可以从另一个角度来定义闭包了。怎么说呢？函数是可嵌套的。当一个嵌套的函数对象被创建时，它会包含一个外层函数对象所对应的活跃对象引用</p>
+<p>有了这层关系，闭包就好定义了：</p>
+<blockquote>
+<p>一个拥有外层函数对象所对应的活跃对象引用的函数对象就被称为闭包。</p>
+</blockquote>
+<p>言简意赅。虽然不至于像“能读取外层函数中的变量”那样亲民朴实，但也非常言简了。同时，有了“活跃对象”作为大前提，已经帮忙做了很多前提条件定义，所以这个定义也能达到意赅的效果。</p>
+<p>以后再面试起什么是闭包，大家可以尝试从这个角度解释哦。前提是你真的懂了，不要到时候又被面试官给绕进去了。</p>
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2021/05/14/javascript-ao/";</script><script>var DISQUS_IDENTIFIER = "2021/05/14/javascript-ao/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2021<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a target="_blank" rel="noopener" href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
+
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $(block).find("td.gutter").remove();
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : ("lang-" + $(block).attr("class"))) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
+    });
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
+
+    $("article.full img").each(function() {
+        if($(this).parent().is("article")) {
+            $(this).wrap("<p style='text-align: center;'></p>");
+        } else {
+            $(this).parent().css("text-align", "center");
+        }
+    });
+
+    if($(".article-toc").children().length < 2) {
+        $(".article-toc").css("display", "none");
+    }
+});</script></body></html>
