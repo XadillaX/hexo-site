@@ -1,0 +1,80 @@
+<!DOCTYPE html><html class="han-init" lang="zh-Hant"><head><meta name="author" content="死月·吃圡蕾特"><meta name="description" itemprop="description" content="好吧，在磨叽了 N 久之后，小菜我终于决定向图论进发了。为了庆祝我能稍稍理解最大流的思路，特此感谢“ACM 阿次魔”群中的各大牛们，以及白神和郭神，好吧，大牛们果然都是来自 ACM_DIY 的。ym 之。
+本笔记只有思路，而且是最最入门级的思路。笔记最后附启蒙我的 PPT 下载=。=
+老规矩，大牛们"><link rel="alternative" href="/atom.xml" title="艾克斯の编码者" type="application/atom+xml"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>最大流（Max Flow）学习笔记 1 · 一个伪宅级别的码畜。</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"><meta name="generator" content="Hexo 5.3.0"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="艾克斯の编码者" title="艾克斯の编码者"></a><h1><a href="/" alt="艾克斯の编码者" title="艾克斯の编码者">艾克斯の编码者</a></h1><p>一个伪宅级别的码畜。</p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/curriculumvitae" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="https://xcoder.in/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/XadillaX" style="position: relative; top: -2px;">&#xe735;</a><a target="_blank" href="https://www.zhihu.com/people/xadillax">&#xe63f;</a><a target="_blank" href="https://weibo.com/xadillax" style="position: relative; top: -2px;">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="full"><h1>最大流（Max Flow）学习笔记 1</h1><span class="post-meta">写于<time> 2010 年 10 月 27 日 10 时 39 分</time><br>更新于<time> 2021 年 06 月 04 日 11 时 52 分</time></span><div class="article-toc"><strong>大纲</strong><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%8F%E4%BE%BF%E5%86%99%E5%86%99"><span class="toc-number">1.</span> <span class="toc-text">随便写写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%90%E5%87%BA"><span class="toc-number">2.</span> <span class="toc-text">问题提出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E6%80%9D%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">简单思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#But"><span class="toc-number">4.</span> <span class="toc-text">But</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F-new"><span class="toc-number">5.</span> <span class="toc-text">为什么？(new)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol></div><p>好吧，在磨叽了 N 久之后，小菜我终于决定向图论进发了。为了庆祝我能稍稍理解最大流的思路，特此感谢“ACM 阿次魔”群中的各大牛们，以及白神和郭神，好吧，大牛们果然都是来自 ACM_DIY 的。ym 之。</p>
+<p>本笔记只有思路，而且是最最入门级的思路。笔记最后附启蒙我的 PPT 下载=。=</p>
+<p>老规矩，大牛们可以一笑而过或者选择围观，有兴趣的童鞋们可以一起研究研究。按下面按钮以阅读全文。</p>
+<h2 id="随便写写"><a href="#随便写写" class="headerlink" title="随便写写"></a>随便写写</h2><p>所谓最大流，就是水一样哗哗哗地流过若干管道。而每个管道都有其自身的最大流量。然后你要找到从起点到终点时可以流过的最大流量。</p>
+<h2 id="问题提出"><a href="#问题提出" class="headerlink" title="问题提出"></a>问题提出</h2><p>直接给出模型：</p>
+<p>设定有向图 <code>G = (V, E)</code>，每条边都有给定的容量 <code>Cv, u</code>，其中：<code>s</code> 为发点，<code>t</code> 为收点。对于每一点边 <code>(v, w)</code>，最多可以有 <code>Cv, u</code> 个单位的流量通过。除发点和收点外，每个顶点的进入的流量必须等于发出的流量。</p>
+<p>最大流量问题就是确定从 <code>s</code> 到 <code>t</code> 的最大流及流图。</p>
+<p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p>
+<h2 id="简单思路"><a href="#简单思路" class="headerlink" title="简单思路"></a>简单思路</h2><p>接下来是一个贪心（or 深搜？）的算法。即：</p>
+<ol>
+<li>在残留图中找一条增长通路（从 <code>s</code> 到 <code>t</code> 的通路）；</li>
+<li>流图中加上这个通路，流量加上这条通路的最小流量的管道的权值；（最大流量是最小信道的流量，多了也流不动）</li>
+<li>调整残留图：一旦某条管道流完了，就把管道删掉，如果没流完，那幺减去流掉的值；</li>
+<li>一直重复 1~3 直到没有通路。</li>
+</ol>
+<p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p>
+<p>这样就得到了“最大流”。</p>
+<h2 id="But"><a href="#But" class="headerlink" title="But"></a>But</h2><p>很重要的一点：<strong>不好意思，以上说的只是一种思路，而不是“正确”思路。</strong></p>
+<p><strong>贪心策略不能保证最优！！！</strong></p>
+<p>很显然，如果上述的第一条通路换成如下的通路，错误性就显而易见了：</p>
+<p>这样一来，就阻断了 <code>s-b-d-t</code> 的这样一条通路，所以贪心显然是错误的。但是不能贪心，也不能随机取啊，怎幺知道要先通哪条呢？</p>
+<p>事实上，我们只要在上面的算法中动点小手脚就好了。</p>
+<p><strong>在每次找到一条通路之后，删边或者减小流量之后，在这条通路的反方向加上相应的可用流量即可。</strong>就像这样：</p>
+<p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p>
+<p>然后就可以再找通路了，接下来的一条通路就是（蓝边）：</p>
+<p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p>
+<p>然后我们再开始删边、加反方向可用流量，一直到没有通路为止。</p>
+<h2 id="为什么？-new"><a href="#为什么？-new" class="headerlink" title="为什么？(new)"></a>为什么？<small>(new)</small></h2><p>为什幺要加一条回路呢？我开始不是很理解。于是我请教了 <a target="_blank" rel="noopener" href="https://web.archive.org/web/20110207165645/http://starvae.com/">StarVae</a>，下面是他的话：</p>
+<blockquote>
+<p>Star VAE! 12:36:15<br>哦 反向边 是为了能够有后悔的机会 直接流一次 不一定就是最大流的<br>也就是说，反向边是为了可以让流往回流再继续下一次流的一个“过渡边”。</p>
+<p>Star VAE! 12:38:45<br>流量 是加上去了的 我们算流量 不是算a-&gt;b这段路上的流量 算的是s-&gt;t这个流量 按照你的意思 如果还需要减去的话 那应该是叫做 费用 而不是流量</p>
+<p>}   **.死月|  12:39:05<br>喔</p>
+<p>}   **.死月|  12:39:09<br>就是说 如果后悔了</p>
+<p>}   **.死月|  12:39:18<br>是因为有更大的通过同一条路的流量</p>
+<p>}   **.死月|  12:39:28<br>所以 只要加上去补差量就好了 是幺</p>
+<p>Star VAE! 12:39:43<br>恩 差不多吧</p>
+</blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>好吧，本小菜是看着一个《数据结构第 19 讲：第 7 章（4）最短距离，网络流》的 ppt 学的，所以本文中的图是出自于那个 ppt，以及思路也是从那里灌输过来的。</p>
+<p>有兴趣的童鞋们可以下载。可能比我自己写的学习笔记更易懂吧。</p>
+<blockquote>
+<p>飞速下载 PPT（原下载链接已无法寻回，但是可以自行去网上搜索）</p>
+</blockquote>
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2010/10/27/maxflow1/";</script><script>var DISQUS_IDENTIFIER = "2010/10/27/maxflow1/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2021<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a target="_blank" rel="noopener" href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
+
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $(block).find("td.gutter").remove();
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : ("lang-" + $(block).attr("class"))) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
+    });
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
+
+    $("article.full img").each(function() {
+        if($(this).parent().is("article")) {
+            $(this).wrap("<p style='text-align: center;'></p>");
+        } else {
+            $(this).parent().css("text-align", "center");
+        }
+    });
+
+    if($(".article-toc").children().length < 2) {
+        $(".article-toc").css("display", "none");
+    }
+});</script></body></html>

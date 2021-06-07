@@ -1,0 +1,49 @@
+<!DOCTYPE html><html class="han-init" lang="zh-Hant"><head><meta name="author" content="死月·吃圡蕾特"><meta name="description" itemprop="description" content="在 OJ 里，编译是评测的第一步。
+通常情况下，大家都是用 bat 文件加命令行进行编译的。但这里不好控制时间。如果用一个线程去监控这个编译进程，进程结束就下一步的话，未免有点小题大做了。
+我采用的是下面一种“文件锁”的方法：
+在创建 bat 文件的同时创建一个“文件锁”文件，如 .lock。
+然后"><link rel="alternative" href="/atom.xml" title="艾克斯の编码者" type="application/atom+xml"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>关于 Online Judge System 的编译延时的一种解决方案 · 一个伪宅级别的码畜。</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"><meta name="generator" content="Hexo 5.3.0"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="艾克斯の编码者" title="艾克斯の编码者"></a><h1><a href="/" alt="艾克斯の编码者" title="艾克斯の编码者">艾克斯の编码者</a></h1><p>一个伪宅级别的码畜。</p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/curriculumvitae" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="https://xcoder.in/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/XadillaX" style="position: relative; top: -2px;">&#xe735;</a><a target="_blank" href="https://www.zhihu.com/people/xadillax">&#xe63f;</a><a target="_blank" href="https://weibo.com/xadillax" style="position: relative; top: -2px;">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="full"><h1>关于 Online Judge System 的编译延时的一种解决方案</h1><span class="post-meta">写于<time> 2010 年 12 月 08 日 01 时 47 分</time><br>更新于<time> 2021 年 06 月 04 日 11 时 28 分</time></span><div class="article-toc"><strong>大纲</strong></div><p>在 OJ 里，编译是评测的第一步。</p>
+<p>通常情况下，大家都是用 bat 文件加命令行进行编译的。但这里不好控制时间。如果用一个线程去监控这个编译进程，进程结束就下一步的话，未免有点小题大做了。</p>
+<p>我采用的是下面一种“文件锁”的方法：</p>
+<p>在创建 bat 文件的同时创建一个“文件锁”文件，如 <code>.lock</code>。</p>
+<p>然后在 bat 文件的最后一行加入一句 <code>del .lock</code> 即可。而在程序中你只要在运行 bat 之后来一句</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="number">0</span> == access(“.lock”, <span class="number">0</span>));</span><br></pre></td></tr></table></figure>
+<p>这样就可以做到延时了。等到文件锁被删除之后，就表示文件编译完成。</p>
+<p>当然，有可能编译时间过久，那这里也可以从 <code>while</code> 下文章，加一个条件，如果时间到了，则删掉这个进程即可。</p>
+<p>下面是部分的实现代码：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** 这段代码就是生成bat文件的代码 */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">NCompiler::MakeBat</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *cmd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    FILE *fp;</span><br><span class="line">    FILE *lock;                     <span class="comment">///&lt; 编译锁文件</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == (fp = fopen(BAT_FILENAME, <span class="string">&quot;w+&quot;</span>)) ||</span><br><span class="line">        <span class="literal">NULL</span> == (lock = fopen(LOCK_FILENAME, <span class="string">&quot;w+&quot;</span>)))</span><br><span class="line">    &#123;</span><br><span class="line">        fclose(fp);</span><br><span class="line">        fclose(lock);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** 输出编译命令 */</span></span><br><span class="line">    <span class="built_in">fprintf</span>(fp, <span class="string">&quot;%s&quot;</span>, cmd);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** 测试编译锁时的延时指令 */</span></span><br><span class="line">    <span class="comment">//fprintf(fp, &quot;ping 127.0.0.1\n&quot;);</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 输出删除编译锁命令 */</span></span><br><span class="line">    <span class="built_in">fprintf</span>(fp, <span class="string">&quot;del %s\n&quot;</span>, LOCK_FILENAME);</span><br><span class="line">    </span><br><span class="line">    fclose(fp);</span><br><span class="line">    fclose(lock);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "https://xcoder.in/2010/12/08/oj-compile-delay/";</script><script>var DISQUS_IDENTIFIER = "2010/12/08/oj-compile-delay/";</script><script>var DISQUS_SHORT_NAME = "xcoder"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2021<a href="/">死月·吃圡蕾特</a></section><section class="intro">由<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a target="_blank" rel="noopener" href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
+
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $(block).find("td.gutter").remove();
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : ("lang-" + $(block).attr("class"))) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
+    });
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
+
+    $("article.full img").each(function() {
+        if($(this).parent().is("article")) {
+            $(this).wrap("<p style='text-align: center;'></p>");
+        } else {
+            $(this).parent().css("text-align", "center");
+        }
+    });
+
+    if($(".article-toc").children().length < 2) {
+        $(".article-toc").css("display", "none");
+    }
+});</script></body></html>

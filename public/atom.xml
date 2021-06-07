@@ -1586,6 +1586,30 @@
   </entry>
   
   <entry>
+    <title>HELLO WORLD!</title>
+    <link href="https://xcoder.in/2011/05/21/hello-world/"/>
+    <id>https://xcoder.in/2011/05/21/hello-world/</id>
+    <published>2011-05-21T11:22:38.000Z</published>
+    <updated>2021-06-04T06:08:06.250Z</updated>
+    
+    <content type="html"><![CDATA[<p>　　这是我好久之前发在 CSDN 上的。看了刁牛的<a href="https://web.archive.org/web/20110828195708/http://diaorui.net/?p=114">咆哮体版 GCC 编译器</a>去参加百度之星，突发奇想，把我这代码也搬上去试试看。顺便去我的那个参赛帖（趣味赛）顶顶给点人气吧！</p><p>　　首先我的代码是通过宏定义的“#”来进行输出表达式，然后期间一坨让人火星的自加自减运算。凑合着看一下吧：</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">   <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;  </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ___(i) &#123; <span class="meta-keyword">if</span>(!i) puts(#i); &#125;  </span></span><br><span class="line">     <span class="meta">#<span class="meta-keyword">define</span> _p_(i) int i = 0;  </span></span><br><span class="line">            <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;  </span><br><span class="line">_p_(h)___(++++++h)___((++++h)++)_p_(e)___(----------h)  </span><br><span class="line">    ___(h--)___(h)_p_(l)___((++++e)++)___(e--)  </span><br><span class="line">            ___((----e)-- == h)  </span><br><span class="line">     ___(e++)___(e)___((----l)++)_p_(o)___(--o)  </span><br><span class="line">___(l++)___(l)___(o++)_p_(w)___(l)___((w = e) ? <span class="number">0</span> : <span class="number">1</span>)___(o)  </span><br><span class="line">         ___(<span class="number">1</span>)_p_(r)___(w)___((++++++o)--)  </span><br><span class="line">___(----o ? h : e)___(++l)___(l--)___(o)___(w ? o : r)___(l)_p_(d)___(d)  </span><br><span class="line">                 &#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;　　这是我好久之前发在 CSDN 上的。看了刁牛的&lt;a href=&quot;https://web.archive.org/web/20110828195708/http://diaorui.net/?p=114&quot;&gt;咆哮体版 GCC 编译器&lt;/a&gt;去参加百度之星，突发奇想，把我这代</summary>
+      
+    
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+  </entry>
+  
+  <entry>
     <title>连连看核心算法小分享——1</title>
     <link href="https://xcoder.in/2011/05/16/lianlinakan-algorighm-i/"/>
     <id>https://xcoder.in/2011/05/16/lianlinakan-algorighm-i/</id>
@@ -1619,14 +1643,14 @@
     <link href="https://xcoder.in/2011/04/25/my-first-game/"/>
     <id>https://xcoder.in/2011/04/25/my-first-game/</id>
     <published>2011-04-25T04:30:53.000Z</published>
-    <updated>2020-12-31T05:17:43.743Z</updated>
+    <updated>2021-06-04T03:13:04.132Z</updated>
     
-    <content type="html"><![CDATA[<p>　　最近网之游在和棒子一起开发一个类似赌博的网游（别墙我，做好是给棒子自己玩的），然后机缘巧合，他们的引擎是结合了MFC以及从我用过的几个引擎之一移植过来的。就引擎本身而言很强大，然后我又有一点小经验，所以网之游的柯总便也让我加入了开发行列。之前也是托网之游的福让我研究了一番网狐的平台。</p><p>　　开发过程中学到了不少底层的东西。我的任务是先将游戏的单屏给弄成三份，以三个逻辑来实现。由于工程耦合性太高，原程序员是C语言出生的，造成了我修改工程一定程度上的麻烦。先自己写了个Wrapper类来包含三个SceneGAME，然后一次性将三个SceneGAME渲染到目标上。这样改了一下之后，有两百多个错误。不知道其它游戏是不是也有这样的特点，因为这是我开发的第一款游戏，所以也没经验。</p><p>　　不过幸好最后还是让我给完成了这第一个quest。接着是添加GUI，就是现在正在做的。还有就是完全分离三块分屏的逻辑代码。让我这个大二学生兴奋的是，这个游戏完成之后，是会有奖金的。这个可是让我这个穷孩子两眼放光莫。YY一下到底会有多少呢，我本身也只是过去见识一下真正的工程而已，压根没想过money这事。</p><p>　　今天，额好吧，以现在的时间来说应该是昨天了，一个韩国人以及另一个中国公司的人过来验收我们现在的进度。我打开自己电脑里编译好的可执行文件，心中那种自豪感油然而生啊，毕竟我还是newbie，当然是有些小兴奋啊。期间那个中国公司的人说要赶在韩国人那边任务完成之前完成，这样好体现我们自己程序员不比他们差。无形之间的较量啊，表示鸭梨很大。据说他们那边现在遇到小问题了，我们超前的可能性还是蛮大的，接下去我就是要卯足劲来分离逻辑以及设置GUI了。柯总那边已经把网络通讯方面差不多完成了，我这一块做好，一对接，差不多能在五月初交工了。</p><p>　　最近还是比较忙啊，要学车，有个宁工基金会网站、港城关系研究所网站以及国际港口与物流中心网站，然后团区委那边的志愿者网站还有点小尾巴，浙江能源集团那个用C#写的员工墙完工了还不知道那边怎么说，接着应该还有一个姜老师那边的站子。都堆在一坨了。不过最近最要紧的还是这个游戏以及基金会网站以及去西班牙实习的一些相关事宜了。不管了，先睡觉。</p>]]></content>
+    <content type="html"><![CDATA[<p>　　最近网之游在和棒子一起开发一个类似赌博的网游（别墙我，做好是给棒子自己玩的），然后机缘巧合，他们的引擎是结合了 MFC 以及从我用过的几个引擎之一移植过来的。就引擎本身而言很强大，然后我又有一点小经验，所以网之游的柯总便也让我加入了开发行列。之前也是托网之游的福让我研究了一番网狐的平台。</p><p>　　开发过程中学到了不少底层的东西。我的任务是先将游戏的单屏给弄成三份，以三个逻辑来实现。由于工程耦合性太高，原程序员是 C 语言出生的，造成了我修改工程一定程度上的麻烦。先自己写了个 Wrapper 类来包含三个 SceneGAME，然后一次性将三个 SceneGAME 渲染到目标上。这样改了一下之后，有两百多个错误。不知道其它游戏是不是也有这样的特点，因为这是我开发的第一款游戏，所以也没经验。</p><p>　　不过幸好最后还是让我给完成了这第一个 quest。接着是添加 GUI，就是现在正在做的。还有就是完全分离三块分屏的逻辑代码。让我这个大二学生兴奋的是，这个游戏完成之后，是会有奖金的。这个可是让我这个穷孩子两眼放光莫。YY 一下到底会有多少呢，我本身也只是过去见识一下真正的工程而已，压根没想过 money 这事。</p><p>　　今天，额好吧，以现在的时间来说应该是昨天了，一个韩国人以及另一个中国公司的人过来验收我们现在的进度。我打开自己电脑里编译好的可执行文件，心中那种自豪感油然而生啊，毕竟我还是 newbie，当然是有些小兴奋啊。期间那个中国公司的人说要赶在韩国人那边任务完成之前完成，这样好体现我们自己程序员不比他们差。无形之间的较量啊，表示鸭梨很大。据说他们那边现在遇到小问题了，我们超前的可能性还是蛮大的，接下去我就是要卯足劲来分离逻辑以及设置 GUI 了。柯总那边已经把网络通讯方面差不多完成了，我这一块做好，一对接，差不多能在五月初交工了。</p><p>　　最近还是比较忙啊，要学车，有个宁工基金会网站、港城关系研究所网站以及国际港口与物流中心网站，然后团区委那边的志愿者网站还有点小尾巴，浙江能源集团那个用 C# 写的员工墙完工了还不知道那边怎么说，接着应该还有一个姜老师那边的站子。都堆在一坨了。不过最近最要紧的还是这个游戏以及基金会网站以及去西班牙实习的一些相关事宜了。不管了，先睡觉。</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;　　最近网之游在和棒子一起开发一个类似赌博的网游（别墙我，做好是给棒子自己玩的），然后机缘巧合，他们的引擎是结合了MFC以及从我用过的几个引擎之一移植过来的。就引擎本身而言很强大，然后我又有一点小经验，所以网之游的柯总便也让我加入了开发行列。之前也是托网之游的福让我研究了一</summary>
+    <summary type="html">&lt;p&gt;　　最近网之游在和棒子一起开发一个类似赌博的网游（别墙我，做好是给棒子自己玩的），然后机缘巧合，他们的引擎是结合了 MFC 以及从我用过的几个引擎之一移植过来的。就引擎本身而言很强大，然后我又有一点小经验，所以网之游的柯总便也让我加入了开发行列。之前也是托网之游的福让我研究</summary>
       
     
     
@@ -1641,6 +1665,90 @@
     <category term="牢骚" scheme="https://xcoder.in/tags/%E7%89%A2%E9%AA%9A/"/>
     
     <category term="网之游" scheme="https://xcoder.in/tags/%E7%BD%91%E4%B9%8B%E6%B8%B8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>扒了腾讯空间的表情套图，奉献给大家</title>
+    <link href="https://xcoder.in/2011/03/15/qq-emotion/"/>
+    <id>https://xcoder.in/2011/03/15/qq-emotion/</id>
+    <published>2011-03-15T11:22:38.000Z</published>
+    <updated>2021-06-04T04:06:40.502Z</updated>
+    
+    <content type="html"><![CDATA[<p>这套图里有五套表情：</p><p>从 0<del>90 为 QQ 的旧版表情，从 100</del>204 是新版表情（这两套表情不稀奇）。300<del>337 是 QQ 空间签到的星星表情 I，从 500</del>514 是星星表情 II。最后从 1000~1005 是手机表情。</p><p>预览如下：</p><p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p><p>事情是这样的：</p><p>我觉得 QQ 空间里的这套星星表情挺不错的，就想扒下来，先观察了一下表情的地址：</p><blockquote><p><a href="http://cnc.qzs.qq.com/qzone/em/e300.gif">http://cnc.qzs.qq.com/qzone/em/e300.gif</a></p><p>…</p><p><a href="http://cnc.qzs.qq.com/qzone/em/e337.gif">http://cnc.qzs.qq.com/qzone/em/e337.gif</a></p></blockquote><p>很显然，这是连续的，但我想想不甘心，于是从 0 开始找，那么就是旧版表情。</p><p>好的，找到规律之后就可以开工了，开始我用渣雷批量载（999 个），发现载不下，于是就删掉了。</p><p>接下去的方案是自己写个页面（后来我发现从 1000 开始还有表情）：</p><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="number">2000</span>; <span class="variable">$i</span>++) <span class="keyword">echo</span> <span class="string">&quot;&lt;img src=&quot;</span>http:<span class="comment">//cnc.qzs.qq.com/qzone/em/e&#123;$i&#125;.gif&quot; alt=&quot;&quot; /&gt;\n&quot;;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure><p>保存在我本机 Apache 根目录下的 <code>emo.php</code> 文件然后打开，悲催的一幕发生了：</p><p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p><p>如果你用我上面的方法也出现这样的情况，那么恭喜你，你也中了防盗链机制。</p><p>我就琢磨 TX 的防盗链应该是按域名来的吧，那么这就好办了：</p><p>第一步，ping：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">C:\Users\死月&gt;ping cnc.qzs.qq.com</span><br><span class="line"></span><br><span class="line">正在 Ping cnc.qzs.tc.qq.com [221.204.218.166] 具有 32 字节的数据:</span><br><span class="line">来自 221.204.218.166 的回复: 字节=32 时间=47ms TTL=54</span><br><span class="line">来自 221.204.218.166 的回复: 字节=32 时间=103ms TTL=54</span><br><span class="line">来自 221.204.218.166 的回复: 字节=32 时间=44ms TTL=54</span><br><span class="line">来自 221.204.218.166 的回复: 字节=32 时间=39ms TTL=54</span><br><span class="line"></span><br><span class="line">221.204.218.166 的 Ping 统计信息:</span><br><span class="line">    数据包: 已发送 = 4，已接收 = 4，丢失 = 0 (0% 丢失)，</span><br><span class="line">往返行程的估计时间(以毫秒为单位):</span><br><span class="line">    最短 = 39ms，最长 = 103ms，平均 = 58ms</span><br></pre></td></tr></table></figure><p>接下去打开 hosts 表，加上下面一句话</p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">127.0.0.1cnc.qzs.qq.com</span><br></pre></td></tr></table></figure><p>最后，把上面的 PHP 代码改一下：</p><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="number">2000</span>; <span class="variable">$i</span>++) <span class="keyword">echo</span> <span class="string">&quot;&lt;img src=&quot;</span>http:<span class="comment">//221.204.218.166/qzone/em/e&#123;$i&#125;.gif&quot; alt=&quot;&quot; /&gt;\n&quot;;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure><p>然后打开“你的” <a href="http://cnc.qzs.qq.com/emo.php">http://cnc.qzs.qq.com/emo.php</a></p><p>完成！你会发现 QQ 的各表情就列在你眼前了。接下去干什么呢？</p><p>哟西，就是保存啦！我用的是 Chrome，然后右键保存网页（当然是全部网页内容啦）。好的，这下表情就被你扒到手啦！</p><p>我打个包：</p><blockquote><p>点击下载（自然是已经找不到了）</p></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;这套图里有五套表情：&lt;/p&gt;
+&lt;p&gt;从 0&lt;del&gt;90 为 QQ 的旧版表情，从 100&lt;/del&gt;204 是新版表情（这两套表情不稀奇）。300&lt;del&gt;337 是 QQ 空间签到的星星表情 I，从 500&lt;/del&gt;514 是星星表情 II。最后从 1000~1005</summary>
+      
+    
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    <category term="PHP" scheme="https://xcoder.in/tags/PHP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于 Online Judge System 的编译延时的一种解决方案</title>
+    <link href="https://xcoder.in/2010/12/08/oj-compile-delay/"/>
+    <id>https://xcoder.in/2010/12/08/oj-compile-delay/</id>
+    <published>2010-12-07T17:47:27.000Z</published>
+    <updated>2021-06-04T03:28:39.310Z</updated>
+    
+    <content type="html"><![CDATA[<p>在 OJ 里，编译是评测的第一步。</p><p>通常情况下，大家都是用 bat 文件加命令行进行编译的。但这里不好控制时间。如果用一个线程去监控这个编译进程，进程结束就下一步的话，未免有点小题大做了。</p><p>我采用的是下面一种“文件锁”的方法：</p><p>在创建 bat 文件的同时创建一个“文件锁”文件，如 <code>.lock</code>。</p><p>然后在 bat 文件的最后一行加入一句 <code>del .lock</code> 即可。而在程序中你只要在运行 bat 之后来一句</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="number">0</span> == access(“.lock”, <span class="number">0</span>));</span><br></pre></td></tr></table></figure><p>这样就可以做到延时了。等到文件锁被删除之后，就表示文件编译完成。</p><p>当然，有可能编译时间过久，那这里也可以从 <code>while</code> 下文章，加一个条件，如果时间到了，则删掉这个进程即可。</p><p>下面是部分的实现代码：</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** 这段代码就是生成bat文件的代码 */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">NCompiler::MakeBat</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *cmd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    FILE *fp;</span><br><span class="line">    FILE *lock;                     <span class="comment">///&lt; 编译锁文件</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == (fp = fopen(BAT_FILENAME, <span class="string">&quot;w+&quot;</span>)) ||</span><br><span class="line">        <span class="literal">NULL</span> == (lock = fopen(LOCK_FILENAME, <span class="string">&quot;w+&quot;</span>)))</span><br><span class="line">    &#123;</span><br><span class="line">        fclose(fp);</span><br><span class="line">        fclose(lock);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** 输出编译命令 */</span></span><br><span class="line">    <span class="built_in">fprintf</span>(fp, <span class="string">&quot;%s&quot;</span>, cmd);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** 测试编译锁时的延时指令 */</span></span><br><span class="line">    <span class="comment">//fprintf(fp, &quot;ping 127.0.0.1\n&quot;);</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 输出删除编译锁命令 */</span></span><br><span class="line">    <span class="built_in">fprintf</span>(fp, <span class="string">&quot;del %s\n&quot;</span>, LOCK_FILENAME);</span><br><span class="line">    </span><br><span class="line">    fclose(fp);</span><br><span class="line">    fclose(lock);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;在 OJ 里，编译是评测的第一步。&lt;/p&gt;
+&lt;p&gt;通常情况下，大家都是用 bat 文件加命令行进行编译的。但这里不好控制时间。如果用一个线程去监控这个编译进程，进程结束就下一步的话，未免有点小题大做了。&lt;/p&gt;
+&lt;p&gt;我采用的是下面一种“文件锁”的方法：&lt;/p&gt;
+&lt;p&gt;在创</summary>
+      
+    
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    <category term="Online Judge" scheme="https://xcoder.in/tags/Online-Judge/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>开始项目——Online Judge System</title>
+    <link href="https://xcoder.in/2010/12/08/start-online-judge-system/"/>
+    <id>https://xcoder.in/2010/12/08/start-online-judge-system/</id>
+    <published>2010-12-07T17:40:27.000Z</published>
+    <updated>2021-06-04T03:13:22.360Z</updated>
+    
+    <content type="html"><![CDATA[<p>确定今天开工，所以发个日志记录一下时间。</p><p>磨蹭了半年，项目是五月份上去的，现在都12月份了，终于要开始动工我的学生项目——Online Judge System了。</p><p>现在在写评测内核，用的是 VC++。我的环境就是 Win7 + VS2008。有这么个构思，评测内核用 dll 来写，然后写个评测服务用 .NET，调用这个 dll。服务负责从数据库中读取待评测数据，编译、运行，然后向数据库提交结果。</p><p>C/S 端用 PHP 编写，决定了用 ThinkPHP，不过鉴于我的 PHP 初级水平，接下来要开始劳烦 <a href="https://www.crazyphper.com/">KonaKona</a> 了，不耻下问。她一个美女 PHPer，而且是个高手喔。</p><p>欢迎同做 OJ 的同学们一起讨论，大家多多交流哈。联系我扣扣：8…..5。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;确定今天开工，所以发个日志记录一下时间。&lt;/p&gt;
+&lt;p&gt;磨蹭了半年，项目是五月份上去的，现在都12月份了，终于要开始动工我的学生项目——Online Judge System了。&lt;/p&gt;
+&lt;p&gt;现在在写评测内核，用的是 VC++。我的环境就是 Win7 + VS2008。有</summary>
+      
+    
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    <category term="Online Judge" scheme="https://xcoder.in/tags/Online-Judge/"/>
     
   </entry>
   
@@ -1701,6 +1809,86 @@
     <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
     
     <category term="设计模式" scheme="https://xcoder.in/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Win7 64bit：IIS 不能连接 Access！？解决方案。</title>
+    <link href="https://xcoder.in/2010/10/29/iis-access/"/>
+    <id>https://xcoder.in/2010/10/29/iis-access/</id>
+    <published>2010-10-29T03:39:38.000Z</published>
+    <updated>2021-06-04T03:31:44.828Z</updated>
+    
+    <content type="html"><![CDATA[<p>　　今天凌晨在搞我的新项目。不过当我写好 <code>conn.asp</code> 之后，发现无法连接数据库。也就是说数据库无法打开。</p><p>　　一直从十二点搞到四点，一直以为是我的进程出问题了，不断调试。后来越来越觉得不对劲，最后我把网站指向以前机子里的一些 ASP 进程。最后发现，原来所有页面都无法连上数据库。我想也许是权限问题，所以我把一些文档夹的权限弄来弄去，结果还是不行。</p><p>　　接下来就是去网上搜了。开始也是怎么也搜不到，因为我忽略了一个非常重要的问题：我用的是 64 位的系统！</p><p>　　好吧，在IIS里，应用进程池貌似 64 位的不能连数据库。于是有这幺一个方案。</p><p>　　打开IIS里的应用进程池：</p><p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p><p>　　如图所示，选中 Classic .NET AppPool，然后是到右边栏里选择“设置应用进程池默认设置”。</p><p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p><p>　　最后在“常规”里将“激活32位应用进程”设置为True即可正常访问Access数据库了。</p><p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;　　今天凌晨在搞我的新项目。不过当我写好 &lt;code&gt;conn.asp&lt;/code&gt; 之后，发现无法连接数据库。也就是说数据库无法打开。&lt;/p&gt;
+&lt;p&gt;　　一直从十二点搞到四点，一直以为是我的进程出问题了，不断调试。后来越来越觉得不对劲，最后我把网站指向以前机子里的一些 A</summary>
+      
+    
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    <category term="IIS" scheme="https://xcoder.in/tags/IIS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>接到一个单子</title>
+    <link href="https://xcoder.in/2010/10/27/pay/"/>
+    <id>https://xcoder.in/2010/10/27/pay/</id>
+    <published>2010-10-27T03:39:38.000Z</published>
+    <updated>2021-06-04T03:37:57.732Z</updated>
+    
+    <content type="html"><![CDATA[<p>　　是人文学院的一个老师给我的单子。之前我有给他的非泛工作室开发了一个图片展示系统（<a href="https://web.archive.org/web/20101119201403/http://www.f-fine.com/">http://www.f-fine.com/</a>），用的 ThinkPHP。他觉得不错。</p><p>　　这次学校的材料所找他重新设计站子，但没有写后台的人，于是他找到了我。</p><p>　　服务器是学校的。我听到这个之后就感觉困难加大了挺多。这以为着，我不得不抛弃 PHP 而使用 ASP 了。对于 ASP 项目，我没开发过，以前也就修改修改一些小进程而已。今天接到这么个项目心里还是有点没底啊。不过好在，界面什么的他都设计好了（PSD 的），我写代码，不用管图片设计了。</p><p>　　ASP 有一点不好，没有 MVC 框架。用原生态的话，开发周期有点长。虽然我知道时间不短了，不过要下个月 11 号之前做好。据说是材料所的老师快要出国了，他想在出国之前能看一眼新站子好安心。</p><p>　　没 MVC 就没吧，我去网上搜索了一阵，幸好发现了两个应该会比较好用的类库、框架：<a href="https://web.archive.org/web/20110207115449/http://freecontex.com/">EasyIDE</a> 和 <a href="http://www.easyasp.cn/">EasyASP</a>。一个是框架（Framework），其函数、语法变得跟 PHP 有点接近了，有点小亲切。另一个是类库，其中包括了数据库操作类之类的。这样的话写起来应该会方便很多吧。</p><p>　　老师挺热情的，找我说明情况的时候选择到了圣巴里，而且开的报酬也挺好的，￥1500，和学校其它的项目比起来，我非常满足了。</p><p>　　好吧，接下来就是开始做了。</p><p>　　顺便发下老师给我的方案：</p><p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;　　是人文学院的一个老师给我的单子。之前我有给他的非泛工作室开发了一个图片展示系统（&lt;a href=&quot;https://web.archive.org/web/20101119201403/http://www.f-fine.com/&quot;&gt;http://www.f-fine.c</summary>
+      
+    
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    <category term="ASP" scheme="https://xcoder.in/tags/ASP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>最大流（Max Flow）学习笔记 1</title>
+    <link href="https://xcoder.in/2010/10/27/maxflow1/"/>
+    <id>https://xcoder.in/2010/10/27/maxflow1/</id>
+    <published>2010-10-27T02:39:38.000Z</published>
+    <updated>2021-06-04T03:52:17.211Z</updated>
+    
+    <content type="html"><![CDATA[<p>好吧，在磨叽了 N 久之后，小菜我终于决定向图论进发了。为了庆祝我能稍稍理解最大流的思路，特此感谢“ACM 阿次魔”群中的各大牛们，以及白神和郭神，好吧，大牛们果然都是来自 ACM_DIY 的。ym 之。</p><p>本笔记只有思路，而且是最最入门级的思路。笔记最后附启蒙我的 PPT 下载=。=</p><p>老规矩，大牛们可以一笑而过或者选择围观，有兴趣的童鞋们可以一起研究研究。按下面按钮以阅读全文。</p><h2 id="随便写写"><a href="#随便写写" class="headerlink" title="随便写写"></a>随便写写</h2><p>所谓最大流，就是水一样哗哗哗地流过若干管道。而每个管道都有其自身的最大流量。然后你要找到从起点到终点时可以流过的最大流量。</p><h2 id="问题提出"><a href="#问题提出" class="headerlink" title="问题提出"></a>问题提出</h2><p>直接给出模型：</p><p>设定有向图 <code>G = (V, E)</code>，每条边都有给定的容量 <code>Cv, u</code>，其中：<code>s</code> 为发点，<code>t</code> 为收点。对于每一点边 <code>(v, w)</code>，最多可以有 <code>Cv, u</code> 个单位的流量通过。除发点和收点外，每个顶点的进入的流量必须等于发出的流量。</p><p>最大流量问题就是确定从 <code>s</code> 到 <code>t</code> 的最大流及流图。</p><p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p><h2 id="简单思路"><a href="#简单思路" class="headerlink" title="简单思路"></a>简单思路</h2><p>接下来是一个贪心（or 深搜？）的算法。即：</p><ol><li>在残留图中找一条增长通路（从 <code>s</code> 到 <code>t</code> 的通路）；</li><li>流图中加上这个通路，流量加上这条通路的最小流量的管道的权值；（最大流量是最小信道的流量，多了也流不动）</li><li>调整残留图：一旦某条管道流完了，就把管道删掉，如果没流完，那幺减去流掉的值；</li><li>一直重复 1~3 直到没有通路。</li></ol><p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p><p>这样就得到了“最大流”。</p><h2 id="But"><a href="#But" class="headerlink" title="But"></a>But</h2><p>很重要的一点：<strong>不好意思，以上说的只是一种思路，而不是“正确”思路。</strong></p><p><strong>贪心策略不能保证最优！！！</strong></p><p>很显然，如果上述的第一条通路换成如下的通路，错误性就显而易见了：</p><p>这样一来，就阻断了 <code>s-b-d-t</code> 的这样一条通路，所以贪心显然是错误的。但是不能贪心，也不能随机取啊，怎幺知道要先通哪条呢？</p><p>事实上，我们只要在上面的算法中动点小手脚就好了。</p><p><strong>在每次找到一条通路之后，删边或者减小流量之后，在这条通路的反方向加上相应的可用流量即可。</strong>就像这样：</p><p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p><p>然后就可以再找通路了，接下来的一条通路就是（蓝边）：</p><p><img src="https://dm.nbut.ac.cn/xcoder/archive/missing.jpg" alt="Missing"></p><p>然后我们再开始删边、加反方向可用流量，一直到没有通路为止。</p><h2 id="为什么？-new"><a href="#为什么？-new" class="headerlink" title="为什么？(new)"></a>为什么？<small>(new)</small></h2><p>为什幺要加一条回路呢？我开始不是很理解。于是我请教了 <a href="https://web.archive.org/web/20110207165645/http://starvae.com/">StarVae</a>，下面是他的话：</p><blockquote><p>Star VAE! 12:36:15<br>哦 反向边 是为了能够有后悔的机会 直接流一次 不一定就是最大流的<br>也就是说，反向边是为了可以让流往回流再继续下一次流的一个“过渡边”。</p><p>Star VAE! 12:38:45<br>流量 是加上去了的 我们算流量 不是算a-&gt;b这段路上的流量 算的是s-&gt;t这个流量 按照你的意思 如果还需要减去的话 那应该是叫做 费用 而不是流量</p><p>}   **.死月|  12:39:05<br>喔</p><p>}   **.死月|  12:39:09<br>就是说 如果后悔了</p><p>}   **.死月|  12:39:18<br>是因为有更大的通过同一条路的流量</p><p>}   **.死月|  12:39:28<br>所以 只要加上去补差量就好了 是幺</p><p>Star VAE! 12:39:43<br>恩 差不多吧</p></blockquote><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>好吧，本小菜是看着一个《数据结构第 19 讲：第 7 章（4）最短距离，网络流》的 ppt 学的，所以本文中的图是出自于那个 ppt，以及思路也是从那里灌输过来的。</p><p>有兴趣的童鞋们可以下载。可能比我自己写的学习笔记更易懂吧。</p><blockquote><p>飞速下载 PPT（原下载链接已无法寻回，但是可以自行去网上搜索）</p></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;好吧，在磨叽了 N 久之后，小菜我终于决定向图论进发了。为了庆祝我能稍稍理解最大流的思路，特此感谢“ACM 阿次魔”群中的各大牛们，以及白神和郭神，好吧，大牛们果然都是来自 ACM_DIY 的。ym 之。&lt;/p&gt;
+&lt;p&gt;本笔记只有思路，而且是最最入门级的思路。笔记最后附启蒙</summary>
+      
+    
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/categories/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    
+    <category term="老博客备份归档" scheme="https://xcoder.in/tags/%E8%80%81%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD%E5%BD%92%E6%A1%A3/"/>
+    
+    <category term="ACM" scheme="https://xcoder.in/tags/ACM/"/>
     
   </entry>
   
