@@ -15,9 +15,9 @@ title: 关于
 ## 教育
 
 + **Zhejiang University** <small>(2013 - 2015)</small>
-    <small>ME in Mobile Internet and Game Development</small>
+    <small>M.E. degree / Mobile Internet and Game Development</small>
 + **Ningbo University of Technology** <small>(2009 - 2013)</small>
-    <small>BA in Computer Science and Technology</small>
+    <small>B.E. degree / Computer Science and Technology</small>
 
 ## 工作
 
