@@ -1,0 +1,3 @@
+[submodule "hexo-xnew"]
+	path = deps/x'new
+	url = git@github.com:XadillaX/hexo-xnew.git
