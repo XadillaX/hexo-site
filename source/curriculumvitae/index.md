@@ -21,7 +21,15 @@ title: 关于
 
 ## 工作
 
-### 阿里巴巴 Alibaba Group <small>(2017.11 - ?)</small>
+### 字节跳动 ByteDance <small>(2021.11 - ?)</small>
+
+> 负责 Node.js Infra 团队。
+
++ Node.js 基础平台方向；
++ Node.js 基础生态方向；
++ JavaScript 底层技术方向。
+
+### 阿里巴巴 Alibaba Group <small>(2017.11 - 2021.11)</small>
 
 + Node.js 基础服务（框架、架构、BaaS 等）；
 + 前端研发平台；
@@ -31,7 +39,8 @@ title: 关于
 
 ### 大搜车 Souche Inc. <small>(2015.9 - 2017.11)</small>
 
-+ 无线架构组中间件团队 Tech Leader；
+> 负责无线架构组中间件团队。
+
 + 动态网关、开放平台、前后端分离架构在公司的落地；
 + 底层 SDK 的研发和维护，以及业务的日常迭代；
 + 先后支持了[车牛](https://d.souche.com/)、[弹个车](https://tangeche.com/)的研发。
