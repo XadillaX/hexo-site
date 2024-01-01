@@ -1,0 +1,3 @@
+[submodule "hexo-xnew"]
+	path = themes/x'new
+	url = git@github.com:XadillaX/hexo-xnew.git
