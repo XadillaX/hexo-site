@@ -27,7 +27,8 @@ title: 关于
 
 + Node.js 基础平台方向；
 + Node.js 基础生态方向；
-+ JavaScript 底层技术方向。
++ JavaScript 底层技术方向；
++ Trae IDE 与 TraeWork 相关。
 
 ### 阿里巴巴 Alibaba Group <small>(2017.11 - 2021.11)</small>
 
@@ -56,7 +57,9 @@ title: 关于
 + **[《精通 Vim：用 Vim 8 和 Neovim 实现高效开发》](https://book.douban.com/subject/35005327/)** <small>([Modern Vim: Craft Your Development Environment with Vim 8 and Neovim](https://book.douban.com/subject/27198132/))</small>
     <small>翻译，2020 年出版；</small>
 + **[《JavaScript 悟道》](https://book.douban.com/subject/35469273/)** <small>([How JavaScript Works](https://book.douban.com/subject/30362974/))</small>
-    <small>翻译，2021 年出版。</small>
+    <small>翻译，2021 年出版；</small>
++ **[《软件开发珠玑》](https://book.douban.com/subject/36802954/)** <small>([Software Development Pearls](https://book.douban.com/subject/36761995/))</small>
+    <small>翻译，2024 年出版。</small>
 
 ## 更多
 
