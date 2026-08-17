@@ -4,6 +4,19 @@ header {
   position: relative;
   text-align: center;
 }
+header:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background-image: url("../images/header.jpeg");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
 header a,
 header h1,
 header p,
